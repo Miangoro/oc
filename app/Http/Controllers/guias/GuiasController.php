@@ -383,52 +383,278 @@ public function store(Request $request)
         return response()->json($guias);
     }
 
-    // Método para ACTUALIZAR una guía existente
-    public function update(Request $request)
-    {
-            $guia = guias::findOrFail($request->id_guia);
-            $guia->id_empresa = $request->input('empresa');
-            $guia->numero_guias = $request->input('numero_guias');
-            $guia->id_predio = $request->input('predios');
-            $guia->id_plantacion = $request->input('plantacion');
-            $guia->num_anterior = $request->input('anterior');
-            $guia->num_comercializadas = $request->input('comercializadas');
-            $guia->mermas_plantas = $request->input('mermas');
-            $guia->numero_plantas = $request->input('plantas');
-            $guia->edad = $request->input('edad');
-            $guia->art = $request->input('art');
-            $guia->kg_maguey = $request->input('kg_maguey');
-            $guia->no_lote_pedido = $request->input('no_lote_pedido');
-            $guia->fecha_corte = $request->input('fecha_corte');
-            $guia->observaciones = $request->input('observaciones');
-            $guia->nombre_cliente = $request->input('nombre_cliente');
-            $guia->no_cliente = $request->input('no_cliente');
-            $guia->fecha_ingreso = $request->input('fecha_ingreso');
-            $guia->domicilio = $request->input('domicilio');
-            $guia->save();
+// Método para ACTUALIZAR una guía existente
+/*public function update(Request $request, $id)
+{
+    //Buscar la guía para obtener el run_folio
+    $guia = guias::findOrFail($id);
 
-            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+    // Actualizar todas las guías con el mismo run_folio
+    guias::where('run_folio', $guia->run_folio)->update([
+        'id_empresa' => $request->input('empresa'),
+        'numero_guias' => $request->input('numero_guias'),
+        'id_predio' => $request->input('predios'),
+        'id_plantacion' => $request->input('plantacion'),
+        'num_anterior' => $request->input('anterior'),
+        'num_comercializadas' => $request->input('comercializadas'),
+        'mermas_plantas' => $request->input('mermas'),
+        'numero_plantas' => $request->input('plantas'),
+        'edad' => $request->input('edad'),
+        'art' => $request->input('art'),
+        'kg_maguey' => $request->input('kg_maguey'),
+        'no_lote_pedido' => $request->input('no_lote_pedido'),
+        'fecha_corte' => $request->input('fecha_corte'),
+        'observaciones' => $request->input('observaciones'),
+        'nombre_cliente' => $request->input('nombre_cliente'),
+        'no_cliente' => $request->input('no_cliente'),
+        'fecha_ingreso' => $request->input('fecha_ingreso'),
+        'domicilio' => $request->input('domicilio'),
+    ]);
 
-            foreach ($request->id_documento as $index => $id_documento) {
-                // Agregar nuevo documento si no existe
-                if ($request->hasFile('url') && isset($request->file('url')[$index])) {
-                    $file = $request->file('url')[$index];
-                    $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+    // Manejo de documentos (solo para el id_guia original o para todos si es necesario)
+    /*$empresa = empresa::with("empresaNumClientes")
+        ->where("id_empresa", $request->empresa)
+        ->first();
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
-                    $documentacion_url = new Documentacion_url();
-                    $documentacion_url->id_relacion = $guia->id_guia;
-                    $documentacion_url->id_documento = $id_documento;
-                    $documentacion_url->nombre_documento = $request->nombre_documento[$index];
-                    $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
-                    $documentacion_url->id_empresa = $request->empresa;
-                    $documentacion_url->save();
-                }
-            }
-        return response()->json(['success' => 'Guía actualizada correctamente']);
-        
+    foreach ($request->id_documento as $index => $id_documento) {
+        if ($request->hasFile('url') && isset($request->file('url')[$index])) {
+            $file = $request->file('url')[$index];
+            $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+
+            $documentacion_url = new Documentacion_url();
+            $documentacion_url->id_relacion = $guia->id_guia; // o el id que corresponda
+            $documentacion_url->id_documento = $id_documento;
+            $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+            $documentacion_url->url = $filename;
+            $documentacion_url->id_empresa = $request->empresa;
+            $documentacion_url->save();
+        }
+    }*
+
+    return response()->json(['success' => 'Guías actualizadas correctamente']);
+}*/
+public function update(Request $request, $id)
+{
+    $guia = Guias::findOrFail($id);
+    $runFolio = $guia->run_folio;
+    $diferencia = $guia->num_anterior - $request->anterior;
+
+    // Restaurar plantas en la plantacion anterior
+    $plantacionAnterior = predio_plantacion::find($guia->id_plantacion);
+    if ($plantacionAnterior) {
+
+        $plantacionAnterior->num_plantas += $diferencia; 
+        // Aquí sumas la diferencia, puede ser positivo o negativo, así ajustas el inventario
+        if ($plantacionAnterior->num_plantas < 0) {
+            $plantacionAnterior->num_plantas = 0; // no puede quedar negativo
+        }
+        //$plantacionAnterior->num_plantas += $guia->num_anterior;
+        //$plantacionAnterior->num_plantas = $guia->num_anterior;
+        $plantacionAnterior->save();
     }
+
+    // Actualizar datos de la guía
+    Guias::where('run_folio', $runFolio)->update([
+        'id_empresa' => $request->empresa,
+        'numero_guias' => $request->numero_guias,
+        'id_predio' => $request->predios,
+        'id_plantacion' => $request->plantacion,
+        'num_anterior' => $request->anterior,
+        'num_comercializadas' => $request->comercializadas,
+        'mermas_plantas' => $request->mermas,
+        'numero_plantas' => $request->plantas,
+        'edad' => $request->edad,
+        'art' => $request->art,
+        'kg_maguey' => $request->kg_maguey,
+        'no_lote_pedido' => $request->no_lote_pedido,
+        'fecha_corte' => $request->fecha_corte,
+        'observaciones' => $request->observaciones,
+        'nombre_cliente' => $request->nombre_cliente,
+        'no_cliente' => $request->no_cliente,
+        'fecha_ingreso' => $request->fecha_ingreso,
+        'domicilio' => $request->domicilio,
+    ]);
+
+        // Si cambió la plantación, hay que mover las plantas del inventario también
+        /*if ($request->plantacion != $guia->id_plantacion) {
+            // Devolver plantas a la plantación vieja (porque se cambia de plantación)
+            $plantacionVieja = predio_plantacion::find($guia->id_plantacion);
+            if ($plantacionVieja) {
+                $plantacionVieja->num_plantas += $guia->num_anterior;
+                $plantacionVieja->save();
+            }
+
+            // Descontar plantas de la nueva plantación
+            $plantacionNueva = predio_plantacion::find($request->plantacion);
+            if ($plantacionNueva) {
+                $plantacionNueva->num_plantas -= $request->anterior;
+                if ($plantacionNueva->num_plantas < 0) $plantacionNueva->num_plantas = 0;
+                $plantacionNueva->save();
+            }
+        }else{
+            $plantacionNueva = predio_plantacion::find($request->plantacion);
+            if ($plantacionNueva) {
+                //$plantacionNueva->num_plantas = max(0, $plantacionNueva->num_plantas - $request->plantas);
+                $plantacionNueva->num_plantas = $request->plantas;
+                $plantacionNueva->save();
+            }
+        }*/
+    // Descontar plantas en la plantación
+    $plantacionNueva = predio_plantacion::find($request->plantacion);
+    if ($plantacionNueva) {
+        $plantacionNueva->num_plantas = $request->plantas;
+        $plantacionNueva->save();
+    }
+
+
+    return response()->json(['success' => 'Guías actualizadas correctamente']);
+}
+
+
+
+
+
+///SUBIR DOCUMENTOS GUIA Y ART
+public function subirDocGuias(Request $request)
+{
+    $request->validate([
+        'id_guia' => 'required|exists:guias,id_guia',
+        'documento.*' => 'nullable|mimes:pdf|max:3072',
+    ]);
+
+    $guia = Guias::findOrFail($request->id_guia);
+
+    $guia_folio = preg_replace('/[^A-Za-z0-9_\-]/', '_', $guia->folio ?? 'No_encontrado');
+
+    $empresa = empresa::with("empresaNumClientes")
+        ->where("id_empresa", $guia->id_empresa)
+        ->first();
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')
+        ->first(function ($numero) {
+            return !empty($numero);
+        });
+
+    $rutaCarpeta = "public/uploads/{$numeroCliente}/guias";
+
+    // Recorremos los archivos enviados
+    foreach ($request->documento as $id_documento => $archivo) {
+        if ($archivo) {
+            // Generar nombre único
+            $nombreArchivo = $guia_folio . '_' . uniqid() . '.pdf';
+
+            // Guardar archivo nuevo
+            $upload = Storage::putFileAs($rutaCarpeta, $archivo, $nombreArchivo);
+
+            if ($upload) {
+                // Buscar si hay documento previo
+                $docAnterior = Documentacion_url::where('id_documento', $id_documento)
+                    ->where('id_relacion', $guia->id_guia)
+                    ->first();
+
+                // Solo eliminar si existe y ya guardamos el nuevo
+                if ($docAnterior && Storage::exists($rutaCarpeta . '/' . $docAnterior->url)) {
+                    Storage::delete($rutaCarpeta . '/' . $docAnterior->url);
+                }
+
+                // Crear o actualizar registro
+                Documentacion_url::updateOrCreate(
+                    [
+                        'id_documento' => $id_documento,
+                        'id_relacion' => $guia->id_guia,
+                    ],
+                    [
+                        'nombre_documento' => $id_documento == 71
+                            ? "Guía de traslado de agave"
+                            : "Resultados ART",
+                        'url' => $nombreArchivo,
+                        'id_empresa' => $guia->id_empresa,
+                    ]
+                );
+            }
+        }
+    }
+
+
+    return response()->json(['message' => 'Documento actualizado correctamente.']);
+}
+///OBTENER DOCUMENTOS GUIA Y ART
+public function mostrarDocGuias($id, $id_documento)
+{
+    $guia = Guias::findOrFail($id);
+
+    // Buscar documento según tipo
+    $documentacion = Documentacion_url::where('id_documento', $id_documento)
+        ->where('id_relacion', $guia->id_guia)
+        ->first();
+
+    $empresa = empresa::with("empresaNumClientes")
+        ->where("id_empresa", $guia->id_empresa)
+        ->first();
+
+    $numeroCliente = $empresa->empresaNumClientes
+        ->pluck('numero_cliente')
+        ->first(function ($numero) {
+            return !empty($numero);
+        });
+
+    if ($documentacion) {
+        $rutaArchivo = "{$numeroCliente}/guias/{$documentacion->url}";
+
+        if (Storage::exists("public/uploads/{$rutaArchivo}")) {
+            return response()->json([
+                'documento_url' => asset("files/{$rutaArchivo}"),
+                'nombre_archivo' => basename($documentacion->url),
+            ]);
+        } else {
+            return response()->json([
+                'documento_url' => null,
+                'nombre_archivo' => null,
+            ], 404);
+        }
+    }
+
+    return response()->json([
+        'documento_url' => null,
+        'nombre_archivo' => null,
+    ]);
+}
+///BORRAR DOCUMENTOS GUIA Y ART
+public function borrarDocGuias($id, $id_documento)
+{
+    $guia = Guias::findOrFail($id);
+
+    $documentacion = Documentacion_url::where('id_documento', $id_documento)
+        ->where('id_relacion', $guia->id_guia)
+        ->first();
+
+    if (!$documentacion) {
+        return response()->json(['message' => 'Documento no encontrado.'], 404);
+    }
+
+    $empresa = empresa::with("empresaNumClientes")
+        ->where("id_empresa", $guia->id_empresa)
+        ->first();
+
+    $numeroCliente = $empresa->empresaNumClientes
+        ->pluck('numero_cliente')
+        ->first(function ($numero) {
+            return !empty($numero);
+        });
+
+    $rutaArchivo = "public/uploads/{$numeroCliente}/guias/{$documentacion->url}";
+
+    // Eliminar archivo físico
+    if (Storage::exists($rutaArchivo)) {
+        Storage::delete($rutaArchivo);
+    }
+
+    // Eliminar registro en la base de datos
+    $documentacion->delete();
+
+    return response()->json(['message' => 'Documento eliminado correctamente.']);
+}
 
 
 

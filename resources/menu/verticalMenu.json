@@ -247,7 +247,8 @@
         {
           "url": "/catalogo/aduana",
           "name": "Aduana",
-          "slug": "catalogo-aduana"
+          "slug": "catalogo-aduana",
+          "can": "Visualizar aduana"
         }
       ]
     },

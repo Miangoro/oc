@@ -83,34 +83,37 @@
 <div class="modal fade" id="ModalSubirPDF" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
+      
         <div class="modal-header bg-primary pb-4">
-          <h5 class="modal-title text-white">Subir archivos PDF<span id="folio_cer"></span></h5>
+          <h5 class="modal-title text-white">Subir archivos PDF</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
+
         <div class="modal-body">
-        <form id="formSubirPDF">
-            <input type="hidden" id="editt_id_guia" name="id_guia">
+        <form id="formSubirPDF" method="POST">
+            <input type="hidden" id="id_guia" name="id_guia">
 
             <div class="row">
                 <div class="form-floating form-floating-outline mb-5">
-                    <input class="form-control form-control-sm" type="file" name="url[]">
-                    <input value="71" class="form-control" type="hidden" name="id_documento[]">
-                    <input value="Guía de traslado de agave" class="form-control" type="hidden"
-                        name="nombre_documento[]">
+                    <input class="form-control form-control-sm" type="file" name="documento[71]">
                     <label for="Guía de traslado de agave">Adjuntar Guia escaneada</label>
+
+                    <div id="docActual_71"></div>
+                    <div id="EliminarDoc_71"></div>
                 </div>
+
                 <div class="form-floating form-floating-outline mb-5">
-                    <input class="form-control form-control-sm" type="file" name="url[]">
-                    <input value="132" class="form-control" type="hidden" name="id_documento[]">
-                    <input value="Resultados ART" class="form-control" type="hidden"
-                        name="nombre_documento[]" step="0.01">
+                    <input class="form-control form-control-sm" type="file" name="documento[132]">
                     <label for="Resultados ART">Adjuntar resultados de ART</label>
+
+                    <div id="docActual_132"></div>
+                    <div id="EliminarDoc_132"></div>
                 </div>
             </div>
 
             <div class="d-flex mt-6 justify-content-center">
-                {{-- <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
-                    Registrar</button> --}}
+                <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
+                    Registrar</button>
                 <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
                     <i class="ri-close-line"></i> Cancelar</button>
             </div>

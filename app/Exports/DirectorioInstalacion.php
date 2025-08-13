@@ -53,8 +53,8 @@ class DirectorioInstalacion implements FromCollection, WithMapping, WithHeadings
             $query->where('certificados.estatus', $this->filtros['estatus']);
         }
 
-        // Ordenar por empresa
-        return $query->orderBy('certificados.fecha_emision', 'asc')->get();
+        // Ordenar por fecha_emision
+        return $query->orderBy('certificados.fecha_emision', 'desc')->get();
     }
 
 

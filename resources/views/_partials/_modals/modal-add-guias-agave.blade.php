@@ -216,6 +216,7 @@
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
             <button id="btnCloseModal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Llenar Guía de Traslado Agave/Maguey</h4>
@@ -223,11 +224,12 @@
                 </div>
                 <form id="editGuiaForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <input type="hidden" id="editt_id_guia" name="id_guia">
-                    <div class="row">
+
+                <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange="editobtenerNombrePredio(); editobtenerPlantacionPredio();"
-                                    id="edit_id_empresa" name="empresa" class="select2 form-select" required disabled>
+                                    id="edit_id_empresa" name="empresa" class="select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresa as $id_cliente)
                                         <option value="{{ $id_cliente->id_empresa }}">
@@ -242,73 +244,64 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control bg-light text-muted" type="number"
-                                    placeholder="Número de guías solicitadas" id="edit_numero_guias" name="numero_guias"
-                                    readonly style="pointer-events: none;" />
+                                    placeholder="Número de guías solicitadas" id="edit_numero_guias" name="numero_guias" 
+                                    style="pointer-events: none;"/>
                                 <label>Número de guías solicitadas</label>
                             </div>
                         </div>
-                    </div>
+                    
                     <div class="form-floating form-floating-outline mb-6">
-                        <select class="select2 form-select" id="edit_nombre_predio" name="predios" aria-label="Predio"
-                            required disabled>
-                            /*Se puede quitar*/
-                            @foreach ($predios as $id_predio)
-                                <option value="{{ $id_predio->id_empresa }}">{{ $id_predio->nombre_predio }}</option>
-                            @endforeach
-                            <option value="" selected>Lista de predios</option>
+                        <select class="select2 form-select" id="edit_nombre_predio" name="predios" aria-label="Predio" required>
+                           
                         </select>
                         <label>Lista de predios</label>
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
                         <select class="select2 form-select" id="edit_id_plantacion" name="plantacion"
-                            aria-label="Plantación" required disabled>
+                            aria-label="Plantación" required>
                             <option value="" selected>Plantación del predio</option>
                         </select>
                         <label for="edit_id_plantacion">Características del predio</label>
                     </div>
-                    <div class="text-center mb-6">
-                        <h4 class="address-title mb-2">Datos para Guía de Traslado</h4>
-                        <p class="address-subtitle"> <b style="color: red"> (DATOS NO OBLIGATORIOS SI NO CUENTA CON
-                                ELLOS DEJAR LOS ESPACIOS VACÍOS)</b></p>
-                    </div>
-                    <div class="row">
+                </div>
+
+                <div class="text-center mb-6">
+                    <h4 class="address-title mb-2">Datos para Guía de Traslado</h4>
+                    <p class="address-subtitle"> <b style="color: red"> (DATOS NO OBLIGATORIOS SI NO CUENTA CON
+                            ELLOS DEJAR LOS ESPACIOS VACÍOS)</b></p>
+                </div>
+                <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control bg-light text-muted" type="number" placeholder="Número de plantas anterior"
-                                    id="edit_num_anterior" name="anterior" oninput="editcalcularPlantasActualmente()"
-                                    readonly style="pointer-events: none;"/>
+                                <input class="form-control" type="number" placeholder="Número de plantas anterior" id="edit_num_anterior" name="anterior" oninput="editcalcularPlantasActualmente()" />
                                 <label for="edit_num_anterior">Número de plantas anterior</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control bg-light text-muted" type="number"
+                                <input class="form-control" type="number"
                                     placeholder="Número de plantas comercializadas" id="edit_num_comercializadas"
-                                    name="comercializadas" oninput="editcalcularPlantasActualmente()" 
-                                    readonly style="pointer-events: none;" />
+                                    name="comercializadas" oninput="editcalcularPlantasActualmente()"  />
                                 <label for="edit_num_comercializadas">Número de plantas comercializadas</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
+                </div>
+                <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control bg-light text-muted" type="number" placeholder="Mermas plantas"
+                                <input class="form-control" type="number" placeholder="Mermas plantas"
                                     id="edit_mermas_plantas" name="mermas"
-                                    oninput="editcalcularPlantasActualmente()"
-                                    readonly style="pointer-events: none;"  />
+                                    oninput="editcalcularPlantasActualmente()" />
                                 <label for="edit_mermas_plantas">Mermas plantas</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control bg-light text-muted" type="number" placeholder="Número de plantas actualmente"
-                                    id="edit_numero_plantas" name="plantas" 
-                                    readonly style="pointer-events: none;"  />
+                                <input class="form-control" type="number" placeholder="Número de plantas actualmente" id="edit_numero_plantas" name="plantas" />
                                 <label for="edit_numero_plantas">Número de plantas actualmente</label>
                             </div>
                         </div>
-                    </div>
+                </div>
                     <div class="form-floating form-floating-outline mb-5">
                         <input class="form-control" type="text" placeholder="Ingrese la edad" id="edit_edad"
                             name="edad" />
@@ -319,7 +312,7 @@
                             id="edit_id_art" name="art" />
                         <label for="edit_id_art">%ART</label>
                     </div>
-                    <div class="row">
+                <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input step="any" class="form-control" type="number"
@@ -361,11 +354,12 @@
                                 name="nombre_documento[]" step="0.01">
                             <label for="Resultados ART">Adjuntar resultados de ART</label>
                         </div> --}}
-                    </div>
-                    <div class="text-center mb-6">
-                        <h4 class="address-title mb-2">Datos del comprador</h4>
-                    </div>
-                    <div class="row">
+                </div>
+
+                <div class="text-center mb-6">
+                    <h4 class="address-title mb-2">Datos del comprador</h4>
+                </div>
+                <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="text"
@@ -391,23 +385,25 @@
 
                             </div>
                         </div>
-                    </div>
-                    <div class="form-floating form-floating-outline mb-5">
-                        <input class="form-control" type="text" placeholder="Ingrese el domicilio de entrega"
-                            id="edit_domicilio" name="domicilio" />
-                        <label for="edit_domicilio">Domicilio de entrega</label>
-                    </div>
+                        <div class="form-floating form-floating-outline mb-5">
+                            <input class="form-control" type="text" placeholder="Ingrese el domicilio de entrega"
+                                id="edit_domicilio" name="domicilio" />
+                            <label for="edit_domicilio">Domicilio de entrega</label>
+                        </div>
+                </div>
+                    
             </div>
+
             <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                 <button type="submit" class="btn btn-primary">Actualizar</button>
                 <button id="btnCancelModal" type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
                     aria-label="Close">Cancelar</button>
             </div>
+
             </form>
         </div>
     </div>
 </div>
-
 
 
 
@@ -437,8 +433,9 @@
     });
 </script>
 
+
 <script>//editar
-    function editobtenerNombrePredio() {
+    function editobtenerNombrePredio(callback) {
         var empresa = $("#edit_id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
@@ -455,12 +452,14 @@
                     contenido = '<option value="">Sin predios registradas</option>';
                 }
                 $('#edit_nombre_predio').html(contenido);
+                if (callback) callback();
             },
             error: function() {}
         });
     }
 
-    function editobtenerPlantacionPredio() {
+
+    function editobtenerPlantacionPredio(callback) {
         var empresa = $("#edit_id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
@@ -474,13 +473,14 @@
                         '">Número de plantas: ' + response
                         .predio_plantacion[index].num_plantas + ' | Tipo de agave: ' + response
                         .predio_plantacion[index].nombre + ' ' + response
-                        .predio_plantacion[index].cientifico + ' | Año de platanción: ' + response
+                        .predio_plantacion[index].cientifico + ' | Año de plantación: ' + response
                         .predio_plantacion[index].anio_plantacion + '</option>' + contenido;
                 }
                 if (response.predio_plantacion.length == 0) {
                     contenido = '<option value="">Sin predios registradas</option>';
                 }
                 $('#edit_id_plantacion').html(contenido);
+                if (callback) callback();
             },
             error: function() {}
         });

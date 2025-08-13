@@ -625,7 +625,7 @@ $(function () {
 
 
 ///EDITAR SOL DE GUIAS
-  $(document).on('click', '.edit-guia', function () {
+$(document).on('click', '.edit-guia', function () {
     var id_guia = $(this).data('id');
     console.log('ver id:' ,id_guia);
 
@@ -634,10 +634,13 @@ $(function () {
       $('#editt_id_guia').val(data.id_guia);
       $('#edit_id_empresa').val(data.id_empresa).trigger('change');
       $('#edit_numero_guias').val(data.numero_guias);
-      $('#edit_nombre_predio').val(data.id_predio).trigger('change'); // Cambiado a 'id_predio'
+      //$('#edit_nombre_predio').val(data.id_predio).trigger('change'); // Cambiado a 'id_predio'
+      editobtenerNombrePredio(function() {
+          $('#edit_nombre_predio').val(data.id_predio).trigger('change');
+      });
 
       // Ahora cargas las plantaciones y cuando terminen, seleccionas la correcta
-      $.ajax({
+      /*$.ajax({
         url: '/getDatos/' + data.id_empresa,
         method: 'GET',
         success: function(response) {
@@ -650,9 +653,12 @@ $(function () {
           // Seleccionar el valor que viene de la base
           $('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
         }
+      });*/
+      // Uso:
+      editobtenerPlantacionPredio(function() {
+          $('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
       });
-
-      //$('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
+      
 
       $('#edit_num_anterior').val(data.num_anterior);
       $('#edit_num_comercializadas').val(data.num_comercializadas);
@@ -681,7 +687,7 @@ $(function () {
         }
       });
     });
-  });
+});
 
   
 
@@ -732,8 +738,9 @@ $(function () {
   }).on('core.form.valid', function (e) {
     //e.preventDefault();
     var formData = new FormData(editGuiaForm);
+    var id = $('#editt_id_guia').val();
     $.ajax({
-      url: '/update/', // Actualiza con la URL correcta
+      url: '/update/' + id, // Actualiza con la URL correcta
       type: 'POST',
       data: formData,
       processData: false,
@@ -1107,8 +1114,8 @@ $(function () {
 
                   <td>
                       <button type="button" class="btn btn-info">
-                          <a href="javascript:;" style="color:#FFF"
-                              data-id="${item.id_guia}"
+                          <a data-id="${item.id_guia}" class="dropdown-item waves-effect subirPDF"
+                              style="color:#FFF"
                               data-bs-toggle="modal"
                               data-bs-target="#ModalSubirPDF">
                               <i class="ri-book-marked-line"></i> Adjuntar PDF's
@@ -1191,7 +1198,162 @@ $(function () {
 
 
 
-  
+
+
+  ///SUBIR DOCUMENTOS GUIA Y ART
+  $('#formSubirPDF').on('submit', function (e) {
+    e.preventDefault();
+    var formData = new FormData(this);
+
+    $.ajax({
+      url: '/guias/subir_documento',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.message,
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+        $('#ModalSubirPDF').modal('hide');
+        $('#formSubirPDF')[0].reset();
+        $('#docActual').empty();
+        dataTable.ajax.reload(null, false); // Si usas datatables
+      },
+      error: function (xhr) {
+
+        console.log(xhr.responseText);
+        if (xhr.status === 422) {
+          // Error de validación
+          Swal.fire({
+            icon: 'warning',
+            title: 'Error al subir',
+            text: 'El documento no debe ser mayor a 3MB',
+            //footer: `<pre>${xhr.responseText}</pre>`,
+            customClass: {
+              confirmButton: 'btn btn-warning'
+            }
+          });
+        } else {
+          // Otro tipo de error (500, 404, etc.)
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al subir el documento.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+
+      }
+    });
+
+  });
+/// OBTENER DOCUMENTO GUÍA O ART
+$(document).on('click', '.subirPDF', function () {
+    let id_guia = $(this).data('id');
+    $('#id_guia').val(id_guia);
+
+    // Para cada documento que tienes en el formulario
+    [71, 132].forEach(function (docId) {
+        let docContainer = $(`#docActual_${docId}`);
+        let delContainer = $(`#EliminarDoc_${docId}`);
+
+        docContainer.html('Cargando documento...');
+        delContainer.empty();
+
+        $.ajax({
+            url: `/guias/mostrar_documento/${id_guia}/${docId}`,
+            type: 'GET',
+            success: function (response) {
+                if (response.documento_url && response.nombre_archivo) {
+                    docContainer.html(
+                        `<p>Documento actual:
+                            <a href="${response.documento_url}" target="_blank">${response.nombre_archivo}</a>
+                        </p>`
+                    );
+                    delContainer.html(
+                        `<button type="button" 
+                                 class="btn btn-outline-danger btn-sm btnEliminarDocumento" 
+                                 data-id_guia="${id_guia}" 
+                                 data-id_documento="${docId}">
+                            <i class="ri-delete-bin-line"></i> Eliminar
+                        </button>`
+                    );
+                } else {
+                    docContainer.html('<p>No hay documento cargado.</p>');
+                }
+            },
+            error: function () {
+                docContainer.html('<p class="text-danger">Error al cargar el documento.</p>');
+            }
+        });
+    });
+});
+
+/// BORRAR DOCUMENTO GUÍA O ART
+$(document).on('click', '.btnEliminarDocumento', function () {
+    let id_guia = $(this).data('id_guia');
+    let id_documento = $(this).data('id_documento');
+
+    Swal.fire({
+        title: '¿Está seguro?',
+        text: 'No podrá revertir este evento',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+        cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+        customClass: {
+            confirmButton: 'btn btn-primary me-2',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: 'DELETE',
+                url: `/guias/borrar_documento/${id_guia}/${id_documento}`,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    dataTable.draw(false);
+                    $(`#docActual_${id_documento}`).html('<p>No hay documento cargado.</p>');
+                    $(`#EliminarDoc_${id_documento}`).empty();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: response.message,
+                        customClass: {
+                            confirmButton: 'btn btn-primary'
+                        }
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: 'Error al eliminar.',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+
+
+
+
 
   //FORMATO PDF GUIAS
   $(document).on('click', '.pdfGuia', function () {

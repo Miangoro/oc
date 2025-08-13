@@ -53,8 +53,8 @@ class DirectorioGranel implements FromCollection, WithMapping, WithHeadings, Wit
             $query->where('certificados_granel.estatus', $this->filtros['estatus']);
         }
 
-        // Ordenar por empresa
-        return $query->orderBy('certificados_granel.fecha_emision', 'asc')->get();
+        // Ordenar por fecha_emision
+        return $query->orderBy('certificados_granel.fecha_emision', 'desc')->get();
     }
 
 

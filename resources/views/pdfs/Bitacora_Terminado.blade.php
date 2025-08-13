@@ -185,8 +185,8 @@
                     <td>{{ $bitacora->cantidad_botellas_cajas ?? '' }}</td> {{-- botellas_por_caja --}}
                     <td>{{ $bitacora->marca->marca ?? '----' }}</td>
                     <td>{{ $bitacora->sku ?? '----' }}</td>
-                    <td>{{ $bitacora->lote_granel ?? '----' }}</td>
-                    <td>{{ $bitacora->lote_envasado ?? '----' }}</td>
+                    <td>{{ $bitacora->granel->nombre_lote ?? '----' }}</td>
+                    <td>{{ $bitacora->envasado->nombre ?? '----' }}</td>
                     <td>{{ $bitacora->folio_fq ?? '----' }}</td> {{-- num_analisis_fq --}}
                     <td>{{ $bitacora->proforma_predio ?? '----' }}</td> {{-- num_certificado --}}
                     <td>{{ $bitacora->categorias->categoria ?? '----' }}</td> {{-- puedes mapear esto desde id_categoria si quieres mostrar nombre --}}

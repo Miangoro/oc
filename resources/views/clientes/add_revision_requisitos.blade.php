@@ -107,7 +107,7 @@
             $actividadesMostradas[] = $actividadActual;
         @endphp
         <tr>
-            <th colspan="5" class="bg-light text-dark">{{ $actividadActual }}</th>
+            <th colspan="5" class="bg-light text-dark">{{ $actividadActual ?? 'Documentación general' }}</th>
         </tr>
     @endif
 

@@ -215,7 +215,7 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
               .filter(doc => doc.url && doc.nombre)
               .map(
                 doc =>
-                  `<a href="${doc.url}" target="_blank" class="text-primary text-decoration-underline fw-bold">${doc.nombre}</a>`
+                  `<a href="${doc.url}" target="_blank" class="text-primary text-decoration-underline fw-bold">${full['folio']}</a>`
               )
               .join(', ');
           } else {
@@ -277,6 +277,9 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
         orderable: false,
         render: function (data, type, full, meta) {
           let acciones = '';
+          if (window.puedeEditarUsuario) {
+              acciones += `<a data-id="${full['id']}"  href="/add_revision_requisitos/${full['id_instalacion']}" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Requisitos a evaluar</a>`;
+            }
             if (window.puedeEditarUsuario) {
               acciones += `<a class="dropdown-item waves-effect text-info edit-record"  data-id="${full['id_instalacion']}" data-bs-toggle="modal"
             data-bs-target="#modalEditInstalacion"><i class="ri-edit-box-line ri-20px text-info"></i> Modificar</a>`;
