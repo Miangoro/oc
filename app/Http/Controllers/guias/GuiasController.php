@@ -56,25 +56,15 @@ class GuiasController  extends Controller
 
         $columns = [
             1 => 'id_guia',
-            2 => 'id_plantacion',
+            2 => 'razon_social',
             3 => 'folio',
-            4 => 'razon_social',
+            4 => 'run_folio',
             5 => 'nombre_predio',
-            6 => 'numero_plantas',
-            7 => 'numero_guias',
+            6 => 'numero_guias',
+            7 => 'numero_plantas',
             8 => 'num_anterior',
             9 => 'num_comercializadas',
             10 => 'mermas_plantas',
-            11 => 'id_art',
-            12 => 'kg_magey',
-            13 => 'no_lote_pedido',
-            14 => 'fecha_corte',
-            15 => 'observaciones',
-            16 => 'nombre_cliente',
-            17 => 'no_cliente',
-            18 => 'fecha_ingreso',
-            19 => 'domicilio',
-            20 => 'run_folio'
         ];
 
         $limit = $request->input('length');
@@ -210,7 +200,7 @@ public function destroy($id_guia)
     $guias = Guias::where('run_folio', $run_folio)->get();
 
     foreach ($guias as $guia) {
-        // Buscar solo documentos con ID 71 (guía) o 132 (resultados ART)
+        // Buscar documentos con ID 71(guía) o 132(resultados ART)
         $documentos = Documentacion_url::where('id_relacion', $guia->id_guia)
             ->whereIn('id_documento', [71, 132])
             ->get();
@@ -218,9 +208,9 @@ public function destroy($id_guia)
         foreach ($documentos as $doc) {
             //Busca el archivo fisico
             $numeroCliente = $guia->empresa->empresaNumClientes->first()?->numero_cliente;
-            $rutaArchivo = 'uploads/' . $numeroCliente . '/' . $doc->url;
+            $rutaArchivo = 'uploads/' . $numeroCliente . '/guias/' . $doc->url;
             // Eliminar archivo físico si existe
-            if ($numeroCliente && Storage::disk('public')->exists($rutaArchivo)) {
+            if ($doc->url && Storage::disk('public')->exists($rutaArchivo)) {
                 Storage::disk('public')->delete($rutaArchivo);
             }
 
@@ -261,14 +251,16 @@ public function store(Request $request)
         'no_lote_pedido' => 'nullable|string|max:255',
         'fecha_corte' => 'nullable|date',
         'observaciones' => 'nullable|string|max:2000',
-        'nombre_cliente' => 'nullable|string|max:255',
+
+
+        /*'nombre_cliente' => 'nullable|string|max:255',
         'no_cliente' => 'nullable|string|regex:/^[A-Za-z0-9\-]+$/',
         'fecha_ingreso' => 'nullable|date',
         'domicilio' => 'nullable|string|max:255',
         //documentos
         'url.*' => 'nullable|file|max:10240',
         'id_documento.*' => 'nullable|integer',
-        'nombre_documento.*' => 'nullable|string|max:255',
+        'nombre_documento.*' => 'nullable|string|max:255',*/
     ]);
 
     // Obtener el valor de plantas actuales y num_anterior
@@ -295,8 +287,8 @@ public function store(Request $request)
     $nuevoFolio = sprintf('SOL-GUIA-%06d-24', $nuevoNumero);
 
 
-    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
-    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+    /*$empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();*/
 
     // Procesar la creación de las guías
     for ($i = 0; $i < $request->input('numero_guias'); $i++) {
@@ -320,16 +312,16 @@ public function store(Request $request)
         $guia->no_lote_pedido = $request->input('no_lote_pedido');
         $guia->fecha_corte = $request->input('fecha_corte');
         $guia->observaciones = $request->input('observaciones');
-        $guia->nombre_cliente = $request->input('nombre_cliente');
+        /*$guia->nombre_cliente = $request->input('nombre_cliente');
         $guia->no_cliente = $request->input('no_cliente');
         $guia->fecha_ingreso = $request->input('fecha_ingreso');
-        $guia->domicilio = $request->input('domicilio');
+        $guia->domicilio = $request->input('domicilio');*/
 
         $guia->id_registro = $userId;//guardar quien solicita
         $guia->save();
 
         // Guardar documentos
-        if ($request->hasFile('url')) {
+        /*if ($request->hasFile('url')) {
             foreach ($request->file('url') as $index => $archivo) {
                 if ($archivo) {
                     $nombreDoc = $request->nombre_documento[$index] ?? 'Sin nombre';
@@ -345,7 +337,7 @@ public function store(Request $request)
                     $documento->save();
                 }
             }
-        }
+        }*/
     }
 
     // Actualizar la cantidad de plantas en la tabla predio_plantacion si es necesario
@@ -457,10 +449,10 @@ public function update(Request $request, $id)
 
     // Actualizar datos de la guía
     Guias::where('run_folio', $runFolio)->update([
-        'id_empresa' => $request->empresa,
-        'numero_guias' => $request->numero_guias,
-        'id_predio' => $request->predios,
-        'id_plantacion' => $request->plantacion,
+        //'id_empresa' => $request->empresa,
+        //'numero_guias' => $request->numero_guias,
+        //'id_predio' => $request->predios,
+        //'id_plantacion' => $request->plantacion,
         'num_anterior' => $request->anterior,
         'num_comercializadas' => $request->comercializadas,
         'mermas_plantas' => $request->mermas,
@@ -502,7 +494,7 @@ public function update(Request $request, $id)
             }
         }*/
     // Descontar plantas en la plantación
-    $plantacionNueva = predio_plantacion::find($request->plantacion);
+    $plantacionNueva = predio_plantacion::find($guia->id_plantacion);
     if ($plantacionNueva) {
         $plantacionNueva->num_plantas = $request->plantas;
         $plantacionNueva->save();
@@ -704,8 +696,8 @@ public function guiasTranslado($id_guia)
 
     $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', [
         'datos' => $res,
-        'razon_social' => $data->razon_social ?? '',
-        'numero_cliente' => $numero_cliente ?? '',
+        'razon_social' => $data->razon_social ?? 'No encontrado',
+        'numero_cliente' => $numero_cliente ?? 'No encontrado',
         'id_registro' => $id_registro,
         'qrCodeBase64' => $qrCodeBase64,
     ]);

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $datos[0]->folio }} Guía de traslado de agave o maguey</title>
+    <title>Guía de traslado de agave o maguey</title>
     <style>
         body {
             font-family: 'Century Gothic', sans-serif;
@@ -212,10 +212,10 @@
 
     <div class="section">
         <center>
-            <b class="tituloLetter">Folio de Guía No. : <b class="colorRed"> {{ $datos[0]->folio }}</b> No. de predio:
-                {{ $datos[0]->num_predio }} <br>
-                Nombre del predio: {{ $datos[0]->nombre_predio }} <br>
-                Nombre de la empresa/productor: {{ $razon_social }} <br>
+            <b class="tituloLetter">Folio de Guía No.: <b class="colorRed">{{ $datos[0]->folio ?? 'No encontrado' }}</b> No. de predio:
+                {{ $datos[0]->num_predio ?? 'No encontrado'}} <br>
+                Nombre del predio: {{ $datos[0]->nombre_predio ?? 'No encontrado'}}<br>
+                Nombre de la empresa/productor: {{ $razon_social}} <br>
                 No. del cliente: {{ $numero_cliente }}
                 <div style="margin-top: 3%">
                     <b class="bigLetter">Guía de traslado de maguey o agave</b>
@@ -225,37 +225,37 @@
     <table>
         <tr>
             <td class="leftLetter" colspan="2"> Fecha de corte:</td>
-            <td class="leftLetter" colspan="2">{{ $datos[0]->fecha_corte }}</td>
+            <td class="leftLetter" colspan="2">{{ $datos[0]->fecha_corte ?? '' }}</td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> Tipo de maguey (Tipo de agave):</td>
-            <td class="leftLetter" colspan="2"> {{ $datos[0]->nombre }} ({{ $datos[0]->cientifico }})</td>
+            <td class="leftLetter" colspan="2"> {{ $datos[0]->nombre ?? ''}} ({{ $datos[0]->cientifico ?? '' }})</td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> Edad:</td>
-            <td class="leftLetter" colspan="2">{{ $datos[0]->edad }}</td>
+            <td class="leftLetter" colspan="2">{{ $datos[0]->edad ?? ''}}</td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de lote o No. de tapada:</td>
-            <td class="leftLetter" colspan="2">{{ $datos[0]->no_lote_pedido }} </td>
+            <td class="leftLetter" colspan="2">{{ $datos[0]->no_lote_pedido ?? '' }} </td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas comercializadas:</td>
-            <td class="leftLetter" colspan="2">{{ $datos[0]->num_comercializadas }}</td>
+            <td class="leftLetter" colspan="2">{{ $datos[0]->num_comercializadas ?? '' }}</td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas anterior:</td>
-            <td class="leftLetter" colspan="2">{{ $datos[0]->num_anterior }} </td>
+            <td class="leftLetter" colspan="2">{{ $datos[0]->num_anterior ?? '' }} </td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas actual:</td>
-            <td class="leftLetter" colspan="2">{{ $datos[0]->numero_plantas }}</td>
+            <td class="leftLetter" colspan="2">{{ $datos[0]->numero_plantas ?? '' }}</td>
         </tr>
         <tr>
             <td class="leftLetter"> Kg de maguey: </td>
-            <td class="leftLetter">{{ $datos[0]->kg_maguey }}</td>
+            <td class="leftLetter">{{ $datos[0]->kg_maguey ?? '' }}</td>
             <td class="leftLetter"> %ART</td>
-            <td class="leftLetter">{{ $datos[0]->art }}</td>
+            <td class="leftLetter">{{ $datos[0]->art ?? '' }}</td>
         </tr>
     </table>
 
@@ -266,20 +266,20 @@
         <br>
         <tr>
             <td class="leftLetter" style="width: 26%;">Nombre del cliente:</td>
-            <td class="leftLetter">{{ $datos[0]->nombre_cliente }}</td>
+            <td class="leftLetter">{{ $datos[0]->nombre_cliente ?? '' }}</td>
             <td class="leftLetter" style="width: 20%;">No. de cliente:</td>
-            <td class="leftLetter">{{ $datos[0]->no_cliente }}</td>
+            <td class="leftLetter">{{ $datos[0]->no_cliente ?? '' }}</td>
         </tr>
         <tr>
             <td class="leftLetter">Fecha de ingreso a
                 fábrica:</td>
-            <td class="leftLetter"colspan="3">{{ $datos[0]->fecha_ingreso }}</td>
+            <td class="leftLetter"colspan="3">{{ $datos[0]->fecha_ingreso ?? '' }}</td>
         </tr>
         <tr>
             <td class="leftLetter">Domicilio de
                 entrega:
             </td>
-            <td class="leftLetter" colspan="3">{{ $datos[0]->domicilio }}</td>
+            <td class="leftLetter" colspan="3">{{ $datos[0]->domicilio ?? '' }}</td>
         </tr>
     </table>
 
@@ -299,7 +299,8 @@
             use App\Models\User;
             use Illuminate\Support\Facades\Storage;
 
-            $firmante = in_array($id_registro, [6, 9]) ? User::find($id_registro) : null;
+            // Buscar el usuario que registro
+            $firmante = User::find($id_registro);
             $firma = $firmante?->firma ?? null;
             $firmaPath = $firma ? 'firmas/' . $firma : null;
             $nombreFirmante = $firmante?->name ?? '';
