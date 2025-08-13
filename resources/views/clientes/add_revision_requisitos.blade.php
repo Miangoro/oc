@@ -13,7 +13,7 @@
 @endsection
 <!-- Page Scripts -->
 @section('page-script')
-    @vite(['resources/js/certificados_personal.js'])
+    @vite(['resources/js/instalaciones.js'])
 @endsection
 
 @php
@@ -39,7 +39,8 @@
             <div class="card-header bg-menu-theme text-center py-3">
                 <h5 class="mb-0 text-white">
                     Requisitos a evaluar NOM-070-SCFI-2016<br>
-                    <span class="badge bg-warning text-dark">{{ $cliente->empresaNumClientes[0]->numero_cliente ?? 'N/A' }} {{ $cliente->razon_social ?? 'N/A' }}</span>
+                    <span class="badge bg-warning text-dark">{{ $cliente->empresaNumClientes[0]->numero_cliente ?? 'N/A' }}
+                        {{ $cliente->razon_social ?? 'N/A' }}</span>
                 </h5>
             </div>
 
@@ -93,84 +94,99 @@
                             </thead>
                             <tbody>
                                 @php
-    $actividadesMostradas = [];
-@endphp
+                                    $actividadesMostradas = [];
+                                @endphp
 
-@foreach ($preguntas as $index => $pregunta)
+                                @foreach ($preguntas as $index => $pregunta)
+                                    @php
+                                        $actividadActual = $pregunta->actividad->actividad ?? 'Documentación general';
+                                    @endphp
 
-    @php
-        $actividadActual = $pregunta->actividad->actividad ?? '';
-    @endphp
+                                    @if (!in_array($actividadActual, $actividadesMostradas))
+                                        @php
+                                            $actividadesMostradas[] = $actividadActual;
+                                        @endphp
+                                       <tr style="background: linear-gradient(90deg, #004aad, #007bff); color: white; font-weight: bold; font-size: 16px;">
+    <th colspan="5" style="padding: 10px; text-align: center; border-radius: 6px 6px 0 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+        {{ $actividadActual }}
+    </th>
+</tr>
 
-    @if (!in_array($actividadActual, $actividadesMostradas))
-        @php
-            $actividadesMostradas[] = $actividadActual;
-        @endphp
-        <tr>
-            <th colspan="5" class="bg-light text-dark">{{ $actividadActual ?? 'Documentación general' }}</th>
-        </tr>
-    @endif
+                                    @endif
 
-    <tr>
-        <th>{{ $index + 1 }}</th>
-        <th>
-            {{ $pregunta->pregunta }}
-            <input value="{{ $pregunta->id_pregunta }}" type="hidden" name="id_pregunta[]">
-        </th>
+                                    <tr>
+                                        <th>{{ $index + 1 }}</th>
+                                        <th>
+                                            {{ $pregunta->pregunta }}
+                                            <input value="{{ $pregunta->id_pregunta }}" type="hidden" name="id_pregunta[]">
+                                        </th>
 
-        @if ($pregunta->documentacion?->documentacionUrls && $pregunta->id_documento != 69)
-            @php
-                $empresa = $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa;
-                $cliente = $empresa?->empresaNumClientes?->firstWhere('numero_cliente', '!=', null);
-                $documento = $datos->obtenerDocumentosClientes($pregunta->id_documento, $empresa?->id_empresa);
-            @endphp
+                                        @if ($pregunta->documentacion?->documentacionUrls && $pregunta->id_documento != 69)
+                                            @php
+                                                $empresa =
+                                                    $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa;
+                                                $cliente = $empresa?->empresaNumClientes?->firstWhere(
+                                                    'numero_cliente',
+                                                    '!=',
+                                                    null,
+                                                );
+                                                $documento = $datos->obtenerDocumentosClientes(
+                                                    $pregunta->id_documento,
+                                                    $empresa?->id_empresa,
+                                                );
+                                            @endphp
 
-            <td>
-                @if ($cliente && $documento)
-                    <a target="_blank" href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
-                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                    </a>
-                @else
-                    <span class="text-muted">Sin documento</span>
-                @endif
-            </td>
-        @elseif($pregunta->filtro == 'solicitud_exportacion')
-            <td>
-                <a target="_blank"
-                    href="/solicitud_certificado_exportacion/{{ $datos->certificado->id_certificado ?? 'N/A' }}">
-                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                </a>
-            </td>
-        @elseif($pregunta->filtro == 'domicilioEnvasado')
-            <td>
-                {{ $datos->certificado->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa ?? 'N/A' }}
-            </td>
-            <td>
-                <a target="_blank"
-                    href="/dictamen_exportacion/{{ $datos->certificado->dictamen->id_dictamen ?? 'N/A' }}">
-                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                </a>
-            </td>
-        @else
-            <td>Sin datos</td>
-        @endif
+                                            <td>
+                                                @if ($cliente && $documento)
+                                                    <a target="_blank"
+                                                        href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                @else
+                                                    <span class="text-muted">Sin documento</span>
+                                                @endif
+                                            </td>
+                                        @elseif($pregunta->filtro == 'solicitud_exportacion')
+                                            <td>
+                                                <a target="_blank"
+                                                    href="/solicitud_certificado_exportacion/{{ $datos->certificado->id_certificado ?? 'N/A' }}">
+                                                    <i
+                                                        class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>
+                                            </td>
+                                        @elseif($pregunta->filtro == 'domicilioEnvasado')
+                                            <td>
+                                                {{ $datos->certificado->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa ?? 'N/A' }}
+                                            </td>
+                                            <td>
+                                                <a target="_blank"
+                                                    href="/dictamen_exportacion/{{ $datos->certificado->dictamen->id_dictamen ?? 'N/A' }}">
+                                                    <i
+                                                        class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>
+                                            </td>
+                                        @else
+                                            <td>Sin datos</td>
+                                        @endif
 
-        <td>
-            <div class="resp">
-                <select class="form-select form-select-sm" name="respuesta[]" aria-label="Elige la respuesta">
-                    <option value="" selected disabled>Seleccione</option>
-                    <option value="C">C</option>
-                    <option value="NC">NC</option>
-                    <option value="NA">NA</option>
-                </select>
-            </div>
-        </td>
+                                        <td>
+                                            <div class="resp">
+                                                <select class="form-select form-select-sm" name="respuesta[]"
+                                                    aria-label="Elige la respuesta">
+                                                    <option value="" selected disabled>Seleccione</option>
+                                                    <option value="C">C</option>
+                                                    <option value="NC">NC</option>
+                                                    <option value="NA">NA</option>
+                                                </select>
+                                            </div>
+                                        </td>
 
-        <td>
-            <textarea name="observaciones[{{ $index }}]" rows="1" class="form-control" placeholder="Observaciones"></textarea>
-        </td>
-    </tr>
-@endforeach
+                                        <td>
+                                            <textarea name="observaciones[{{ $index }}]" rows="1" class="form-control" placeholder="Observaciones"></textarea>
+                                        </td>
+                                    </tr>
+                                @endforeach
 
 
                             </tbody>
@@ -178,13 +194,12 @@
                     </div>
                 </div>
             </div>
-        
+
 
             <div class="d-flex justify-content-center mt-3">
                 <button type="submit" class="btn btn-primary me-2 waves-effect waves-light"><i class="ri-add-line"></i>
                     Registrar revisión</button>
-                <a href="/revision/personal" class="btn btn-danger waves-effect"><i
-                        class="ri-close-line"></i>Cancelar</a>
+                <a href="/domicilios/instalaciones" class="btn btn-danger waves-effect"><i class="ri-close-line"></i>Cancelar</a>
             </div>
 
         </div>

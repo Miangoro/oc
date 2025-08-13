@@ -332,11 +332,11 @@
             <div class="authentication-inner row m-0">
                 <div class="santa"></div>
                <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center justify-content-center p-12 pb-2 min-vh-100">
-  <img style="inset-block-end: 0%" src="{{ asset('assets/img/fondo_oc_cidam.jpg') }}"
+  <img style="inset-block-end: 0%" src="{{ asset('assets/img/aviso.jpg') }}"
        class="authentication-image w-100 h-100 object-fit-cover"
        alt="mask"
-       data-app-light-img="fondo_oc_cidam.jpg"
-       data-app-dark-img="fondo_oc_cidam.jpg" />
+       data-app-light-img="aviso.jpg"
+       data-app-dark-img="aviso.jpg" />
 </div>
 
                 <div

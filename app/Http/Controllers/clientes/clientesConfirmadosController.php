@@ -691,8 +691,6 @@ public function mostrarRequisitosEvaluar($id)
 
      $id_cliente = instalaciones::find($id_instalacion)->id_empresa;
 
-        $datos = RequisitoEvaluar::where("id_cliente", $id_cliente)->first();
-        //$preguntas = preguntasRequisitosModel::with('actividad')->get();
 
         
 
@@ -703,23 +701,14 @@ public function mostrarRequisitosEvaluar($id)
     $cliente = empresa::with('empresaNumClientes', 'contacto')->find($id_cliente);
 
 $preguntas = preguntasRequisitosModel::with('actividad')
-    ->whereIn('tipo', $actividadesEmpresa)
-    ->orWhere(function($q) {
-        $q->where('tipo', 0)
-          ->select('pregunta') // Cambia por el campo
-          ->distinct();
+    ->where(function($q) use ($actividadesEmpresa) {
+        $q->whereIn('tipo', $actividadesEmpresa)
+          ->orWhere('tipo', 0);
     })
+    ->groupBy('pregunta')
     ->orderBy('tipo')
     ->get();
 
-
-
-
-
-
-  
-       
-   
 
        /* if (!empty($datos->certificado?->id_lote_granel)) {
             $doc = Documentacion_url::where('id_documento', 59)
@@ -729,9 +718,69 @@ $preguntas = preguntasRequisitosModel::with('actividad')
             $certificadoEscaneado = $doc?->url ?? '';
         }*/
 
-        return view('clientes.add_revision_requisitos', compact('datos', 'preguntas' ,'cliente'));
+        return view('clientes.add_revision_requisitos', compact( 'preguntas' ,'cliente'));
     }
 
+
+     public function registrar_revision_requisitos(Request $request)
+    {
+        try {
+            $request->validate([
+            
+                'respuesta' => 'required|array',
+                'observaciones' => 'nullable|array',
+                'id_pregunta' => 'required|array',
+            ]);
+
+          /*  $revisor = RequisitoEvaluar::where('id_revision', $request->id_revision)->first();
+            if (!$revisor) {
+                return response()->json(['message' => 'El registro no fue encontrado.'], 404);
+            }*/
+
+            // Obtener el historial de respuestas como array
+            $historialRespuestas = $revisor->respuestas ?? [];
+
+            // Asegurarse de que es un array, por si viene como JSON string
+            if (is_string($historialRespuestas)) {
+                $historialRespuestas = json_decode($historialRespuestas, true);
+            }
+
+
+
+
+            $nuevoRegistro = [];
+            $todasLasRespuestasSonC = true;
+
+            foreach ($request->respuesta as $key => $nuevaRespuesta) {
+                $nuevaObservacion = $request->observaciones[$key] ?? null;
+                $nuevaIdPregunta = $request->id_pregunta[$key] ?? null;
+
+                if ($nuevaRespuesta == 'NC') {
+                    $todasLasRespuestasSonC = false;
+                }
+
+                $nuevoRegistro[] = [ // Aquí usamos `[]` en lugar de `$key`
+                    'id_pregunta' => $nuevaIdPregunta,
+                    'respuesta' => $nuevaRespuesta,
+                    'observacion' => $nuevaObservacion,
+                ];
+            }
+
+            $revisor = new RequisitoEvaluar();
+            $revisor->fill([
+                'respuestas' => $historialRespuestas,
+                'decision' => $todasLasRespuestasSonC ? 'positiva' : 'negativa',
+            ]);
+
+            $revisor->save();
+
+            return response()->json(['message' => 'Respuestas y decisión registradas exitosamente.'], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ocurrió un error al registrar las respuestas: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 
 
 
