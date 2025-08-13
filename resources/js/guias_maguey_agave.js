@@ -41,7 +41,8 @@ if (dt_user_table.length) {
       columns: [
         // columns according to JSON
         { data: '' },
-        { data: 'id_guia' },
+        //{ data: 'id_guia' },
+        { data: 'id_predio' },
         {
           data: null, // Se usará null porque combinaremos varios valores
           render: function (data, type, row) {
@@ -53,36 +54,35 @@ if (dt_user_table.length) {
         },
         { data: 'folio' },
         { data: 'run_folio' },
-        { data: 'id_predio' },
         { data: 'numero_guias' },
         { data: 'numero_plantas' },
         { data: 'num_anterior' },
         { data: 'num_comercializadas' },
         { data: 'mermas_plantas' },
-        { data: '' },//archivos adjuntos
+        //{ data: '' },//archivos adjuntos
         { data: 'action' }
       ],
       columnDefs: [
         {
           // For Responsive
+          targets: 0,
           className: 'control',
           searchable: false,
           orderable: false,
           responsivePriority: 2,
-          targets: 0,
           render: function (data, type, full, meta) {
             return '';
           }
         },
-        {
+        /* {
           searchable: false,
           orderable: false,
           targets: 1,
           render: function (data, type, full, meta) {
             return `<span>${full.fake_id}</span>`;
           }
-        },
-        {
+        }, */
+        /*{
           targets: 11,
           render: function (data, type, full, meta) {
             let documentos = '';
@@ -107,7 +107,7 @@ if (dt_user_table.length) {
 
             return documentos;
           }
-        },
+        },*/
         {
           // Actions
           targets: -1,
@@ -570,7 +570,7 @@ $(function () {
             title: '¡Éxito!',
             text: response.success,
             customClass: {
-              confirmButton: 'btn btn-success'
+              confirmButton: 'btn btn-primary'
             }
           });
           $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');//boton deshabilitado
@@ -591,7 +591,7 @@ $(function () {
     });
 
     // Limpiar campos al cerrar el modal
-    $('#addGuias').on('hidden.bs.modal', function () {
+      $('#addGuias').on('hidden.bs.modal', function () {
       $('#id_empresa').val('').trigger('change.select2');
       $('#nombre_predio').html('').trigger('change.select2');
       $('#id_plantacion').html('').trigger('change.select2');
@@ -736,9 +736,11 @@ $(document).on('click', '.edit-guia', function () {
       autoFocus: new FormValidation.plugins.AutoFocus()
     }
   }).on('core.form.valid', function (e) {
-    //e.preventDefault();
     var formData = new FormData(editGuiaForm);
     var id = $('#editt_id_guia').val();
+      //deshabilita el boton al editar
+      const $submitBtn = $(editGuiaForm).find('button[type="submit"]');
+      $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');// Cambiar a modo cargando
     $.ajax({
       url: '/update/' + id, // Actualiza con la URL correcta
       type: 'POST',
@@ -754,9 +756,10 @@ $(document).on('click', '.edit-guia', function () {
           title: '¡Éxito!',
           text: response.success,
           customClass: {
-            confirmButton: 'btn btn-success'
+              confirmButton: 'btn btn-primary'
           }
         });
+        $submitBtn.prop('disabled', false).html('<i class="ri-pencil-fill"></i> Actualizar');//boton deshabilitado
       },
       error: function (xhr) {
         // Mostrar alerta de error
@@ -768,6 +771,7 @@ $(document).on('click', '.edit-guia', function () {
             confirmButton: 'btn btn-danger'
           }
         });
+        $submitBtn.prop('disabled', false).html('<i class="ri-pencil-fill"></i> Actualizar');//boton deshabilitado
       }
     });
 });

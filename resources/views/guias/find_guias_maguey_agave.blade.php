@@ -59,17 +59,17 @@
         <thead class="table-dark">
           <tr>
             <th></th>
-            <th>#</th>
+            {{-- <th>#</th> --}}
+            <th>Predio</th>
             <th>Cliente</th>
             <th>Folio</th>
             <th>Run Folio</th>
-            <th>Predio</th>
             <th>Cantidad guias</th>
             <th>Plantas actuales</th>
             <th>No. anterior</th>
             <th>Comercializadas</th>
             <th>No. mermas</th>
-            <th>Doc. Adjuntos</th>
+            {{-- <th>Doc. Adjuntos</th> --}}
             <th>Acciones</th>
           </tr>
         </thead>
@@ -114,8 +114,8 @@
             <div class="d-flex mt-6 justify-content-center">
                 <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
                     Registrar</button>
-                <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
-                    <i class="ri-close-line"></i> Cancelar</button>
+                <button id="btnCancelModal" type="reset" class="btn btn-secondary waves-effect waves-light" data-bs-dismiss="modal" aria-label="Close">
+                  <i class="ri-arrow-go-back-line"> </i> Regresar</button>
             </div>
 
         </form>

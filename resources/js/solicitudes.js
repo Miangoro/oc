@@ -5558,7 +5558,7 @@ $(document).on('click', '.activar-hologramas', function () {
       _token: $('meta[name="csrf-token"]').attr('content')
     },
     success: (response) => {
-      dt_instalaciones_table.draw();
+      dt_instalaciones_table.draw(false);
 
       // Opcional: actualizar el texto y data-estatus del enlace en la tabla para reflejar el cambio inmediato
       $(this).data('estatus', nuevoEstatus);
