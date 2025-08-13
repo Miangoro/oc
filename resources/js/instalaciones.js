@@ -1245,6 +1245,16 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
   });
 
 
+
+
+
+
+
+}); ///end function
+
+
+  
+'use strict';
   $(function () {
     // Configuración de AJAX para enviar el token CSRF
     $.ajaxSetup({
@@ -1254,7 +1264,7 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
     });
 
     // Inicializar FormValidation en el formulario
-    const form = document.getElementById('formulario');
+    const form = document.getElementById('formularioRequisitos');
     const fv = FormValidation.formValidation(form, {
         fields: {
             'respuesta[]': {
@@ -1318,8 +1328,3 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
 
 
 });
-
-
-
-
-}); ///end function

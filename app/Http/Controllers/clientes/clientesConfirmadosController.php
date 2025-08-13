@@ -768,7 +768,7 @@ $preguntas = preguntasRequisitosModel::with('actividad')
 
             $revisor = new RequisitoEvaluar();
             $revisor->fill([
-                'respuestas' => $historialRespuestas,
+                'respuestas' => $nuevoRegistro,
                 'decision' => $todasLasRespuestasSonC ? 'positiva' : 'negativa',
             ]);
 
