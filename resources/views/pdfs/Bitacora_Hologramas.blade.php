@@ -11,7 +11,7 @@
     table {
         width: 101%;
         border-collapse: collapse;
-        table-layout: fixed;
+        /* table-layout: fixed; */
     }
 
     th,
@@ -19,7 +19,7 @@
         border: 1px solid;
         padding: 8px;
         text-align: center;
-        font-size: 10px;
+        font-size: 14px;
         word-wrap: break-word;
         width: auto;
         height: 25px;
@@ -36,18 +36,12 @@
         width: auto;
     }
 
-    .text {
-        text-align: center;
-        margin-top: -50px;
-        font-family: 'calibri-bold';
-        font-size: 18px;
-    }
 
     tr.text-title td,
     tr.text-title th {
         padding: 2px;
         text-align: center;
-        font-size: 13px;
+        font-size: 14px;
         word-break: break-word;
         height: auto;
         width: auto;
@@ -72,58 +66,26 @@
         z-index: 1;
         /* color: #A6A6A6; */
     }
-     @page {
+
+    @page {
         margin: 150px 50px 130px 50px;
     }
 </style>
 
 <body>
 
-{{--     <table width="100%" style="border: none;">
-        <tr>
-            <td style="width: 25%; text-align: left; vertical-align: top; padding-left: 0; border:none; ">
-                <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección"
-                    style="height: 80px; padding-top: 10px;">
-            </td>
-            <td style="width: 50%; text-align: center; border:none;">
-                <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
-                    CONTROL DE HOLOGRAMAS {{ $title ? "($title)" : '' }}
-                </p>
-                 @php
-                      $razon = $empresaPadre->razon_social ?? 'Sin razón social';
-                      $numeroCliente = 'Sin número cliente';
-                      if ($empresaPadre && $empresaPadre->empresaNumClientes->isNotEmpty()) {
-                          foreach ($empresaPadre->empresaNumClientes as $cliente) {
-                              if (!empty($cliente->numero_cliente)) {
-                                  $numeroCliente = $cliente->numero_cliente;
-                                  break;
-                              }
-                          }
-                      }
-                  @endphp
-                <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
-                    <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
-                </p>
-            </td>
-            <td style="width: 25%; text-align: right; vertical-align: top; padding-right: 0; border:none;">
-                <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo OC"
-                    style="height: 100px; width:auto;">
-            </td>
-        </tr>
-    </table>
- --}}
-
     <div style="width: 100%; position: fixed; overflow: hidden; margin-top: -130px;">
         {{-- Logo Unidad de Inspección --}}
         <div style="width: 25%; float: left; text-align: left;">
-            <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Unidad de Inspección" style="height: 100px; width: auto;">
+            <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Unidad de Inspección"
+                style="height: 100px; width: auto;">
         </div>
         {{-- Título y Cliente --}}
         <div style="width: 50%; float: left; text-align: center;">
             <p style="font-size: 25px; margin: 0; font-family: 'calibri-bold';">
-                  CONTROL DE HOLOGRAMAS {{ $title ? "($title)" : '' }}
+                CONTROL DE HOLOGRAMAS {{ $title ? "($title)" : '' }}
             </p>
-           @php
+            @php
                 $razon = $empresaSeleccionada->razon_social ?? 'Sin razón social';
                 $numeroCliente = 'Sin número cliente';
 
@@ -147,24 +109,24 @@
         {{-- Limpiar floats --}}
         <div style="clear: both;"></div>
     </div>
- @php use Carbon\Carbon; @endphp
+    @php use Carbon\Carbon; @endphp
     <table>
         <tbody>
             <tr class="text-title">
-                <td rowspan="2">#</td>
+                <td rowspan="2" >#</td>
                 <td rowspan="2">FECHA</td>
                 <td rowspan="2">MARCA</td>
-                <td rowspan="2">LOTE DE ENVASADO</td>
-                <td rowspan="2">CATEGORÍA</td>
+                <td rowspan="2"style="width: 100px;">LOTE DE ENVASADO</td>
+                <td rowspan="2" style="width: 100px;">CATEGORÍA</td>
                 <td rowspan="2">CLASE</td>
-                <td rowspan="2">CAPACIDAD</td>
+                <td rowspan="2" style="width: 100px;">CAPACIDAD</td>
                 <td rowspan="2">%ALC. VOL.</td>
-                <td colspan="2">INVENTARIO INICIAL</td>
+                <td colspan="2" >INVENTARIO INICIAL</td>
                 <td colspan="2">ENTRADAS</td>
                 <td colspan="2">SALIDAS</td>
                 <td colspan="2">FINAL</td>
                 <td colspan="2">MERMAS</td>
-                <td rowspan="2">OBSERVACIONES</td>
+                <td rowspan="2" style="width: 250px;">OBSERVACIONES</td>
                 <td rowspan="2">FIRMA DE LA UI</td>
             </tr>
             <tr class="text-title">
@@ -173,16 +135,17 @@
                 <td>SERIE</td>
                 <td>NÚM. SELLOS</td>
                 <td>SERIE</td>
-                <td>NÚM. SELLOS</td>
+                <td >NÚM. SELLOS</td>
                 <td>SERIE</td>
-                <td>NÚM. SELLOS</td>
+                <td >NÚM. SELLOS</td>
                 <td>SERIE</td>
-                <td>NÚM. SELLOS</td>
+                <td style="width: 80px;">NÚM. SELLOS</td>
             </tr>
             @forelse($bitacoras as $bitacora)
                 <tr class="bitacora-row">
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $bitacora->fecha ? \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('d \d\e F \d\e Y') : '----' }}</td>
+                    <td>{{ $bitacora->fecha ? \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('d \d\e F \d\e Y') : '----' }}
+                    </td>
 
                     {{-- Marca (puedes cambiar esto por nombre de marca si hay relación) --}}
                     <td>{{ $bitacora->loteBitacora->marca->marca ?? '----' }}</td>
@@ -221,27 +184,27 @@
                     <td>{{ $bitacora->num_sellos_merma ?? '----' }}</td>
 
                     {{-- Observaciones --}}
-                    <td>{{ $bitacora->observaciones ?? '----' }}</td>
+                    <td style="width: 250px;">{{ $bitacora->observaciones ?? '----' }}</td>
 
                     {{-- Firma --}}
                     <td style="padding: 0; text-align: center;">
-                    @if ($bitacora->id_firmante != 0 && $bitacora->firmante)
-                        @php
-                            $firma = $bitacora->firmante->firma;
-                            $rutaFirma = public_path('storage/firmas/' . $firma);
-                        @endphp
+                        @if ($bitacora->id_firmante != 0 && $bitacora->firmante)
+                            @php
+                                $firma = $bitacora->firmante->firma;
+                                $rutaFirma = public_path('storage/firmas/' . $firma);
+                            @endphp
 
-                        @if (!empty($firma) && file_exists($rutaFirma))
-                            <img src="{{ $rutaFirma }}" alt="Firma" style="max-width: 100%; height: auto;">
-                            <br>
-                            <small>{{ $bitacora->firmante->name }}</small>
+                            @if (!empty($firma) && file_exists($rutaFirma))
+                                <img src="{{ $rutaFirma }}" alt="Firma" style="max-width: 100%; height: auto;">
+                                <br>
+                                <small>{{ $bitacora->firmante->name }}</small>
+                            @else
+                                <span class="text-muted">Firma no encontrada</span>
+                            @endif
                         @else
-                            <span class="text-muted">Firma no encontrada</span>
+                            <span>Sin firma</span>
                         @endif
-                    @else
-                        <span>Sin firma</span>
-                    @endif
-                </td>
+                    </td>
                 </tr>
             @empty
                 <tr>
@@ -251,14 +214,7 @@
         </tbody>
     </table>
 
-    {{-- <div class="pie">
-        <p>Página 1 de 1 <br>
-            F7.2-01-07 Bitácora para Control de Hologramas <br>
-            Ed. 0 Entrada en vigor: 21-07-2025<br>
-
-        </p>
-    </div> --}}
-      <script type="text/php">
+    <script type="text/php">
       if(isset($pdf)){
         $pdf->page_script('
         $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
