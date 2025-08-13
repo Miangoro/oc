@@ -737,15 +737,6 @@ $preguntas = preguntasRequisitosModel::with('actividad')
                 return response()->json(['message' => 'El registro no fue encontrado.'], 404);
             }*/
 
-            // Obtener el historial de respuestas como array
-            $historialRespuestas = $revisor->respuestas ?? [];
-
-            // Asegurarse de que es un array, por si viene como JSON string
-            if (is_string($historialRespuestas)) {
-                $historialRespuestas = json_decode($historialRespuestas, true);
-            }
-
-
 
 
             $nuevoRegistro = [];

@@ -12,8 +12,8 @@ class RequisitoEvaluar extends Model
     protected $table = 'requisitos_revision';
     protected $primaryKey = 'id_pregunta';
     protected $fillable = [
-        'pregunta',
-        'tipo',
+        'respuestas',
+        'decision',
       ];
 
 
