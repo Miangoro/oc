@@ -777,7 +777,7 @@ Route::middleware(['auth'])->controller(GuiasController::class)->group(function 
     //DOCUMENTOS GUIA Y ART
     Route::post('/guias/subir_documento', 'subirDocGuias')->name('guias.subir_documento');
     Route::get('/guias/mostrar_documento/{id_guia}/{id_documento}', 'mostrarDocGuias');
-    Route::delete('/guias/eliminar_documento/{id_guia}/{id_documento}', 'borrarDocGuias');
+    Route::delete('/guias/borrar_documento/{id_guia}/{id_documento}', 'borrarDocGuias');
 });
 
 //Documentacion
