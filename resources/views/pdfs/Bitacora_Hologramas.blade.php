@@ -195,7 +195,7 @@
                             @endphp
 
                             @if (!empty($firma) && file_exists($rutaFirma))
-                                <img src="{{ $rutaFirma }}" alt="Firma" style="max-width: 100%; height: auto;">
+                                <img src="{{ $rutaFirma }}" alt="Firma" style="max-width: 50%; height: auto;">
                                 <br>
                                 <small>{{ $bitacora->firmante->name }}</small>
                             @else
