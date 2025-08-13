@@ -149,10 +149,13 @@ public function info($id) {
         s.comentarios,
         e.representante,
         e.razon_social,
+        e.cp,
+        e.domicilio_fiscal,
         s.fecha_registro,
         s.info_procesos,
         e.correo,
-        e.telefono
+        e.telefono,
+        i.direccion_completa
     FROM empresa e
     LEFT JOIN solicitud_informacion s
         ON e.id_empresa = s.id_empresa
@@ -166,7 +169,10 @@ public function info($id) {
         ON n.id_norma = nc.id_norma
     LEFT JOIN empresa_actividad_cliente a
         ON a.id_empresa = e.id_empresa
+        LEFT JOIN instalaciones i
+        ON i.id_empresa = e.id_empresa
     WHERE e.id_empresa = ?
+
 ', [$id]);
 
     $pdf = Pdf::loadView('pdfs.SolicitudInfoCliente', ['datos' => $res]);
@@ -313,10 +319,24 @@ public function info($id) {
   }
 
 
-  public function pdfNOM199($id) {
+/*   public function pdfNOM199($id) {
     $pdf = Pdf::loadView('pdfs.solicitudInfoClienteNOM-199');
     return $pdf->stream('solicitud_Info_ClienteNOM-199.pdf');
-  }
+  } */
+ public function pdfNOM199($id)
+{
+    // Traer la empresa (o solicitud) con sus datos
+    $empresa = empresa::findOrFail($id);
+
+    $pdf = Pdf::loadView('pdfs.solicitudInfoClienteNOM-199', [
+        'empresa' => $empresa
+    ]);
+
+    return $pdf->stream('solicitud_Info_ClienteNOM-199.pdf');
+}
+
+
+
 
 
 

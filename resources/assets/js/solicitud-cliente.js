@@ -323,7 +323,10 @@ document.addEventListener('DOMContentLoaded', function () {
     {
       fields: {
         domicilio_fiscal: { validators: { notEmpty: { message: 'Por favor ingresa el domicilio fiscal' } } },
-        estado_fiscal: { validators: { notEmpty: { message: 'Por favor selecciona un estado' } } }
+        estado_fiscal: { validators: { notEmpty: { message: 'Por favor selecciona un estado' } } },
+        direccion_completa: { validators: { notEmpty: { message: 'Por favor ingresa el domicilio fiscal' } } },
+        id_estado: { validators: { notEmpty: { message: 'Por favor selecciona un estado' } } }
+
         // Puedes agregar más validaciones para los domicilios adicionales si son requeridos
       },
       plugins: {

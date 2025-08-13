@@ -122,8 +122,8 @@
                     <tr>
                         <td class="custom-table-cell spaced-text" colspan="2">
                             <!-- Contenido del lado derecho, segundo elemento -->
-                            <span style="margin-right: 200px">Localidad/Municipio/Ciudad/Estado:</span>
-                            <span>C.P.:</span>
+                            <span style="margin-right: 200px">Localidad/Municipio/Ciudad/Estado:  {{$datos[0]->domicilio_fiscal}}</span>
+                            <span>C.P.:  {{$datos[0]->cp ?? ''}}</span>
                         </td>
                     </tr>
                     <tr>
@@ -143,32 +143,11 @@
                     <tr>
                         <td class="custom-table-cell spaced-text" colspan="2">
                             <!-- Contenido del lado derecho, segundo elemento -->
-                            <span style="margin-right: 200px">Localidad/Municipio/Ciudad/Estado:</span>
+                            <span style="margin-right: 200px">Localidad/Municipio/Ciudad/Estado: {{$datos[0]->direccion_completa}}</span>
                             <span>C.P.:</span>
                         </td>
                     </tr>
 
-                    <tr>
-                        <td rowspan="2" class="custom-table-cell"
-                            style="vertical-align: top; border-right: 1px solid black;">
-                            <!-- Contenido del lado izquierdo -->
-                            <p style="text-align: center; font-weight: bold">Domicilio de: <br><br><br>
-                                __________________ </p>
-                        </td>
-                        <td class="custom-table-cell spaced-text" colspan="2">
-                            <!-- Contenido del lado derecho, primer elemento -->
-                            <span style="margin-right: 200px;">Calle:</span>
-                            <span style="margin-right: 30px;">Número:</span>
-                            <span style="margin-right: 20px;">Colonia:</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="custom-table-cell spaced-text" colspan="2">
-                            <!-- Contenido del lado derecho, segundo elemento -->
-                            <span style="margin-right: 200px;">Localidad/Municipio/Ciudad/Estado:</span>
-                            <span>C.P.:</span>
-                        </td>
-                    </tr>
                 </table>
             </div>
 
@@ -188,7 +167,52 @@
                 </tr>
 
             </table>
-            @php
+@php
+    $primera = $segunda = $tercera = $cuarta = '-----';
+    $norma070 = $norma251 = $norma052 = '-----';
+    $actividad1 = $actividad2 = $actividad3 = $actividad4 = $actividad5 = $actividad6 = $actividad7 = '-----';
+    $producto = [];
+    $norma = [];
+    $actividad = [];
+
+    foreach ($datos as $dato) {
+        $producto[] = (string) $dato->id_producto;
+        $norma[] = (string) $dato->id_norma;
+        $actividad[] = (string) $dato->id_actividad;
+    }
+
+    if (in_array('1', $producto)) $primera = 'X';
+    if (in_array('2', $producto)) $segunda = 'X';
+    if (in_array('3', $producto)) $tercera = 'X';
+    if (in_array('4', $producto)) $cuarta = 'X';
+
+    if (in_array('1', $norma)) $norma070 = 'X';
+    if (in_array('2', $norma)) $norma251 = 'X';
+    if (in_array('3', $norma)) $norma052 = 'X';
+
+    if (in_array('1', $actividad)) $actividad1 = 'X';
+    if (in_array('2', $actividad)) $actividad2 = 'X';
+    if (in_array('3', $actividad)) $actividad3 = 'X';
+    if (in_array('4', $actividad)) $actividad4 = 'X';
+    if (in_array('5', $actividad)) $actividad5 = 'X';
+    if (in_array('6', $actividad)) $actividad6 = 'X';
+    if (in_array('7', $actividad)) $actividad7 = 'X';
+
+    // Usar último registro para las otras banderas (array normal)
+    $ultimo = end($datos);
+
+    $medios = $ultimo->medios === 'Si' ? 'X' : '';
+    $medios2 = $ultimo->medios === 'Si' ? '' : 'X';
+
+    $competencia = $ultimo->competencia === 'Si' ? 'X' : '';
+    $competencia2 = $ultimo->competencia === 'Si' ? '' : 'X';
+
+    $capacidad = $ultimo->capacidad === 'Si' ? 'X' : '';
+    $capacidad2 = $ultimo->capacidad === 'Si' ? '' : 'X';
+@endphp
+
+
+{{--             @php
 
                 $primera = '-----';
                 $segunda = '-----';
@@ -210,7 +234,8 @@
             @endphp
 
             @foreach ($datos as $dato)
-                @phparray_push($producto, $dato->id_producto);
+                @php array_push($producto, $dato->id_producto);
+
                                         array_push($norma, $dato->id_norma);
                                 array_push($actividad, $dato->id_actividad); @endphp ?>
             @endforeach
@@ -283,7 +308,7 @@
                     $capacidad = '';
                     $capacidad2 = 'X';
                 }
-            @endphp
+            @endphp --}}
 
             <table class="no-top-border">
                 <tr>

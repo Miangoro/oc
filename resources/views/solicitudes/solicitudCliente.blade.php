@@ -1055,7 +1055,7 @@
                             </div>
                         </div>
 
-                        
+
 
 {{--                         <div class="row g-3">
                             <div class="col-md-6 offset-md-6 d-flex justify-content-end align-items-center flex-column">
@@ -1109,7 +1109,7 @@
 
                             <div class="col-4">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" id="¿Cual?" name="¿Cual?"
+                                    <input type="text" class="form-control" id="¿Cual?" name="cual"
                                         autocomplete="off" placeholder="¿Cual?">
                                     <label for="¿Cual?">¿Cual?</label>
                                 </div>

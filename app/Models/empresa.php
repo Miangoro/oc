@@ -188,6 +188,10 @@ class empresa extends Model
         return $this->belongsTo(estados::class, 'estado', 'id');
     }
 
+    public function solicitud_informacion()
+    {
+        return $this->belongsTo(solicitud_informacion::class, 'id_empresa', 'id_empresa');
+    }
 
 
 

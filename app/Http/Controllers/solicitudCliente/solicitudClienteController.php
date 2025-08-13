@@ -34,7 +34,7 @@ class solicitudClienteController extends Controller
 
   public function registrar(Request $request)
   {
-   /*  dd($request->all()); */
+    dd($request->all());
     $empresa = new empresa();
     $empresa->razon_social = $request->razon_social;
     $empresa->domicilio_fiscal = $request->domicilio_fiscal;
@@ -195,6 +195,9 @@ class solicitudClienteController extends Controller
     $solicitud = new solicitud_informacion();
     $solicitud->id_empresa = $id_empresa;
     $solicitud->info_procesos = $request->info_procesos;
+    $solicitud->cual = $request->cual;
+    $solicitud->certificacion = $request->certificacion;
+    $solicitud->emiteCertificacion = $request->emiteCertificacion;
     $solicitud->save();
 
     $details = [

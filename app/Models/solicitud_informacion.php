@@ -17,4 +17,12 @@ class solicitud_informacion extends Model
         'capacidad',
         'comentarios'
       ];
+
+      // En el modelo solicitud_informacion
+    public function user()
+    {
+        return $this->belongsTo(user::class, 'id_revisor');
+        // 'id_revisor' es la columna que apunta al id del usuario
+    }
+
 }
