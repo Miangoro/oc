@@ -1327,7 +1327,7 @@ $(document).on('click', '.btnEliminarDocumento', function () {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (response) {
-                    dataTable.draw(false);
+                    dt_user.draw(false);
                     $(`#docActual_${id_documento}`).html('<p>No hay documento cargado.</p>');
                     $(`#EliminarDoc_${id_documento}`).empty();
 
@@ -1340,7 +1340,7 @@ $(document).on('click', '.btnEliminarDocumento', function () {
                         }
                     });
                 },
-                error: function () {
+                error: function (error) {
                     Swal.fire({
                         icon: 'error',
                         title: '¡Error!',
@@ -1351,6 +1351,16 @@ $(document).on('click', '.btnEliminarDocumento', function () {
                     });
                 }
             });
+
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          Swal.fire({
+            title: '¡Cancelado!',
+            text: 'La eliminación ha sido cancelada.',
+            icon: 'info',
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+          });
         }
     });
 });
@@ -1359,8 +1369,8 @@ $(document).on('click', '.btnEliminarDocumento', function () {
 
 
 
-  //FORMATO PDF GUIAS
-  $(document).on('click', '.pdfGuia', function () {
+//FORMATO PDF GUIAS
+$(document).on('click', '.pdfGuia', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
     var pdfUrl = '/guia_de_translado/' + id;
@@ -1390,13 +1400,13 @@ $(document).on('click', '.btnEliminarDocumento', function () {
       spinner.hide();
       iframe.show();
     });
-  });
+});
 
 
 
 
 
-  
+
 
 
   
