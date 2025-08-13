@@ -299,8 +299,8 @@
             use App\Models\User;
             use Illuminate\Support\Facades\Storage;
 
-            //9Eric, 6Karen
-            $firmante = in_array($id_registro, [6, 9]) ? User::find($id_registro) : null;
+            // Buscar el usuario que registro
+            $firmante = User::find($id_registro);
             $firma = $firmante?->firma ?? null;
             $firmaPath = $firma ? 'firmas/' . $firma : null;
             $nombreFirmante = $firmante?->name ?? '';
