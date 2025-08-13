@@ -34,16 +34,11 @@ class solicitudClienteController extends Controller
 
   public function registrar(Request $request)
   {
-    /* dd($request->all()); */
+   /*  dd($request->all()); */
     $empresa = new empresa();
     $empresa->razon_social = $request->razon_social;
     $empresa->domicilio_fiscal = $request->domicilio_fiscal;
     $empresa->estado = $request->estado_fiscal;
-    /*$empresa->calle = $request->calle1;
-    $empresa->num = $request->numero1;
-    $empresa->colonia = $request->colonia1;
-    $empresa->municipio = $request->municipio1;
-    $empresa->cp = $request->cp1;*/
     $empresa->regimen = $request->regimen;
     $empresa->correo = $request->correo;
     $empresa->telefono = $request->telefono;
@@ -60,9 +55,78 @@ class solicitudClienteController extends Controller
       $producto->save();
     }
 
+            // Mapeo de actividades a tipos
+            $mapaTipos = [
+                1 => 'Productora',       // Productor de Agave
+                3 => 'Productora',       // Productor de Mezcal
+                2 => 'Envasadora',       // Envasador de Mezcal
+                4 => 'Comercializadora', // Comercializador de Mezcal
+            ];
+
+            // Determinar tipos según actividades
+            $tiposInstalacion = [];
+            if (!empty($request->actividad) && is_array($request->actividad)) {
+                foreach ($request->actividad as $actividad) {
+                    if (isset($mapaTipos[$actividad]) && !in_array($mapaTipos[$actividad], $tiposInstalacion)) {
+                        $tiposInstalacion[] = $mapaTipos[$actividad];
+                    }
+                }
+            }
+
+            // Si no se detectaron tipos, poner "Sin definir"
+            if (empty($tiposInstalacion)) {
+                $tiposInstalacion[] = 'Sin definir';
+            }
+
+            // Guardar UNA sola instalación con todos los tipos
+            $instalacion = new instalaciones();
+            $instalacion->id_empresa = $id_empresa;
+            $instalacion->direccion_completa = $request->direccion_completa;
+            $instalacion->estado = $request->id_estado;
+            $instalacion->tipo = json_encode($tiposInstalacion); // ["Productora","Envasadora"]
+
+            // Opcionales
+            $instalacion->folio = $request->folio ?? null;
+            $instalacion->responsable = $request->responsable ?? null;
+            $instalacion->certificacion = $request->certificacion ?? null;
+            $instalacion->id_organismo = $request->id_organismo ?? null;
+            $instalacion->fecha_emision = $request->fecha_emision ?? null;
+            $instalacion->fecha_vigencia = $request->fecha_vigencia ?? null;
+            $instalacion->eslabon = $request->eslabon ?? null;
+
+            $instalacion->save();
+            // Guardar actividades normalmente en empresa_actividad
+            $mapaActividades = [
+                1 => 1,
+                2 => 3,
+                3 => 2,
+                4 => 4,
+                5 => 5,
+                6 => 6,
+                7 => 7,
+            ];
+
+            if (!empty($request->actividad) && is_array($request->actividad)) {
+                foreach ($request->actividad as $valorActividad) {
+                    if (isset($mapaActividades[$valorActividad])) {
+                        $id_actividad = $mapaActividades[$valorActividad];
+
+                        if (!empresa_actividad::where('id_empresa', $id_empresa)
+                                ->where('id_actividad', $id_actividad)
+                                ->exists()) {
+                            $actividad = new empresa_actividad();
+                            $actividad->id_empresa = $id_empresa;
+                            $actividad->id_actividad = $id_actividad;
+                            $actividad->save();
+                        }
+                    }
+                }
+            }
 
 
-    if (!empty($request->domicilio_productora) && !empty($request->estado_productora)) {
+
+
+    /* if (!empty($request->domicilio_productora) && !empty($request->estado_productora)) {
       $productora = new instalaciones();
       $productora->direccion_completa = $request->domicilio_productora;
       $productora->estado = $request->estado_productora;
@@ -88,15 +152,6 @@ class solicitudClienteController extends Controller
       $comercializadora->tipo = 'Comercializadora';
       $comercializadora->save();
     }
-
-
-/*     for ($i = 0; $i < count($request->actividad); $i++) {
-      $actividad = new empresa_actividad();
-      $actividad->id_actividad = $request->actividad[$i];
-      $actividad->id_empresa = $id_empresa;
-      $actividad->save();
-    } */
-
         if (!empty($request->actividad) && is_array($request->actividad)) {
         foreach ($request->actividad as $id_actividad) {
             $actividad = new empresa_actividad();
@@ -104,7 +159,7 @@ class solicitudClienteController extends Controller
             $actividad->id_empresa = $id_empresa;
             $actividad->save();
         }
-    }
+    } */
     if (is_array($request->clasificacion)) {
         foreach ($request->clasificacion as $id_clasificacion) {
 
@@ -150,8 +205,6 @@ class solicitudClienteController extends Controller
 
 
     //Mail::to($request->correo)->send(new correoEjemplo($details));
-
-
 
     return view('solicitudes.registro_exitoso');
   }

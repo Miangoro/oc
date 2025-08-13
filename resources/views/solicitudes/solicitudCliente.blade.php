@@ -1029,8 +1029,35 @@
                                 </div>
                             </div>
                         </div>
+                        <hr>
+                         <div class="content-header mb-4">
+                            <h6 class="mb-0">Domicilio de:</h6>
+                            <small>Ingrese los datos del domicilio</small>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" class="form-control" id="localidad2" name="direccion_completa"
+                                        required placeholder=" ">
+                                    <label for="localidad1">Domicilio completo</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating form-floating-outline">
+                                    <select class="form-control select2" name="id_estado" id="id_estado" required>
+                                        <option disabled selected value="">selecciona un estado</option>
+                                        @foreach ($estados as $estado)
+                                            <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label for="estado">Estado</label>
+                                </div>
+                            </div>
+                        </div>
 
-                        {{-- <div class="row g-3">
+                        
+
+{{--                         <div class="row g-3">
                             <div class="col-md-6 offset-md-6 d-flex justify-content-end align-items-center flex-column">
                                 <div class="text-light small fw-medium mb-2">Seleccionar</div>
                                 <label class="switch">
@@ -1042,8 +1069,8 @@
                                     <span class="switch-label">Usar la misma dirección fiscal</span>
                                 </label>
                             </div>
-                        </div> --}}
-                        <hr>
+                        </div>
+                        <hr> --}}
                         {{-- se generan las direcciones --}}
                         {{--  --}}
 
