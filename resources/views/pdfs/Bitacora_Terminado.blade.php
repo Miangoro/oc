@@ -11,7 +11,7 @@
     table {
         width: 101%;
         border-collapse: collapse;
-        table-layout: fixed;
+        /* table-layout: fixed; */
     }
 
     th,
@@ -19,7 +19,7 @@
         border: 1px solid;
         padding: 8px;
         text-align: center;
-        font-size: 13px;
+        font-size: 14px;
         word-wrap: break-word;
         width: auto;
         height: 25px;
@@ -47,7 +47,7 @@
     tr.text-title th {
         padding: 2px;
         text-align: center;
-        font-size: 13px;
+        font-size: 14px;
         word-break: break-word;
         height: auto;
         width: auto;
@@ -162,7 +162,7 @@
                 <td colspan="3">SALIDAS</td>
                 <td colspan="2">I. FINAL</td>
                 <td rowspan="2">MERMAS</td>
-                <td rowspan="2">OBSERVACIONES</td>
+                <td rowspan="2" style="width: 200px;">OBSERVACIONES</td>
                 <td rowspan="2">FIRMA DE LA UV</td>
             </tr>
             <tr class="text-title">
@@ -236,7 +236,7 @@
                         @endphp
 
                         @if (!empty($firma) && file_exists($rutaFirma))
-                            <img src="{{ $rutaFirma }}" alt="Firma" style="max-width: 100%; height: auto;">
+                            <img src="{{ $rutaFirma }}" alt="Firma" style="max-width: 70%; height: auto;">
                             <br>
                             <small>{{ $bitacora->firmante->name }}</small>
                         @else
