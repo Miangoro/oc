@@ -773,6 +773,11 @@ Route::middleware(['auth'])->controller(GuiasController::class)->group(function 
 
     Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado')->middleware(['auth']);//PDF
     //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
+
+    //SUBIR DOCUMENTOS GUIA Y ART
+    Route::post('/guias/subir_documento', 'subirDocGuias')->name('guias.subir_documento');
+    Route::get('/guias/mostrar_documento/{id_guia}/{id_documento}', 'mostrarDocGuias');
+    Route::delete('/guias/eliminar_documento/{id_guia}/{id_documento}', 'borrarDocGuias');
 });
 
 //Documentacion
