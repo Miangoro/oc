@@ -39,7 +39,8 @@
         }
 
         .custom-option.active {
-            border: 2px solid #8eb3ae;
+            border: 2px solid #619d85;
+             /* border: 2px solid var(--bs-success); */
             /* El color del borde usa la variable definida */
         }
     </style>

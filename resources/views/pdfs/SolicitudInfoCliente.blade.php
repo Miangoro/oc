@@ -211,8 +211,8 @@
 
             @foreach ($datos as $dato)
                 @phparray_push($producto, $dato->id_producto);
-                    array_push($norma, $dato->id_norma);
-                array_push($actividad, $dato->id_actividad); @endphp
+                                        array_push($norma, $dato->id_norma);
+                                array_push($actividad, $dato->id_actividad); @endphp ?>
             @endforeach
 
             @php
@@ -474,10 +474,16 @@
                         {{ $datos[0]->puesto_revisor }}
                     </td>
                     <th style="height: 50px;">Firma de quien <br> realiza la revisión</td>
-                    <td style="width: 140px;">
-                       @if($datos[0]->firma_revisor)
-                            <img src="{{ public_path('storage/firmas/'.$datos[0]->firma_revisor) }}"
-                                style="max-width: 140px; height: auto;">
+                    <td style="width: 140px; text-align: center;">
+                        @php
+                            $firma = $datos[0]->firma_revisor ?? null;
+                            $rutaFirma = $firma ? public_path('storage/firmas/' . $firma) : null;
+                        @endphp
+
+                        @if ($firma && file_exists($rutaFirma))
+                            <img src="{{ $rutaFirma }}" style="max-width: 140px; height: auto;">
+                        @else
+                            <span>No encontrada</span>
                         @endif
                     </td>
                 </tr>

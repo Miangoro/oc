@@ -31,19 +31,30 @@ document.addEventListener('DOMContentLoaded', function () {
     nom070Checkbox, nom251Checkbox, normexCheckbox, norm199Checkbox, otrabebida
   ];
 
-  function updateBorder(checkbox) {
-    const parentDiv = checkbox.closest('.custom-option');
-    if (checkbox.checked) {
-      parentDiv.classList.add('active');
-      // Asegúrate de que el borde sea el color del botón en el tema actual
-      parentDiv.style.borderColor = getComputedStyle(document.body).getPropertyValue('--primary-color').trim();
-    } else {
-      parentDiv.classList.remove('active');
-      parentDiv.style.borderColor = ''; // Eliminar el color de borde si no está activo
-    }
+/* function updateBorder(checkbox) {
+  const parentDiv = checkbox.closest('.custom-option');
+  if (checkbox.checked) {
+    parentDiv.classList.add('active');
+    // Borde verde Bootstrap y 2px de grosor
+    parentDiv.style.border = '2px solid ' + getComputedStyle(document.body).getPropertyValue('--primary-color').trim();
+  } else {
+    parentDiv.classList.remove('active');
+    parentDiv.style.border = ''; // Eliminar el borde si no está activo
   }
+} */
+function updateBorder(checkbox) {
+  const parentDiv = checkbox.closest('.custom-option');
+  if (checkbox.checked) {
+    parentDiv.classList.add('active');
+    parentDiv.style.border = '2.1px solid #619d85'; // Usa el color personalizado
+  } else {
+    parentDiv.classList.remove('active');
+    parentDiv.style.border = '';
+  }
+}
 
 
+// ...existing code...
   function mostrarSecciones() {
 
     console.log('mezcalCheckbox:', mezcalCheckbox.checked);
@@ -389,7 +400,7 @@ new Cleave(".phone-number-mask", {
   phoneRegionCode: "US"
 });
 
-/* document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   function toggleSection() {
     // Obtener el estado de cada checkbox
     const agaveCheckbox = document.getElementById('customRadioIcon8');
@@ -469,7 +480,7 @@ new Cleave(".phone-number-mask", {
 
   // Inicializa el estado de las secciones al cargar la página
   toggleSection();
-}); */
+});
 
 
 /* seccion del switch */
