@@ -888,11 +888,11 @@ public function asignarInspector(Request $request)
         $fecha_muestreo = Carbon::parse($datos->fecha_servicio)->translatedFormat('d/m/Y'); //formato moldeable con fecha y hora
 
         //edicion del formato
-        //if ($datos->solicitud->fecha_solicitud < '2025-08-07') {
+        /*if ($datos->solicitud->fecha_solicitud < '2025-08-07') {
             $edicion = 'pdfs.Etiqueta_agave_art'; // ed16
-        /*} else {
+        } else {*/
             $edicion = 'pdfs.Etiqueta_agave_art_ed17';
-        }*/
+        //}
         $pdf = Pdf::loadView($edicion,
             ['datos' => $datos,
             'fecha_muestreo' => $fecha_muestreo ?? 'No encontrado',

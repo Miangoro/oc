@@ -209,7 +209,7 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
 
 <p class="title">CERTIFICADO NOM</p>
 <p class="title2">COMO COMERCIALIZADOR DE MEZCAL A</p>
-<p style="font-size: 20px; text-align: center;"><b>"{{ strtoupper(str_replace(['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú'], ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'], $razon_social)) }}"</b></p>
+<p style="font-size: 20px; text-align: center;"><b>"{{ strtoupper(str_replace(['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú'], ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'], $razon_social)) }}" C.P.{{ $cp }}</b></p>
 
 
 <table id="tabla-principal">

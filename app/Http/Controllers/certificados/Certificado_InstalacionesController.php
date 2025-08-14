@@ -1019,6 +1019,7 @@ public function storeRevisor(Request $request)
             //
             'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa ?? 'No encontrado',
             'razon_social' => $empresa->razon_social ?? 'No encontrado',
+            'cp' => $empresa->cp ?? ' ',
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
             'numero_cliente' => $numero_cliente,
             'representante_legal' => $empresa->representante ?? 'No encontrado',
@@ -1079,6 +1080,7 @@ public function storeRevisor(Request $request)
             'id_sustituye' => $nombre_id_sustituye,
             //
             'razon_social' => $empresa->razon_social ?? 'No encontrado',
+            'cp' => $empresa->cp ?? ' ',
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
             'numero_cliente' => $numero_cliente,
             'representante_legal' => $empresa->representante ?? 'No encontrado',
