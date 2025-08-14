@@ -14,8 +14,8 @@
 
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            /* margin: 0;
+            padding: 0; */
         }
 
         .etiqueta-table {
