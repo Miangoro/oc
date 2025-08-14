@@ -217,12 +217,12 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
         <tr>
             <td style="border-right: none"><strong>Domicilio:</strong></td>
             <td colspan="3" style="text-align: center; vertical-align: middle; border-left: none">{{$domicilio_fiscal}} C.P.{{ $cp }}</td>
-        </tr>
-        <tr>
             <td style="border-right: none"><strong>RFC:</strong></td>
             <td style="border-left: none">{{$rfc}}</td>
             <td style="border-right: none"><strong>Tel:</strong></td>
-            <td style="border-left: none">{{$telefono}}</td>
+            <td style="border-left: none">{{$teled>
+        </tr>
+        <tr>fono}}</td>
         </tr>
         <tr>
             <td style="border-right: none"><strong>Correo electrónico:</strong></td>
