@@ -253,6 +253,7 @@ class BitacoraMezcalEnvasadorController extends Controller
                 'id' => $bitacora->id,
                 //numero de cliente
                 'razon_social' => $razonSocial,
+                'domicilio_instalacion' => $bitacora->instalacion->direccion_completa ?? '',
                 'numero_cliente' => $numeroCliente,
                 'cliente' => '<b>' . $numeroCliente . '</b><br>' . $razonSocial,
                 //

@@ -44,12 +44,13 @@ $(function () {
         { data: null }, // 0 -> # (control o vacío)
         { data: 'fake_id' }, // 1 -> ID
         { data: 'razon_social' }, // 2 -> Cliente (campo directo)
-        { data: null }, // 3 -> Datos Iniciales (fecha + lote)
-        { data: null }, // 4 -> Entradas
-        { data: null }, // 5 -> Salidas
-        { data: null }, // 6 -> Inventario Final
-        { data: 'id_firmante' }, // 7 -> Estatus (para badge)
-        { data: null } // 8 -> Acciones
+        { data: 'domicilio_instalacion' }, // 3 -> Domicilio de la inatalcion
+        { data: null }, // 4 -> Datos Iniciales (fecha + lote)
+        { data: null }, // 5 -> Entradas
+        { data: null }, // 6 -> Salidas
+        { data: null }, // 7 -> Inventario Final
+        { data: 'id_firmante' }, // 8 -> Estatus (para badge)
+        { data: null } // 9 -> Acciones
       ],
       columnDefs: [
         {
@@ -79,7 +80,7 @@ $(function () {
           }
         },
        {
-          targets: 3,
+          targets: 4,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $fecha = full['fecha'] ?? 'N/A';
@@ -123,7 +124,7 @@ $(function () {
           }
         },
         {
-          targets: 4,
+          targets: 5,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $procedencia_entrada = full['procedencia_entrada'] ?? 'N/A';
@@ -153,7 +154,7 @@ $(function () {
         },
         ////salidas
         {
-          targets: 5,
+          targets: 6,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $volumen_salidas = full['volumen_salidas'] ?? 'N/A';
@@ -177,7 +178,7 @@ $(function () {
           }
         },
         {
-          targets: 6,
+          targets: 7,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $volumen_final = full['volumen_final'] ?? 'N/A';
@@ -196,7 +197,7 @@ $(function () {
           }
         },
         {
-          targets: 7,
+          targets: 8,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $estatus = full['id_firmante'] ?? null;
@@ -214,7 +215,7 @@ $(function () {
         },
         {
           // Actions
-          targets: 8,
+          targets: 9,
           title: 'Acciones',
           searchable: false,
           orderable: false,

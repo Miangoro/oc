@@ -59,5 +59,10 @@ class BitacoraMezcal extends Model
         return $this->belongsTo(User::class, 'id_firmante');
     }
 
+    public function instalacion()
+    {
+        return $this->belongsTo(instalaciones::class, 'id_instalacion','id_instalacion');
+    }
+
 
 }
