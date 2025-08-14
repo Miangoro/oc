@@ -880,47 +880,25 @@ public function asignarInspector(Request $request)
 
 
 
+    //PDF ETIQUETAS
     public function etiqueta_muestra($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
 
         $fecha_muestreo = Carbon::parse($datos->fecha_servicio)->translatedFormat('d/m/Y'); //formato moldeable con fecha y hora
 
-        $pdf = Pdf::loadView('pdfs.Etiqueta_agave_art',
+        //edicion del formato
+        //if ($datos->solicitud->fecha_solicitud < '2025-08-07') {
+            $edicion = 'pdfs.pdfs.Etiqueta_agave_art'; // ed16
+        /*} else {
+            $edicion = 'pdfs.Etiqueta_agave_art_ed17';
+        }*/
+        $pdf = Pdf::loadView($edicion,
             ['datos' => $datos,
             'fecha_muestreo' => $fecha_muestreo ?? 'No encontrado',
             ]);
         return $pdf->stream('Etiqueta para agave (%ART).pdf');
     }
-
-
-
-    public function etiqueta_granel($id_inspeccion)
-    {
-        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
-        // Renderizar el PDF por primera vez para obtener el total de páginas
-        $pdf = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', ['datos' => $datos]);
-        $dompdf = $pdf->getDomPDF();
-        $dompdf->render();
-        // Obtener el total de páginas
-        $totalPaginas = $dompdf->get_canvas()->get_page_count();
-        // Pasar el total de páginas a la vista para la segunda renderización
-        $pdfFinal = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', [
-            'totalPaginas' => $totalPaginas,
-            'datos' => $datos
-        ]);
-
-        // Retornar el PDF final
-        return $pdfFinal->stream('Etiqueta para lotes de mezcal a granel.pdf');
-    }
-
-    public function etiqueta_barrica($id_inspeccion)
-    {
-        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
-        $pdf = Pdf::loadView('pdfs.Etiqueta_Barrica', ['datos' => $datos]);
-        return $pdf->stream('Etiqueta_ingreso_a_barrica.pdf');
-    }
-
     public function etiqueta($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
@@ -939,8 +917,34 @@ public function asignarInspector(Request $request)
         $pdf = Pdf::loadView('pdfs.Etiquetas_tapas_sellado',  ['datos' => $datos, 'lotes_procedencia' => $lotesOriginales,]);
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
+    public function etiqueta_granel($id_inspeccion)
+    {
+        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
+        // Renderizar el PDF por primera vez para obtener el total de páginas
+        $pdf = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', ['datos' => $datos]);
+        $dompdf = $pdf->getDomPDF();
+        $dompdf->render();
+        // Obtener el total de páginas
+        $totalPaginas = $dompdf->get_canvas()->get_page_count();
+        // Pasar el total de páginas a la vista para la segunda renderización
+        $pdfFinal = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', [
+            'totalPaginas' => $totalPaginas,
+            'datos' => $datos
+        ]);
 
-        public function exportar(Request $request)
+        // Retornar el PDF final
+        return $pdfFinal->stream('Etiqueta para lotes de mezcal a granel.pdf');
+    }
+    public function etiqueta_barrica($id_inspeccion)
+    {
+        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
+        $pdf = Pdf::loadView('pdfs.Etiqueta_Barrica', ['datos' => $datos]);
+        return $pdf->stream('Etiqueta_ingreso_a_barrica.pdf');
+    }
+
+
+
+    public function exportar(Request $request)
     {
         $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes', 'id_soli']);
         // Pasar los filtros a la clase InspeccionesExport
