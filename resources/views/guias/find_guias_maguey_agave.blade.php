@@ -83,7 +83,6 @@
 <div class="modal fade" id="ModalSubirPDF" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      
         <div class="modal-header bg-primary pb-4">
           <h5 class="modal-title text-white">Subir archivos PDF</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -92,7 +91,6 @@
         <div class="modal-body">
         <form id="formSubirPDF" method="POST">
             <input type="hidden" id="id_guia" name="id_guia">
-
             <div class="row">
                 <div class="form-floating form-floating-outline mb-5">
                     <input class="form-control form-control-sm" type="file" name="documento[71]">
@@ -101,7 +99,6 @@
                     <div id="docActual_71"></div>
                     <div id="EliminarDoc_71"></div>
                 </div>
-
                 <div class="form-floating form-floating-outline mb-5">
                     <input class="form-control form-control-sm" type="file" name="documento[132]">
                     <label for="Resultados ART">Adjuntar resultados de ART</label>
@@ -117,7 +114,6 @@
                 <button id="btnCancelModal" type="reset" class="btn btn-secondary waves-effect waves-light" data-bs-dismiss="modal" aria-label="Close">
                   <i class="ri-arrow-go-back-line"> </i> Regresar</button>
             </div>
-
         </form>
       </div>
     </div>
@@ -125,12 +121,9 @@
 </div>
 
 
-
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-guias-agave')
-{{-- @include('_partials/_modals/modal-edit-guias-agave') --}}
-
 
 @include('_partials/_modals/modal-ver-guias-registardas')
 <!-- /Modal -->
