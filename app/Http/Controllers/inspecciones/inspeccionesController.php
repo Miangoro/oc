@@ -889,7 +889,7 @@ public function asignarInspector(Request $request)
 
         //edicion del formato
         //if ($datos->solicitud->fecha_solicitud < '2025-08-07') {
-            $edicion = 'pdfs.pdfs.Etiqueta_agave_art'; // ed16
+            $edicion = 'pdfs.Etiqueta_agave_art'; // ed16
         /*} else {
             $edicion = 'pdfs.Etiqueta_agave_art_ed17';
         }*/
