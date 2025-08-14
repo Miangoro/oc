@@ -798,11 +798,13 @@ Route::middleware(['auth'])->controller(inspeccionesController::class)->group(fu
     Route::resource('inspecciones-list', inspeccionesController::class);
     Route::post('/asignar-inspector', 'asignarInspector');
     Route::get('/oficio_de_comision/{id_inspeccion}', 'pdf_oficio_comision')->name('oficioDeComision');
-    Route::get('/etiqueta_agave_art/{id_inspeccion}', 'etiqueta_muestra')->name('etiqueta-muestra');
     Route::get('/orden_de_servicio/{id_inspeccion}', 'pdf_orden_servicio')->name('ordenDeServicio');
-    Route::get('/etiqueta_lotes_mezcal_granel/{id_inspeccion}', 'etiqueta_granel')->name('etiquetalotegranel');
-    Route::get('/etiqueta-barrica/{id_inspeccion}',  'etiqueta_barrica')->name('etiquetabarrica');
-    Route::get('/etiquetas_tapas_sellado/{id_inspeccion}', 'etiqueta')->name('etiqueta-2401ESPTOB');
+//etiquetas
+Route::get('/etiqueta_agave_art/{id_inspeccion}', 'etiqueta_muestra')->name('etiqueta-muestra');
+Route::get('/etiquetas_tapas_sellado/{id_inspeccion}', 'etiqueta')->name('etiqueta-2401ESPTOB');
+Route::get('/etiqueta_lotes_mezcal_granel/{id_inspeccion}', 'etiqueta_granel')->name('etiquetalotegranel');
+Route::get('/etiqueta-barrica/{id_inspeccion}',  'etiqueta_barrica')->name('etiquetabarrica');
+
     Route::post('/agregar-resultados', 'agregarResultados');
     Route::get('/acta-solicitud/edit/{id_acta}', 'editActa');
     Route::get('/getInspeccion/{id_solicitud}', 'getInspeccion');

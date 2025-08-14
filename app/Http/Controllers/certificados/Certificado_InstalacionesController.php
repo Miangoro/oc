@@ -1090,7 +1090,7 @@ public function storeRevisor(Request $request)
             // Nuevos campos
             'marcas' => $datos->dictamen?->inspeccione?->solicitud?->marcas()?->pluck('marca')->implode(', ') ?? 'No encontrado',
             'domicilio_unidad' => $datos->dictamen->instalaciones->direccion_completa ?? 'No encontrado',
-            'convenio_corresponsabilidad' => $empresa->convenio_corresp ?? 'No encontrado',
+            'convenio_corresponsabilidad' => $empresa->convenio_corresp ?? 'NA',
         ];
 
         /*if ($guardar && $rutaGuardado) {
