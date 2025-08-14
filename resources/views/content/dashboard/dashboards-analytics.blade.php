@@ -205,7 +205,7 @@
                                 </div>
                                 <h4 class="mb-0">{{ $solicitudesSinActa->count() }}</h4>
                             </div>
-                            <h6 class="mb-0 fw-normal">Pendiente de subir acta</h6>
+                            <h6 class="mb-0 fw-normal">Pendiente de subir acta 2024</h6>
 
                             <hr>
                             <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
@@ -967,7 +967,7 @@
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel">Solicitudes pendientes de subir acta 2024</h5>
+                        <h5 class="modal-title" id="modalLabel">Solicitudes pendientes de subir acta</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
