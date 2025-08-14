@@ -147,6 +147,7 @@
           <th>Teléfono</th>
           <th>Contraseña</th>
           <th>Cliente</th>
+          <th>Rol</th>
           <th>Carta de asignación</th>
           <th>Acciones</th>
         </tr>

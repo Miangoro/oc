@@ -92,6 +92,8 @@ class UsuariosController extends Controller
       3 => 'email',
       4 => 'email_verified_at',
       5 => 'razon_social',
+      6 => 'rol',
+      7 => 'rol',
 
     ];
 
@@ -122,7 +124,7 @@ class UsuariosController extends Controller
     } else {
       $search = $request->input('search.value');
 
-      $users = User::with('empresa.empresaNumClientes')
+      $users = User::with('empresa.empresaNumClientes','roles')
       ->where(function ($query) use ($search) {
           $query->where('name', 'LIKE', "%{$search}%")
               ->orWhere('email', 'LIKE', "%{$search}%")
@@ -166,6 +168,7 @@ class UsuariosController extends Controller
         $nestedData['email'] = $user->email ;
         $nestedData['telefono'] = $user->telefono;
         $nestedData['password_original'] = $user->password_original ;
+        $nestedData['rol'] = $user->roles[0]->name ?? '';
         $empresa = $user->empresa;
           $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
           ? $empresa->empresaNumClientes
@@ -268,11 +271,11 @@ class UsuariosController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function edit($id): JsonResponse
-  {
-    $user = User::findOrFail($id);
+public function edit($id): JsonResponse
+{
+    $user = User::with('roles')->findOrFail($id);
     return response()->json($user);
-  }
+}
 
   /**
    * Update the specified resource in storage.

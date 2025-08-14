@@ -92,4 +92,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(solicitudHolograma::class, 'id_solicitante', 'id_empresa');
     }
+
+
 }

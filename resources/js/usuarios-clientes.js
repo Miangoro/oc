@@ -88,7 +88,9 @@ $(function () {
             `;
           }
         },
-        { data: 'id' },
+         { data: 'rol' },
+         { data: 'id' },
+        
         { data: 'action' }
       ],
       columnDefs: [
@@ -183,7 +185,7 @@ $(function () {
           },
           {
             // email verify
-            targets: 7,
+            targets: 8,
             className: 'text-center',
             render: function (data, type, full, meta) {
               var $id = full['id_empresa'];
@@ -393,7 +395,8 @@ $(function () {
       //$('#id_empresa').val(data.id_empresa).prop('selected', true).change();
       $('#id_empresa').val(data.id_empresa).trigger('change');
       $('#id_contacto').val(data.id_contacto).trigger('change');
-       $('#rol_id').val(data.rol).prop('selected', true).change();
+       $('#rol_id').val(data.roles[0].name).prop('selected', true).change();
+       
     });
   });
 
