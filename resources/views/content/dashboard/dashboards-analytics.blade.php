@@ -967,7 +967,7 @@
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel">Solicitudes pendientes de subir acta</h5>
+                        <h5 class="modal-title" id="modalLabel">Solicitudes pendientes de subir acta 2024</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
