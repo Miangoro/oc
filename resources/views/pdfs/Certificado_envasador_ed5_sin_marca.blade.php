@@ -297,7 +297,7 @@
             <strong>Domicilio Fiscal:</strong>
           </td>
           <td class="td-margins" style="text-align: left;  padding-left: 6px; padding: 5px;" colspan="3">
-            {{ $domicilio_fiscal }}
+            {{ $domicilio_fiscal }} C.P.{{ $cp }}
           </td>
         </tr>
         <tr>
