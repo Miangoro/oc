@@ -91,13 +91,13 @@ $(function () {
               '<span class="fw-bold small">Fecha: </span><span class="small">' +
               fecha +
               '</span><br>' +
-              '<span class="fw-bold small">Lote a Granel: </span><span class="small">' +
+              '<span class="fw-bold small">Granel: </span><span class="small">' +
               loteGranel +
               '</span><br>' +
-              '<span class="fw-bold small">Lote Envasado: </span><span class="small">' +
+              '<span class="fw-bold small">Envasado: </span><span class="small">' +
               loteEnvasado +
               '</span><br>' +
-              '<span class="fw-bold small">Folio FQ: </span><span class="small">' +
+              '<span class="fw-bold small">FQ: </span><span class="small">' +
               folioFq +
               '</span>'
             );
@@ -117,11 +117,11 @@ $(function () {
               '<span class="small">' +
               $procedencia_entrada +
               '</span>' +
-              '<br><span class="fw-bold small">Cajas Entrada: </span>' +
+              '<br><span class="fw-bold small">Cajas: </span>' +
               '<span class="small">' +
               $cant_cajas_entrada +
               '</span>' +
-              '<br><span class="fw-bold small">Botellas Entrada: </span>' +
+              '<br><span class="fw-bold small">Botellas: </span>' +
               '<span class="small">' +
               $cant_bot_entrada +
               '</span>'
@@ -138,15 +138,15 @@ $(function () {
             var $destino_salidas = full['destino_salidas'] ?? 'N/A';
 
             return (
-              '<span class="fw-bold small">Cajas Salidas: </span>' +
+              '<span class="fw-bold small">Cajas: </span>' +
               '<span class="small">' +
               $cant_cajas_salidas +
               '</span>' +
-              '<br><span class="fw-bold small">Botellas Salidas: </span>' +
+              '<br><span class="fw-bold small">Botellas: </span>' +
               '<span class="small">' +
               $cant_bot_salidas +
               '</span>' +
-              '<br><span class="fw-bold small">Destino de Salidas: </span>' +
+              '<br><span class="fw-bold small">Destino: </span>' +
               '<span class="small">' +
               $destino_salidas +
               '</span>'
@@ -158,17 +158,17 @@ $(function () {
           targets: 6, // Asegúrate que sigue siendo la columna correcta
           responsivePriority: 1,
           render: function (data, type, full, meta) {
-            var $cant_cajas_salidas = full['cant_cajas_salidas'] ?? 'N/A';
-            var $cant_bot_salidas = full['cant_bot_salidas'] ?? 'N/A';
+            var $cant_cajas_final = full['cant_cajas_final'] ?? 'N/A';
+            var $cant_bot_final = full['cant_bot_final'] ?? 'N/A';
 
             return (
-              '<span class="fw-bold small">Cajas Salidas: </span>' +
+              '<span class="fw-bold small">Cajas: </span>' +
               '<span class="small">' +
-              $cant_cajas_salidas +
+              $cant_cajas_final +
               '</span>' +
-              '<br><span class="fw-bold small">Botellas Salidas: </span>' +
+              '<br><span class="fw-bold small">Botellas: </span>' +
               '<span class="small">' +
-              $cant_bot_salidas +
+              $cant_bot_final +
               '</span>'
             );
           }

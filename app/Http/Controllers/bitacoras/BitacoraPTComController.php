@@ -218,8 +218,8 @@ class BitacoraPTComController extends Controller
                   // Datos generales
                 'tipo_operacion' => $bitacora->tipo_operacion ?? 'N/A',
                 'tipo' => $bitacora->tipo ?? 'N/A',
-                'lote_granel' => $bitacora->lote_granel ?? 'N/A',
-                'lote_envasado' => $bitacora->lote_envasado ?? 'N/A',
+                'lote_granel' => $bitacora->granel->nombre_lote ?? 'N/A',
+                'lote_envasado' => $bitacora->envasado->nombre ?? 'N/A',
                 'proforma_predio' => $bitacora->proforma_predio ?? 'N/A',
                 'folio_fq' => $bitacora->folio_fq ?? 'N/A',
                 'alc_vol' => $bitacora->alc_vol ?? 'N/A',
@@ -317,7 +317,7 @@ class BitacoraPTComController extends Controller
               ], 404);
           }
         $pdf = Pdf::loadView('pdfs.Bitacora_Terminado', compact('bitacoras', 'title', 'empresaSeleccionada'))
-            ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
+            ->setPaper([0, 0, 1190.55, 1791.75], 'landscape');
 
         return $pdf->stream('Bitácora de inventario de producto terminado.pdf');
     }

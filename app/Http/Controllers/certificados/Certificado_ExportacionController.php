@@ -19,6 +19,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CertificadosExport;
 use App\Exports\DirectorioExport;
 use App\Mail\CorreoCertificado;
+use App\Models\BitacoraProductoTerminado;
 use App\Models\Certificado;
 use App\Notifications\GeneralNotification;
 use Endroid\QrCode\Color\Color;
@@ -461,6 +462,67 @@ public function store(Request $request)
         $new->id_hologramas = json_encode($idHologramas);
         $new->old_hologramas = json_encode($oldHologramas);
         $new->save();
+
+
+        $dictamenExportacion = Dictamen_Exportacion::find($new->id_dictamen);
+        $datos = $dictamenExportacion->inspeccione->solicitud->caracteristicas ?? null; //Obtener Características Solicitud
+        $caracteristicas =$datos ? json_decode($datos, true) : []; //Decodificar el JSON
+        $detalles = $caracteristicas['detalles'] ?? [];
+        $botellas = $detalles[0]['cantidad_botellas'] ?? '';
+        $cajas = $detalles[0]['cantidad_cajas'] ?? '';
+        $loteIds = collect($detalles)->pluck('id_lote_envasado')->filter()->all();
+        $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get(): collect();
+
+        foreach ($lotes as $lote){
+
+            $bitacora = new BitacoraProductoTerminado();
+            $bitacora->fecha = $new->fecha_emision; 
+            $bitacora->id_empresa = $dictamenExportacion->inspeccione->solicitud->empresa->id_empresa;
+            $bitacora->tipo_operacion = 'Salidas';
+            $bitacora->lote_granel = $lote->lotesGranel->first()->id_lote_granel;
+            $bitacora->lote_envasado = $lote->id_lote_envasado;
+            $bitacora->id_categoria = $lote->lotesGranel->first()->categoria->id_categoria;
+            $bitacora->id_clase = $lote->lotesGranel->first()->clase->id_clase;
+            $bitacora->id_marca =$lote->marca->id_marca; 
+            $bitacora->proforma_predio =  $caracteristicas['no_pedido'] ?? '';
+            $bitacora->num_certificado_granel =  $lote->lotesGranel->first()?->certificadoGranel?->num_certificado ?? $lote->lotesGranel->first()->folio_certificado ?? 'No encontrado';
+            $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
+            $bitacora->folio_fq = implode(',', $folios); // Une otra vez en formato texto
+            //$bitacora->id_tipo = json_encode($request->id_tipo);
+            $bitacora->alc_vol = $lote->cont_alc_envasado;
+            $bitacora->sku = $lote->sku;
+            $bitacora->edad = $lote->lotesGranel->first()->edad;
+            $bitacora->ingredientes = $lote->lotesGranel->first()->ingredientes;
+            //Inicial
+            $bitacora->cantidad_botellas_cajas = 6;
+            $bitacora->cant_cajas_inicial = 0; //Es un dato que no se tiene en ningun lado, considerar agregarlo
+            $bitacora->cant_bot_inicial = $lote->cant_bot_restantes ?? 0;
+            //Entrada
+            $bitacora->procedencia_entrada = 'NA';
+            $bitacora->cant_cajas_entrada = 0;
+            $bitacora->cant_bot_entrada = 0;
+            //Salida
+            $bitacora->destino_salidas = $dictamenExportacion->inspeccione->solicitud->direccion_destino->pais_destino;
+            $bitacora->cant_cajas_salidas = $detalles[0]['cantidad_cajas'];
+            $bitacora->cant_bot_salidas = $detalles[0]['cantidad_botellas'];
+            //Final
+            $bitacora->cant_cajas_final = 0; //Sería la resta de cajas restantes menos $detalles[0]['cantidad_cajas'];
+            $bitacora->cant_bot_final = $lote->cant_bot_restantes - $detalles[0]['cantidad_botellas'];
+
+            $bitacora->id_solicitante = 0; //No se que es
+            $bitacora->capacidad = $lote->presentacion ?? 'No encontrado '.$lote->unidad ?? 'No encontrado';
+            $bitacora->mermas = 0;
+            $bitacora->observaciones = 'Certificado: '. $new->num_certificado.' Proforma: '.$caracteristicas['no_pedido'] ?? '';
+            //$bitacora->id_usuario_registro = auth()->id();
+            $bitacora->tipo = 3; // Fijo
+            $bitacora->save();
+
+            $loteEnvasado = lotes_envasado::find($lote->id_lote_envasado); // Busca el registro por ID
+            $loteEnvasado->cant_bot_restantes = $lote->cant_bot_restantes - $detalles[0]['cantidad_botellas'];
+            $loteEnvasado->update(); // Actualiza en DB
+
+
+        }
 
         return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {

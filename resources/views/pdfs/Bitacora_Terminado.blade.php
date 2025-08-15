@@ -14,6 +14,10 @@
         /* table-layout: fixed; */
     }
 
+     tr:nth-child(even) {
+        background-color: #f2f2f2; /* gris claro */
+    }
+
     th,
     td {
         border: 1px solid;
@@ -47,7 +51,7 @@
     tr.text-title th {
         padding: 2px;
         text-align: center;
-        font-size: 14px;
+        font-size: 10.5px;
         word-break: break-word;
         height: auto;
         width: auto;
@@ -181,14 +185,19 @@
             @foreach ($bitacoras as $bitacora)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $bitacora->fecha ? \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('d \d\e F \d\e Y') : '----'  }}</td>
+                   <td>
+                        {{ $bitacora->fecha 
+                            ? \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('d/') . ucfirst(\Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('F')) . \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('/Y') 
+                            : '----' 
+                        }}
+                    </td>
                     <td>{{ $bitacora->cantidad_botellas_cajas ?? '' }}</td> {{-- botellas_por_caja --}}
                     <td>{{ $bitacora->marca->marca ?? '----' }}</td>
                     <td>{{ $bitacora->sku ?? '----' }}</td>
                     <td>{{ $bitacora->granel->nombre_lote ?? '----' }}</td>
-                    <td>{{ $bitacora->envasado->nombre ?? '----' }}</td>
+                    <td><b>{{ $bitacora->envasado->nombre ?? '----' }}</b></td>
                     <td>{{ $bitacora->folio_fq ?? '----' }}</td> {{-- num_analisis_fq --}}
-                    <td>{{ $bitacora->proforma_predio ?? '----' }}</td> {{-- num_certificado --}}
+                    <td>{{ $bitacora->num_certificado_granel ?? '----' }}</td> {{-- num_certificado --}}
                     <td>{{ $bitacora->categorias->categoria ?? '----' }}</td> {{-- puedes mapear esto desde id_categoria si quieres mostrar nombre --}}
                     <td>{{ $bitacora->clases->clase ?? '----' }}</td> {{-- igual con id_clase --}}
                     <td>{{ $bitacora->ingredientes ?? '----' }}</td> {{-- ingrediente --}}
