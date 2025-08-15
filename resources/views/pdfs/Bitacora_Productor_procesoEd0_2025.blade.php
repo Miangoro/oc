@@ -291,9 +291,9 @@
 
                 <td>{{ $bitacora->numero_guia ?? '' }}</td>
                 @php
-                    use App\Models\Tipos;
+                    use App\Models\tipos;
 
-                    $tipos = Tipos::whereIn('id_tipo', $bitacora->id_tipo_maguey_array)->get();
+                    $tipos = tipos::whereIn('id_tipo', $bitacora->id_tipo_maguey_array)->get();
                 @endphp
 
                 <td>
