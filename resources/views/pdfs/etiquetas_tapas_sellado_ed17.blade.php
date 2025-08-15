@@ -132,21 +132,21 @@
     </tr>
 
     <tr>
-        <td rowspan="3" style="width: 4%;">
-            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 140px; height: 70px; padding-left: 15px" alt="Unidad de Inspección">
+        <td rowspan="3" style="width:12%;">
+            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 95px; height: 50px; padding-left: 10px" alt="Unidad de Inspección">
         </td>
         <td colspan="4" class="verde" style="font-size: 11px;">
             ETIQUETAS PARA MUESTRAS DE LOTE DE MEZCAL A GRANEL
         </td>
-        <td rowspan="3" style="width: 4%;">
-            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 140px; height: 70px; padding-left: 15px" alt="Unidad de Inspección">
+        <td rowspan="3" style="width:12%;">
+            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 95px; height: 50px; padding-left: 10" alt="Unidad de Inspección">
         </td>
     </tr>
 
     <tr>
-        <td class="verde">FECHA DEL SERVICIO:</td>
+        <td class="verde" style="width:15%;">FECHA DEL SERVICIO:</td>
         <td>{{ Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</td>
-        <td class="verde">NO. DE SERVICIO:</td>
+        <td class="verde" style="width:15%;">NO. DE SERVICIO:</td>
         <td>{{ $datos->num_servicio ?? 'Sin asignar' }} </td>
     </tr>
     <tr>
@@ -157,18 +157,18 @@
     </tr>
 
     <tr>
-        <td colspan="6" style="padding: 10px; border-left: 2px solid #000; border-right: 2px solid #000; border-top: none; border-bottom: none;"></td><!--LINEAAAA-->
+        <td colspan="6" style="padding: 2px; border-left: 2px solid #000; border-right: 2px solid #000; border-top: none; border-bottom: none;"></td><!--LINEAAAA-->
     </tr>
 </table>
 <table class="tabla2" style="border-collapse: collapse;" width=100%>
     <tr>
-        <td class="verde">No. DE LOTE A GRANEL:</td>
+        <td class="verde" style="width:12%;">No. DE LOTE A GRANEL:</td>
         <td>{{ $datos->solicitud->lote_granel->nombre_lote ?? '' }}</td>
-        <td rowspan="4" style="border: none;"> </td><!--ESPACIO-->
-        <td rowspan="3" class="verde">INGREDIENTES:</td>
+        <td rowspan="4" style="width: 6px; border: none;"> </td><!--ESPACIO-->
+        <td rowspan="3" class="verde" style="width:12%;">INGREDIENTES:</td>
         <td rowspan="3">{{ $datos->solicitud->lote_granel->ingredientes ?? 'N/A' }}</td>
-        <td rowspan="4" style="border: none;"> </td><!--ESPACIO-->
-        <td rowspan="2" class="verde">ESTADO DEL PRODUCTOR:</td>
+        <td rowspan="4" style="width: 6px; border: none;"> </td><!--ESPACIO-->
+        <td rowspan="2" class="verde" style="width:12%;">ESTADO DEL PRODUCTOR:</td>
         <td rowspan="2">{{ $datos->solicitud->lote_granel->estados->nombre ?? '' }}</td>
     </tr>
     <tr>
@@ -199,22 +199,23 @@
 
 
     <tr>
-        <td colspan="8" style="padding: 10px; border-left: 2px solid #000; border-right: 2px solid #000; border-top: none; border-bottom: none;"></td><!--LINEAAAA-->
+        <td colspan="8" style="padding: 2px; border-left: 2px solid #000; border-right: 2px solid #000; border-top: none; border-bottom: none;"></td><!--LINEAAAA-->
     </tr>
-
+</table>
+<table class="tabla2" style="border-collapse: collapse;" width=100%>
     <tr>
-        <td rowspan="2" class="verde">LOTES DE PROCEDENCIA:</td>
+        <td rowspan="2" class="verde" style="width:12%;">LOTES DE PROCEDENCIA:</td>
         <td rowspan="2" colspan="2">
             {{ !empty($lotes_procedencia) ? implode(', ', $lotes_procedencia) : 'N/A' }} 
         </td>
-        <td rowspan="2" class="verde">NO. DE FISICOQUÍMICO:</td>
+        <td rowspan="2" class="verde" style="width:12%;">NO. DE FISICOQUÍMICO:</td>
         <td rowspan="2">{{ $datos->solicitud->lote_granel->folio_fq ?? ''}}</td>
         <td colspan="3" class="verde">TIPO DE ANÁLISIS:</td>
     </tr>
     <tr>
-        <td class="verde">Análisis Completo</td>
-        <td class="verde">Ajuste de Grado</td>
-        <td class="verde">Otros (indique):</td>
+        <td class="verde" style="width:7%;">Análisis Completo</td>
+        <td class="verde" style="width:7%;">Ajuste de Grado</td>
+        <td class="verde" style="width:7%;">Otros (indique):</td>
     </tr>
 @php
     $tipo = $datos->solicitud->tipo_analisis;
@@ -227,16 +228,15 @@
     </tr>
 
     <tr>
-        <td colspan="8" style="padding: 10px; border-left: 2px solid #000; border-right: 2px solid #000; border-top: none; border-bottom: none;"></td><!--LINEAAAA-->
+        <td colspan="8" style="padding: 2px; border-left: 2px solid #000; border-right: 2px solid #000; border-top: none; border-bottom: none;"></td><!--LINEAAAA-->
     </tr>
 
     <tr>
-        <td colspan="2" class="verde">NOMBRE Y FIRMA DEL RESPONSABLE DE INSTALACIONES</td>
+        <td colspan="2" class="verde" style="padding: 10px;">NOMBRE Y FIRMA DEL RESPONSABLE DE INSTALACIONES</td>
         <td colspan="2">{{ $datos->solicitud->instalaciones->responsable ?? ''}}</td>
         <td colspan="2" class="verde">NOMBRE Y FIRMA DEL TÉCNICO INSPECTOR</td>
         <td colspan="2">{{ $datos->inspector->name ?? ''}}</td>
     </tr>
-
 </table>
 
 
