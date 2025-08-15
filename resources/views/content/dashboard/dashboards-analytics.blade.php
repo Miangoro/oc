@@ -205,7 +205,7 @@
                                 </div>
                                 <h4 class="mb-0">{{ $solicitudesSinActa->count() }}</h4>
                             </div>
-                            <h6 class="mb-0 fw-normal">Pendiente de subir acta 2024</h6>
+                            <h6 class="mb-0 fw-normal">Pendiente de subir acta 2023</h6>
 
                             <hr>
                             <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
