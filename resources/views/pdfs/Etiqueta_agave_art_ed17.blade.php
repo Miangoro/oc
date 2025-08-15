@@ -67,7 +67,7 @@
 </div>
 
 
-<!--etiqueta 1-->
+<!----------------------- ETIQUETA 1 ----------------------->
 <table style="border-collapse: collapse; " width=100%>
     <tr>
         <td colspan="6" class="azul" style="background-color: #0d5295;">
@@ -180,7 +180,7 @@
 </table>
 
 
-<!--etiqueta 2--><br><br><br>
+<!----------------------- ETIQUETA 2 -----------------------><br><br><br>
 <table style="border-collapse: collapse; " width=100%>
     <tr>
         <td colspan="6" class="azul" style="background-color: #0d5295;">
