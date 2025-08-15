@@ -767,7 +767,7 @@ Route::middleware(['auth'])->controller(GuiasController::class)->group(function 
     //por agrupacion
     Route::get('/edit/{id_run_folio}', [GuiasController::class, 'edit'])->name('guias.edit')->middleware(['auth']);
 
-    Route::post('/update', [GuiasController::class, 'update'])->name('guias.update')->middleware(['auth']);
+    Route::post('/update/{id}', [GuiasController::class, 'update'])->name('guias.update')->middleware(['auth']);
     
     Route::get('/editGuias/{run_folio}', [GuiasController::class, 'editGuias'])->middleware(['auth']);
 

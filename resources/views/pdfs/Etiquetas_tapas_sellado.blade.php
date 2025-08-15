@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Etiquetas Para Muestras</title>
+    <title>Etiqueta para tapa de la muestra</title>
     <style>
         @page {
             size: 292mm 227mm;

@@ -888,11 +888,11 @@ public function asignarInspector(Request $request)
         $fecha_muestreo = Carbon::parse($datos->fecha_servicio)->translatedFormat('d/m/Y'); //formato moldeable con fecha y hora
 
         //edicion del formato
-        //if ($datos->solicitud->fecha_solicitud < '2025-08-07') {
-            $edicion = 'pdfs.Etiqueta_agave_art'; // ed16
-        /*} else {
-            $edicion = 'pdfs.Etiqueta_agave_art_ed17';
-        }*/
+        if ($datos->solicitud->fecha_solicitud < '2020-08-07') {
+            $edicion = 'pdfs.etiqueta_agave_art'; // ed16
+        } else {
+            $edicion = 'pdfs.etiqueta_agave_art_ed17';
+        }
         $pdf = Pdf::loadView($edicion,
             ['datos' => $datos,
             'fecha_muestreo' => $fecha_muestreo ?? 'No encontrado',
@@ -913,8 +913,14 @@ public function asignarInspector(Request $request)
                         ->toArray();
                 }
           }
-
-        $pdf = Pdf::loadView('pdfs.Etiquetas_tapas_sellado',  ['datos' => $datos, 'lotes_procedencia' => $lotesOriginales,]);
+        
+        //edicion del formato
+        if ($datos->solicitud->fecha_solicitud < '2020-08-07') {
+            $edicion = 'pdfs.etiquetas_tapas_sellado'; // ed16
+        } else {
+            $edicion = 'pdfs.etiquetas_tapas_sellado_ed17';
+        }
+        $pdf = Pdf::loadView($edicion,  ['datos' => $datos, 'lotes_procedencia' => $lotesOriginales,]);
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
     public function etiqueta_granel($id_inspeccion)
