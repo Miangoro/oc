@@ -245,7 +245,7 @@
                         <strong>Razón social:</strong>
                     </td>
                     <td class="td-margins" style="text-align: left;  padding-left: 6px; padding: 5px;">
-                        {{ $razon_social }}
+                        {{ $razon_social }} 
                     </td>
                     <td class="td-margins"
                         style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;"><strong>No. de
@@ -274,7 +274,7 @@
                         <strong>Domicilio Fiscal:</strong>
                     </td>
                     <td class="td-margins" style="text-align: left;  padding-left: 6px; padding: 5px;" colspan="3">
-                        {{ $domicilio_fiscal }}
+                        {{ $domicilio_fiscal }} C.P.{{ $cp }}
                     </td>
                 </tr>
                 <tr>

@@ -946,6 +946,7 @@ public function storeRevisor(Request $request)
             ///
             'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa ?? 'No encontrado',
             'razon_social' => $empresa->razon_social ?? 'No encontrado',
+            'cp' => $empresa->cp ?? '',
             'maestro_mezcalero' => is_null($datos->maestro_mezcalero)
                 ? '---------------------------------------------------------------------------------------------------------------------'
                 : (trim($datos->maestro_mezcalero) === ''
@@ -1019,6 +1020,7 @@ public function storeRevisor(Request $request)
             //
             'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa ?? 'No encontrado',
             'razon_social' => $empresa->razon_social ?? 'No encontrado',
+            'cp' => $empresa->cp ?? ' ',
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
             'numero_cliente' => $numero_cliente,
             'representante_legal' => $empresa->representante ?? 'No encontrado',
@@ -1036,7 +1038,7 @@ public function storeRevisor(Request $request)
             return $rutaGuardado;
         }*/
          if ($datos->fecha_emision >= "2025-04-01") {
-              $edicion = $conMarca ? 'pdfs.certificado_envasador_ed5' : 'pdfs.Certificado_envasador_ed5_sin_marca';
+              $edicion = $conMarca ? 'pdfs.certificado_envasador_ed5' : 'pdfs.certificado_envasador_ed5_sin_marca';
         } else {
               $edicion = $conMarca ? 'pdfs.certificado_envasador_ed4' : 'pdfs.certificado_envasador_ed4_sin_marca';
         }
@@ -1079,6 +1081,7 @@ public function storeRevisor(Request $request)
             'id_sustituye' => $nombre_id_sustituye,
             //
             'razon_social' => $empresa->razon_social ?? 'No encontrado',
+            'cp' => $empresa->cp ?? '',
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
             'numero_cliente' => $numero_cliente,
             'representante_legal' => $empresa->representante ?? 'No encontrado',
@@ -1100,7 +1103,7 @@ public function storeRevisor(Request $request)
         }*/
 
     if ($datos->fecha_emision >= "2025-04-01") {
-        $edicion = $conMarca ? 'pdfs.certificado_comercializador_ed6' : 'pdfs.Certificado_comercializador_ed6_sin_marca';
+        $edicion = $conMarca ? 'pdfs.certificado_comercializador_ed6' : 'pdfs.certificado_comercializador_ed6_sin_marca';
     } else {
         $edicion = $conMarca ? 'pdfs.certificado_comercializador_ed5' : 'pdfs.certificado_comercializador_ed5_sin_marca';
     }

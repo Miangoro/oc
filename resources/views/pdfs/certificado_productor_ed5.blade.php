@@ -199,7 +199,7 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
     <tbody>
         <tr>
             <td style="border-right: none"><strong>Domicilio:</strong></td>
-            <td colspan="3" style="text-align: center; vertical-align: middle; border-left: none">{{$domicilio_fiscal}}</td>
+            <td colspan="3" style="text-align: center; vertical-align: middle; border-left: none">{{$domicilio_fiscal}} C.P.{{ $cp }}</td>
         </tr>
         <tr>
             <td style="border-right: none"><strong>RFC:</strong></td>

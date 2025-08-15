@@ -5,167 +5,144 @@
     {{-- <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge"> --}}
-    <title>Etiqueta para agave (%ART)</title>
+    <title>Etiquetas para muestras de agave (ART/ARD)</title>
     <style>
         @page {
             size: 292mm 227mm;
-            margin: 30px 60px 30px 60px;  /*márgenes (arriba, derecha, abajo, izquierda) */
+            margin: 2px 40px 15px 40px;  /*márgenes (arriba, derecha, abajo, izquierda) */
         }
-
         body {
-            font-family: Arial, sans-serif;
-            /* margin: 0;
-            padding: 0; */
+            font-family: sans-serif;
+            /*font-family: 'Arial Negrita', Gadget, sans-serif; /*negrita*/
+            font-size: 10px;
         }
 
-        .etiqueta-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 8px;
-        }
-
-        .etiqueta-table th,
-        .etiqueta-table td {
-            padding: 4px;
-            border: 2px solid #3C8A69;
+        /*tabla*/
+        td {
+            border: 2px solid #000000;
             text-align: center;
-            vertical-align: middle;
-            height: 17px;
-            font-size: 14px;
+            padding: 4px;
+            /* vertical-align: middle;
+            height: 17px; */
         }
-
-        .custom {
-            font-weight: bold;
-            background-color: #3C8A69;
+        .azul {
+            background-color: #3f84c7;
             color: white;
-            border-bottom: 2px solid white !important;
-        }
-
-        .customx {
             font-weight: bold;
-            background-color: #3C8A69;
-            color: white;
         }
 
-        .custom-title {
-            font-size: 23px !important;
-            font-weight: bold;
-            background-color: #3C8A69;
-            color: white;
-            border-bottom: 2px solid white !important;
-        }
-
-        .logo-small {
-            width: 170px;
-            height: auto;
-        }
-
-        .logo-smallx {
-            width: 200px;
-            height: auto;
-        }
-
-        .footer-bar {
+        .footer {
+            /* border: 2px solid blue; */
             position: fixed;
-            bottom: -55px;
-            right: 10px;
-            width: calc(100% - 40px);
-            height: 45px;
-            font-size: 13px;
+            width: 100%;
+            bottom: 0;
+            height: 50px;
+            font-family: 'Lucida Sans Unicode';
+            font-size: 14px;
+            line-height: 0.8;
+        }
+        .left {
+            position: absolute;
+            left: 0;
+            text-align: center;
+        }
+        .right {
+            position: absolute;
+            right: 0px;
+            top: -25px;
             text-align: right;
-            padding: 30px 0px;
-        }
-
-        .footer-bar-left {
-            position: fixed;
-            bottom: -55px;
-            left: 10px;
-            right: 10px;
-            width: calc(100% - 20px);
-            height: 45px;
-            font-size: 14px;
-            text-align: left;
-            padding: 30px 0px;
-        }
-
-        .offset-text {
-            display: inline-block;
-            margin-left: 150px;
-        }
-
-        .image-cell {
-            width: 200px;
-            height: 120px;
-        }
-
-        .logo-small {
-            max-width: 100%;
-            max-height: 100%;
-            height: auto;
-            width: auto;
-        }
-
-        .logo-smallx {
-            max-width: 120%;
-            max-height: 100%;
-            height: auto;
-            width: auto;
         }
     </style>
 </head>
 
 <body>
 
+    <div class="footer">
+        <p class="left">
+            Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser<br>distribuido externamente sin la autorización escrita del Director Ejecutivo.
+        </p>
+        <p class="right">
+            F-UV-04-04<br>Edición 17, 07/08/2025
+        </p>
+    </div>
 
-    <table class="etiqueta-table">
-        <tbody>
+
+
+    <table style="border-collapse: collapse; " width=100%>
             <tr>
-                <td colspan="2" rowspan="3" class="border-green-custom image-cell">
-                    <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" class="logo-small">
-                </td>
-                <td colspan="4" class="custom-title">Etiqueta para agave (%ART)</td>
-                <td colspan="2" rowspan="3" class="border-green-custom image-cell">
-                    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador"
-                        class="logo-smallx">
+                <td colspan="6" class="azul" style="background-color: #0d5295;">
+                    CENTRO DE INNOVACION Y DESARROLLO AGROALIMENTARIO DE MICHOACÁN - UNIDAD DE INSPECCCION UVNOM-129
                 </td>
             </tr>
+
             <tr>
-                <td class="custom">Fecha de muestreo:</td>
+                <td rowspan="4">
+                    <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 140px; height: 70px; padding-left: 8px" alt="Unidad de Inspección">
+                </td>
+
+                <td colspan="4" class="azul" style="background-color: #0d5295; font-size: 13px;">ETIQUETAS PARA MUESTRAS DE AGAVE(%ART Y/O ARD)</td>
+                
+                <td rowspan="4">
+                    <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 140px; height: 70px; padding-left: 8px" alt="Unidad de Inspección">
+                </td>
+            </tr>
+
+            <tr>
+                <td class="azul">FECHA DEL SERVICIO:</td>
                 <td>{{ $fecha_muestreo }}</td>
-                <td class="custom">Folio / No. de servicio:</td>
+                <td class="azul">NO. DE SERVICIO:</td>
                 <td>{{ $datos->num_servicio ?? 'Sin asignar' }} </td>
             </tr>
             <tr>
-                <td class="customx">No. de lote o tapada:</td>
-                <td>{{ $datos->solicitud->lote_granel->nombre_lote ?? '' }}</td>
-                <td class="custom">Peso total del maguey:</td>
-                <td> </td>
+                <td class="azul">RAZÓN SOCIAL:</td>
+                <td colspan="3">{{ $datos->solicitud->empresa->razon_social }}</td>
             </tr>
             <tr>
-                <td colspan="2" class="custom">Razón Social / Productor:</td>
-                <td colspan="2">{{ $datos->solicitud->empresa->razon_social }}</td>
-                <td class="custom">No. de piñas anterior:</td>
-                <td colspan="3"> </td>
+                <td class="azul">DOMICILIO DEL SERVICIO:</td>
+                <td colspan="3">{{ $datos->solicitud->instalaciones->direccion_completa ?? '' }}</td>
             </tr>
+
+
             <tr>
-                <td colspan="2" rowspan="4" class="custom">Domicilio:</td>
-                <td colspan="2" rowspan="4">{{ $datos->solicitud->instalaciones->direccion_completa ?? '' }}
-                </td>
-                <td class="custom">No. de piñas comercializadas:</td>
-                <td colspan="3"> </td>
+                <td colspan="2" class="azul">MAESTRO MEZCALERO:</td>
+                <td>{{-- {{ $datos->solicitud->lote_granel->certificadoGranel?->maestro_mezcalero ?? '' }} --}}
+                    {{ $datos->solicitud?->lotesGranel?->certificadoGranel?->maestro_mezcalero ?? '' }}
+                    </td>
+                <td class="azul">DESTINO DE LA MUESTRA:</td>
+                <td colspan="2"> </td>
             </tr>
+
             <tr>
-                <td class="custom">No. de piñas actual:</td>
-                <td colspan="3"> </td>
+                <td colspan="6" style="padding: 10px"></td><!--LINEAAAA-->
             </tr>
-            <tr>
-                <td class="custom">No. de guías del maguey:</td>
-                <td colspan="3"> </td>
-            </tr>
-            <tr>
-                <td class="custom">Especie o tipo de agave:</td>
-                <td colspan="3">
-                  @if (isset($datos->solicitud->lote_granel) && $datos->solicitud->lote_granel->tipos_relacionados)
+    </table>
+
+
+    <table style="border-collapse: collapse; " width=100%>
+        <tr>
+            <td style="width: 15%"> </td>
+            <td class="azul" style="width: 20%">NO. DE GUÍA/NO. DE PREDIO:</td>
+            <td>xxx</td>
+            <td></td>
+            <td class="azul" style="width: 15%">NO. DE TAPADA:</td>
+            <td>xxx</td>
+        </tr>
+        <tr>
+            <td> </td>
+            <td class="azul">PESO DE MAGUEY (KG):</td>
+            <td> </td>
+            <td style="width:2px"> </td>
+            <td class="azul">EDAD DEL AGAVE:</td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td> </td>
+            <td class="azul">NO. DE PIÑAS COMERCIALIZADAS:</td>
+            <td> </td>
+            <td style="width:2px"> </td>
+            <td class="azul">TIPO DE AGAVE O MAGUEY:</td>
+            <td>
+                @if (isset($datos->solicitud->lote_granel) && $datos->solicitud->lote_granel->tipos_relacionados)
                     @foreach ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
                         {{ $tipo->nombre ?? '' }} (<em>{{ $tipo->cientifico ?? '' }}</em>)
                         @if (!$loop->last)
@@ -173,44 +150,38 @@
                         @endif
                     @endforeach
                 @endif
+            </td>
+        </tr>
 
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" class="custom">Maestro mezcalero:</td>
-                <td colspan="2"> 
-                    {{-- {{ $datos->solicitud->lote_granel->certificadoGranel?->maestro_mezcalero ?? '' }} --}}
-                    {{ $datos->solicitud?->lotesGranel?->certificadoGranel?->maestro_mezcalero ?? '' }}
-                </td>
-                <td class="custom">Edad del agave:</td>
-                <td colspan="3"> </td>
-            </tr>
-            <tr>
-                <td colspan="2" class="customx">Nombre y firma del responsable:</td>
-                <td colspan="2"> </td>
-                <td class="customx">Nombre y firma del inspector:</td>
-                <td colspan="3">{{ $datos->inspector->name }} </td>
-            </tr>
-        </tbody>
+        
+        <tr>
+            <td colspan="6" style="padding:10"> </td>
+        </tr>
+ 
+        <tr>
+            <td class="azul">ANÁLISIS A REALIZAR:</td>
+            <td colspan="2">Art :________   %aArd:____________ </td>
+            <td style="width:2px"> </td>
+            <td class="azul">TIPO DE LA MUESTRA:</td>
+            <td>MAGUEY CRUDO:_________     MAGUEY COCIDO:__________</td>
+        </tr>
+
+        <tr>
+            <td colspan="6" style="padding:10"> </td>
+        </tr>
+
+        <tr>
+            <td colspan="2" style="padding:10">{{ $datos->inspector->name }}</td>
+            <td colspan="2" style="width:2px; padding:10"> </td>
+            <td colspan="2" style="padding:10">{{ $datos->inspector->name }}</td>
+        </tr>
+
+        <tr>
+            <td colspan="2" class="azul">NOMBRE Y FIRMA </td>
+            <td colspan="2" style="width:2px"> </td>
+            <td colspan="2" class="azul">NOMBRE Y FIRMA</td>
+        </tr> --}}
     </table>
-
-    <br>
-
-
-
-    <div class="footer-bar">
-        <p>F-UV-04-04 <br> Edición 17, 15/07/2024</p>
-    </div>
-
-    <div class="footer-bar-left">
-        <p class="text-center vertical-center" style="bottom: 4px;">
-            Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michpacán A.C. y no
-            puede ser
-            <br>
-            <span class="offset-text">distribuido externamente sin la autorización escrita del Director
-                Ejecutivo.</span>
-        </p>
-    </div>
 
 
 

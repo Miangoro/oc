@@ -209,20 +209,20 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
 
 <p class="title">CERTIFICADO NOM</p>
 <p class="title2">COMO COMERCIALIZADOR DE MEZCAL A</p>
-<p style="font-size: 20px; text-align: center;"><b>"{{ strtoupper(str_replace(['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú'], ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'], $razon_social)) }}"</b></p>
+<p style="font-size: 20px; text-align: center;"><b>"{{ strtoupper(str_replace(['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú'], ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'], $razon_social)) }}" </b></p>
 
 
 <table id="tabla-principal">
     <tbody>
         <tr>
             <td style="border-right: none"><strong>Domicilio:</strong></td>
-            <td colspan="3" style="text-align: center; vertical-align: middle; border-left: none">{{$domicilio_fiscal}}</td>
-        </tr>
-        <tr>
+            <td colspan="3" style="text-align: center; vertical-align: middle; border-left: none">{{$domicilio_fiscal}} C.P.{{ $cp }}</td>
             <td style="border-right: none"><strong>RFC:</strong></td>
             <td style="border-left: none">{{$rfc}}</td>
             <td style="border-right: none"><strong>Tel:</strong></td>
-            <td style="border-left: none">{{$telefono}}</td>
+            <td style="border-left: none">{{$teled>
+        </tr>
+        <tr>fono}}</td>
         </tr>
         <tr>
             <td style="border-right: none"><strong>Correo electrónico:</strong></td>
