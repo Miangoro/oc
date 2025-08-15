@@ -897,6 +897,7 @@ public function asignarInspector(Request $request)
             ['datos' => $datos,
             'fecha_muestreo' => $fecha_muestreo ?? 'No encontrado',
             ]);
+
         return $pdf->stream('Etiqueta para agave (%ART).pdf');
     }
     public function etiqueta($id_inspeccion)
@@ -921,6 +922,7 @@ public function asignarInspector(Request $request)
             $edicion = 'pdfs.etiquetas_tapas_sellado_ed17';
         }
         $pdf = Pdf::loadView($edicion,  ['datos' => $datos, 'lotes_procedencia' => $lotesOriginales,]);
+
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
     public function etiqueta_granel($id_inspeccion)
@@ -932,19 +934,32 @@ public function asignarInspector(Request $request)
         $dompdf->render();
         // Obtener el total de páginas
         $totalPaginas = $dompdf->get_canvas()->get_page_count();
-        // Pasar el total de páginas a la vista para la segunda renderización
-        $pdfFinal = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', [
+        
+        //edicion del formato
+        if ($datos->solicitud->fecha_solicitud < '2020-08-07') {
+            $edicion = 'pdfs.Etiqueta_lotes_mezcal_granel'; // ed16
+        } else {
+            $edicion = 'pdfs.etiqueta_lotes_mezcal_granel_ed17';
+        }
+        $pdfFinal = Pdf::loadView($edicion, [
             'totalPaginas' => $totalPaginas,
             'datos' => $datos
         ]);
 
-        // Retornar el PDF final
         return $pdfFinal->stream('Etiqueta para lotes de mezcal a granel.pdf');
     }
     public function etiqueta_barrica($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
-        $pdf = Pdf::loadView('pdfs.Etiqueta_Barrica', ['datos' => $datos]);
+
+        //edicion del formato
+        if ($datos->solicitud->fecha_solicitud < '2020-08-07') {
+            $edicion = 'pdfs.Etiqueta_Barrica'; // ed16
+        } else {
+            $edicion = 'pdfs.Etiqueta_Barrica_ed17';
+        }
+        $pdf = Pdf::loadView($edicion, ['datos' => $datos]);
+
         return $pdf->stream('Etiqueta_ingreso_a_barrica.pdf');
     }
 
