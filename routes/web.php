@@ -804,7 +804,7 @@ Route::middleware(['auth'])->controller(inspeccionesController::class)->group(fu
 Route::get('/etiqueta_agave_art/{id_inspeccion}', 'etiqueta_muestra')->name('etiqueta-muestra');
 Route::get('/etiquetas_tapas_sellado/{id_inspeccion}', 'etiqueta')->name('etiqueta-2401ESPTOB');
 Route::get('/etiqueta_lotes_mezcal_granel/{id_inspeccion}', 'etiqueta_granel')->name('etiquetalotegranel');
-Route::get('/etiqueta-barrica/{id_inspeccion}',  'etiqueta_barrica')->name('etiquetabarrica');
+Route::get('/etiqueta-barrica/{id_inspeccion}', 'etiqueta_barrica')->name('etiquetabarrica');
 
     Route::post('/agregar-resultados', 'agregarResultados');
     Route::get('/acta-solicitud/edit/{id_acta}', 'editActa');
