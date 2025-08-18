@@ -311,18 +311,18 @@
             {
               "url": "/bitacoraProcesoElaboracion",
               "name": "Proceso de elaboración",
-              "slug": "bitacora-proceso-elaboracion"
+              "slug": "bitacora-productor-elaboracion"
             },
             {
               "url": "/bitacoraMezcalProductor",
               "name": "Graneles",
-              "slug": "bitacora-mezcal",
+              "slug": "bitacora-productor-granel",
               "can": "Visualizar bitácoras"
             },
             {
               "url": "/BitacoraProductoMaduracion",
               "name": "Maduración en barricas o vidrio",
-              "slug": "bitacora-producto-maduracion",
+              "slug": "bitacora-productor-maduracion",
               "can": "Visualizar bitácoras"
             }
           ]
@@ -335,25 +335,25 @@
             {
               "url": "/bitacoraMezcalEnvasador",
               "name": "Graneles",
-              "slug": "bitacora-mezcal-envasador",
+              "slug": "bitacora-envasador->granel",
               "can": "Visualizar bitácoras"
             },
             {
               "url": "/BitacoraProductoEtiqueta",
               "name": "Producto sin etiqueta",
-              "slug": "bitacora-producto-etiqueta",
+              "slug": "bitacora-envasador-etiqueta",
               "can": "Visualizar bitácoras"
             },
             {
               "url": "/bitacoraProductoEnvasado",
               "name": "Producto terminado",
-              "slug": "bitacora-producto-envasado",
+              "slug": "bitacora-envasador-envasado",
               "can": "Visualizar bitácoras"
             },
             {
               "url": "/bitacoraHologramasEnvasador",
               "name": "Control de hologramas",
-              "slug": "bitacora-hologramas-envasador",
+              "slug": "bitacora-envasador-hologramas",
               "can": "Visualizar bitácoras"
 
             }
@@ -367,13 +367,13 @@
             {
               "url": "/bitacoraProductoTerminado",
               "name": "Producto terminado",
-              "slug": "bitacora-producto-terminado",
+              "slug": "bitacora-comercializador-terminado",
               "can": "Visualizar bitácoras"
             },
             {
               "url": "/bitacoraHologramasCom",
               "name": "Control de hologramas",
-              "slug": "bitacora-hologramas-com",
+              "slug": "bitacora-comercializador-hologramas",
               "can": "Visualizar bitácoras"
             }
           ]

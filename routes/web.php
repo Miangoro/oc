@@ -984,7 +984,7 @@ Route::controller(CartaAsignacionController::class)->middleware(['auth'])->group
 
 // BitacoraMezcal
 Route::controller(BitacoraMezcalController::class)->middleware(['auth'])->group(function () {
-    Route::get('/bitacoraMezcalProductor', 'UserManagement')->name('bitacora-mezcal');
+    Route::get('/bitacoraMezcalProductor', 'UserManagement')->name('bitacora-productor-granel');
     Route::get('/bitacora_mezcal', 'PDFBitacoraMezcal');
     Route::get('bitacora_mezcal/{id_bitacora}/edit', 'edit');
     Route::get('bitacoraMezcal-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
@@ -996,7 +996,7 @@ Route::controller(BitacoraMezcalController::class)->middleware(['auth'])->group(
 Route::resource('/bitacoraMezcal-list', BitacoraMezcalController::class)->middleware(['auth']);
 
 Route::controller(BitacoraMezcalEnvasadorController::class)->middleware(['auth'])->group(function () {
-    Route::get('/bitacoraMezcalEnvasador', 'UserManagement')->name('bitacora-mezcal-envasador');
+    Route::get('/bitacoraMezcalEnvasador', 'UserManagement')->name('bitacora-envasador->granel');
     Route::get('/bitacora_mezcal_envasador', 'PDFBitacoraMezcal');
     Route::get('bitacora_mezcal_envasador/{id_bitacora}/edit', 'edit');
     Route::get('bitacoraMezcalEnvasador-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
@@ -1008,7 +1008,7 @@ Route::controller(BitacoraMezcalEnvasadorController::class)->middleware(['auth']
 Route::resource('/bitacoraMezcalEnvasador-list', BitacoraMezcalEnvasadorController::class)->middleware(['auth']);
 
 Route::controller(BitacoraHologramasController::class)->middleware(['auth'])->group(function () {
-    Route::get('/bitacoraHologramasEnvasador', 'UserManagement')->name('bitacora-hologramas-envasador');
+    Route::get('/bitacoraHologramasEnvasador', 'UserManagement')->name('bitacora-envasador-hologramas');
     Route::get('/bitacora_hologramas_envasador', 'PDFBitacoraHologramas');
     Route::get('bitacora_hologramas_envasador/{id_bitacora}/edit', 'edit');
     Route::get('bitacoraHologramasEnvasador-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
@@ -1019,7 +1019,7 @@ Route::controller(BitacoraHologramasController::class)->middleware(['auth'])->gr
 Route::resource('/bitacoraHologramasEnvasador-list', BitacoraHologramasController::class)->middleware(['auth']);
 
 Route::controller(BitacoraHologramasComercializadorController::class)->middleware(['auth'])->group(function () {
-    Route::get('/bitacoraHologramasCom', 'UserManagement')->name('bitacora-hologramas-com');
+    Route::get('/bitacoraHologramasCom', 'UserManagement')->name('bitacora-comercializador-hologramas');
     Route::get('/bitacora_hologramas_com', 'PDFBitacoraHologramas');
     Route::get('bitacora_hologramas_com/{id_bitacora}/edit', 'edit');
     Route::get('bitacoraHologramasCom-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
@@ -1030,7 +1030,7 @@ Route::controller(BitacoraHologramasComercializadorController::class)->middlewar
 Route::resource('/bitacoraHologramasCom-list', BitacoraHologramasComercializadorController::class)->middleware(['auth']);
 //bitacora proceso de elaboracion
 Route::controller(BitacoraProcesoElaboracionController::class)->middleware(['auth'])->group(function () {
-    Route::get('/bitacoraProcesoElaboracion', 'UserManagement')->name('bitacora-proceso-elaboracion');
+    Route::get('/bitacoraProcesoElaboracion', 'UserManagement')->name('bitacora-productor-elaboracion');
     Route::get('/bitacoraProcesoElabPDF/{id_bitacora}', 'PDFBitacoraProcesoElab');
     Route::get('bitacoraProcesoElab/{id_bitacora}/edit', 'edit');
     Route::get('bitacoraProcesoElab-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
@@ -1042,7 +1042,7 @@ Route::resource('/bitacoraProcesoElaboracion-list', BitacoraProcesoElaboracionCo
 
 
 Route::controller(BitacoraPTComController::class)->middleware(['auth'])->group(function () {
-    Route::get('/bitacoraProductoTerminado', 'UserManagement')->name('bitacora-producto-terminado');
+    Route::get('/bitacoraProductoTerminado', 'UserManagement')->name('bitacora-comercializador-terminado');
     Route::get('/bitacoraPTComerPDF', 'PDFBitacoraPTCom');
     Route::get('bitacoraPTComer/{id_bitacora}/edit', 'edit');
     Route::delete('bitacoraPTComer-delete/{id_bitacora}', 'destroy')->name('bitacora.delete');
@@ -1054,7 +1054,7 @@ Route::resource('/bitacoraProductoTerminado-list', BitacoraPTComController::clas
 
 
 Route::controller(BitacoraProductoTerminadoController::class)->middleware(['auth'])->group(function () {
-    Route::get('/bitacoraProductoEnvasado', 'UserManagement')->name('bitacora-producto-envasado');
+    Route::get('/bitacoraProductoEnvasado', 'UserManagement')->name('bitacora-envasador-envasado');
     Route::get('/bitacoraProductoEnvasadoPDF', 'PDFBitacoraProductoEnvasado');
     Route::get('bitacoraProductoEnvasado/{id_bitacora}/edit', 'edit');
     Route::delete('bitacoraProductoEnvasado-delete/{id_bitacora}', 'destroy')->name('bitacora.delete');
@@ -1066,7 +1066,7 @@ Route::resource('/bitacoraProductoEnvasado-list', BitacoraProductoTerminadoContr
 
 
 Route::controller(BitacoraProductoMaduracionController::class)->middleware(['auth'])->group(function () {
-    Route::get('/BitacoraProductoMaduracion', 'UserManagement')->name('bitacora-producto-maduracion');
+    Route::get('/BitacoraProductoMaduracion', 'UserManagement')->name('bitacora-productor-maduracion');
     Route::get('/BitacoraProductoMaduracionPDF', 'PDFProductoMaduracion');
     Route::get('bitacoraProductoMaduracion/{id_bitacora}/edit', 'edit');
     Route::delete('bitacoraProductoMaduracion-delete/{id_bitacora}', 'destroy')->name('bitacora.delete');
@@ -1077,7 +1077,7 @@ Route::controller(BitacoraProductoMaduracionController::class)->middleware(['aut
 Route::resource('/BitacoraProductoMaduracion-list', BitacoraProductoMaduracionController::class)->middleware(['auth']);
 
 Route::controller(BitacoraProductoEtiquetaController::class)->middleware(['auth'])->group(function () {
-    Route::get('/BitacoraProductoEtiqueta', 'UserManagement')->name('bitacora-producto-etiqueta');
+    Route::get('/BitacoraProductoEtiqueta', 'UserManagement')->name('bitacora-envasador-etiqueta');
     Route::get('/BitacoraProductoEtiquetaPDF', 'PDFProductoEtiqueta');
     Route::get('bitacoraProductoEtiqueta/{id_bitacora}/edit', 'edit');
     Route::delete('bitacoraProductoEtiqueta-delete/{id_bitacora}', 'destroy')->name('bitacora.delete');

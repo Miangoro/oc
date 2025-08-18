@@ -165,6 +165,9 @@ class BitacoraMezcalEnvasadorController extends Controller
                       ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
                           $sub->where('razon_social', 'LIKE', "%{$search}%");
                       })
+                       ->orWhereHas('instalacion', function ($sub) use ($search) {
+                          $sub->where('direccion_completa', 'LIKE', "%{$search}%");
+                      })
                       ->orWhereHas('loteBitacora', function ($sub) use ($search) {
                           $sub->where('nombre_lote', 'LIKE', "%{$search}%")
                               ->orWhere('folio_fq', 'LIKE', "%{$search}%")
