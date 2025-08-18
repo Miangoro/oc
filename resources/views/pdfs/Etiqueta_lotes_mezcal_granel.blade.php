@@ -146,7 +146,7 @@
             </tr>
             <tr>
                 <td class="custom-title" style="width: 120px;">Fecha:</td>
-                <td colspan="2" class="white-background-custom"><strong> {{ $datos->fecha_servicio }}</strong></td>
+                <td colspan="2" class="white-background-custom"><strong> {{ $datos->fecha_servicio ?? '' }}</strong></td>
                 <td class="custom-title">Folio / No. de servicio:</td>
                 <td colspan="2" class="white-background-custom"><strong>{{ $datos->num_servicio }}</strong></td>
             </tr>

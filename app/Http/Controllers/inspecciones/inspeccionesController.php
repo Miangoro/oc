@@ -880,7 +880,8 @@ public function asignarInspector(Request $request)
 
 
 
-    //PDF ETIQUETAS
+
+    ///PDF ETIQUETAS - MUESTRAS DE AGAVE ART
     public function etiqueta_muestra($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
@@ -900,6 +901,7 @@ public function asignarInspector(Request $request)
 
         return $pdf->stream('Etiqueta para agave (%ART).pdf');
     }
+    ///PDF ETIQUETAS - MUESTRAS Y CONTENEDORES
     public function etiqueta($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
@@ -925,6 +927,7 @@ public function asignarInspector(Request $request)
 
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
+    ///PDF ETIQUETAS - LOTES DE MEZCAL A GRANEL
     public function etiqueta_granel($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
@@ -937,7 +940,7 @@ public function asignarInspector(Request $request)
         
         //edicion del formato
         if ($datos->solicitud->fecha_solicitud < '2026-08-07') {
-            $edicion = 'pdfs.Etiqueta_lotes_mezcal_granel'; // ed16
+            $edicion = 'pdfs.etiqueta_lotes_mezcal_granel'; // ed16
         } else {
             $edicion = 'pdfs.etiqueta_lotes_mezcal_granel_ed17';
         }
@@ -948,20 +951,22 @@ public function asignarInspector(Request $request)
 
         return $pdfFinal->stream('Etiqueta para lotes de mezcal a granel.pdf');
     }
+    ///PDF ETIQUETAS - INGRESO A MADURACION
     public function etiqueta_barrica($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
 
         //edicion del formato
         if ($datos->solicitud->fecha_solicitud < '2026-08-07') {
-            $edicion = 'pdfs.Etiqueta_Barrica'; // ed16
+            $edicion = 'pdfs.etiqueta_barrica'; // ed16
         } else {
-            $edicion = 'pdfs.Etiqueta_Barrica_ed17';
+            $edicion = 'pdfs.etiqueta_barrica_ed17';
         }
         $pdf = Pdf::loadView($edicion, ['datos' => $datos]);
 
         return $pdf->stream('Etiqueta_ingreso_a_barrica.pdf');
     }
+
 
 
 
