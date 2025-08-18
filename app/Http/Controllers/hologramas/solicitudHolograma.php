@@ -129,7 +129,7 @@ class solicitudHolograma extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)
+                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->marcas->id_empresa)
                 ->whereNotNull('numero_cliente')
                 ->value('numero_cliente');
 
@@ -163,16 +163,16 @@ class solicitudHolograma extends Controller
 
                     'folio_final' => '<a target="_Blank" href="'.url('/holograma/'.$numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_final, 7, '0', STR_PAD_LEFT)).'">'.$numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_final, 7, '0', STR_PAD_LEFT).'</a>',
                     'activados' => $user->cantidadActivados($user->id_solicitud),
-                 'restantes' => number_format(
-    max(0, (
-        $user->cantidad_hologramas 
-        - $user->cantidadActivados($user->id_solicitud) 
-        - $user->cantidadMermas($user->id_solicitud)
-    )), 
-    0, 
-    '.', 
-    ','
-),
+                    'restantes' => number_format(
+                        max(0, (
+                            $user->cantidad_hologramas 
+                            - $user->cantidadActivados($user->id_solicitud) 
+                            - $user->cantidadMermas($user->id_solicitud)
+                        )), 
+                        0, 
+                        '.', 
+                        ','
+                    ),
 
                     'mermas' => $user->cantidadMermas($user->id_solicitud),
                     'razon_social' => $razonSocialFormatted, // Aquí asignamos la clave correctamente
@@ -467,7 +467,7 @@ class solicitudHolograma extends Controller
     public function ModelsSolicitudHolograma($id)
     {
         // Cargar la solicitud de holograma con la relación de la empresa
-        $datos = ModelsSolicitudHolograma::with('empresa', 'direcciones', 'user', 'empresanumcliente')->findOrFail($id);
+        $datos = ModelsSolicitudHolograma::with('empresa', 'direcciones', 'user', 'empresanumcliente','marcas')->findOrFail($id);
 
         // Pasar los datos a la vista del PDF
         $pdf = Pdf::loadView('pdfs.solicitudDeHologramas', ['datos' => $datos]);

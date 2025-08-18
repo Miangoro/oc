@@ -57,7 +57,7 @@
           <th>Id</th>
           <th>Folio</th>
           <th>Fecha</th>
-          <th>Datos del cliente</th>
+          <th>Datos del cliente/Maquilador</th>
           <th>Solicitante</th>
           <th>Marca</th>
           <th>Hologramas</th>

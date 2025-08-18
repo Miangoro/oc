@@ -21,7 +21,7 @@
                                         <option value="{{ $solicitud->id_solicitud }}">{{ $solicitud->folio }} |
                                             {{ $solicitud->marcas->marca }} |
                                             {{ number_format($solicitud->folio_inicial) }} -
-                                            {{ number_format($solicitud->folio_final) }}</option>
+                                            {{ number_format($solicitud->folio_final) }} | {{ $solicitud->tipo }} | {{ $solicitud->empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_solicitud">Solicitud de entrega</label>

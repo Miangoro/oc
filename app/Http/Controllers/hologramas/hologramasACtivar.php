@@ -123,7 +123,7 @@ class hologramasActivar extends Controller
             foreach ($datos as $dato) {
 
                 $numero_cliente = optional(
-                    $dato->solicitudHolograma->empresa->empresaNumClientes
+                    $dato->solicitudHolograma->marcas->empresa->empresaNumClientes
                         ->firstWhere('numero_cliente', '!=', null)
                 )->numero_cliente;
 

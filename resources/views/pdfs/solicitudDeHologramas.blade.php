@@ -228,9 +228,9 @@
 </tr>
 <tr>
     <td class="rightLetter negrita" >Folio inicial:</td>
-    <td class="letra-up">{{ $datos->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_inicial, 7, '0', STR_PAD_LEFT) }}</td>
+    <td class="letra-up">{{ $datos->marcas->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_inicial, 7, '0', STR_PAD_LEFT) }}</td>
     <td class="rightLetter negrita">Folio final:</td>
-    <td class="letra-up">{{ $datos->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_final, 7, '0', STR_PAD_LEFT) }}</td>
+    <td class="letra-up">{{ $datos->marcas->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_final, 7, '0', STR_PAD_LEFT) }}</td>
 </tr>
 <tr>
     <td class="rightLetter negrita" >Total de hologramas <br>
