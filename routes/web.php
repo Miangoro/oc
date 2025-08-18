@@ -230,6 +230,7 @@ use App\Http\Controllers\insertar_datos_bd_actas;
 use App\Http\Controllers\insertar_datos_bd_certificados_granel;
 use App\Http\Controllers\insertar_datos_bd_dictamenes_exportacion;
 use App\Http\Controllers\insertar_datos_bd_dictamenes_graneles;
+use App\Http\Controllers\insertar_datos_bd_guias;
 use App\Http\Controllers\insertar_datos_bd_lotes_envasado;
 use App\Http\Controllers\insertar_datos_bd_predios;
 use App\Http\Controllers\insertar_datos_bd_solicitudes_granel;
@@ -1109,7 +1110,7 @@ Route::get('/insertarDictamenesGranelesDesdeAPI', [insertar_datos_bd_dictamenes_
 Route::get('/insertarDictamenesExportacionDesdeAPI', [insertar_datos_bd_dictamenes_exportacion::class, 'insertarDictamenesExportacionDesdeAPI'])->name('insertarDictamenesExportacionDesdeAPI');
 Route::get('/insertarCertificadosDesdeAPI', [insertar_datos_bd_certificados::class, 'insertarCertificadosDesdeAPI'])->name('insertarCertificadosDesdeAPI');
 Route::get('/insertarCertificadosGranelDesdeAPI', [insertar_datos_bd_certificados_granel::class, 'insertarCertificadosGranelDesdeAPI'])->name('insertarCertificadosGranelDesdeAPI');
-Route::get('/insertarActasDesdeAPI', [insertar_datos_bd_actas::class, 'insertarActasDesdeAPI'])->name('insertarActasDesdeAPI');
+Route::get('/insertarGuiasDesdeAPI', [insertar_datos_bd_guias::class, 'insertarGuiasDesdeAPI'])->name('insertarGuiasDesdeAPI');
 Route::get('/insertarLotesEnvasadoDesdeAPI', [insertar_datos_bd_lotes_envasado::class, 'insertarLotesEnvasadoDesdeAPI'])->name('insertarLotesEnvasadoDesdeAPI');
 Route::get('/insertarPrediosDesdeAPI', [insertar_datos_bd_predios::class, 'insertarPrediosDesdeAPI'])->name('insertarPrediosDesdeAPI');
 Route::get('/insertarSolicitudesGranelDesdeAPI', [insertar_datos_bd_solicitudes_granel::class, 'insertarSolicitudesGranelDesdeAPI'])->name('insertarSolicitudesGranelDesdeAPI');
