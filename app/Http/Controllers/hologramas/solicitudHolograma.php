@@ -150,7 +150,7 @@ class solicitudHolograma extends Controller
                     'id_empresa' => $user->id_empresa,
                     'id_solicitante' => $name,
                     'id_marca' => $user->marcas->marca ?? '',
-                    'cantidad_hologramas' => $user->cantidad_hologramas,
+                    'cantidad_hologramas' => number_format($user->cantidad_hologramas, 0, '.', ','),
                     'id_direccion' => $direccion,
                     'comentarios' => $user->comentarios,
                     'tipo_pago' => $user->tipo_pago,
@@ -158,11 +158,22 @@ class solicitudHolograma extends Controller
                     'costo_envio' => $user->costo_envio,
                     'no_guia' => $user->no_guia,
                     'estatus' => $user->estatus,
+                    'tipo' => $user->tipo,
                     'folio_inicial' => '<a target="_blank" href="' . url('/holograma/'.$numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_inicial, 7, '0', STR_PAD_LEFT)) . '">' . $numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_inicial, 7, '0', STR_PAD_LEFT) . '</a>',
 
                     'folio_final' => '<a target="_Blank" href="'.url('/holograma/'.$numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_final, 7, '0', STR_PAD_LEFT)).'">'.$numero_cliente.'-'.$user->tipo.$user->marcas->folio.str_pad($user->folio_final, 7, '0', STR_PAD_LEFT).'</a>',
                     'activados' => $user->cantidadActivados($user->id_solicitud),
-                    'restantes' => max(0, ($user->cantidad_hologramas - $user->cantidadActivados($user->id_solicitud) - $user->cantidadMermas($user->id_solicitud))),
+                 'restantes' => number_format(
+    max(0, (
+        $user->cantidad_hologramas 
+        - $user->cantidadActivados($user->id_solicitud) 
+        - $user->cantidadMermas($user->id_solicitud)
+    )), 
+    0, 
+    '.', 
+    ','
+),
+
                     'mermas' => $user->cantidadMermas($user->id_solicitud),
                     'razon_social' => $razonSocialFormatted, // Aquí asignamos la clave correctamente
                     'razon_social_pdf' => $user->empresa ? $user->empresa->razon_social : '',

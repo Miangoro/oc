@@ -72,7 +72,9 @@ $(function () {
               '</span><br><span class="fw-bold text-dark small">Mermas:</span><span class="small"> ' +
               row.mermas +
               '</span><br><span class="fw-bold text-dark small">Restantes:</span><span class="small"> ' +
-              row.restantes
+              row.restantes +
+              '</span><br><span class="fw-bold text-dark small">Tipo:</span><span class="small"> ' +
+              row.tipo
             );
           }
         },
