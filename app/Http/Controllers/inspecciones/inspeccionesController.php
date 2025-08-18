@@ -888,7 +888,7 @@ public function asignarInspector(Request $request)
         $fecha_muestreo = Carbon::parse($datos->fecha_servicio)->translatedFormat('d/m/Y'); //formato moldeable con fecha y hora
 
         //edicion del formato
-        if ($datos->solicitud->fecha_solicitud < '2020-08-07') {
+        if ($datos->solicitud->fecha_solicitud < '2026-08-07') {
             $edicion = 'pdfs.etiqueta_agave_art'; // ed16
         } else {
             $edicion = 'pdfs.etiqueta_agave_art_ed17';
@@ -916,7 +916,7 @@ public function asignarInspector(Request $request)
           }
         
         //edicion del formato
-        if ($datos->solicitud->fecha_solicitud < '2020-08-07') {
+        if ($datos->solicitud->fecha_solicitud < '2026-08-07') {
             $edicion = 'pdfs.etiquetas_tapas_sellado'; // ed16
         } else {
             $edicion = 'pdfs.etiquetas_tapas_sellado_ed17';
@@ -936,7 +936,7 @@ public function asignarInspector(Request $request)
         $totalPaginas = $dompdf->get_canvas()->get_page_count();
         
         //edicion del formato
-        if ($datos->solicitud->fecha_solicitud < '2020-08-07') {
+        if ($datos->solicitud->fecha_solicitud < '2026-08-07') {
             $edicion = 'pdfs.Etiqueta_lotes_mezcal_granel'; // ed16
         } else {
             $edicion = 'pdfs.etiqueta_lotes_mezcal_granel_ed17';
@@ -953,7 +953,7 @@ public function asignarInspector(Request $request)
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
 
         //edicion del formato
-        if ($datos->solicitud->fecha_solicitud < '2020-08-07') {
+        if ($datos->solicitud->fecha_solicitud < '2026-08-07') {
             $edicion = 'pdfs.Etiqueta_Barrica'; // ed16
         } else {
             $edicion = 'pdfs.Etiqueta_Barrica_ed17';
