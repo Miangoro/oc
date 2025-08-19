@@ -91,7 +91,7 @@
         <td class="azul" style="width: 14%;">FECHA DEL SERVICIO:</td>
         <td>{{ Carbon\Carbon::parse($datos->fecha_servicio)->translatedFormat('d \d\e F \d\e Y') ?? ''}}</td>
         <td class="azul" style="width: 14%;">NO. DE SERVICIO:</td>
-        <td>{{ $datos->num_servicio ?? '' }} </td>
+        <td>{{ $datos->num_servicio ?? '' }}</td>
     </tr>
     <tr>
         <td class="azul">RAZÓN SOCIAL:</td>
@@ -109,7 +109,7 @@
         </td>
         <td class="azul">DESTINO DE LA MUESTRA:</td>
         <td colspan="2">
-            {{ $datos->solicitud->guias->pluck('domicilio')->implode(', ') }}
+            {{ $datos->solicitud->guias->pluck('domicilio')->filter()->implode(', ') }}
         </td>
     </tr>
 
@@ -122,30 +122,37 @@
         <td rowspan="3" style="width: 18%; border-left: 2px solid #000; border-right: none; border-top: none; border-bottom: none;"></td><!--CUADRO BLANCO-->
 
         <td class="azul" style="width: 18%;">NO. DE GUÍA/NO. DE PREDIO:</td>
-        <td> </td>
+        <td>{{ $datos->solicitud->guias->pluck('folio')->filter()->implode(', ') }} / 
+            {{ $datos->solicitud->guias->map->predios->pluck('num_predio')->filter()->implode(', ') }}</td>
         <td rowspan="3" style="width: 2px; border:none"> </td><!--ESPACIO-->
         <td class="azul" style="width: 15%;">NO. DE TAPADA:</td>
-        <td> </td>
+        <td>{{ $datos->solicitud->guias->pluck('no_lote_pedido')->filter()->implode(', ') }}</td>
     </tr>
     <tr>
         <td class="azul">PESO DE MAGUEY (KG):</td>
-        <td> </td>
+        <td>{{ $datos->solicitud->guias->pluck('kg_maguey')->filter()->implode(', ') }}</td>
         <td class="azul">EDAD DEL AGAVE:</td>
-        <td> </td>
+        <td>{{ $datos->solicitud->guias->pluck('edad')->filter()->implode(', ') }}</td>
     </tr>
     <tr>
         <td class="azul">NO. DE PIÑAS COMERCIALIZADAS:</td>
-        <td> </td>
+        <td>{{ $datos->solicitud->guias->pluck('num_comercializadas')->filter()->implode(', ') }}</td>
         <td class="azul">TIPO DE AGAVE O MAGUEY:</td>
         <td>
-            @if (isset($datos->solicitud->lote_granel) && $datos->solicitud->lote_granel->tipos_relacionados)
-                @foreach ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
-                    {{ $tipo->nombre ?? '' }} (<em>{{ $tipo->cientifico ?? '' }}</em>)
-                    @if (!$loop->last)
-                        ,
-                    @endif
-                @endforeach
-            @endif
+            {{-- {{ $datos->solicitud->guias->map->predio_plantacion->map->tipo->pluck('nombre')->filter()->implode(', ') }} --}}
+            @php
+                $tipos = $datos->solicitud->guias
+                    ->map->predio_plantacion      // coleccion de plantaciones
+                    ->map->tipo                   // coleccion de tipos
+                    ->filter();                   // eliminamos null
+            @endphp
+
+            @foreach($tipos as $tipo)
+                {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)
+                @if (!$loop->last)
+                    <br>
+                @endif
+            @endforeach
         </td>
     </tr>
 
@@ -158,17 +165,17 @@
         <td colspan="2"><b>%ART:</b>______ &nbsp;&nbsp;&nbsp; <b>%ARD:</b>______ </td>
         <td style="border:none"> </td><!--ESPACIO-->
         <td class="azul">TIPO DE LA MUESTRA:</td>
-        <td><b>MAGUEY CRUDO:</b>______ &nbsp;&nbsp;&nbsp; <b>MAGUEY COCIDO:</b>______</td>
+        <td style="font-size: 9px"><b>MAGUEY CRUDO:</b>______ &nbsp;&nbsp;&nbsp;<b>MAGUEY COCIDO:</b>______</td>
     </tr>
 
     <tr>
-        <td colspan="6" style="padding:10; border-left: 2px solid #000; border-right: 2px solid #000; border-top: none; border-bottom: none;"></td><!--LINEAAAA-->
+        <td colspan="6" style="padding:8; border-left: 2px solid #000; border-right: 2px solid #000; border-top: none; border-bottom: none;"></td><!--LINEAAAA-->
     </tr>
 
     <tr>
-        <td colspan="3" style="padding:6;"> </td>
+        <td colspan="3" style="padding:6;">{{ $datos->solicitud->instalaciones->responsable ?? ''}}</td>
         <td style="border:none"></td><!--ESPACIO-->
-        <td colspan="2" >{{ $datos->inspector->name }}</td>
+        <td colspan="2" >{{ $datos->inspector->name ?? ''}}</td>
     </tr>
 
     <tr>

@@ -887,7 +887,7 @@ public function asignarInspector(Request $request)
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
         
         //edicion del formato
-        if ($datos->solicitud->fecha_solicitud < '2020-08-07') {
+        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {
             $edicion = 'pdfs.etiqueta_agave_art'; // ed16
         } else {
             $edicion = 'pdfs.etiqueta_agave_art_ed17';
@@ -913,7 +913,7 @@ public function asignarInspector(Request $request)
             }
 
         //edicion del formato
-        if ($datos->solicitud->fecha_solicitud < '2026-08-07') {
+        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {
             $edicion = 'pdfs.etiquetas_tapas_sellado'; // ed16
         } else {
             $edicion = 'pdfs.etiquetas_tapas_sellado_ed17';

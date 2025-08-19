@@ -135,59 +135,62 @@
             </tr>
             <tr>
                 <td class="customx">No. de lote o tapada:</td>
-                <td> </td>
+                <td>{{ $datos->solicitud->guias->pluck('no_lote_pedido')->filter()->implode(', ') }}</td>
                 <td class="custom">Peso total del maguey:</td>
-                <td> </td>
+                <td>{{ $datos->solicitud->guias->pluck('kg_maguey')->filter()->implode(', ') }}</td>
             </tr>
             <tr>
                 <td colspan="2" class="custom">Razón Social / Productor:</td>
-                <td colspan="2">{{ $datos->solicitud->empresa->razon_social }}</td>
+                <td colspan="2">{{ $datos->solicitud->empresa->razon_social ?? ''}}</td>
                 <td class="custom">No. de piñas anterior:</td>
-                <td colspan="3"> </td>
+                <td colspan="3">{{ $datos->solicitud->guias->pluck('num_anterior')->filter()->implode(', ') }}</td>
             </tr>
             <tr>
                 <td colspan="2" rowspan="4" class="custom">Domicilio:</td>
                 <td colspan="2" rowspan="4">{{ $datos->solicitud->instalaciones->direccion_completa ?? '' }}
                 </td>
                 <td class="custom">No. de piñas comercializadas:</td>
-                <td colspan="3"> </td>
+                <td colspan="3">{{ $datos->solicitud->guias->pluck('num_comercializadas')->filter()->implode(', ') }}</td>
             </tr>
             <tr>
                 <td class="custom">No. de piñas actual:</td>
-                <td colspan="3"> </td>
+                <td colspan="3">{{ $datos->solicitud->guias->pluck('numero_plantas')->filter()->implode(', ') }}</td>
             </tr>
             <tr>
                 <td class="custom">No. de guías del maguey:</td>
-                <td colspan="3"> </td>
+                <td colspan="3">{{ $datos->solicitud->guias->pluck('numero_guias')->filter()->implode(', ') }}</td>
             </tr>
             <tr>
                 <td class="custom">Especie o tipo de agave:</td>
                 <td colspan="3">
-                  @if (isset($datos->solicitud->lote_granel) && $datos->solicitud->lote_granel->tipos_relacionados)
-                    @foreach ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
-                        {{ $tipo->nombre ?? '' }} (<em>{{ $tipo->cientifico ?? '' }}</em>)
+                    @php
+                        $tipos = $datos->solicitud->guias
+                            ->map->predio_plantacion      // coleccion de plantaciones
+                            ->map->tipo                   // coleccion de tipos
+                            ->filter();                   // eliminamos null
+                    @endphp
+
+                    @foreach($tipos as $tipo)
+                        {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)
                         @if (!$loop->last)
-                            ,
+                            <br>
                         @endif
                     @endforeach
-                @endif
-
                 </td>
             </tr>
             <tr>
                 <td colspan="2" class="custom">Maestro mezcalero:</td>
                 <td colspan="2"> 
-                    {{-- {{ $datos->solicitud->lote_granel->certificadoGranel?->maestro_mezcalero ?? '' }} --}}
-                    {{ $datos->solicitud?->lotesGranel?->certificadoGranel?->maestro_mezcalero ?? '' }}
+                    {{ $datos->solicitud->instalaciones->dictamen->certificado->maestro_mezcalero ?? '' }}
                 </td>
                 <td class="custom">Edad del agave:</td>
-                <td colspan="3"> </td>
+                <td colspan="3">{{ $datos->solicitud->guias->pluck('edad')->filter()->implode(', ') }}</td>
             </tr>
             <tr>
                 <td colspan="2" class="customx">Nombre y firma del responsable:</td>
-                <td colspan="2"> </td>
+                <td colspan="2">{{ $datos->solicitud->instalaciones->responsable ?? ''}}</td>
                 <td class="customx">Nombre y firma del inspector:</td>
-                <td colspan="3">{{ $datos->inspector->name }} </td>
+                <td colspan="3">{{ $datos->inspector->name ?? ''}} </td>
             </tr>
         </tbody>
     </table>
