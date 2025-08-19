@@ -47,14 +47,14 @@ class insertar_datos_bd_guias extends Controller
                     if (!empty($solicitud['numero_predio_cidam'])) {
                         $sol = Predios::where('num_predio', $solicitud['numero_predio_cidam'])->first();
                          $plantacion = null;
-                        
-                       $plantacion = predio_plantacion::with('tipo')
-                        ->where('id_predio', $sol->id_predio)
-                        ->whereHas('tipo', function($q) use ($solicitud) {
-                            $q->where('nombre', $solicitud['nombre_maguey']);
-                        })
-                        ->first();
+                   $plantacion = predio_plantacion::with('tipo')
+    ->where('id_predio', $sol->id_predio)
+    ->whereHas('tipo', function($q) use ($solicitud) {
+        $q->whereRaw("nombre COLLATE utf8mb4_general_ci LIKE ?", ["%{$solicitud['nombre_maguey']}%"]);
+    })
+    ->first();
 
+                    
                     } else {
                         $sol = null;
                     }
@@ -147,12 +147,12 @@ class insertar_datos_bd_guias extends Controller
                         $documentacion_url->id_documento = 132; //132 art
                         $documentacion_url->id_empresa = $sol->id_empresa;
                         // Obtener URL remota
-                        $fileUrl = "https://antiguaplataforma.erpcidam.com/apps/georeferenciacion/pdfs/" . $solicitud['documento']; // Construye la URL completa
+                        $fileUrl = "https://antiguaplataforma.erpcidam.com/apps/georeferenciacion/pdfs/" . $solicitud['documento_art']; // Construye la URL completa
                         
                         // Obtener solo el nombre del archivo
                         $fileName = basename($fileUrl);
                         $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION); // "pdf"
-                        $nombreArchivo = str_replace('/', '-','Resultados de %ART '.$solicitud['folio_guia']) . '_' . time() . '.' . $fileExtension;
+                        $nombreArchivo = str_replace('/', '-','Resultados de ART '.$solicitud['folio_guia']) . '_' . time() . '.' . $fileExtension;
 
                         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $sol->id_empresa)->first();
                         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
@@ -171,18 +171,26 @@ class insertar_datos_bd_guias extends Controller
                         }
                 
                         // Descargar el archivo desde la URL y guardarlo en el servidor
-                        $fileContent = file_get_contents($fileUrl);
-                        if ($fileContent !== false) {
-                            file_put_contents($destinationPath, $fileContent);
-                
-                            // Guardar la ruta en la base de datos
-                            $documentacion_url->nombre_documento = 'Resultados de %ART '.$solicitud['folio_guia'];
-                            $documentacion_url->url =  $nombreArchivo;
-                            $documentacion_url->fecha_vigencia = null;
-                            $documentacion_url->save();
-                        } else {
-                            Log::error("No se pudo descargar el archivo desde: {$fileUrl}");
-                        }
+                        if (!empty($solicitud['documento_art'])) {
+    $fileUrl = "https://antiguaplataforma.erpcidam.com/apps/georeferenciacion/pdfs/" . $solicitud['documento_art'];
+    
+    $fileContent = @file_get_contents($fileUrl);
+
+    if ($fileContent !== false) {
+        file_put_contents($destinationPath, $fileContent);
+
+        // Guardar la ruta en la base de datos
+        $documentacion_url->nombre_documento = 'Resultados de ART '.$solicitud['folio_guia'];
+        $documentacion_url->url = $nombreArchivo;
+        $documentacion_url->fecha_vigencia = null;
+        $documentacion_url->save();
+    } else {
+        Log::error("No se pudo descargar el archivo desde: {$fileUrl}");
+    }
+} else {
+    Log::warning("El documento ART está vacío para la solicitud: ".$solicitud['folio_guia']);
+}
+
 
 
 
