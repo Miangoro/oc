@@ -67,56 +67,58 @@ class GuiasController  extends Controller
             10 => 'mermas_plantas',
         ];
 
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $orderColumnIndex = $request->input('order.0.column');
-        $order = $columns[$orderColumnIndex] ?? 'id_guia';
-        $dir = $request->input('order.0.dir');
+      $limit = $request->input('length');
+$start = $request->input('start');
+$orderColumnIndex = $request->input('order.0.column');
+$order = $columns[$orderColumnIndex] ?? 'id_guia';
+$dir = $request->input('order.0.dir');
+$searchValue = $request->input('search.value');
 
-        $searchValue = $request->input('search.value');
+// Query base SIN groupBy para contar bien
+$queryBase = Guias::with(['empresa.empresaNumClientes', 'predios']);
+if ($empresaId) {
+    $queryBase->where('id_empresa', $empresaId);
+}
 
-        $query = Guias::with(['empresa.empresaNumClientes', 'predios'])
-            ->groupBy('run_folio');
-        if ($empresaId) {
-            $query->where('id_empresa', $empresaId);
-        }
-        $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
-        $totalData = $baseQuery->count();
+$totalData = $queryBase->count(); // total de registros sin filtros
 
+// Ahora sí, la query con groupBy
+$query = Guias::with(['empresa.empresaNumClientes', 'predios'])
+    ->groupBy('run_folio');
+if ($empresaId) {
+    $query->where('id_empresa', $empresaId);
+}
 
-        if (!empty($searchValue)) {
-            $query->where(function ($q) use ($searchValue) {
-                $q->where('run_folio', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('folio', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('id_empresa', 'LIKE', "%{$searchValue}%");
+if (!empty($searchValue)) {
+    $query->where(function ($q) use ($searchValue) {
+        $q->where('run_folio', 'LIKE', "%{$searchValue}%")
+            ->orWhere('folio', 'LIKE', "%{$searchValue}%")
+            ->orWhere('id_empresa', 'LIKE', "%{$searchValue}%");
 
-                $q->orWhereHas('empresa', function ($Nombre) use ($searchValue) {
-                    $Nombre->where('razon_social', 'LIKE', "%{$searchValue}%");
-                });
+        $q->orWhereHas('empresa', function ($Nombre) use ($searchValue) {
+            $Nombre->where('razon_social', 'LIKE', "%{$searchValue}%");
+        });
 
-                $q->orWhereHas('empresa.empresaNumClientes', function ($q) use ($searchValue) {
-                    $q->where('numero_cliente', 'LIKE', "%{$searchValue}%");
-                });
+        $q->orWhereHas('empresa.empresaNumClientes', function ($q) use ($searchValue) {
+            $q->where('numero_cliente', 'LIKE', "%{$searchValue}%");
+        });
 
-                $q->orWhereHas('predios', function ($Predio) use ($searchValue) {
-                    $Predio->where('nombre_predio', 'LIKE', "%{$searchValue}%");
-                });
-            });
+        $q->orWhereHas('predios', function ($Predio) use ($searchValue) {
+            $Predio->where('nombre_predio', 'LIKE', "%{$searchValue}%");
+        });
+    });
 
-            $totalData = $query->get()->count();
-            $totalFiltered = $query->count();
+    // Contar filtrados (se hace sobre la query filtrada y agrupada)
+    $totalFiltered = $query->get()->count();
+} else {
+    $totalFiltered = $totalData;
+}
 
-        }else{
-            $totalFiltered = $totalData;
-        }
-
-            
-        
-
-        $guias = $query->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir)
-            ->get();
+// Aplicar orden y paginación
+$guias = $query->orderBy($order, $dir)
+    ->offset($start)
+    ->limit($limit)
+    ->get();
 
         $data = [];
 
