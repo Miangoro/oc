@@ -54,41 +54,44 @@ class GuiasController  extends Controller
             $empresaId = Auth::user()->empresa?->id_empresa;
         }
 
-        $columns = [
-            1 => 'id_guia',
-            2 => 'razon_social',
-            3 => 'folio',
-            4 => 'run_folio',
-            5 => 'nombre_predio',
-            6 => 'numero_guias',
-            7 => 'numero_plantas',
-            8 => 'num_anterior',
-            9 => 'num_comercializadas',
-            10 => 'mermas_plantas',
-        ];
+  $columns = [
+    1 => 'id_guia',
+    2 => 'razon_social',
+    3 => 'folio',
+    4 => 'run_folio',
+    5 => 'nombre_predio',
+    6 => 'numero_guias',
+    7 => 'numero_plantas',
+    8 => 'num_anterior',
+    9 => 'num_comercializadas',
+    10 => 'mermas_plantas',
+];
 
-      $limit = $request->input('length');
+$limit = $request->input('length');
 $start = $request->input('start');
 $orderColumnIndex = $request->input('order.0.column');
 $order = $columns[$orderColumnIndex] ?? 'id_guia';
 $dir = $request->input('order.0.dir');
 $searchValue = $request->input('search.value');
 
-// Query base SIN groupBy para contar bien
+// Base query (sin groupBy) para contar total
 $queryBase = Guias::with(['empresa.empresaNumClientes', 'predios']);
 if ($empresaId) {
     $queryBase->where('id_empresa', $empresaId);
 }
 
-$totalData = $queryBase->count(); // total de registros sin filtros
+$totalData = $queryBase->count(); // Total sin filtros
 
-// Ahora sí, la query con groupBy
+// Query con groupBy (para traer registros únicos por run_folio)
 $query = Guias::with(['empresa.empresaNumClientes', 'predios'])
+    ->select('guias.*') // importante para no romper con groupBy
     ->groupBy('run_folio');
+
 if ($empresaId) {
     $query->where('id_empresa', $empresaId);
 }
 
+// Si hay búsqueda
 if (!empty($searchValue)) {
     $query->where(function ($q) use ($searchValue) {
         $q->where('run_folio', 'LIKE', "%{$searchValue}%")
@@ -108,7 +111,7 @@ if (!empty($searchValue)) {
         });
     });
 
-    // Contar filtrados (se hace sobre la query filtrada y agrupada)
+    // 👀 Ojo: aquí contamos sobre un clon de la query (sin paginación)
     $totalFiltered = $query->get()->count();
 } else {
     $totalFiltered = $totalData;
@@ -119,6 +122,7 @@ $guias = $query->orderBy($order, $dir)
     ->offset($start)
     ->limit($limit)
     ->get();
+
 
         $data = [];
 
