@@ -266,22 +266,26 @@
                 break;
         }
 
-        if (etiquetaHref !== '' && inspectorName !== 'Sin inspector') {
+        /*if (etiquetaHref !== '') {
             $('#links_etiquetas').attr('href', etiquetaHref);
             $('.etiqueta_name').text(etiquetaTexto);
             $('.etiquetasNA').show(); // mostrar el tr
         } else {
             $('.etiquetasNA').hide(); // ocultar el tr
-        }
-        /*
-        if (inspectorName != 'Sin inspector') {
-            $('#link_plan_auditoria').attr('href', audiHref);
-            $('.auditoria_texto').text(auditoria_texto);
-            $('.auditoria').show(); // mostrar el tr
+        }*/
+       if (etiquetaHref !== '') {
+            $('.etiqueta_name').text(etiquetaTexto);
+
+            if (inspectorName !== 'Sin inspector') {
+                $('#links_etiquetas').attr('href', etiquetaHref).html('<i class="ri-file-pdf-2-fill ri-40px text-danger"></i>');
+            } else {
+                $('#links_etiquetas').removeAttr('href').text('Sin inspección asignada');
+            }
+
+            $('.etiquetasNA').show(); // mostrar el tr siempre
         } else {
-            $('.auditoria').hide(); // ocultar el tr
+            $('.etiquetasNA').hide(); // ocultar el tr si no hay PDF
         }
-        */
 
         ///DOCUMENTACION DE LA SOLICITUD GENERADA
         $.ajax({
