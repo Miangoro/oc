@@ -881,27 +881,22 @@ public function asignarInspector(Request $request)
 
 
 
-    ///PDF ETIQUETAS - MUESTRAS DE AGAVE ART
+    ///PDF ETIQUETAS - MUESTRAS DE AGAVE ART (Muestreo de agave ART (1))
     public function etiqueta_muestra($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
-
-        $fecha_muestreo = Carbon::parse($datos->fecha_servicio)->translatedFormat('d/m/Y'); //formato moldeable con fecha y hora
-
+        
         //edicion del formato
-        if ($datos->solicitud->fecha_solicitud < '2026-08-07') {
+        if ($datos->solicitud->fecha_solicitud < '2020-08-07') {
             $edicion = 'pdfs.etiqueta_agave_art'; // ed16
         } else {
             $edicion = 'pdfs.etiqueta_agave_art_ed17';
         }
-        $pdf = Pdf::loadView($edicion,
-            ['datos' => $datos,
-            'fecha_muestreo' => $fecha_muestreo ?? 'No encontrado',
-            ]);
+        $pdf = Pdf::loadView($edicion, ['datos' => $datos]);
 
         return $pdf->stream('Etiqueta para agave (%ART).pdf');
     }
-    ///PDF ETIQUETAS - MUESTRAS Y CONTENEDORES
+    ///PDF ETIQUETAS - TAPA MUESTRAS DE LOTE DE MEZCAL A GRANEL (Muestreo de lote a granel (3))
     public function etiqueta($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
@@ -915,56 +910,50 @@ public function asignarInspector(Request $request)
                         ->pluck('nombre_lote')
                         ->toArray();
                 }
-          }
-        
+            }
+
         //edicion del formato
         if ($datos->solicitud->fecha_solicitud < '2026-08-07') {
             $edicion = 'pdfs.etiquetas_tapas_sellado'; // ed16
         } else {
             $edicion = 'pdfs.etiquetas_tapas_sellado_ed17';
         }
-        $pdf = Pdf::loadView($edicion,  ['datos' => $datos, 'lotes_procedencia' => $lotesOriginales,]);
+        $pdf = Pdf::loadView($edicion,  [
+            'datos' => $datos, 
+            'lotes_procedencia' => $lotesOriginales,
+        ]);
 
-        return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
+        return $pdf->stream('Etiqueta para tapa de la muestra.pdf');
     }
-    ///PDF ETIQUETAS - LOTES DE MEZCAL A GRANEL
+    ///PDF ETIQUETAS - LOTES DE MEZCAL A GRANEL (Vigilancia en el traslado del lote (4))
     public function etiqueta_granel($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
-        // Renderizar el PDF por primera vez para obtener el total de páginas
-        $pdf = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', ['datos' => $datos]);
-        $dompdf = $pdf->getDomPDF();
-        $dompdf->render();
-        // Obtener el total de páginas
-        $totalPaginas = $dompdf->get_canvas()->get_page_count();
         
         //edicion del formato
-        if ($datos->solicitud->fecha_solicitud < '2026-08-07') {
+        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {
             $edicion = 'pdfs.etiqueta_lotes_mezcal_granel'; // ed16
         } else {
             $edicion = 'pdfs.etiqueta_lotes_mezcal_granel_ed17';
         }
-        $pdfFinal = Pdf::loadView($edicion, [
-            'totalPaginas' => $totalPaginas,
-            'datos' => $datos
-        ]);
+        $pdf = Pdf::loadView($edicion, ['datos' => $datos]);
 
-        return $pdfFinal->stream('Etiqueta para lotes de mezcal a granel.pdf');
+        return $pdf->stream('Etiqueta para lotes de mezcal a granel.pdf');
     }
-    ///PDF ETIQUETAS - INGRESO A MADURACION
+    ///PDF ETIQUETAS - INGRESO A MADURACION (Inspección ingreso a barrica/ contenedor de vidrio (7))
     public function etiqueta_barrica($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
 
         //edicion del formato
-        if ($datos->solicitud->fecha_solicitud < '2026-08-07') {
+        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {
             $edicion = 'pdfs.etiqueta_barrica'; // ed16
         } else {
             $edicion = 'pdfs.etiqueta_barrica_ed17';
         }
         $pdf = Pdf::loadView($edicion, ['datos' => $datos]);
 
-        return $pdf->stream('Etiqueta_ingreso_a_barrica.pdf');
+        return $pdf->stream('Etiqueta para ingreso a barrica.pdf');
     }
 
 

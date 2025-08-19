@@ -114,14 +114,16 @@
 
 <body>
 
-    <!-- #1 tabla -->
-    <br>
+
+<!-- #1 tabla -->
+<br>
+@for ($i = 0; $i < 3; $i++)
     <table class="top">
         <tr>
-            <td rowspan="5"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección"
+            <td rowspan="5"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UI"
                     class="logo1"></td>
             <td colspan="2" class="title">Etiqueta para tapa de la <br> muestra</td>
-            <td rowspan="5"><img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador"
+            <td rowspan="5"><img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo UI"
                     class="logo2"></td>
         </tr>
         <tr>
@@ -130,10 +132,11 @@
         </tr>
         <tr>
             <td class="highlight-white-cell border-right-white">
-                {{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</td>
+                {{ Carbon\Carbon::parse($datos->fecha_servicio)->translatedFormat('d \d\e F \d\e Y') ?? ''}}
+            </td>
             <td class="highlight-white-cell border-left-white">
-                {{ $datos->solicitud->lote_granel->categoria->categoria }} -
-                {{ $datos->solicitud->lote_granel->clase->clase }}</td>
+                {{ $datos->solicitud->lote_granel->categoria->categoria ?? ''}} -
+                {{ $datos->solicitud->lote_granel->clase->clase ?? ''}}</td>
         </tr>
         <tr>
             <td class="section-title-cell border-right-white">No. de lote:</td>
@@ -141,73 +144,14 @@
         </tr>
         <tr>
             <td class="highlight-white-cell border-right-white border-green">
-                {{ $datos->solicitud->lote_granel->nombre_lote }}</td>
+                {{ $datos->solicitud->lote_granel->nombre_lote ?? '' }}</td>
             <td class="highlight-white-cell border-left-white border-green">
-                {{ $datos->solicitud->inspeccion->num_servicio }}</td>
+                {{ $datos->num_servicio ?? ''}}</td>
         </tr>
     </table>
-    <!-- #2 tabla -->
-    <table class="top">
-        <tr>
-            <td rowspan="5"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección"
-                    class="logo1"></td>
-            <td colspan="2" class="title">Etiqueta para tapa de la <br> muestra</td>
-            <td rowspan="5"><img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador"
-                    class="logo2"></td>
-        </tr>
-        <tr>
-            <td class="section-title-cell border-right-white">Fecha:</td>
-            <td class="section-title-cell border-left-white">Producto:</td>
-        </tr>
-        <tr>
-            <td class="highlight-white-cell border-right-white">
-                {{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</td>
-            <td class="highlight-white-cell border-left-white">
-                {{ $datos->solicitud->lote_granel->categoria->categoria }} -
-                {{ $datos->solicitud->lote_granel->clase->clase }}</td>
-        </tr>
-        <tr>
-            <td class="section-title-cell border-right-white">No. de lote:</td>
-            <td class="section-title-cell border-left-white">Folio o No.</td>
-        </tr>
-        <tr>
-            <td class="highlight-white-cell border-right-white border-green">
-                {{ $datos->solicitud->lote_granel->nombre_lote }}</td>
-            <td class="highlight-white-cell border-left-white border-green">
-                {{ $datos->solicitud->inspeccion->num_servicio }}</td>
-        </tr>
-    </table>
-    <!-- #3 tabla -->
-    <table class="top">
-        <tr>
-            <td rowspan="5"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección"
-                    class="logo1"></td>
-            <td colspan="2" class="title">Etiqueta para tapa de la <br> muestra</td>
-            <td rowspan="5"><img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador"
-                    class="logo2"></td>
-        </tr>
-        <tr>
-            <td class="section-title-cell border-right-white">Fecha:</td>
-            <td class="section-title-cell border-left-white">Producto:</td>
-        </tr>
-        <tr>
-            <td class="highlight-white-cell border-right-white">
-                {{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</td>
-            <td class="highlight-white-cell border-left-white">
-                {{ $datos->solicitud->lote_granel->categoria->categoria }} -
-                {{ $datos->solicitud->lote_granel->clase->clase }}</td>
-        </tr>
-        <tr>
-            <td class="section-title-cell border-right-white">No. de lote:</td>
-            <td class="section-title-cell border-left-white">Folio o No.</td>
-        </tr>
-        <tr>
-            <td class="highlight-white-cell border-right-white border-green">
-                {{ $datos->solicitud->lote_granel->nombre_lote }}</td>
-            <td class="highlight-white-cell border-left-white border-green">
-                {{ $datos->solicitud->inspeccion->num_servicio }}</td>
-        </tr>
-    </table>
+
+@endfor
+
     <!-- Footer sin tablas -->
     <div class="footer">
         <div class="footer-left">
@@ -218,8 +162,8 @@
             <p>F-UV-04-04 <br> Edición 16, 15/07/2024</p>
         </div>
     </div>
-</body>
 
+</body>
 </html>
 
 
@@ -328,66 +272,68 @@
 
 <body>
 
-    <!-- Primera tabla -->
+    <!-- #2 tabla -->
+@for ($i = 0; $i < 3; $i++)
     <table class="etiqueta-table">
         <tbody>
             <tr>
-                <td rowspan="3" class="border-green-custom"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}"
-                        alt="Unidad de Inspección" class="logo-small"></td>
+                <td rowspan="3" class="border-green-custom"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UI" class="logo-small"></td>
                 <td colspan="6" class="custom">Etiqueta para muestra</td>
-                <td rowspan="3" class="border-green-custom"><img src="{{ public_path('img_pdf/logo_oc_3d.png') }}"
-                        alt="Organismo Certificador" class="logo-small"></td>
+                <td rowspan="3" class="border-green-custom"><img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo UI" class="logo-small"></td>
             </tr>
             <tr>
                 <td class="custom-title">Fecha:</td>
                 <td colspan="2" class="white-background-custom">
-                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</strong>
+                    <strong>{{ Carbon\Carbon::parse($datos->fecha_servicio)->translatedFormat('d \d\e F \d\e Y') ?? ''}}</strong>
                 </td>
                 <td class="custom-title">Folio / No. de servicio:</td>
                 <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->inspeccion->num_servicio }}</strong></td>
+                    <strong>{{ $datos->num_servicio ?? '' }}</strong></td>
             </tr>
             <tr>
                 <td class="custom-title">No. de lote:</td>
                 <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->nombre_lote }}</strong></td>
+                    <strong>{{ $datos->solicitud->lote_granel->nombre_lote ?? '' }}</strong></td>
                 <td class="custom-title">Volumen del lote:</td>
                 <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->volumen }} L</strong></td>
+                    <strong>{{ $datos->solicitud->lote_granel->volumen ?? ''}} L</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left;">Maguey Empleado:</td>
                 <td colspan="3" class="white-background-custom">
                     <strong>
-                        @foreach ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
-                            {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)@if (!$loop->last)
-                                ,
+                        @forelse ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
+                            {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)
+                            @if (!$loop->last)
+                                <br>
                             @endif
-                        @endforeach
+                        @empty
+                            {{-- si está vacío no muestra nada (en blanco) --}}
+                        @endforelse
                     </strong>
                 </td>
                 {{--                 <td colspan="3" class="white-background-custom"><strong>{{$datos->solicitud->lote_granel->tipos->nombre}} Maguey Espadín, Maguey Tobalá (A. angustifolia), (A. potatorum)</strong></td> --}}
                 <td colspan="2" class="custom-title">Categoría y clase de mezcal:</td>
                 <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->categoria->categoria }},
-                        {{ $datos->solicitud->lote_granel->clase->clase }}</strong></td>
+                    <strong>{{ $datos->solicitud->lote_granel->categoria->categoria ?? ''}},
+                        {{ $datos->solicitud->lote_granel->clase->clase ?? ''}}</strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left;">Edad:</td>
                 <td class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->edad ?? 'N/A' }}</strong></td>
+                    <strong>{{ $datos->solicitud->lote_granel->edad ?? '' }}</strong></td>
                 <td class="custom-title">Ingredientes:</td>
                 <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->ingredientes ?? 'N/A' }}</strong></td>
+                    <strong>{{ $datos->solicitud->lote_granel->ingredientes ?? '' }}</strong></td>
                 <td class="custom-title">Estado del productor</td>
                 <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->instalaciones->estados->nombre }}</strong></td>
+                    <strong>{{ $datos->solicitud->instalaciones->estados->nombre ?? '' }}</strong></td>
             </tr>
             <tr>
                 <td colspan="1" class="custom-title" style="text-align: left;">Marca:</td>
-                <td colspan="3" class="white-background-custom"><strong>Por definir</strong></td>
+                <td colspan="3" class="white-background-custom"><strong> </strong></td>
                 <td colspan="2" class="custom-title">Destino de la muestra:</td>
-                <td colspan="2" class="white-background-custom"><strong>Laboratorio</strong></td>
+                <td colspan="2" class="white-background-custom"><strong> </strong></td>
             </tr>
             <tr>
                 <td class="custom-title" style="text-align: left;">Lote de procedencia:</td>
@@ -396,23 +342,24 @@
                   </td>
                 <td class="custom-title">No. de Fisicoquímico:</td>
                 <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->folio_fq }}</strong></td>
+                    <strong>{{ $datos->solicitud->lote_granel->folio_fq ?? ''}}</strong></td>
                 <td colspan="3" class="custom-title">Tipo de análisis:</td>
             </tr>
             <tr>
                 <td rowspan="2" class="custom-title" style="text-align: left;">Razón Social/ Productor:</td>
                 <td rowspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->empresa->razon_social }}</strong></td>
+                    <strong>{{ $datos->solicitud->empresa->razon_social ?? ''}}</strong></td>
                 <td rowspan="2" class="custom-title">Domicilio:</td>
                 <td colspan="2" rowspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->instalaciones->direccion_completa }}</strong></td>
+                    <strong>{{ $datos->solicitud->instalaciones->direccion_completa ?? ''}}</strong></td>
                 <td class="custom-title">Análisis Completo:</td>
                 <td class="custom-title">Ajuste de Grado:</td>
                 <td class="custom-title">Otros (indique):</td>
             </tr>
-            @php
-            $tipo = $datos->solicitud->tipo_analisis;
-            @endphp
+
+@php
+$tipo = $datos->solicitud->tipo_analisis;
+@endphp
             <tr>
               <td class="white-background-custom"><strong>{{ $tipo == 1 ? 'x' : '' }}</strong></td>
               <td class="white-background-custom"><strong>{{ $tipo == 2 ? 'x' : '' }}</strong></td>
@@ -420,209 +367,17 @@
           </tr>
             <tr>
                 <td colspan="2" class="custom-title">Nombre y firma del inspector:</td>
-                <td colspan="2" class="white-background-custom"><strong>{{ $datos->inspector->name }}</strong>
+                <td colspan="2" class="white-background-custom"><strong>{{ $datos->inspector->name ?? ''}}</strong>
                 </td>
                 <td colspan="2" class="custom-title">Nombre y firma del responsable:</td>
                 <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->instalaciones->responsable }}</strong></td>
+                    <strong>{{ $datos->solicitud->instalaciones->responsable ?? ''}}</strong></td>
             </tr>
         </tbody>
     </table>
 
-    <!-- Segunda tabla -->
-    <table class="etiqueta-table">
-        <tbody>
-            <tr>
-                <td rowspan="3" class="border-green-custom"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}"
-                        alt="Unidad de Inspección" class="logo-small"></td>
-                <td colspan="6" class="custom">Etiqueta para muestra</td>
-                <td rowspan="3" class="border-green-custom"><img
-                        src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador"
-                        class="logo-small"></td>
-            </tr>
-            <tr>
-                <td class="custom-title">Fecha:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</strong>
-                </td>
-                <td class="custom-title">Folio / No. de servicio:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->inspeccion->num_servicio }}</strong></td>
-            </tr>
-            <tr>
-                <td class="custom-title">No. de lote:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->nombre_lote }}</strong></td>
-                <td class="custom-title">Volumen del lote:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->volumen }} L</strong></td>
-            </tr>
-            <tr>
-                <td class="custom-title" style="text-align: left;">Maguey Empleado:</td>
-                <td colspan="3" class="white-background-custom"><strong>
-                        @foreach ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
-                            {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)@if (!$loop->last)
-                                ,
-                            @endif
-                        @endforeach
-                    </strong></td>
-                <td colspan="2" class="custom-title">Categoría y clase de mezcal:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->categoria->categoria }},
-                        {{ $datos->solicitud->lote_granel->clase->clase }}</strong></td>
-            </tr>
-            <tr>
-                <td class="custom-title" style="text-align: left;">Edad:</td>
-                <td class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->edad ?? 'N/A' }}</strong></td>
-                <td class="custom-title">Ingredientes:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->ingredientes ?? 'N/A' }}</strong></td>
-                <td class="custom-title">Estado del productor</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->instalaciones->estados->nombre }}</strong></td>
-            </tr>
-            <tr>
-                <td colspan="1" class="custom-title" style="text-align: left;">Marca:</td>
-                <td colspan="3" class="white-background-custom"><strong>Por definir</strong></td>
-                <td colspan="2" class="custom-title">Destino de la muestra:</td>
-                <td colspan="2" class="white-background-custom"><strong>Laboratorio</strong></td>
-            </tr>
-            <tr>
-                <td class="custom-title" style="text-align: left;">Lote de procedencia:</td>
-                <td class="white-background-custom">
-                   <strong>{{ !empty($lotes_procedencia) ? implode(', ', $lotes_procedencia) : 'N/A' }}</strong></td>
-                <td class="custom-title">No. de Fisicoquímico:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->folio_fq }}</strong></td>
-                <td colspan="3" class="custom-title">Tipo de análisis:</td>
-            </tr>
-            <tr>
-                <td rowspan="2" class="custom-title" style="text-align: left;">Razón Social/ Productor:</td>
-                <td rowspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->empresa->razon_social }}</strong></td>
-                <td rowspan="2" class="custom-title">Domicilio:</td>
-                <td colspan="2" rowspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->instalaciones->direccion_completa }}</strong></td>
-                <td class="custom-title">Análisis Completo:</td>
-                <td class="custom-title">Ajuste de Grado:</td>
-                <td class="custom-title">Otros (indique):</td>
-            </tr>
-            @php
-            $tipo = $datos->solicitud->tipo_analisis;
-            @endphp
-            <tr>
-              <td class="white-background-custom"><strong>{{ $tipo == 1 ? 'x' : '' }}</strong></td>
-              <td class="white-background-custom"><strong>{{ $tipo == 2 ? 'x' : '' }}</strong></td>
-              <td class="white-background-custom"><strong>{{ !in_array($tipo, [1, 2]) ? 'x' : '' }}</strong></td>
-          </tr>
-            <tr>
-                <td colspan="2" class="custom-title">Nombre y firma del inspector:</td>
-                <td colspan="2" class="white-background-custom"><strong>{{ $datos->inspector->name }}</strong>
-                </td>
-                <td colspan="2" class="custom-title">Nombre y firma del responsable:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->instalaciones->responsable }}</strong></td>
-            </tr>
-        </tbody>
-    </table>
+@endfor
 
-    <!-- Tercera tabla -->
-    <table class="etiqueta-table">
-        <tbody>
-            <tr>
-                <td rowspan="3" class="border-green-custom"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}"
-                        alt="Unidad de Inspección" class="logo-small"></td>
-                <td colspan="6" class="custom">Etiqueta para muestra</td>
-                <td rowspan="3" class="border-green-custom"><img
-                        src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador"
-                        class="logo-small"></td>
-            </tr>
-            <tr>
-                <td class="custom-title">Fecha:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</strong>
-                </td>
-                <td class="custom-title">Folio / No. de servicio:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->inspeccion->num_servicio }}</strong></td>
-            </tr>
-            <tr>
-                <td class="custom-title">No. de lote:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->nombre_lote }}</strong></td>
-                <td class="custom-title">Volumen del lote:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->volumen }} L</strong></td>
-            </tr>
-            <tr>
-                <td class="custom-title" style="text-align: left;">Maguey Empleado:</td>
-                <td colspan="3" class="white-background-custom"><strong>
-                        @foreach ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
-                            {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)@if (!$loop->last)
-                                ,
-                            @endif
-                        @endforeach
-                    </strong></td>
-                <td colspan="2" class="custom-title">Categoría y clase de mezcal:</td>
-                <td colspan="2" class="white-background-custom"><strong>Mezcal Artesanal, Blanco o Joven</strong>
-                </td>
-            </tr>
-            <tr>
-                <td class="custom-title" style="text-align: left;">Edad:</td>
-                <td class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->edad ?? 'N/A' }}</strong></td>
-                <td class="custom-title">Ingredientes:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->ingredientes ?? 'N/A' }}</strong></td>
-                <td class="custom-title">Estado del productor</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->instalaciones->estados->nombre }}</strong></td>
-            </tr>
-            <tr>
-                <td colspan="1" class="custom-title" style="text-align: left;">Marca:</td>
-                <td colspan="3" class="white-background-custom"><strong>Por definir</strong></td>
-                <td colspan="2" class="custom-title">Destino de la muestra:</td>
-                <td colspan="2" class="white-background-custom"><strong>Laboratorio</strong></td>
-            </tr>
-            <tr>
-                <td class="custom-title" style="text-align: left;">Lote de procedencia:</td>
-                <td class="white-background-custom">
-                   <strong>{{ !empty($lotes_procedencia) ? implode(', ', $lotes_procedencia) : 'N/A' }}</strong></td>
-                <td class="custom-title">No. de Fisicoquímico:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->lote_granel->folio_fq }}</strong></td>
-                <td colspan="3" class="custom-title">Tipo de análisis:</td>
-            </tr>
-            <tr>
-                <td rowspan="2" class="custom-title" style="text-align: left;">Razón Social/ Productor:</td>
-                <td rowspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->empresa->razon_social }}</strong></td>
-                <td rowspan="2" class="custom-title">Domicilio:</td>
-                <td colspan="2" rowspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->instalaciones->direccion_completa }}</strong></td>
-                <td class="custom-title">Análisis Completo:</td>
-                <td class="custom-title">Ajuste de Grado:</td>
-                <td class="custom-title">Otros (indique):</td>
-            </tr>
-            @php
-            $tipo = $datos->solicitud->tipo_analisis;
-            @endphp
-            <tr>
-                <td class="white-background-custom"><strong>{{ $tipo == 1 ? 'x' : '' }}</strong></td>
-                <td class="white-background-custom"><strong>{{ $tipo == 2 ? 'x' : '' }}</strong></td>
-                <td class="white-background-custom"><strong>{{ !in_array($tipo, [1, 2]) ? 'x' : '' }}</strong></td>
-            </tr>
-            <tr>
-                <td colspan="2" class="custom-title">Nombre y firma del inspector:</td>
-                <td colspan="2" class="white-background-custom"><strong>{{ $datos->inspector->name }}</strong>
-                </td>
-                <td colspan="2" class="custom-title">Nombre y firma del responsable:</td>
-                <td colspan="2" class="white-background-custom">
-                    <strong>{{ $datos->solicitud->instalaciones->responsable }}</strong></td>
-            </tr>
-        </tbody>
-    </table>
     <!-- Footer sin tablas -->
     <div class="footer">
         <div class="footer-left">
@@ -633,8 +388,8 @@
             <p>F-UV-04-04 <br> Edición 16, 15/07/2024</p>
         </div>
     </div>
-</body>
 
+</body>
 </html>
 
 
@@ -705,251 +460,90 @@
 
 <body>
 
-    <!-- Tabla 7 -->
+    <!--#3 Tabla  -->
+@for ($i = 0; $i < 3; $i++)
     <table class="unique-final-table top">
         <tbody>
             <tr>
                 <td rowspan="3" class="logo-cell" style="font-size: 12px;">
-                    <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo" class="custom-logo">
+                    <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UI" class="custom-logo">
                 </td>
                 <td colspan="6" class="title title-white-border">Etiqueta para sellado de tanques</td>
                 <td rowspan="3" class="logo-cell" style="font-size: 12px;">
-                    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo">
+                    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo UI">
                 </td>
             </tr>
             <tr>
                 <td class="header-cell" style="font-size: 10px;">Fecha:</td>
                 <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</strong>
+                    <strong>{{ Carbon\Carbon::parse($datos->fecha_servicio)->translatedFormat('d \d\e F \d\e Y') ?? ''}}</strong>
                 </td>
                 <td class="header-cell" style="font-size: 10px;">Folio / No. de servicio:</td>
                 <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->inspeccion->num_servicio }}</strong></td>
+                    <strong>{{ $datos->num_servicio ?? ''}}</strong></td>
             </tr>
             <tr>
                 <td class="header-cell" style="font-size: 10px;">No. de lote:</td>
                 <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->lote_granel->nombre_lote }}</strong></td>
+                    <strong>{{ $datos->solicitud->lote_granel->nombre_lote ?? ''}}</strong></td>
                 <td class="header-cell" style="font-size: 10px;">Volumen del lote:</td>
-                <td colspan="2" style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->volumen }}
-                        L</strong></td>
+                <td colspan="2" style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->volumen ?? ''}} L</strong></td>
             </tr>
             <tr>
                 <td colspan="1" class="header-cell" style="font-size: 10px;">Razón Social / Productor:</td>
                 <td colspan="3" style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->empresa->razon_social }}</strong></td>
+                    <strong>{{ $datos->solicitud->empresa->razon_social ?? ''}}</strong></td>
                 <td colspan="2" class="header-cell" style="font-size: 10px;">Nombre de la marca:</td>
-                <td colspan="2" style="font-size: 10px;"><strong>Por definir</strong></td>
+                <td colspan="2" style="font-size: 10px;"><strong> </strong></td>
             </tr>
             <tr>
                 <td class="header-cell" style="font-size: 10px; text-align: left;">Categoría y clase:</td>
-                <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->categoria->categoria }},
-                        {{ $datos->solicitud->lote_granel->clase->clase }}</strong></td>
+                <td style="font-size: 10px;"><strong>
+                    {{ $datos->solicitud->lote_granel->categoria->categoria ?? ''}}, 
+                    {{ $datos->solicitud->lote_granel->clase->clase ?? ''}}
+                </strong></td>
                 <td class="header-cell" style="font-size: 10px;">Especie de agave:</td>
                 <td style="font-size: 10px;"><strong>
-                        @foreach ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
-                            {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)@if (!$loop->last)
-                                ,
-                            @endif
-                        @endforeach
-                    </strong></td>
+                    @forelse ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
+                        {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)
+                        @if (!$loop->last)
+                            <br>
+                        @endif
+                    @empty
+                        {{-- si está vacío no muestra nada (en blanco) --}}
+                    @endforelse
+                </strong></td>
                 <td class="header-cell" style="font-size: 10px;">Edad:</td>
-                <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->edad ?? 'N/A' }}</strong></td>
+                <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->edad ?? '' }}</strong></td>
                 <td class="header-cell" style="font-size: 10px;">Ingredientes:</td>
                 <td style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->lote_granel->ingredientes ?? 'N/A' }}</strong></td>
+                    <strong>{{ $datos->solicitud->lote_granel->ingredientes ?? '' }}</strong></td>
             </tr>
             <tr>
                 <td class="header-cell" style="font-size: 10px; text-align: left;">No. de Análisis Fisicoquímicos:
                 </td>
-                <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->folio_fq }}</strong></td>
+                <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->folio_fq ?? ''}}</strong></td>
                 <td class="header-cell" style="font-size: 10px;">ID del tanque:</td>
-                <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->id_tanque ?? 'N/A' }}</strong>
+                <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->id_tanque ?? '' }}</strong>
                 </td>
                 <td colspan="2" class="header-cell" style="font-size: 10px;">No. de certificado NOM:</td>
-                <td colspan="2" style="font-size: 10px;">
-                    <strong>
-                        {{$datos->solicitud?->lote_granel?->certificadoGranel?->num_certificado
-                            ?? $datos->solicitud?->lote_granel?->folio_certificado
-                            ?? 'No encontrado'}}
-                    </strong>
-                </td>
+                <td colspan="2" style="font-size: 10px;"> <strong>
+                    {{ $datos->solicitud->lote_granel?->certificadoGranel->num_certificado
+                    ?? $datos->solicitud->lote_granel->folio_certificado 
+                    ?? ''}}
+                </strong></td>
             </tr>
             <tr>
-                <td colspan="1" class="header-cell" style="font-size: 10px; text-align: left;">Nombre y firma del
-                    inspector:</td>
-                <td colspan="3" style="font-size: 10px;"><strong>{{ $datos->inspector->name }}</strong></td>
+                <td colspan="1" class="header-cell" style="font-size: 10px; text-align: left;">Nombre y firma del inspector:</td>
+                <td colspan="3" style="font-size: 10px;"><strong>{{ $datos->inspector->name ?? '' }}</strong></td>
                 <td colspan="2" class="header-cell" style="font-size: 10px;">Nombre y firma del responsable:</td>
                 <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->instalaciones->responsable }}</strong></td>
+                    <strong>{{ $datos->solicitud->instalaciones->responsable ?? ''}}</strong></td>
             </tr>
         </tbody>
     </table>
 
-    <!-- Tabla 8 -->
-    <table class="unique-final-table top">
-        <tbody>
-            <tr>
-                <td rowspan="3" class="logo-cell" style="font-size: 12px;">
-                    <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo" class="custom-logo">
-                </td>
-                <td colspan="6" class="title title-white-border">Etiqueta para sellado de tanques</td>
-                <td rowspan="3" class="logo-cell" style="font-size: 12px;">
-                    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo">
-                </td>
-            </tr>
-            <tr>
-                <td class="header-cell" style="font-size: 10px;">Fecha:</td>
-                <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</strong>
-                </td>
-                <td class="header-cell" style="font-size: 10px;">Folio / No. de servicio:</td>
-                <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->inspeccion->num_servicio }}</strong></td>
-            </tr>
-            <tr>
-                <td class="header-cell" style="font-size: 10px;">No. de lote:</td>
-                <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->lote_granel->nombre_lote }}</strong></td>
-                <td class="header-cell" style="font-size: 10px;">Volumen del lote:</td>
-                <td colspan="2" style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->volumen }}
-                        L</strong></td>
-            </tr>
-            <tr>
-                <td colspan="1" class="header-cell" style="font-size: 10px;">Razón Social / Productor:</td>
-                <td colspan="3" style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->empresa->razon_social }}</strong></td>
-                <td colspan="2" class="header-cell" style="font-size: 10px;">Nombre de la marca:</td>
-                <td colspan="2" style="font-size: 10px;"><strong>Por definir</strong></td>
-            </tr>
-            <tr>
-                <td class="header-cell" style="font-size: 10px; text-align: left;">Categoría y clase:</td>
-                <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->categoria->categoria }},
-                        {{ $datos->solicitud->lote_granel->clase->clase }}</strong></td>
-                <td class="header-cell" style="font-size: 10px;">Especie de agave:</td>
-                <td style="font-size: 10px;"><strong>
-                        @foreach ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
-                            {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)@if (!$loop->last)
-                                ,
-                            @endif
-                        @endforeach
-                    </strong></td>
-                <td class="header-cell" style="font-size: 10px;">Edad:</td>
-                <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->edad ?? 'N/A' }}</strong>
-                </td>
-                <td class="header-cell" style="font-size: 10px;">
-                    {{ $datos->solicitud->lote_granel->ingredientes ?? 'N/A' }}</td>
-                <td style="font-size: 10px;"><strong>NA</strong></td>
-            </tr>
-            <tr>
-                <td class="header-cell" style="font-size: 10px; text-align: left;">No. de Análisis Fisicoquímicos:
-                </td>
-                <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->folio_fq }}</strong></td>
-                <td class="header-cell" style="font-size: 10px;">ID del tanque:</td>
-                <td style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->lote_granel->id_tanque ?? 'N/A' }}</strong></td>
-                <td colspan="2" class="header-cell" style="font-size: 10px;">No. de certificado NOM:</td>
-                <td colspan="2" style="font-size: 10px;">
-                    <strong>
-                        {{$datos->solicitud?->lote_granel?->certificadoGranel?->num_certificado
-                            ?? $datos->solicitud?->lote_granel?->folio_certificado
-                            ?? 'No encontrado'}}
-                    </strong>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="1" class="header-cell" style="font-size: 10px; text-align: left;">Nombre y firma del
-                    inspector:</td>
-                <td colspan="3" style="font-size: 10px;"><strong>{{ $datos->inspector->name }}</strong></td>
-                <td colspan="2" class="header-cell" style="font-size: 10px;">Nombre y firma del responsable:</td>
-                <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->instalaciones->responsable }}</strong></td>
-            </tr>
-        </tbody>
-    </table>
-
-
-    <!-- Tabla 7 -->
-    <table class="unique-final-table top">
-        <tbody>
-            <tr>
-                <td rowspan="3" class="logo-cell" style="font-size: 12px;">
-                    <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo" class="custom-logo">
-                </td>
-                <td colspan="6" class="title title-white-border">Etiqueta para sellado de tanques</td>
-                <td rowspan="3" class="logo-cell" style="font-size: 12px;">
-                    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo">
-                </td>
-            </tr>
-            <tr>
-                <td class="header-cell" style="font-size: 10px;">Fecha:</td>
-                <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</strong>
-                </td>
-                <td class="header-cell" style="font-size: 10px;">Folio / No. de servicio:</td>
-                <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->inspeccion->num_servicio }}</strong></td>
-            </tr>
-            <tr>
-                <td class="header-cell" style="font-size: 10px;">No. de lote:</td>
-                <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->lote_granel->nombre_lote }}</strong></td>
-                <td class="header-cell" style="font-size: 10px;">Volumen del lote:</td>
-                <td colspan="2" style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->volumen }}
-                        L</strong></td>
-            </tr>
-            <tr>
-                <td colspan="1" class="header-cell" style="font-size: 10px;">Razón Social / Productor:</td>
-                <td colspan="3" style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->empresa->razon_social }}</strong></td>
-                <td colspan="2" class="header-cell" style="font-size: 10px;">Nombre de la marca:</td>
-                <td colspan="2" style="font-size: 10px;"><strong>Por definir</strong></td>
-            </tr>
-            <tr>
-                <td class="header-cell" style="font-size: 10px; text-align: left;">Categoría y clase:</td>
-                <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->categoria->categoria }},
-                        {{ $datos->solicitud->lote_granel->clase->clase }}</strong></td>
-                <td class="header-cell" style="font-size: 10px;">Especie de agave:</td>
-                <td style="font-size: 10px;"><strong>
-                        @foreach ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
-                            {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)@if (!$loop->last)
-                                ,
-                            @endif
-                        @endforeach
-                    </strong></td>
-                <td class="header-cell" style="font-size: 10px;">Edad:</td>
-                <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->edad ?? 'N/A' }}</strong>
-                </td>
-                <td class="header-cell" style="font-size: 10px;">Ingredientes:</td>
-                <td style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->lote_granel->ingredientes ?? 'N/A' }}</strong></td>
-            </tr>
-            <tr>
-                <td class="header-cell" style="font-size: 10px; text-align: left;">No. de Análisis Fisicoquímicos:
-                </td>
-                <td style="font-size: 10px;"><strong>{{ $datos->solicitud->lote_granel->folio_fq }}</strong></td>
-                <td class="header-cell" style="font-size: 10px;">ID del tanque:</td>
-                <td style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->lote_granel->id_tanque ?? 'N/A' }}</strong></td>
-                <td colspan="2" class="header-cell" style="font-size: 10px;">No. de certificado NOM:</td>
-                <td colspan="2" style="font-size: 10px;">
-                    <strong>
-                        {{$datos->solicitud?->lote_granel?->certificadoGranel?->num_certificado
-                            ?? $datos->solicitud?->lote_granel?->folio_certificado
-                            ?? 'No encontrado'}}
-                    </strong>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="1" class="header-cell" style="font-size: 10px; text-align: left;">Nombre y firma del
-                    inspector:</td>
-                <td colspan="3" style="font-size: 10px;"><strong>{{ $datos->inspector->name }}</strong></td>
-                <td colspan="2" class="header-cell" style="font-size: 10px;">Nombre y firma del responsable:</td>
-                <td colspan="2" style="font-size: 10px;">
-                    <strong>{{ $datos->solicitud->instalaciones->responsable }}</strong></td>
-            </tr>
-        </tbody>
-    </table>
+@endfor
 
     <!-- Footer sin tablas -->
     <div class="footer">
@@ -961,6 +555,6 @@
             <p>F-UV-04-04 <br> Edición 16, 15/07/2024</p>
         </div>
     </div>
-</body>
 
+</body>
 </html>

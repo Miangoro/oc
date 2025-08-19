@@ -113,27 +113,29 @@
 </head>
 
 <body>
+
+
     <table class="etiqueta-table">
         <tbody>
             <tr>
                 <td colspan="2" rowspan="3" class="border-green-custom image-cell">
-                    <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" class="logo-small">
+                    <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UI" class="logo-small">
                 </td>
                 <td colspan="4" class="custom-title">Etiqueta para agave (%ART)</td>
                 <td colspan="2" rowspan="3" class="border-green-custom image-cell">
-                    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador"
+                    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo UI"
                         class="logo-smallx">
                 </td>
             </tr>
             <tr>
                 <td class="custom">Fecha de muestreo:</td>
-                <td>{{ $fecha_muestreo }}</td>
+                <td>{{ Carbon\Carbon::parse($datos->fecha_servicio)->translatedFormat('d \d\e F \d\e Y') ?? ''}}</td>
                 <td class="custom">Folio / No. de servicio:</td>
-                <td>{{ $datos->num_servicio ?? 'Sin asignar' }} </td>
+                <td>{{ $datos->num_servicio ?? '' }} </td>
             </tr>
             <tr>
                 <td class="customx">No. de lote o tapada:</td>
-                <td>{{ $datos->solicitud->lote_granel->nombre_lote ?? '' }}</td>
+                <td> </td>
                 <td class="custom">Peso total del maguey:</td>
                 <td> </td>
             </tr>
@@ -190,82 +192,8 @@
         </tbody>
     </table>
 
+
     <br>
-
-
-    {{-- <table class="etiqueta-table">
-        <tbody>
-            <tr>
-                <td colspan="2" rowspan="3" class="border-green-custom image-cell">
-                    <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" class="logo-small">
-                </td>
-                <td colspan="4" class="custom-title">Etiqueta para agave (%ART)</td>
-                <td colspan="2" rowspan="3" class="border-green-custom image-cell">
-                    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador"
-                        class="logo-smallx">
-                </td>
-            </tr>
-            <tr>
-                <td class="custom">Fecha de muestreo:</td>
-                <td>{{ $datos->solicitud->lote_granel->fecha_emision ?? '' }}</td>
-                <td class="custom">Folio / No. de servicio:</td>
-                <td>{{ $datos->solicitud->inspeccion->num_servicio }}</td>
-            </tr>
-            <tr>
-                <td class="customx">No. de lote o tapada:</td>
-                <td>{{ $datos->solicitud->lote_granel->nombre_lote ?? '' }}</td>
-                <td class="custom">Peso total del maguey:</td>
-                <td>20090</td>
-            </tr>
-            <tr>
-                <td colspan="2" class="custom">Razón Social / Productor:</td>
-                <td colspan="2">{{ $datos->solicitud->empresa->razon_social }}</td>
-                <td class="custom">No. de piñas anterior:</td>
-                <td colspan="3">3012</td>
-            </tr>
-            <tr>
-                <td colspan="2" rowspan="4" class="custom">Domicilio:</td>
-                <td colspan="2" rowspan="4">{{ $datos->solicitud->instalaciones->direccion_completa ?? ''}}
-                </td>
-                <td class="custom">No. de piñas comercializadas:</td>
-                <td colspan="3">930</td>
-            </tr>
-            <tr>
-                <td class="custom">No. de piñas actual:</td>
-                <td colspan="3">2082</td>
-            </tr>
-            <tr>
-                <td class="custom">No. de guías del maguey:</td>
-                <td colspan="3">525G005</td>
-            </tr>
-            <tr>
-                <td class="custom">Especie o tipo de agave:</td>
-                <td colspan="3">
-                  @if (isset($datos->solicitud->lote_granel) && $datos->solicitud->lote_granel->tipos_relacionados)
-                  @foreach ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
-                      {{ $tipo->nombre ?? '' }} (<em>{{ $tipo->cientifico ?? '' }}</em>)@if (!$loop->last)
-                          ,
-                      @endif
-                  @endforeach
-              @endif
-
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" class="custom">Maestro mezcalero:</td>
-                <td colspan="2">Hugo César García González</td>
-                <td class="custom">Edad del agave:</td>
-                <td colspan="3">5 años</td>
-            </tr>
-            <tr>
-                <td colspan="2" class="customx">Nombre y firma del responsable:</td>
-                <td colspan="2">Ismael Ortega Lopez</td>
-                <td class="customx">Nombre y firma del inspector:</td>
-                <td colspan="3">Lidia Isabel Cabrera Vásquez</td>
-            </tr>
-        </tbody>
-    </table> --}}
-
 
     <div class="footer-bar">
         <p>F-UV-04-04 <br> Edición 16, 15/07/2024</p>
@@ -281,6 +209,7 @@
         </p>
     </div>
 
-</body>
 
+
+</body>
 </html>

@@ -319,5 +319,18 @@ public function clases_agave()
         return $this->hasOne(solicitudes_eliminadas::class, 'id_solicitud', 'id_solicitud');
     }
 
+    public function getGuiasAttribute()
+    {
+        $caracteristicas = json_decode($this->caracteristicas, true); // aseguramos que sea array
+        $ids = $caracteristicas['id_guia'] ?? [];
+
+        // Si no es un arreglo, regresamos colección vacía
+        if (!is_array($ids)) {
+            return collect();
+        }
+
+        return Guias::whereIn('id_guia', $ids)->get();
+    }
+
 
 }

@@ -48,7 +48,6 @@
         .right {
             position: absolute;
             right: 0px;
-            top: -25px;
             text-align: right;
         }
     </style>
@@ -66,6 +65,7 @@
 </div>
 
 
+@for ($i = 0; $i < 2; $i++)
 <!----------------------- ETIQUETA 1 ----------------------->
 <table class="tabla" style="border-collapse: collapse; " width=100%>
     <tr>
@@ -75,26 +75,26 @@
     </tr>
 
     <tr>
-        <td rowspan="3" style="width:12%;">
-            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 95px; height: 50px; padding-left: 10px" alt="Unidad de Inspección">
+        <td rowspan="3" style="width:15%;">
+            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 115px; height: 60px; padding-left: 12px" alt="Logo UI">
         </td>
-        <td colspan="4" class="azul" style="background-color: #0d5295; font-size: 13px;">
+        <td colspan="4" class="azul" style="background-color: #0d5295; padding:2px; font-size: 13px;">
             ETIQUETAS PARA INGRESO A MADURACIÓN
         </td>
-        <td rowspan="3" style="width:12%;">
-            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 95px; height: 50px; padding-left: 10" alt="Unidad de Inspección">
+        <td rowspan="3" style="width:15%;">
+            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 115px; height: 60px; padding-left: 12px" alt="Logo UI">
         </td>
     </tr>
 
     <tr>
         <td class="azul" style="width:15%;">FECHA DEL SERVICIO:</td>
-        <td>{{ Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y') }}</td>
+        <td>{{ Carbon\Carbon::parse($datos->fecha_servicio)->translatedFormat('d \d\e F \d\e Y') ?? ''}}</td>
         <td class="azul" style="width:15%;">NO. DE SERVICIO:</td>
-        <td>{{ $datos->num_servicio ?? 'Sin asignar' }} </td>
+        <td>{{ $datos->num_servicio ?? '' }}</td>
     </tr>
     <tr>
         <td class="azul">RAZÓN SOCIAL:</td>
-        <td colspan="3">{{ $datos->solicitud->empresa->razon_social }}</td>
+        <td colspan="3">{{ $datos->solicitud->empresa->razon_social ?? '' }}</td>
     </tr>
 
     <tr>
@@ -103,30 +103,40 @@
 </table>
 <table class="tabla" style="border-collapse: collapse;" width=100%>
     <tr>
-        <td class="azul" style="width:12%;">No. DE LOTE A GRANEL:</td>
+        <td class="azul" style="width:15%;">No. DE LOTE A GRANEL:</td>
         <td>{{ $datos->solicitud->lote_granel->nombre_lote ?? '' }}</td>
-        <td class="azul" style="width:12%;">TIPO DE MAGUEY O AGAVE:</td>
-        <td>{{ $datos->solicitud->lote_granel->ingredientes ?? 'N/A' }}</td>
-        <td rowspan="3" style="width: 2px; border: none; border-top: 2px solid #000;"> </td><!--ESPACIO-->
-
-        <td colspan="2" class="azul" style="width:12%;">NO. DE ANÁLISIS FISIFCOQUÍMICOS:</td>
-        <td colspan="2">{{ $datos->solicitud->lote_granel->estados->nombre ?? '' }}</td>
+        <td class="azul" style="width:11%;">TIPO DE MAGUEY O AGAVE:</td>
+        <td style="font-size: 9px;"><!--recorre si hay elementos y si no hay, ejecuta un bloque empty-->
+            @forelse ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
+                {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)
+                @if (!$loop->last)
+                    <br>
+                @endif
+            @empty
+                {{-- si está vacío no muestra nada (en blanco) --}}
+            @endforelse
+        </td>
+        <td rowspan="3" style="width: 1px; border: none; border-top: 2px solid #000;"></td><!--ESPACIO-->
+        <td colspan="2" class="azul" style="width:18%;">NO. DE ANÁLISIS FISICOQUÍMICOS:</td>
+        <td colspan="2">{{ $datos->solicitud->lote_granel->folio_fq ?? '' }}</td>
     </tr>
     <tr>
         <td class="azul">CATEGORÍA:</td>
-        <td>{{ $datos->solicitud->lote_granel->categoria->categoria ?? ''}},
-            {{ $datos->solicitud->lote_granel->clase->clase ?? '' }}
-        </td>
+        <td>{{ $datos->solicitud->lote_granel->categoria->categoria ?? ''}}</td>
         <td rowspan="2" class="azul">VOLUMEN TOTAL DEL LOTE:</td>
-        <td rowspan="2"> R </td>
-        <td colspan="2" class="azul" style="width:12%;">NO. DE CERTIFICADO NOM A GRANEL:</td>
-        <td colspan="2">R</td>
+        <td rowspan="2">{{ $datos->solicitud->lote_granel->volumen_restante ?? ''}} L</td>
+        <td colspan="2" class="azul">NO. DE CERTIFICADO NOM A GRANEL:</td>
+        <td colspan="2">
+            {{ $datos->solicitud->lote_granel?->certificadoGranel->num_certificado
+                ?? $datos->solicitud->lote_granel->folio_certificado 
+                ?? ''}}
+        </td>
     </tr>
     <tr>
         <td class="azul">CLASE:</td>
-        <td>{{ $datos->solicitud->lote_granel->edad ?? 'N/A' }}</td>
+        <td>{{ $datos->solicitud->lote_granel->clase->clase ?? '' }}</td>
         <td colspan="2" class="azul">% ALC. VOL. :</td>
-        <td colspan="2"> R </td>
+        <td colspan="2">{{ $datos->solicitud->lote_granel->cont_alc ?? '' }}</td>
     </tr>
 
     <tr>
@@ -136,23 +146,31 @@
         <td colspan="9" style="background-color: #5b9bd5; padding-top: 2px; padding-bottom: 2px; border-left: 2px solid #000; border-right: 2px solid #000; border-top: 2px solid #000; border-bottom: none; font-size: 12px"><b>II.Información del ingreso</b></td>
     </tr>
 
+@php
+    $caracteristicas = json_decode($datos->solicitud->caracteristicas, true);
+    if ($caracteristicas['tipoIngreso'] == 'Ingreso de producto en barrica') {
+        $barricas = 'X';
+    }else{
+        $vidrio = 'X';
+    }
+@endphp
     <tr>
-        <td rowspan="2" class="azul" style="width:12%;">MADURACIÓN:</td>
-        <td>BARRICAS:_____ </td>
-        <td style="width:12%;">TIPO DE MADERA: </td>
-        <td>{{ $datos->solicitud->lote_granel->folio_fq ?? ''}}</td>
-        <td rowspan="2" style="width: 2px; border: none; border-top: 2px solid #000;"> </td><!--ESPACIO-->
+        <td rowspan="2" class="azul">MADURACIÓN:</td>
+        <td>BARRICAS: <u>&nbsp;&nbsp;&nbsp;{{$barricas ?? ''}}&nbsp;&nbsp;&nbsp;</u> </td>
+        <td>TIPO DE MADERA: </td>
+        <td></td>
+        <td rowspan="2" style="border: none; border-top: 2px solid #000;"> </td><!--ESPACIO-->
         <td class="azul">No DE RECIPIENTES:</td>
-        <td>r</td>
+        <td>{{ $caracteristicas['num_recipientes'] ?? ''}}</td>
         <td class="azul">CAPACIDAD DE LOS RECIPIENTES:</td>
-        <td>r</td>
-    </tr>
+        <td>{{ $caracteristicas['capacidad'] ?? ''}}</td>
+    </tr>   
     <tr>
-        <td>VIDRIO:_____</td>
+        <td>VIDRIO: <u>&nbsp;&nbsp;&nbsp;{{$vidrio ?? ''}}&nbsp;&nbsp;&nbsp;</u> </td>
         <td>TIPO DE RECIPIENTE:</td>
-        <td>R</td>
+        <td>{{ $caracteristicas['material'] ?? ''}}</td>
         <td colspan="2" class="azul">VOLUMEN INGRESADO:</td>
-        <td colspan="2">r</td>
+        <td colspan="2">{{ $caracteristicas['volumen_ingresado'] ?? ''}} L</td>
     </tr>
 
     <tr>
@@ -160,15 +178,18 @@
     </tr>
 
     <tr>
-        <td colspan="4">{{ $datos->solicitud->instalaciones->responsable ?? ''}}</td>
-        <td rowspan="2" style="width: 2px; border-left: none; border-right: none; border-top: none; border-bottom: 2px solid #000;"> </td><!--ESPACIO-->
-        <td colspan="4">{{ $datos->inspector->name ?? ''}}</td>
+        <td colspan="4" style="padding:10px;">{{ $datos->solicitud->instalaciones->responsable ?? ''}}</td>
+        <td rowspan="2" style="border-left: none; border-right: none; border-top: none; border-bottom: 2px solid #000;"></td><!--ESPACIO-->
+        <td colspan="4" style="padding:10px;">{{ $datos->inspector->name ?? ''}}</td>
     </tr>
     <tr>
-        <td colspan="4" class="azul">NOMBRE Y FIRMA DEL RESPONSABLE DE INSTALACIONES</td>
-        <td colspan="4" class="azul">NOMBRE Y FIRMA DEL TÉCNICO INSPECTOR</td>
+        <td colspan="4" class="azul" style="padding:8px;">NOMBRE Y FIRMA DEL RESPONSABLE DE INSTALACIONES</td>
+        <td colspan="4" class="azul" style="padding:8px;">NOMBRE Y FIRMA DEL TÉCNICO INSPECTOR</td>
     </tr>
 </table>
+
+ 
+<br><br>{{-- separación entre etiquetas --}}@endfor
 
 
 

@@ -144,6 +144,8 @@
 </head>
 <body>
 
+
+@for ($i = 0; $i < 3; $i++)
 <table class="etiqueta-table">
     <tbody>
         <tr>
@@ -159,7 +161,7 @@
             <td colspan="5" class="custom-titlex">Nombre o Razón social: </td>
         </tr>
         <tr>
-            <td colspan="5">{{ $datos->solicitud->empresa->razon_social }}</td>
+            <td colspan="5">{{ $datos->solicitud->empresa->razon_social ?? '' }}</td>
         </tr>
         <tr>
             <td class="customd">No. de servicio:</td>
@@ -169,17 +171,17 @@
             <td class="customd">Clase:</td>
         </tr>
         <tr>
-            <td>{{ $datos->solicitud->inspeccion->num_servicio }}</td>
-            <td>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</td>
-            <td>{{ $datos->solicitud->lote_granel->nombre_lote }}</td>
-            <td>{{ $datos->solicitud->lote_granel->categoria->categoria }}</td>
-            <td>{{ $datos->solicitud->lote_granel->clase->clase }}</td>
+            <td>{{ $datos->num_servicio ?? '' }}</td>
+            <td>{{ Carbon\Carbon::parse($datos->fecha_servicio)->translatedFormat('d \d\e F \d\e Y') ?? ''}}</td>
+            <td>{{ $datos->solicitud->lote_granel->nombre_lote ?? '' }}</td>
+            <td>{{ $datos->solicitud->lote_granel->categoria->categoria ?? ''}}</td>
+            <td>{{ $datos->solicitud->lote_granel->clase->clase ?? ''}}</td>
         </tr>
         <tr>
             <td colspan="2" rowspan="2" class="custom">Fisicoquímico:</td>
-            <td rowspan="2">{{ $datos->solicitud->lote_granel->folio_fq }}</td>
+            <td rowspan="2">{{ $datos->solicitud->lote_granel->folio_fq ?? '' }}</td>
             <td colspan="2" rowspan="2" class="customx">Grado Alcohólico: </td>
-            <td rowspan="2">{{ $datos->solicitud->lote_granel->cont_alc }}</td>
+            <td rowspan="2">{{ $datos->solicitud->lote_granel->cont_alc ?? '' }}</td>
             <td class="custom">Barrica: </td>
             <td colspan="2"></td>
         </tr>
@@ -190,7 +192,7 @@
         <tr>
             <td colspan="2" class="customx">Nombre y firma del inspector: </td>
             <td colspan="3" class="bold firma-container">
-              <div class="firma-text">{{ $datos->inspector->name }}</div>
+              <div class="firma-text">{{ $datos->inspector->name ?? ''}}</div>
 
 {{--               @php
               $firma = !empty($datos->inspector->firma)
@@ -203,7 +205,7 @@
           </td>
             <td class="customx">Nombre y firma del responsable:</td>
             <td colspan="3" class="bold firma-container">
-                <div class="firma-text">{{ $datos->solicitud->instalaciones->responsable }}</div>
+                <div class="firma-text">{{ $datos->solicitud->instalaciones->responsable ?? ''}}</div>
                 <!-- Lugar si hay firma -->
                 <!-- <img src="{{ public_path('img_pdf/logoumsn.png') }}" alt="Firma Lidia Isabel Cabrera Vásquez" class="firma"> -->
             </td>
@@ -212,148 +214,14 @@
 </table>
 
 <br>
+@endfor
 
-<table class="etiqueta-table">
-    <tbody>
-        <tr>
-            <td colspan="2" rowspan="5" class="image-cell">
-                <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" class="logo-small">
-            </td>
-            <td colspan="5" class="custom-title">Etiqueta de ingreso a barricas</td>
-            <td colspan="2" rowspan="5" class="image-cellx">
-                <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador" class="logo-smallx">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="5" class="custom-titlex">Nombre o Razón social: </td>
-        </tr>
-        <tr>
-            <td colspan="5">{{ $datos->solicitud->empresa->razon_social }}</td>
-        </tr>
-        <tr>
-            <td class="customd">No. de servicio:</td>
-            <td class="customd">Fecha:</td>
-            <td class="customd">Lote:</td>
-            <td class="customd">Categoría:</td>
-            <td class="customd">Clase:</td>
-        </tr>
-        <tr>
-          <td>{{ $datos->solicitud->inspeccion->num_servicio }}</td>
-          <td>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</td>
-          <td>{{ $datos->solicitud->lote_granel->nombre_lote }}</td>
-          <td>{{ $datos->solicitud->lote_granel->categoria->categoria }}</td>
-          <td>{{ $datos->solicitud->lote_granel->clase->clase }}</td>
-      </tr>
-        <tr>
-          <td colspan="2" rowspan="2" class="custom">Fisicoquímico:</td>
-          <td rowspan="2">{{ $datos->solicitud->lote_granel->folio_fq }}</td>
-          <td colspan="2" rowspan="2" class="customx">Grado Alcohólico: </td>
-          <td rowspan="2">{{ $datos->solicitud->lote_granel->cont_alc }}</td>
-            <td class="custom">Barrica: </td>
-            <td colspan="2"></td>
-        </tr>
-        <tr>
-            <td class="customx">De:</td>
-            <td colspan="2"></td>
-        </tr>
-        <tr>
-            <td colspan="2" class="customx">Nombre y firma del inspector: </td>
-{{--             <td colspan="3" class="bold firma-container">
-                <div class="firma-text">{{ $datos->inspector->name }}</div>
-
-            </td> --}}
-
-            <td colspan="3" class="bold firma-container">
-              <div class="firma-text">{{ $datos->inspector->name }}</div>
-{{--               @php
-              $firmaPath = public_path('storage/firmas/' . $datos->inspector->firma);
-            @endphp
-
-            @if (!empty($datos->inspector->firma) && file_exists($firmaPath))
-                <img src="{{ asset('storage/firmas/' . $datos->inspector->firma) }}" alt="Firma {{ $datos->inspector->name }}" class="firma">
-            @endif --}}
-          </td>
-
-
-            <td class="customx">Nombre y firma del responsable:</td>
-            <td colspan="3" class="bold firma-container">
-                <div class="firma-text">{{ $datos->solicitud->instalaciones->responsable }}</div>
-                <!-- Lugar si hay firma -->
-                <!-- <img src="{{ public_path('img_pdf/logoumsn.png') }}" alt="Firma Lidia Isabel Cabrera Vásquez" class="firma"> -->
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<br>
-
-<table class="etiqueta-table">
-    <tbody>
-        <tr>
-            <td colspan="2" rowspan="5" class="image-cell">
-                <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" class="logo-small">
-            </td>
-            <td colspan="5" class="custom-title">Etiqueta de ingreso a barricas</td>
-            <td colspan="2" rowspan="5" class="image-cellx">
-                <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Organismo Certificador" class="logo-smallx">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="5" class="custom-titlex">Nombre o Razón social: </td>
-        </tr>
-        <tr>
-            <td colspan="5">{{ $datos->solicitud->empresa->razon_social }}</td>
-        </tr>
-        <tr>
-            <td class="customd">No. de servicio:</td>
-            <td class="customd">Fecha:</td>
-            <td class="customd">Lote:</td>
-            <td class="customd">Categoría:</td>
-            <td class="customd">Clase:</td>
-        </tr>
-        <tr>
-          <td>{{ $datos->solicitud->inspeccion->num_servicio }}</td>
-          <td>{{ \Carbon\Carbon::parse($datos->solicitud->fecha_solicitud)->format('Y-m-d') }}</td>
-          <td>{{ $datos->solicitud->lote_granel->nombre_lote }}</td>
-          <td>{{ $datos->solicitud->lote_granel->categoria->categoria }}</td>
-          <td>{{ $datos->solicitud->lote_granel->clase->clase }}</td>
-      </tr>
-        <tr>
-          <td colspan="2" rowspan="2" class="custom">Fisicoquímico:</td>
-          <td rowspan="2">{{ $datos->solicitud->lote_granel->folio_fq }}</td>
-          <td colspan="2" rowspan="2" class="customx">Grado Alcohólico: </td>
-          <td rowspan="2">{{ $datos->solicitud->lote_granel->cont_alc }}</td>
-            <td class="custom">Barrica: </td>
-            <td colspan="2"></td>
-        </tr>
-        <tr>
-            <td class="customx">De:</td>
-            <td colspan="2"></td>
-        </tr>
-        <tr>
-            <td colspan="2" class="customx">Nombre y firma del inspector: </td>
-            <td colspan="3" class="bold firma-container">
-              <div class="firma-text">{{ $datos->inspector->name }}</div>
-{{--               @php
-              $firmaPath = public_path('storage/firmas/' . $datos->inspector->firma);
-            @endphp
-
-            @if (!empty($datos->inspector->firma) && file_exists($firmaPath))
-                <img src="{{ asset('storage/firmas/' . $datos->inspector->firma) }}" alt="Firma {{ $datos->inspector->name }}" class="firma">
-            @endif --}}
-          </td>
-            <td class="customx">Nombre y firma del responsable:</td>
-            <td colspan="3" class="bold firma-container">
-                <div class="firma-text">{{ $datos->solicitud->instalaciones->responsable }}</div>
-                <!-- Lugar si hay firma -->
-                <!-- <img src="{{ public_path('img_pdf/logoumsn.png') }}" alt="Firma Lidia Isabel Cabrera Vásquez" class="firma"> -->
-            </td>
-        </tr>
-    </tbody>
-</table>
 
 <div class="footer-bar">
     <p>Entrada en vigor el 15 de julio del 2024<br>Página 1 /1 F-UV-04-04 Versión 16</p>
 </div>
+
+
+
 </body>
 </html>
