@@ -8,6 +8,7 @@ use App\Models\empresa;
 use App\Models\Predios;
 use App\Http\Controllers\Controller;
 use App\Models\Documentacion_url;
+use App\Models\empresaNumCliente;
 use App\Models\predio_plantacion;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -84,6 +85,7 @@ $totalData = $queryBase->get()->count(); // total de folios únicos
 // --------- Query agrupada con agregados ---------
 $query = Guias::select([
         'run_folio',
+        'empresa.id_empresa AS id_empresa',
         DB::raw('MIN(guias.id_guia) as id_guia'),
         DB::raw('MAX(guias.folio) as folio'),
          DB::raw('MAX(predios.num_predio) as num_predio'),
@@ -129,14 +131,17 @@ $guias = $query->orderBy($order, $dir)
 
 
             foreach ($guias as $user) {
-                //$numero_cliente = empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
-                // Nombre y Número de empresa
-                $empresa = $user->empresa ?? null;
+                $numero_cliente = empresaNumCliente::where('id_empresa', $user->id_empresa)
+    ->whereNotNull('numero_cliente')
+    ->value('numero_cliente');
 
-                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                // Nombre y Número de empresa
+               // $empresa = $user->empresa ?? null;
+
+                /*$numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
                     ? $empresa->empresaNumClientes->first(fn($item) =>
                         $item->empresa_id === $empresa->id && !empty($item->numero_cliente)
-                    )?->numero_cliente ?? 'No encontrado' : 'N/A';
+                    )?->numero_cliente ?? 'No encontrado' : 'N/A';*/
 
                 
                 $documentoGuia = Documentacion_url::where('id_relacion', $user->id_guia)
@@ -160,7 +165,7 @@ $guias = $query->orderBy($order, $dir)
                     'fake_id' => ++$ids,
                     'folio' => $user->folio,
                     'run_folio' => $user->run_folio,
-                    'razon_social' => $empresa->razon_social ?? 'No encontrado',
+                    'razon_social' => $user->razon_social ?? 'No encontrado',
                     'numero_cliente' => $numero_cliente, // Asignar numero_cliente
                     'id_predio' => $user->num_predio.' '.$user->nombre_predio,
                     'numero_plantas' => $user->numero_plantas,
