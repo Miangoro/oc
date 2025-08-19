@@ -37,7 +37,7 @@ class Certificado_InstalacionesController extends Controller
             ->get(); 
         $dictamenes = Dictamen_instalaciones::where('estatus', '!=', 1)
             ->whereDoesntHave('certificado') // Solo los dictámenes sin certificado
-            ->where('fecha_emision','>','2024-12-31')
+            //->where('fecha_emision','>','2024-12-31')
             ->orderBy('id_dictamen', 'desc')
             ->get();
         $users = User::where('tipo', 1)->get();
