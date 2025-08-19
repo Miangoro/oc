@@ -330,7 +330,7 @@ $(function () {
             $(node).find('select').select2();
           }
         },
-        /*   {
+           {
           className: 'dt-custom-select p-0 me-2 btn-outline-dark form-select-sm',
           text: '',
           init: function (api, node) {
@@ -342,7 +342,7 @@ $(function () {
             `);
             $(node).find('select').select2();
           }
-        }, */
+        }, 
         {
           text: '<i class="ri-eye-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Ver Bitácora</span>',
           className: 'btn btn-info waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4 mt-md-0',

@@ -110,7 +110,7 @@ class BitacoraMezcalController extends Controller
                 $query->where('id_instalacion', $instalacionId);
             }
         } */
-        /* if ($empresaId) {
+         if ($empresaId) {
               $empresa = empresa::find($empresaId);
 
               if ($empresa) {
@@ -134,7 +134,7 @@ class BitacoraMezcalController extends Controller
                       $query->where('id_instalacion', $instalacionId);
                   }
               }
-          } */
+          } 
 
 
         $filteredQuery = clone $query;
@@ -212,6 +212,7 @@ class BitacoraMezcalController extends Controller
                 'id' => $bitacora->id,
                 //numero de cliente
                 'razon_social' => $razonSocial,
+                'domicilio_instalacion' => $bitacora->instalacion->direccion_completa ?? '',
                 'numero_cliente' => $numeroCliente,
                 'cliente' => '<b>' . $numeroCliente . '</b><br>' . $razonSocial,
                 //

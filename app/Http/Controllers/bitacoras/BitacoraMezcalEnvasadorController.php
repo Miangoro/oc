@@ -109,7 +109,7 @@ class BitacoraMezcalEnvasadorController extends Controller
                 $query->where('id_instalacion', $instalacionId);
             }
         } */
-        /* if ($empresaId) {
+         if ($empresaId) {
               $empresa = empresa::find($empresaId);
 
               if ($empresa) {
@@ -133,7 +133,7 @@ class BitacoraMezcalEnvasadorController extends Controller
                       $query->where('id_instalacion', $instalacionId);
                   }
               }
-          } */
+          } 
          $filteredQuery = clone $query;
         if (!empty($search)) {
             $filteredQuery->where(function ($q) use ($search) {
