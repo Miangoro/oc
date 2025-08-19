@@ -266,13 +266,22 @@
                 break;
         }
 
-        if (etiquetaHref !== '') {
+        if (etiquetaHref !== '' && inspectorName !== 'Sin inspector') {
             $('#links_etiquetas').attr('href', etiquetaHref);
             $('.etiqueta_name').text(etiquetaTexto);
             $('.etiquetasNA').show(); // mostrar el tr
         } else {
             $('.etiquetasNA').hide(); // ocultar el tr
         }
+        /*
+        if (inspectorName != 'Sin inspector') {
+            $('#link_plan_auditoria').attr('href', audiHref);
+            $('.auditoria_texto').text(auditoria_texto);
+            $('.auditoria').show(); // mostrar el tr
+        } else {
+            $('.auditoria').hide(); // ocultar el tr
+        }
+        */
 
         ///DOCUMENTACION DE LA SOLICITUD GENERADA
         $.ajax({
