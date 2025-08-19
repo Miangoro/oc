@@ -77,13 +77,13 @@
 
     <tr>
         <td rowspan="6" style="width: 22%;">
-            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 180px; height: 95px; padding-left: 17px; padding-top: 17px" alt="Logo UI">
+            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 190px; height: 90px; padding-left: 11px; padding-top: 17px" alt="Logo UI">
         </td>
         <td colspan="3" class="verde" style="font-size: 15px;">
             ETIQUETA PARA TAPA MUESTRAS DE LOTE DE MEZCAL A GRANEL
         </td>
         <td rowspan="6" style="width: 22%;">
-            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 180px; height: 95px; padding-left: 17px; padding-top: 17px" alt="Logo UI">
+            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" style="position: absolute; width: 190px; height: 90px; padding-left: 11px; padding-top: 17px" alt="Logo UI">
         </td>
     </tr>
 
@@ -107,7 +107,8 @@
 
     <tr>
         <td>{{ $datos->solicitud->lote_granel->nombre_lote ?? '' }}</td>
-        <td> </td>
+        <td>{{ $datos->solicitud->lote_granel->categoria->categoria ?? ''}} - 
+            {{ $datos->solicitud->lote_granel->clase->clase ?? ''}}</td>
     </tr>
 </table>
 

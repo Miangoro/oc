@@ -275,13 +275,11 @@
         }*/
        if (etiquetaHref !== '') {
             $('.etiqueta_name').text(etiquetaTexto);
-
             if (inspectorName !== 'Sin inspector') {
                 $('#links_etiquetas').attr('href', etiquetaHref).html('<i class="ri-file-pdf-2-fill ri-40px text-danger"></i>');
             } else {
                 $('#links_etiquetas').removeAttr('href').text('Sin inspección asignada');
             }
-
             $('.etiquetasNA').show(); // mostrar el tr siempre
         } else {
             $('.etiquetasNA').hide(); // ocultar el tr si no hay PDF
