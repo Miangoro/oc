@@ -74,50 +74,47 @@ $order = $columns[$orderColumnIndex] ?? 'id_guia';
 $dir = $request->input('order.0.dir');
 $searchValue = $request->input('search.value');
 
-// Base query (sin groupBy) para contar total
-$queryBase = Guias::with(['empresa.empresaNumClientes', 'predios']);
-if ($empresaId) {
-    $queryBase->where('id_empresa', $empresaId);
-}
-
-$totalData = $queryBase->count(); // Total sin filtros
-
-// Query con groupBy (para traer registros únicos por run_folio)
-$query = Guias::with(['empresa.empresaNumClientes', 'predios'])
-    ->select('guias.*') // importante para no romper con groupBy
+// --------- Query base para contar total de folios únicos ---------
+$queryBase = Guias::select('run_folio')
+    ->when($empresaId, fn($q) => $q->where('id_empresa', $empresaId))
     ->groupBy('run_folio');
 
-if ($empresaId) {
-    $query->where('id_empresa', $empresaId);
-}
+$totalData = $queryBase->get()->count(); // total de folios únicos
 
-// Si hay búsqueda
+// --------- Query agrupada con agregados ---------
+$query = Guias::select([
+        'run_folio',
+        DB::raw('MIN(guias.id_guia) as id_guia'),
+        DB::raw('MAX(guias.folio) as folio'),
+         DB::raw('MAX(predios.num_predio) as num_predio'),
+        DB::raw('MAX(predios.nombre_predio) as nombre_predio'),
+        DB::raw('MAX(empresa.razon_social) as razon_social'),
+        DB::raw('COUNT(guias.id_guia) as numero_guias'),
+        DB::raw('SUM(guias.numero_plantas) as numero_plantas'),
+        DB::raw('SUM(guias.num_anterior) as num_anterior'),
+        DB::raw('SUM(guias.num_comercializadas) as num_comercializadas'),
+        DB::raw('SUM(guias.mermas_plantas) as mermas_plantas')
+    ])
+    ->join('empresa', 'empresa.id_empresa', '=', 'guias.id_empresa')
+    ->leftJoin('predios', 'predios.id_predio', '=', 'guias.id_predio')
+    ->when($empresaId, fn($q) => $q->where('guias.id_empresa', $empresaId))
+    ->groupBy('run_folio');
+
+// --------- Filtros de búsqueda ---------
 if (!empty($searchValue)) {
     $query->where(function ($q) use ($searchValue) {
         $q->where('run_folio', 'LIKE', "%{$searchValue}%")
-            ->orWhere('folio', 'LIKE', "%{$searchValue}%")
-            ->orWhere('id_empresa', 'LIKE', "%{$searchValue}%");
-
-        $q->orWhereHas('empresa', function ($Nombre) use ($searchValue) {
-            $Nombre->where('razon_social', 'LIKE', "%{$searchValue}%");
-        });
-
-        $q->orWhereHas('empresa.empresaNumClientes', function ($q) use ($searchValue) {
-            $q->where('numero_cliente', 'LIKE', "%{$searchValue}%");
-        });
-
-        $q->orWhereHas('predios', function ($Predio) use ($searchValue) {
-            $Predio->where('nombre_predio', 'LIKE', "%{$searchValue}%");
-        });
+          ->orWhere('guias.folio', 'LIKE', "%{$searchValue}%")
+          ->orWhere('empresa.razon_social', 'LIKE', "%{$searchValue}%")
+          ->orWhere('predios.nombre_predio', 'LIKE', "%{$searchValue}%");
     });
 
-    // 👀 Ojo: aquí contamos sobre un clon de la query (sin paginación)
     $totalFiltered = $query->get()->count();
 } else {
     $totalFiltered = $totalData;
 }
 
-// Aplicar orden y paginación
+// --------- Paginación y orden ---------
 $guias = $query->orderBy($order, $dir)
     ->offset($start)
     ->limit($limit)
@@ -165,7 +162,7 @@ $guias = $query->orderBy($order, $dir)
                     'run_folio' => $user->run_folio,
                     'razon_social' => $empresa->razon_social ?? 'No encontrado',
                     'numero_cliente' => $numero_cliente, // Asignar numero_cliente
-                    'id_predio' => $user->predios ? $user->predios->nombre_predio : '',
+                    'id_predio' => $user->num_predio.' '.$user->nombre_predio,
                     'numero_plantas' => $user->numero_plantas,
                     'num_anterior' => $user->num_anterior,
                     'num_comercializadas' => $user->num_comercializadas,
