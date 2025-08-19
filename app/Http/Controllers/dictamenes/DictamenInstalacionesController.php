@@ -235,6 +235,7 @@ public function index(Request $request)
                         $id_documento = 129;
                         break;
                     default:
+                        $id_documento = null;
                 }
                 $documento = null;
                 if ($instalacion && $dictamen->certificado) {
