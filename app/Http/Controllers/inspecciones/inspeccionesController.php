@@ -912,8 +912,7 @@ public function asignarInspector(Request $request)
                 }
             }
 
-        //edicion del formato
-        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {
+        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {//edicion del formato
             $edicion = 'pdfs.etiquetas_tapas_sellado'; // ed16
         } else {
             $edicion = 'pdfs.etiquetas_tapas_sellado_ed17';
@@ -930,8 +929,7 @@ public function asignarInspector(Request $request)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
         
-        //edicion del formato
-        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {
+        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {//edicion del formato
             $edicion = 'pdfs.etiqueta_lotes_mezcal_granel'; // ed16
         } else {
             $edicion = 'pdfs.etiqueta_lotes_mezcal_granel_ed17';
@@ -945,8 +943,7 @@ public function asignarInspector(Request $request)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
 
-        //edicion del formato
-        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {
+        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {//edicion del formato
             $edicion = 'pdfs.etiqueta_barrica'; // ed16
         } else {
             $edicion = 'pdfs.etiqueta_barrica_ed17';

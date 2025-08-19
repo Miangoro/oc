@@ -70,12 +70,12 @@ class UsuariosController extends Controller
     $mes = $currentDate->translatedFormat('F');
     $anio = $currentDate->year;
         $res = User::with('empresa')->where('id', $id)->first();
-        $id_contacto = $res->empresa->id_contacto ?? '0';
+        $id_contacto = $res->id_contacto ?? '0';
         $contacto = User::find($id_contacto);
 
         $pdf = Pdf::loadView('pdfs.AsignacionUsuario',[
           'datos'=>$res,
-          'contacto'=>$contacto,
+          'contacto'=>$contacto ?? null,
           'dia'=>$dia,
           'mes'=>$mes,
           'anio'=>$anio,

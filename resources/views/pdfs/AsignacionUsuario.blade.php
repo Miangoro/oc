@@ -104,7 +104,7 @@
         .Atentamente p {
             font-size: 16px;
             text-align: center;
-            margin-top: 10px;
+            line-height: 0.8;
         }
 
     </style>
@@ -166,15 +166,14 @@
         $firma = $contacto->firma ?? null;
         $firmaPath = $firma ? 'firmas/' . $firma : null;
     @endphp
-
-    @if ($firma && Storage::disk('public')->exists($firmaPath))
-        <img style="position: absolute; left: 38%; margin-top: 4%; " height="60px"
-        src="{{ public_path('storage/' . $firmaPath) }}">
-    @endif
     
     <div class="Atentamente">
-        <p>Atentamente. <br><br><br>
-
+        <p>Atentamente.
+            <br>
+            @if ($firma && Storage::disk('public')->exists($firmaPath))
+                <img height="60px" src="{{ public_path('storage/' . $firmaPath) }}">
+            @endif
+            <br>
             <u>{{$contacto->name ?? 'No encontrado'}}</u> <br><br>
             {{$contacto->puesto ?? 'No encontrado'}}
         </p>

@@ -184,12 +184,11 @@ $(function () {
             }
           },
           {
-            // email verify
+            //PDF carta asignacion
             targets: 8,
             className: 'text-center',
             render: function (data, type, full, meta) {
-              var $id = full['id_empresa'];
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id']}" data-registro="${full['name']} "></i>`;
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdfCartAsignacion cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id']}" data-nombre="${full['name']}"></i>`;
             }
           },
         {
@@ -346,9 +345,9 @@ $(function () {
 
 
 //RECIBE LOS DATOS DEL PDF
-  $(document).on('click', '.pdf', function () {
+  $(document).on('click', '.pdfCartAsignacion', function () {
     var id = $(this).data('id');
-    var registro = $(this).data('registro');
+    var nombre = $(this).data('nombre');
       var iframe = $('#pdfViewer');//contenido
       var spinner = $('#cargando');
 
@@ -361,7 +360,7 @@ $(function () {
       $("#NewPestana").attr('href', '../pdf_asignacion_usuario/'+id).show();
     //Titulos
       $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
-      $("#subtitulo_modal").text(registro);
+      $("#subtitulo_modal").text(nombre);
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
       iframe.on('load', function () {
       spinner.hide();
