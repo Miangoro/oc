@@ -147,16 +147,16 @@ $(function () {
               (row.id_organismo || 'CIDAM') +
               '</span><br><span class="fw-bold text-dark small">Certificado:</span><span class="small"> ' +
               // Verifica si hay URL del certificado
-              
+
               /*(row.url_certificado
                 ? `<a class="text-decoration-underline waves-effect text-primary pdfCerGranel" data-bs-target="#mostrarPdf"
                   data-bs-toggle="modal" data-bs-dismiss="modal"
                   data-id="${row.id_lote_granel}" data-registro="${row.id_empresa}"
                   data-url="${row.url_certificado}">${row.folio_certificado}</a>`
                 : row.folio_certificado) +*/
-                (row.certificado 
-                    ? `<a href="${row.certificado}" class="text-primary" target="_blank">${row.num_certificado}</a>`
-                    : row.num_certificado) +
+              (row.certificado
+                ? `<a href="${row.certificado}" class="text-primary" target="_blank">${row.num_certificado}</a>`
+                : row.num_certificado) +
 
               '</span>' +
               '<br><span class="fw-bold text-dark small">Emisión:</span><span class="small"> ' +
@@ -209,29 +209,29 @@ $(function () {
         orderable: false,
         render: function (data, type, full, meta) {
           let acciones = '';
-            if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id_lote_granel']}" data-bs-toggle="modal" data-bs-target="#offcanvasEditLote" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes agranel</a>`;
-            }
-            if (window.puedeEliminarElUsuario) {
-              acciones += `<a data-id="${full['id_lote_granel']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes agranel</a>`;
-            }
-            // Si no hay acciones, no retornar el dropdown
-            if (!acciones.trim()) {
-              return `
+          if (window.puedeEditarElUsuario) {
+            acciones += `<a data-id="${full['id_lote_granel']}" data-bs-toggle="modal" data-bs-target="#offcanvasEditLote" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes agranel</a>`;
+          }
+          if (window.puedeEliminarElUsuario) {
+            acciones += `<a data-id="${full['id_lote_granel']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes agranel</a>`;
+          }
+          // Si no hay acciones, no retornar el dropdown
+          if (!acciones.trim()) {
+            return `
                 <button class="btn btn-sm btn-secondary" disabled>
                   <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
                 </button>
               `;
-            }
-            // Si hay acciones, construir el dropdown
-            const dropdown = `<div class="d-flex align-items-center gap-50">
+          }
+          // Si hay acciones, construir el dropdown
+          const dropdown = `<div class="d-flex align-items-center gap-50">
             <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>
             <div class="dropdown-menu dropdown-menu-end m-0">
                   ${acciones}
                 </div>
               </div>
             `;
-            return dropdown;
+          return dropdown;
         }
       }
     ],
@@ -273,18 +273,18 @@ $(function () {
           var data = $.map(columns, function (col, i) {
             return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
               ? '<tr data-dt-row="' +
-                  col.rowIndex +
-                  '" data-dt-column="' +
-                  col.columnIndex +
-                  '">' +
-                  '<td>' +
-                  col.title +
-                  ':' +
-                  '</td> ' +
-                  '<td>' +
-                  col.data +
-                  '</td>' +
-                  '</tr>'
+              col.rowIndex +
+              '" data-dt-column="' +
+              col.columnIndex +
+              '">' +
+              '<td>' +
+              col.title +
+              ':' +
+              '</td> ' +
+              '<td>' +
+              col.data +
+              '</td>' +
+              '</tr>'
               : '';
           }).join('');
 
@@ -337,7 +337,7 @@ $(function () {
 
   if (!window.puedeVerElUsuario) {
     $('#edit_volumen_res').closest('.row').hide(); // oculta toda la fila
-}
+  }
 
   // Reciben los datos del PDF
   $(document).on('click', '.pdf', function () {
@@ -527,7 +527,7 @@ $(function () {
       calcularVolumenTotal();
     });
 
-    $(document).on('input', '.volumen-parcial', function () {
+    $(document).on('input', '.volumen-parcial, #agua_entrada', function () {
       calcularVolumenTotal(); // Recalcular total en cada cambio
     });
 
@@ -559,7 +559,7 @@ $(function () {
     }
 
     // Función para calcular el volumen total
-    function calcularVolumenTotal() {
+   /*  function calcularVolumenTotal() {
       let totalVolumen = 0;
 
       // Sumar todos los volúmenes parciales
@@ -570,7 +570,25 @@ $(function () {
 
       // Actualizar el campo de volumen total
       $('#volumen').val(totalVolumen.toFixed(2)); // Mostrar el total con dos decimales
+    } */
+
+    function calcularVolumenTotal() {
+      let totalVolumen = 0;
+
+      // Sumar todos los volúmenes parciales
+      $('.volumen-parcial').each(function () {
+        const valor = parseFloat($(this).val()) || 0;
+        totalVolumen += valor;
+      });
+
+      // Sumar el agua de entrada si existe
+      const aguaEntrada = parseFloat($('#agua_entrada').val()) || 0;
+      totalVolumen += aguaEntrada;
+
+      // Actualizar el campo de volumen total
+      $('#volumen').val(totalVolumen.toFixed(2));
     }
+
 
     $(document).on('change', '.id_lote_granel', function () {
       var loteSeleccionado = $(this).val();
@@ -622,42 +640,42 @@ $(function () {
     });
 
     $(function () {
-  $('#tipo_lote').on('change', function () {
-    var selectedValue = $(this).val();
+      $('#tipo_lote').on('change', function () {
+        var selectedValue = $(this).val();
 
-    if (selectedValue === '1') {
-      $('#oc_cidam_fields').removeClass('d-none');
-      $('#otro_organismo_fields').addClass('d-none');
+        if (selectedValue === '1') {
+          $('#oc_cidam_fields').removeClass('d-none');
+          $('#otro_organismo_fields').addClass('d-none');
 
-      // Desactivar validaciones para otro organismo
-      fv.disableValidator('folio_certificado');
-      fv.disableValidator('id_organismo');
-      fv.disableValidator('fecha_emision');
-      fv.disableValidator('fecha_vigencia');
-      fv.disableValidator('documentos[0][url]');
-    } else if (selectedValue === '2') {
-      $('#oc_cidam_fields').addClass('d-none');
-      $('#otro_organismo_fields').removeClass('d-none');
+          // Desactivar validaciones para otro organismo
+          fv.disableValidator('folio_certificado');
+          fv.disableValidator('id_organismo');
+          fv.disableValidator('fecha_emision');
+          fv.disableValidator('fecha_vigencia');
+          fv.disableValidator('documentos[0][url]');
+        } else if (selectedValue === '2') {
+          $('#oc_cidam_fields').addClass('d-none');
+          $('#otro_organismo_fields').removeClass('d-none');
 
-      // Activar validaciones para otro organismo
-      fv.enableValidator('folio_certificado');
-      fv.enableValidator('id_organismo');
-      fv.enableValidator('fecha_emision');
-      fv.enableValidator('fecha_vigencia');
-      fv.enableValidator('documentos[0][url]');
-    } else {
-      $('#oc_cidam_fields').addClass('d-none');
-      $('#otro_organismo_fields').addClass('d-none');
+          // Activar validaciones para otro organismo
+          fv.enableValidator('folio_certificado');
+          fv.enableValidator('id_organismo');
+          fv.enableValidator('fecha_emision');
+          fv.enableValidator('fecha_vigencia');
+          fv.enableValidator('documentos[0][url]');
+        } else {
+          $('#oc_cidam_fields').addClass('d-none');
+          $('#otro_organismo_fields').addClass('d-none');
 
-      // Desactivar validaciones en ambos casos
-      fv.disableValidator('folio_certificado');
-      fv.disableValidator('id_organismo');
-      fv.disableValidator('fecha_emision');
-      fv.disableValidator('fecha_vigencia');
-      fv.disableValidator('documentos[0][url]');
-    }
-  });
-});
+          // Desactivar validaciones en ambos casos
+          fv.disableValidator('folio_certificado');
+          fv.disableValidator('id_organismo');
+          fv.disableValidator('fecha_emision');
+          fv.disableValidator('fecha_vigencia');
+          fv.disableValidator('documentos[0][url]');
+        }
+      });
+    });
 
 
     const addNewLote = document.getElementById('loteForm');
@@ -686,7 +704,7 @@ $(function () {
         },
         id_estado: {
           validators: {
-            notEmpty:{
+            notEmpty: {
               message: 'Por favor seleccione el origen'
             }
           }
@@ -736,41 +754,41 @@ $(function () {
 
 
 
-         'folio_certificado': {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingresa el folio del certificado'
-        }
-      }
-    },
-    'id_organismo': {
-      validators: {
-        notEmpty: {
-          message: 'Por favor selecciona el organismo'
-        }
-      }
-    },
-    'fecha_emision': {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingresa la fecha de emisión'
-        }
-      }
-    },
-    'fecha_vigencia': {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingresa la fecha de vigencia'
-        }
-      }
-    },
-    'documentos[0][url]': {
-      validators: {
-        notEmpty: {
-          message: 'Por favor adjunta el certificado'
-        }
-      }
-    },
+        'folio_certificado': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingresa el folio del certificado'
+            }
+          }
+        },
+        'id_organismo': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor selecciona el organismo'
+            }
+          }
+        },
+        'fecha_emision': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingresa la fecha de emisión'
+            }
+          }
+        },
+        'fecha_vigencia': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingresa la fecha de vigencia'
+            }
+          }
+        },
+        'documentos[0][url]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor adjunta el certificado'
+            }
+          }
+        },
 
       },
 
@@ -968,7 +986,7 @@ $(function () {
             $('#edit_agua_entrada').val(lote.agua_entrada);
             $('#edit_id_estado').val(lote.id_estado).trigger('change');
 
-             /* $('#edit_id_estado').val(lote.id_estado).trigger('change'); */
+            /* $('#edit_id_estado').val(lote.id_estado).trigger('change'); */
             // Asigna los valores seleccionados (solo IDs)
             var guiasIds = guias.map(function (guia) {
               return guia.id;
@@ -1057,15 +1075,15 @@ $(function () {
 
                   $('#archivo_url_display_otro_organismo').html(
                     'Documento disponible: <a href="../files/' +
-                      data.numeroCliente +
-                      '/certificados_granel/' +
-                      documento.url +
-                      '" target="_blank" class="text-primary">' +
-                      fileName +
-                      '</a>' +
-                      '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
-                      botonEliminar +
-                      '</span>'
+                    data.numeroCliente +
+                    '/certificados_granel/' +
+                    documento.url +
+                    '" target="_blank" class="text-primary">' +
+                    fileName +
+                    '</a>' +
+                    '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
+                    botonEliminar +
+                    '</span>'
                   );
                 }
               });
@@ -1265,60 +1283,75 @@ $(function () {
 
     // Cargar lotes en los selects dentro de filas en modo edición
     // Cargar lotes en los selects dentro de filas en modo edición
-   /*  function cargarLotesEnSelectEdit() {
-      $('.id_lote_granel').each(function () {
-        var $select = $(this);
-        var valorSeleccionado = $select.val();
-        $select.empty();
-        if (lotesDisponiblesEdit.length > 0) {
-          lotesDisponiblesEdit.forEach(function (lote) {
-            $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote}</option>`);
-          });
-          if (valorSeleccionado) {
-            $select.val(valorSeleccionado);
-          }
-        } else {
-          $select.append('<option value="" disabled selected>Sin lotes registrados</option>');
+    /*  function cargarLotesEnSelectEdit() {
+       $('.id_lote_granel').each(function () {
+         var $select = $(this);
+         var valorSeleccionado = $select.val();
+         $select.empty();
+         if (lotesDisponiblesEdit.length > 0) {
+           lotesDisponiblesEdit.forEach(function (lote) {
+             $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote}</option>`);
+           });
+           if (valorSeleccionado) {
+             $select.val(valorSeleccionado);
+           }
+         } else {
+           $select.append('<option value="" disabled selected>Sin lotes registrados</option>');
+         }
+       });
+     } */
+    function cargarLotesEnSelectEdit(idSelect) {
+      const $select = $(`#${idSelect}`);
+      const valorSeleccionado = $select.val();
+
+      $select.empty();
+
+      if (lotesDisponiblesEdit.length > 0) {
+        $select.append('<option value="">Seleccione un lote</option>');
+        lotesDisponiblesEdit.forEach(function (lote) {
+          $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote}</option>`);
+        });
+        if (valorSeleccionado) {
+          $select.val(valorSeleccionado);
+        }
+      } else {
+        $select.append('<option value="" disabled selected>Sin lotes registrados</option>');
+      }
+    }
+
+    $(document).on('input', '.volumen-parcial-edit,  #edit_agua_entrada', function () {
+      actualizarVolumenTotalEdit();
+    });
+
+
+   /*  function actualizarVolumenTotalEdit() {
+      let total = 0;
+
+      $('.volumen-parcial-edit').each(function () {
+        const val = parseFloat($(this).val());
+        if (!isNaN(val)) {
+          total += val;
         }
       });
+
+      $('#edit_volumen').val(total.toFixed(2)); // Reemplaza con el ID correcto del campo total
     } */
-    function cargarLotesEnSelectEdit(idSelect) {
-  const $select = $(`#${idSelect}`);
-  const valorSeleccionado = $select.val();
+      function actualizarVolumenTotalEdit() {
+        let total = 0;
 
-  $select.empty();
+        // Sumar todos los volúmenes parciales
+        $('.volumen-parcial-edit').each(function () {
+          const val = parseFloat($(this).val()) || 0;
+          total += val;
+        });
 
-  if (lotesDisponiblesEdit.length > 0) {
-    $select.append('<option value="">Seleccione un lote</option>');
-    lotesDisponiblesEdit.forEach(function (lote) {
-      $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote}</option>`);
-    });
-    if (valorSeleccionado) {
-      $select.val(valorSeleccionado);
-    }
-  } else {
-    $select.append('<option value="" disabled selected>Sin lotes registrados</option>');
-  }
-}
+        // Sumar el agua de entrada si existe
+        const aguaEntrada = parseFloat($('#edit_agua_entrada').val()) || 0;
+        total += aguaEntrada;
 
-$(document).on('input', '.volumen-parcial-edit', function () {
-  actualizarVolumenTotalEdit();
-});
-
-
-function actualizarVolumenTotalEdit() {
-  let total = 0;
-
-  $('.volumen-parcial-edit').each(function () {
-    const val = parseFloat($(this).val());
-    if (!isNaN(val)) {
-      total += val;
-    }
-  });
-
-  $('#edit_volumen').val(total.toFixed(2)); // Reemplaza con el ID correcto del campo total
-}
-
+        // Actualizar el campo de volumen total
+        $('#edit_volumen').val(total.toFixed(2)); // ID del total en el formulario de edición
+      }
 
 
     const editLoteForm = document.getElementById('loteFormEdit');
@@ -1349,7 +1382,7 @@ function actualizarVolumenTotalEdit() {
         },
         id_estado: {
           validators: {
-            notEmpty:{
+            notEmpty: {
               message: 'Por favor seleccione el origen'
             }
           }
