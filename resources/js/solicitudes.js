@@ -250,12 +250,12 @@ $(function () {
         render: function (data, type, row) {
           //estatus hologramas activados
           var $color_estatus = '';
-          if ( row.id_tipo == 5 ) {
-              if ( row.estatus_activado == 1 ) {
-                var $color_estatus = '<span class="badge rounded-pill bg-label-primary">Hologramas activados</span>';
-              } else  {
-                var $color_estatus = '<span class="badge rounded-pill bg-label-danger">Hologramas no activados</span>';
-              }
+          if (row.id_tipo == 5) {
+            if (row.estatus_activado == 1) {
+              var $color_estatus = '<span class="badge rounded-pill bg-label-primary">Hologramas activados</span>';
+            } else {
+              var $color_estatus = '<span class="badge rounded-pill bg-label-danger">Hologramas no activados</span>';
+            }
           }
 
           // Define las etiquetas para cada estado
@@ -289,7 +289,7 @@ $(function () {
           return `<span class="badge bg-warning mb-1">${data}</span><br>
             <span class="badge ${estatus_validado_oc} mb-1">${row.estatus_validado_oc} por oc</span><br>
             <span class="badge ${estatus_validado_ui}">${row.estatus_validado_ui} por ui</span> <br>`
-            +html+`<br>`+$color_estatus;
+            + html + `<br>` + $color_estatus;
         }
       },
 
@@ -395,9 +395,9 @@ $(function () {
           ///estatus hologramas activados
           var $boton = '';
           let textoEstatus = full['estatus_activado'] == 1
-              ? 'Cambiar estatus <span class="text-danger">desactivado</span>'
-              : 'Cambiar estatus <span class="text-success">activado</span>';
-          if ( full['id_tipo']== 5 ) {
+            ? 'Cambiar estatus <span class="text-danger">desactivado</span>'
+            : 'Cambiar estatus <span class="text-success">activado</span>';
+          if (full['id_tipo'] == 5) {
             var $boton = `<a data-id="${full['id_solicitud']}" data-estatus="${full['estatus_activado']}" class="dropdown-item waves-effect text-dark activar-hologramas">
                 <i class="ri-refresh-line ri-20px"></i> ${textoEstatus}
               </a>`;
@@ -448,7 +448,7 @@ $(function () {
           }
 
           dropdown += $boton +
-                `</div>
+            `</div>
                 </div>`;
 
           return dropdown;
@@ -519,18 +519,18 @@ $(function () {
           var data = $.map(columns, function (col, i) {
             return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
               ? '<tr data-dt-row="' +
-                  col.rowIndex +
-                  '" data-dt-column="' +
-                  col.columnIndex +
-                  '">' +
-                  '<td>' +
-                  col.title +
-                  ':' +
-                  '</td> ' +
-                  '<td>' +
-                  col.data +
-                  '</td>' +
-                  '</tr>'
+              col.rowIndex +
+              '" data-dt-column="' +
+              col.columnIndex +
+              '">' +
+              '<td>' +
+              col.title +
+              ':' +
+              '</td> ' +
+              '<td>' +
+              col.data +
+              '</td>' +
+              '</tr>'
               : '';
           }).join('');
 
@@ -574,43 +574,43 @@ $(function () {
   });
 
 
-$(document).ready(function () {
+  $(document).ready(function () {
     $('#exportarExcel').on('shown.bs.modal', function () {
-        const today = new Date();
-        const currentYear = today.getFullYear();
-        const currentMonth = String(today.getMonth() + 1).padStart(2, '0'); // '01' a '12'
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = String(today.getMonth() + 1).padStart(2, '0'); // '01' a '12'
 
-        $('#anio').val(currentYear);
-        $('#mes').val(currentMonth);
+      $('#anio').val(currentYear);
+      $('#mes').val(currentMonth);
     });
-});
-
-
-///FORMATO PDF SOLICITUD SERVICIOS
-$(document).on('click', '.pdfSolicitud', function () {
-  var id = $(this).data('id');
-  var folio = $(this).data('folio');
-  var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
-  var iframe = $('#pdfViewer');
-  var spinner = $('#cargando');
-
-  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-  spinner.show();
-  iframe.hide();
-
-  //Cargar el PDF con el ID
-  iframe.attr('src', pdfUrl);
-  //Configurar el botón para abrir el PDF en una nueva pestaña
-  $("#NewPestana").attr('href', pdfUrl).show();
-
-  $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
-  $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
-  //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-  iframe.on('load', function () {
-    spinner.hide();
-    iframe.show();
   });
-});
+
+
+  ///FORMATO PDF SOLICITUD SERVICIOS
+  $(document).on('click', '.pdfSolicitud', function () {
+    var id = $(this).data('id');
+    var folio = $(this).data('folio');
+    var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+
+    //Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
+
+    $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
+    $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+  });
 
 
 
@@ -855,9 +855,40 @@ $(document).on('click', '.pdfSolicitud', function () {
                 if (guias.length > 0) {
                   guias.forEach(doc => {
                     const url = `/storage/uploads/${numeroCliente}/${doc.url}`;
-                    const linkHtml = `<a href="${url}" target="_blank" class="d-block text-end mb-1">
-                      <i class="ri-file-check-fill me-1"></i> ${doc.url}
-                    </a>`;
+                    const fileName = doc.url.split('/').pop();
+
+                    // Botón de eliminar con el id del documento
+                    const botonEliminar = `
+                      <button type="button"
+                              class="btn btn-outline-danger btn-sm btn-eliminar-doc"
+                              data-id="${doc.id}"
+                              style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                        <i class="ri-delete-bin-line"></i> Eliminar
+                      </button>
+                    `;
+                    /*  const linkHtml = `
+                       <div class="d-flex justify-content-between align-items-center mb-1">
+                         <a href="${url}" target="_blank" class="text-primary">
+                           <i class="ri-file-check-fill me-1"></i> ${fileName}
+                         </a>
+                         <button type="button"
+                                 class="btn btn-outline-danger btn-sm btn-eliminar-doc"
+                                 data-id="${doc.id}"
+                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                           <i class="ri-delete-bin-line"></i>
+                         </button>
+                       </div>
+                     `; */
+
+                    const linkHtml = `
+                      <div class="d-flex justify-content-end align-items-end mb-1">
+                        <a href="${url}" target="_blank" class="me-3">
+                          <i class="ri-file-check-fill me-1"></i> ${fileName}
+                        </a>
+                        ${botonEliminar}
+                      </div>
+                    `;
+
                     modal.find('.linksGuias').append(linkHtml);
                   });
                 } else {
@@ -866,6 +897,8 @@ $(document).on('click', '.pdfSolicitud', function () {
               } else {
                 modal.find('.linksGuias').html('<div class="text-muted text-end me-6">Sin guías de traslado</div>');
               }
+
+
               if (response.caracteristicas && response.caracteristicas.nombre_produccion) {
                 modal.find('#edit_nombre_produccion').val(response.caracteristicas.nombre_produccion);
               } else {
@@ -1216,12 +1249,12 @@ $(document).on('click', '.pdfSolicitud', function () {
                 if (facturaProforma && facturaProforma.url) {
                   $('#factura_proforma_display').html(
                     'Factura actual: <a href="/storage/uploads/' +
-                      numeroCliente +
-                      '/' +
-                      facturaProforma.url +
-                      '" target="_blank">' +
-                      facturaProforma.url +
-                      '</a>'
+                    numeroCliente +
+                    '/' +
+                    facturaProforma.url +
+                    '" target="_blank">' +
+                    facturaProforma.url +
+                    '</a>'
                   );
                 } else {
                   $('#factura_proforma_display').html('<span class="text-danger">No hay factura proforma.</span>');
@@ -1230,12 +1263,12 @@ $(document).on('click', '.pdfSolicitud', function () {
                 if (facturaProformaCont && facturaProformaCont.url) {
                   $('#factura_proforma_cont_display').html(
                     'Factura (Continuación) actual: <a href="/storage/uploads/' +
-                      numeroCliente +
-                      '/' +
-                      facturaProformaCont.url +
-                      '" target="_blank">' +
-                      facturaProformaCont.url +
-                      '</a>'
+                    numeroCliente +
+                    '/' +
+                    facturaProformaCont.url +
+                    '" target="_blank">' +
+                    facturaProformaCont.url +
+                    '</a>'
                   );
                 } else {
                   $('#factura_proforma_cont_display').html(
@@ -1356,6 +1389,82 @@ $(document).on('click', '.pdfSolicitud', function () {
       });
     });
   });
+
+  $(document).on('click', '.btn-eliminar-doc', function () {
+    const idDoc = $(this).data('id');
+
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: 'Este documento será eliminado y no podrá recuperarse.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-danger me-3',
+        cancelButton: 'btn btn-label-secondary'
+      },
+      buttonsStyling: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: `/documentos-productor/${idDoc}`, // tu ruta para eliminar
+          type: 'POST',
+          data: {
+            _token: $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function (res) {
+            if (res.success) {
+                Swal.fire({
+                    title: 'Eliminado',
+                    text: res.message,
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    },
+                    buttonsStyling: false
+                });
+
+                // Refrescar la lista de guías
+                $(`button[data-id="${idDoc}"]`).closest('div').remove();
+            } else {
+
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo eliminar el documento.',
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
+            }
+          },
+          error: function (xhr) {
+            console.error(xhr.responseText);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Ocurrió un error en el servidor.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
+      }
+       else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelado',
+          text: 'La eliminación del documento ha sido cancelada.',
+          icon: 'info',
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      }
+    });
+  });
+
 
   /* formulario para enviar los datos y actualizar */
   $(function () {
@@ -4715,10 +4824,10 @@ $(document).on('click', '.pdfSolicitud', function () {
     $(
       '#id_empresa_solicitud_exportacion, #fecha_visita_exportacion, #id_instalacion_exportacion, #direccion_destinatario, #id_instalacion_envasado_2'
     ).on('change', function () {
-          const nombreCampo = $(this).attr('name');
-    if (nombreCampo && window.fv_pedido) {
-      window.fv_pedido.revalidateField(nombreCampo);
-    }
+      const nombreCampo = $(this).attr('name');
+      if (nombreCampo && window.fv_pedido) {
+        window.fv_pedido.revalidateField(nombreCampo);
+      }
     });
   });
 
@@ -4733,31 +4842,31 @@ $(document).on('click', '.pdfSolicitud', function () {
     $('#id_instalacion_exportacion, #id_instalacion_envasado_2, #lote_envasadoExportPe').empty();
     $('#tablaLotes tbody').empty();
 
-        const $seccionCombinado = $('#seccionCajasBotellasCombinado');
-        const $seccionExportacion = $('#seccionCajasBotellas');
-        const $botonesCharacteristics = $('#botones_characteristics');
-        $('#cant_botellas_exportac2').removeAttr('name');
-        $('#cant_cajas_exportac2').removeAttr('name');
-        $('#presentacion_exportac2').removeAttr('name');
-        $('#cant_botellas_exportac').attr('name', 'cantidad_botellas[0]');
-        $('#cant_cajas_exportac').attr('name', 'cantidad_cajas[0]');
-        $('#presentacion_exportac').attr('name', 'presentacion[0]');
-        $seccionCombinado.removeClass('d-none');
-        $seccionExportacion.addClass('d-none');
-        // Ocultar botones
-        $botonesCharacteristics.addClass('d-none');
+    const $seccionCombinado = $('#seccionCajasBotellasCombinado');
+    const $seccionExportacion = $('#seccionCajasBotellas');
+    const $botonesCharacteristics = $('#botones_characteristics');
+    $('#cant_botellas_exportac2').removeAttr('name');
+    $('#cant_cajas_exportac2').removeAttr('name');
+    $('#presentacion_exportac2').removeAttr('name');
+    $('#cant_botellas_exportac').attr('name', 'cantidad_botellas[0]');
+    $('#cant_cajas_exportac').attr('name', 'cantidad_cajas[0]');
+    $('#presentacion_exportac').attr('name', 'presentacion[0]');
+    $seccionCombinado.removeClass('d-none');
+    $seccionExportacion.addClass('d-none');
+    // Ocultar botones
+    $botonesCharacteristics.addClass('d-none');
 
     const $destinatario = $('#direccion_destinatario');
     $destinatario.val('').trigger('change'); // Asegura que no quede valor residual
     $destinatario.empty().append('<option value="0" disabled selected>Seleccione una dirección</option>');
 
 
-      if (window.fv_pedido && typeof window.fv_pedido.resetForm === 'function') {
-        // Esperar brevemente para asegurar que el DOM siga presente
-        setTimeout(() => {
-          window.fv_pedido.resetForm(true);
-        }, 100);
-      }
+    if (window.fv_pedido && typeof window.fv_pedido.resetForm === 'function') {
+      // Esperar brevemente para asegurar que el DOM siga presente
+      setTimeout(() => {
+        window.fv_pedido.resetForm(true);
+      }, 100);
+    }
 
   }
 
@@ -4832,8 +4941,8 @@ $(document).on('click', '.pdfSolicitud', function () {
           if (response.data.instalacion) {
             $('.domicilioInstalacion').append(
               response.data.instalacion.direccion_completa +
-                ' <b>Vigencia: </b>' +
-                response.data.instalacion.fecha_vigencia
+              ' <b>Vigencia: </b>' +
+              response.data.instalacion.fecha_vigencia
             );
           } else {
             // Si está vacío, usar `ubicacion_predio`
@@ -4841,8 +4950,8 @@ $(document).on('click', '.pdfSolicitud', function () {
             $('.nombrePredio').text(response.data?.predios?.nombre_predio);
             $('.preregistro').html(
               "<a target='_Blank' href='/pre-registro_predios/" +
-                response.data?.predios?.id_predio +
-                "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
+              response.data?.predios?.id_predio +
+              "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
             );
           }
 
@@ -4855,15 +4964,15 @@ $(document).on('click', '.pdfSolicitud', function () {
           // Validar categoría
           $('.categoria').text(
             response?.data?.lote_granel?.categoria?.categoria ||
-              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
-              'No disponible'
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
+            'No disponible'
           );
 
           // Validar clase
           $('.clase').text(
             response?.data?.lote_granel?.clase?.clase ||
-              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
-              'No disponible'
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
+            'No disponible'
           );
           const documentConfig = [
             {
@@ -4954,9 +5063,9 @@ $(document).on('click', '.pdfSolicitud', function () {
           $('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
           $('.certificadoGranel').text(
             response?.data?.lote_granel?.certificado_granel?.num_certificado ||
-              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.certificado_granel
-                ?.num_certificado ||
-              'No disponible'
+            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.certificado_granel
+              ?.num_certificado ||
+            'No disponible'
           );
           /* $('.certificadoGranel').html('<a href="/files/' + response?.data?.lote_granel.empresa?.empresa_num_clientes[0]?.numero_cliente + '/certificados_granel/' + response?.url_certificado_granel + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'); */
           if (response?.data?.lote_granel?.empresa?.empresa_num_clientes?.[0] && response?.url_certificado_granel) {
@@ -5029,31 +5138,31 @@ $(document).on('click', '.pdfSolicitud', function () {
            $('.destinoEnvasado').text(destino);*/
           $('.etiqueta').html(
             '<a href="files/' +
-              response.data.empresa.empresa_num_clientes[0].numero_cliente +
-              '/' +
-              response?.url_etiqueta +
-              '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
+            response.data.empresa.empresa_num_clientes[0].numero_cliente +
+            '/' +
+            response?.url_etiqueta +
+            '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
           );
           if (Array.isArray(response.lotesEnvasado) && response.lotesEnvasado.length > 0) {
             $('.nombreLoteEnvasado').text(response.lotesEnvasado[0].nombre || 'Nombre no disponible');
 
             //response.lotesEnvasado.forEach((lote, index) => {
-              const lote = response.lotesEnvasado[0];
-              let html = 'N/A';
+            const lote = response.lotesEnvasado[0];
+            let html = 'N/A';
 
-              if (lote.dictamen_envasado) {
-                const idDictamen = lote.dictamen_envasado.id_dictamen_envasado;
-                const numDictamen = lote.dictamen_envasado.num_dictamen;
-                const url = `/dictamen_envasado/${idDictamen}`;
+            if (lote.dictamen_envasado) {
+              const idDictamen = lote.dictamen_envasado.id_dictamen_envasado;
+              const numDictamen = lote.dictamen_envasado.num_dictamen;
+              const url = `/dictamen_envasado/${idDictamen}`;
 
-                html = `${numDictamen}
+              html = `${numDictamen}
                   <a href="${url}" target="_blank">
                     <i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>
                   </a>`;
-              }
+            }
 
-              // Aplicar por índice si hay varios
-              //$(`.dictamenEnvasado[data-index="${index}"]`).html(html);
+            // Aplicar por índice si hay varios
+            //$(`.dictamenEnvasado[data-index="${index}"]`).html(html);
             //});
             $('.dictamenEnvasado').html(html); // Aplica solo a un elemento
 
@@ -5065,22 +5174,22 @@ $(document).on('click', '.pdfSolicitud', function () {
 
           $('.acta').html(
             '<a href="/files/' +
-              response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente +
-              '/actas/' +
-              response?.url_acta +
-              '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
+            response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente +
+            '/actas/' +
+            response?.url_acta +
+            '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
           );
           $('.solicitudPdf').html(
             '<a href="/solicitud_de_servicio/' +
-              response?.data?.id_solicitud +
-              '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
+            response?.data?.id_solicitud +
+            '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
           );
           $('.proforma').html(
             '<a href="/files/' +
-              response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente +
-              '/' +
-              response?.url_proforma +
-              '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
+            response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente +
+            '/' +
+            response?.url_proforma +
+            '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
           );
           // Verificar si 'detalles' existe y es un arreglo
           if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
@@ -5096,9 +5205,9 @@ $(document).on('click', '.pdfSolicitud', function () {
             // Si 'detalles' no existe o no es un arreglo
             $('.cajasBotellas').text(
               caracteristicas.cantidad_caja +
-                ' Cajas y ' +
-                (response?.lotesEnvasado?.[0]?.cant_botellas ?? '0') +
-                ' Botellas'
+              ' Cajas y ' +
+              (response?.lotesEnvasado?.[0]?.cant_botellas ?? '0') +
+              ' Botellas'
             );
           }
           const cajas = caracteristicas.cajas_por_pallet || '0';
@@ -5132,16 +5241,16 @@ $(document).on('click', '.pdfSolicitud', function () {
           });
 
           $('select:visible').each(function () {
-                if ($(this).find('option[value="si"]').length) {
-                  $(this).val('si');
-                }
-              });
-
-               /*  $('.form-control').each(function () {
             if ($(this).find('option[value="si"]').length) {
               $(this).val('si');
             }
-          }); */
+          });
+
+          /*  $('.form-control').each(function () {
+       if ($(this).find('option[value="si"]').length) {
+         $(this).val('si');
+       }
+     }); */
 
         } else {
           console.warn('No se encontró información para la solicitud.');
@@ -5152,75 +5261,75 @@ $(document).on('click', '.pdfSolicitud', function () {
       }
     });
   });
-$(document).ready(function () {
-  $('#reporteForm').on('submit', function (e) {
-    e.preventDefault();
-    const exportUrl = $(this).attr('action');
-    const formData = $(this).serialize();
+  $(document).ready(function () {
+    $('#reporteForm').on('submit', function (e) {
+      e.preventDefault();
+      const exportUrl = $(this).attr('action');
+      const formData = $(this).serialize();
 
-    Swal.fire({
-      title: 'Generando Reporte...',
-      text: 'Por favor espera mientras se genera el reporte.',
-      icon: 'info',
-      didOpen: () => {
-        Swal.showLoading();
-      },
-      customClass: {
-        confirmButton: false
-      }
-    });
-
-    $.ajax({
-      url: exportUrl,
-      type: 'GET',
-      data: formData,
-      xhrFields: {
-        responseType: 'blob'
-      },
-      success: function (response, status, xhr) {
-        const disposition = xhr.getResponseHeader('Content-Disposition');
-        let filename = 'reporte.xlsx';
-
-        if (disposition && disposition.indexOf('filename=') !== -1) {
-          const matches = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-          if (matches != null && matches[1]) {
-            filename = matches[1].replace(/['"]/g, '');
-          }
+      Swal.fire({
+        title: 'Generando Reporte...',
+        text: 'Por favor espera mientras se genera el reporte.',
+        icon: 'info',
+        didOpen: () => {
+          Swal.showLoading();
+        },
+        customClass: {
+          confirmButton: false
         }
+      });
 
-        const link = document.createElement('a');
-        const url = window.URL.createObjectURL(response);
-        link.href = url;
-        link.download = filename;
-        link.click();
-        window.URL.revokeObjectURL(url);
+      $.ajax({
+        url: exportUrl,
+        type: 'GET',
+        data: formData,
+        xhrFields: {
+          responseType: 'blob'
+        },
+        success: function (response, status, xhr) {
+          const disposition = xhr.getResponseHeader('Content-Disposition');
+          let filename = 'reporte.xlsx';
 
-        $('#exportarExcel').modal('hide');
-
-        Swal.fire({
-          title: '¡Éxito!',
-          text: `El reporte se generó exitosamente.`,
-          icon: 'success',
-          customClass: {
-            confirmButton: 'btn btn-success'
+          if (disposition && disposition.indexOf('filename=') !== -1) {
+            const matches = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+            if (matches != null && matches[1]) {
+              filename = matches[1].replace(/['"]/g, '');
+            }
           }
-        });
-      },
-      error: function (xhr, status, error) {
-        console.error('Error al generar el reporte:', error);
-        $('#exportarExcel').modal('hide');
-        Swal.fire({
-          title: '¡Error!',
-          text: 'Ocurrió un error al generar el reporte.',
-          icon: 'error',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
+
+          const link = document.createElement('a');
+          const url = window.URL.createObjectURL(response);
+          link.href = url;
+          link.download = filename;
+          link.click();
+          window.URL.revokeObjectURL(url);
+
+          $('#exportarExcel').modal('hide');
+
+          Swal.fire({
+            title: '¡Éxito!',
+            text: `El reporte se generó exitosamente.`,
+            icon: 'success',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error('Error al generar el reporte:', error);
+          $('#exportarExcel').modal('hide');
+          Swal.fire({
+            title: '¡Error!',
+            text: 'Ocurrió un error al generar el reporte.',
+            icon: 'error',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
     });
   });
-});
 
   //funcion para exportar en excel
   $(document).ready(function () {
@@ -5543,34 +5652,34 @@ $(document).ready(function () {
 
 
 
-///ESTATUS ACTUVAR HOLOGRAMAS
-$(document).on('click', '.activar-hologramas', function () {
-  var id_solicitud = $(this).data('id');
-  var estatusActual = $(this).data('estatus');
-  var nuevoEstatus = estatusActual == 1 ? 0 : 1;
+  ///ESTATUS ACTUVAR HOLOGRAMAS
+  $(document).on('click', '.activar-hologramas', function () {
+    var id_solicitud = $(this).data('id');
+    var estatusActual = $(this).data('estatus');
+    var nuevoEstatus = estatusActual == 1 ? 0 : 1;
 
-  // Actualizar el estatus sin preguntar
-  $.ajax({
-    type: 'POST',
-    url: `${baseUrl}activar-hologramas/${id_solicitud}`,
-    data: {
-      estatus_activado: nuevoEstatus,
-      _token: $('meta[name="csrf-token"]').attr('content')
-    },
-    success: (response) => {
-      dt_instalaciones_table.draw(false);
+    // Actualizar el estatus sin preguntar
+    $.ajax({
+      type: 'POST',
+      url: `${baseUrl}activar-hologramas/${id_solicitud}`,
+      data: {
+        estatus_activado: nuevoEstatus,
+        _token: $('meta[name="csrf-token"]').attr('content')
+      },
+      success: (response) => {
+        dt_instalaciones_table.draw(false);
 
-      // Opcional: actualizar el texto y data-estatus del enlace en la tabla para reflejar el cambio inmediato
-      $(this).data('estatus', nuevoEstatus);
-      let nuevoTexto = nuevoEstatus == 1 ? 'Cambiar estatus desactivado' : 'Cambiar estatus activado';
-      $(this).html(`<i class="ri-refresh-bin-7-line ri-20px text-info"></i> ${nuevoTexto}`);
-    },
-    error: (err) => {
-      console.error(err);
-      // Aquí puedes mostrar mensaje de error si quieres
-    }
+        // Opcional: actualizar el texto y data-estatus del enlace en la tabla para reflejar el cambio inmediato
+        $(this).data('estatus', nuevoEstatus);
+        let nuevoTexto = nuevoEstatus == 1 ? 'Cambiar estatus desactivado' : 'Cambiar estatus activado';
+        $(this).html(`<i class="ri-refresh-bin-7-line ri-20px text-info"></i> ${nuevoTexto}`);
+      },
+      error: (err) => {
+        console.error(err);
+        // Aquí puedes mostrar mensaje de error si quieres
+      }
+    });
   });
-});
 
 
 

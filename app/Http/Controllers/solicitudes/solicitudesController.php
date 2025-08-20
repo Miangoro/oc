@@ -2455,7 +2455,29 @@ public function cambiarEstatus(Request $request, $id)
 }
 
 
+       public function delete_document($id_documento)
+{
+    try {
+        $documento = Documentacion_url::findOrFail($id_documento);
 
+        // Si quieres borrar también el archivo físico
+        if ($documento->url && Storage::exists('uploads/'.$documento->id_empresa.'/'.$documento->url)) {
+            Storage::delete('uploads/'.$documento->id_empresa.'/'.$documento->url);
+        }
+
+        $documento->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Documento eliminado correctamente.'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al eliminar el documento: '.$e->getMessage()
+        ], 500);
+    }
+}
 
 
 }

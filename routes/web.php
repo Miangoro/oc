@@ -769,7 +769,7 @@ Route::middleware(['auth'])->controller(GuiasController::class)->group(function 
     Route::get('/edit/{id_run_folio}', [GuiasController::class, 'edit'])->name('guias.edit')->middleware(['auth']);
 
     Route::post('/update/{id}', [GuiasController::class, 'update'])->name('guias.update')->middleware(['auth']);
-    
+
     Route::get('/editGuias/{run_folio}', [GuiasController::class, 'editGuias'])->middleware(['auth']);
 
     Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado')->middleware(['auth']);//PDF
@@ -902,6 +902,8 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
 
     //estatus de activar hologramas
     Route::post('/activar-hologramas/{id}', 'cambiarEstatus')->name('activar hologramas solo de vista xd');
+
+     Route::post('/documentos-productor/{id_solicitud}', 'delete_document');
 });
 
 Route::middleware(['auth'])->controller(solicitudes_eliminadas_controller::class)->group(function () {
