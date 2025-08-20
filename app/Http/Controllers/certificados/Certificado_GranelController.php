@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\solicitudesModel;
 use App\Models\Revisor;
 use App\Models\LotesGranel;
+use App\Models\maquiladores_model;
 //Notificacion
 use App\Notifications\GeneralNotification;
 //Enviar Correo
@@ -34,7 +35,7 @@ class Certificado_GranelController extends Controller
     {
         $certificados = CertificadosGranel::where('estatus', '!=', 1)
             ->orderBy('id_certificado', 'desc')
-            ->get(); 
+            ->get();
         /*$dictamenes = Dictamen_Granel::with('inspeccione.solicitud')
             ->whereHas('inspeccione.solicitud', function ($query) {
             $query->where('id_tipo', '!=', 2);
@@ -59,7 +60,20 @@ class Certificado_GranelController extends Controller
         return view('certificados.find_certificados_granel', compact('certificados' , 'dictamenes' , 'users', 'revisores', 'empresa'));
     }
 
+ private function obtenerEmpresasVisibles($empresaId)
+  {
+      $idsEmpresas = [];
 
+      if ($empresaId) {
+          $idsEmpresas[] = $empresaId;
+          $idsEmpresas = array_merge(
+              $idsEmpresas,
+              maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+          );
+      }
+
+      return array_unique($idsEmpresas);
+  }
 public function index(Request $request)
 {
     //Permiso de empresa
@@ -96,15 +110,20 @@ public function index(Request $request)
         ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
         ->select('certificados_granel.*', 'empresa.razon_social');
 
-        
-    if ($empresaId) {
+
+    /* if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
+    } */
+    if ($empresaId) {
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
+        $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
     }
+
     $baseQuery = clone $query;
     // totalData (sin búsqueda)
     $totalData = $baseQuery->count();
 
-    
+
     // Búsqueda Global
     if (!empty($search)) {
         $query->where(function ($q) use ($search) {
@@ -140,7 +159,7 @@ public function index(Request $request)
     } elseif (!empty($orderColumn)) {
         $query->orderBy($orderColumn, $orderDirection);
     }
-   
+
 
     // Paginación
     $certificados = $query
@@ -155,7 +174,7 @@ public function index(Request $request)
         ])->offset($start)->limit($limit)->get();
 
 
-        
+
     $data = [];
     if (!empty($certificados)) {
         foreach ($certificados as $certificado) {
@@ -245,8 +264,8 @@ public function index(Request $request)
                 ->where('id_documento', 59)->where('id_doc', $certificado->id_certificado) ->first();
             $nestedData['pdf_firmado'] = $documentacion?->url
                 ? asset("files/{$numero_cliente}/certificados_granel/{$documentacion->url}") : null;
-            
-        
+
+
             $data[] = $nestedData;
         }
     }
@@ -345,7 +364,7 @@ public function destroy($id_certificado)
         solicitudesModel::where('id_predio', $id_certificado)
             ->where('id_tipo', 12)
             ->delete();
-            
+
         // Luego, eliminar el certificado
         $eliminar->delete();
 
@@ -423,7 +442,7 @@ public function update(Request $request, $id_certificado)
             'id_dictamen' => $dictamen->id_dictamen ?? '0'
             ]);
         $soli->update();
-        
+
 
         return response()->json(['message' => 'Actualizado correctamente.']);
     } catch (\Exception $e) {
@@ -528,7 +547,7 @@ public function obtenerRevision($id_certificado)
     }
 
     $documento = Documentacion_url::where('id_relacion', $revision->id_revision)
-        ->where('id_documento', 133) 
+        ->where('id_documento', 133)
         ->first();
 
     return response()->json([
@@ -776,7 +795,7 @@ public function CertificadoGranel($id_certificado, $conMarca = true)
     $fecha_emision = $fecha->format('d') . '/' . ucfirst($fecha->translatedFormat('F')) . '/' . $fecha->format('Y');
     $fecha2 = Carbon::parse($certificado->fecha_vigencia);
     $fecha_vigencia = $fecha2->format('d') . '/' . ucfirst($fecha2->translatedFormat('F')) . '/' . $fecha2->format('Y');
-    
+
     $watermarkText = $certificado->estatus === 1;
     $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ? CertificadosGranel::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
@@ -806,7 +825,7 @@ public function CertificadoGranel($id_certificado, $conMarca = true)
     }else{
         $volumen = $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen ?? 'No encontrado';
     }
-    
+
     // Datos para el PDF
     $pdfData = [
         'data' => $certificado,
@@ -867,14 +886,14 @@ public function subirCertificado(Request $request)
     // Generar nombre de archivo con num_certificado + cadena aleatoria
     $nombreArchivo = $nombreCertificado.'_'. uniqid() .'.pdf'; //uniqid() para asegurar nombre único
 
-    
+
     $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)->first();
     $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
         return !empty($numero);
     });
     // Ruta de carpeta física donde se guardará
     $rutaCarpeta = "public/uploads/{$numeroCliente}/certificados_granel";
-   
+
     // Guardar nuevo archivo
     $upload = Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
     if (!$upload) {
@@ -945,7 +964,7 @@ public function CertificadoFirmado($id)
         ->where('id_doc', $certificado->id_certificado)
         ->first();
 
-    
+
     $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)->first();
       $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
         return !empty($numero);

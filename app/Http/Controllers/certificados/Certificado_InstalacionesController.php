@@ -13,6 +13,7 @@ use App\Models\Revisor;
 use App\Models\Documentacion_url;
 use App\Models\instalaciones;
 use App\Models\empresa;
+use App\Models\maquiladores_model;
 //Notificacion
 use App\Notifications\GeneralNotification;
 //Enviar Correo
@@ -34,7 +35,7 @@ class Certificado_InstalacionesController extends Controller
     {
         $certificados = Certificados::where('estatus', '!=', 1)
             ->orderBy('id_certificado', 'desc')
-            ->get(); 
+            ->get();
         $dictamenes = Dictamen_instalaciones::where('estatus', '!=', 1)
             ->whereDoesntHave('certificado') // Solo los dictámenes sin certificado
             //->where('fecha_emision','>','2024-12-31')
@@ -48,6 +49,20 @@ class Certificado_InstalacionesController extends Controller
         return view('certificados.find_certificados_instalaciones', compact('certificados','dictamenes', 'users', 'revisores', 'empresa'));
     }
 
+  private function obtenerEmpresasVisibles($empresaId)
+  {
+      $idsEmpresas = [];
+
+      if ($empresaId) {
+          $idsEmpresas[] = $empresaId;
+          $idsEmpresas = array_merge(
+              $idsEmpresas,
+              maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+          );
+      }
+
+      return array_unique($idsEmpresas);
+  }
 
 public function index(Request $request)
 {
@@ -85,8 +100,12 @@ public function index(Request $request)
         ->leftJoin('instalaciones', 'instalaciones.id_instalacion', '=', 'dictamenes_instalaciones.id_instalacion')
         ->select('certificados.*', 'empresa.razon_social');
 
-    if ($empresaId) {
+    /* if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
+    } */
+      if ($empresaId) {
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
+        $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
     }
     $baseQuery = clone $query;
     $totalData = $baseQuery->count();
@@ -676,7 +695,7 @@ public function obtenerRevision($id_certificado)
     }
 
     $documento = Documentacion_url::where('id_relacion', $revision->id_revision)
-        ->where('id_documento', 133) 
+        ->where('id_documento', 133)
         ->first();
 
     return response()->json([

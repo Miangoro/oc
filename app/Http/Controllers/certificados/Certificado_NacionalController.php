@@ -13,6 +13,7 @@ use App\Models\Revisor;
 use App\Models\activarHologramasModelo;
 use App\Models\Documentacion_url;
 use App\Models\Dictamen_Envasado;
+use App\Models\maquiladores_model;
 ///Extensiones
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -25,7 +26,7 @@ class Certificado_NacionalController extends Controller
 {
 
     public function UserManagement()
-    {   
+    {
         $certificados = Certificado_Nacional::where('estatus', '!=', 1)
             ->orderBy('id_certificado', 'desc')
             ->get();
@@ -40,6 +41,20 @@ class Certificado_NacionalController extends Controller
         return view('certificados.find_certificados_nacional', compact('certificados','solicitud', 'users', 'empresa', 'hologramas'));
     }
 
+     private function obtenerEmpresasVisibles($empresaId)
+  {
+      $idsEmpresas = [];
+
+      if ($empresaId) {
+          $idsEmpresas[] = $empresaId;
+          $idsEmpresas = array_merge(
+              $idsEmpresas,
+              maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+          );
+      }
+
+      return array_unique($idsEmpresas);
+  }
 public function index(Request $request)
 {
     //Permiso de empresa
@@ -61,7 +76,7 @@ public function index(Request $request)
         6 => 'estatus',
         7 => '',// acciones
     ];
-      
+
     /*$totalData = Certificado_Exportacion::count();
     $totalFiltered = $totalData; */
     $limit = $request->input('length');
@@ -81,8 +96,12 @@ public function index(Request $request)
         ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
         ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
         ->select('certificados_nacional.*', 'empresa.razon_social');
-    if ($empresaId) {
+    /* if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
+    } */
+      if ($empresaId) {
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
+        $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
     }
     $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
     $totalData = $baseQuery->count();// totalData (sin búsqueda)
@@ -123,7 +142,7 @@ public function index(Request $request)
         $query->orderBy($orderColumn, $orderDirection);
     }
 
-    
+
     // Paginación
     $certificados = $query
         ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda de query adicionales en BD)
@@ -221,7 +240,7 @@ public function index(Request $request)
 public function store(Request $request)
 {
     try {
-    
+
     $validated = $request->validate([
         'id_solicitud' => 'required|exists:solicitudes,id_solicitud',
         'num_certificado' => 'required|string|max:40',
@@ -372,7 +391,7 @@ public function reexpedir(Request $request)
 
         if ($request->accion_reexpedir == '1') {
             $reexpedir->estatus = 1;
-            
+
             $observacionesActuales = json_decode($reexpedir->observaciones, true);
                 $observacionesActuales['observaciones'] = $request->observaciones;
             $reexpedir->observaciones = json_encode($observacionesActuales);

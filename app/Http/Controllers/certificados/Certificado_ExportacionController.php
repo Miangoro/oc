@@ -14,6 +14,7 @@ use App\Models\lotes_envasado;
 use App\Models\activarHologramasModelo;
 use App\Models\Documentacion_url;
 use App\Models\Dictamen_Envasado;
+use App\Models\maquiladores_model;
 //Clase de exportacion
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CertificadosExport;
@@ -57,7 +58,7 @@ class Certificado_ExportacionController extends Controller
             ->where('fecha_emision','>','2024-12-31')
             ->orderBy('id_dictamen', 'desc')
             ->get();
- 
+
         $users = User::where('tipo',1)->get(); //Solo Prrsonal OC
         $empresa = empresa::where('tipo', 2)->get();
         $revisores = Revisor::all();
@@ -65,6 +66,20 @@ class Certificado_ExportacionController extends Controller
 
         return view('certificados.find_certificados_exportacion', compact('certificados','dictamen', 'users', 'empresa', 'revisores', 'hologramas'));
     }
+     private function obtenerEmpresasVisibles($empresaId)
+{
+    $idsEmpresas = [];
+
+    if ($empresaId) {
+        $idsEmpresas[] = $empresaId;
+        $idsEmpresas = array_merge(
+            $idsEmpresas,
+            maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+        );
+    }
+
+    return array_unique($idsEmpresas);
+}
 ///FUNCION PARA OBTENER N° DE LOTES PARA HOLOGRAMAS
 public function contarLotes($id)
 {
@@ -107,7 +122,7 @@ public function index(Request $request)
         7 => 'estatus',
         8 => '',// acciones
     ];
-      
+
     /*$totalData = Certificado_Exportacion::count();
     $totalFiltered = $totalData; */
     $limit = $request->input('length');
@@ -136,8 +151,12 @@ public function index(Request $request)
             ->orWhere('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
             ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%");
         })*/;
-    if ($empresaId) {
+    /* if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
+    } */
+     if ($empresaId) {
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
+        $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
     }
     $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
     $totalData = $baseQuery->count();// totalData (sin búsqueda)
@@ -170,7 +189,7 @@ public function index(Request $request)
             ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
             ->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
-            
+
             // Buscar por cada id_lote_envasado dentro del JSON de caracteristicas
             foreach ($loteIds as $idLote) {
                 $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
@@ -249,7 +268,7 @@ public function index(Request $request)
         $query->orderBy($orderColumn, $orderDirection);
     }
 
-    
+
     //dd($query->toSql(), $query->getBindings());ver que manda
     // Paginación
     //1)$certificados = $query->offset($start)->limit($limit)->get();
@@ -341,7 +360,7 @@ public function index(Request $request)
             $nestedData['pais'] = $certificado->dictamen->inspeccione->solicitud->direccion_destino->pais_destino ?? 'No encontrado';
             $nestedData['cajas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_cajas'] ?? 'No encontrado';
             $nestedData['botellas'] = collect($caracteristicas['detalles'] ?? [])->first()['cantidad_botellas'] ?? 'No encontrado';
-            
+
             //servicio dictamen envasado
             $empresa2 = $lotes_env->first()->dictamenEnvasado->inspeccion->solicitud->empresa ?? null;
             $numero_cliente2 = $empresa2 && $empresa2->empresaNumClientes->isNotEmpty()
@@ -375,7 +394,7 @@ public function index(Request $request)
                 ->where('id_documento', 135)->first();
             $nestedData['pdf_firmado'] = $documentacion?->url
                 ? asset("files/{$numero_cliente}/certificados_exportacion/{$documentacion->url}") : null;
-            
+
 
 
             $data[] = $nestedData;
@@ -458,7 +477,7 @@ public function store(Request $request)
         $new->fecha_emision = $validated['fecha_emision'];
         $new->fecha_vigencia = $validated['fecha_vigencia'];
         $new->id_firmante = $validated['id_firmante'];
-        
+
         $new->id_hologramas = json_encode($idHologramas);
         $new->old_hologramas = json_encode($oldHologramas);
         $new->save();
@@ -476,14 +495,14 @@ public function store(Request $request)
         foreach ($lotes as $lote){
 
             $bitacora = new BitacoraProductoTerminado();
-            $bitacora->fecha = $new->fecha_emision; 
+            $bitacora->fecha = $new->fecha_emision;
             $bitacora->id_empresa = $dictamenExportacion->inspeccione->solicitud->empresa->id_empresa;
             $bitacora->tipo_operacion = 'Salidas';
             $bitacora->lote_granel = $lote->lotesGranel->first()->id_lote_granel;
             $bitacora->lote_envasado = $lote->id_lote_envasado;
             $bitacora->id_categoria = $lote->lotesGranel->first()->categoria->id_categoria;
             $bitacora->id_clase = $lote->lotesGranel->first()->clase->id_clase;
-            $bitacora->id_marca =$lote->marca->id_marca; 
+            $bitacora->id_marca =$lote->marca->id_marca;
             $bitacora->proforma_predio =  $caracteristicas['no_pedido'] ?? '';
             $bitacora->num_certificado_granel =  $lote->lotesGranel->first()?->certificadoGranel?->num_certificado ?? $lote->lotesGranel->first()->folio_certificado ?? 'No encontrado';
             $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
@@ -526,7 +545,7 @@ public function store(Request $request)
 
         return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
-        
+
         return response()->json(['error' => 'Error al registrar.'. $e], 500);
     }
 }
@@ -726,7 +745,7 @@ public function obtenerRevision($id_certificado)
     }
 
     $documento = Documentacion_url::where('id_relacion', $revision->id_certificado)
-        ->where('id_documento', 133) 
+        ->where('id_documento', 133)
         ->first();
 
     return response()->json([
@@ -914,10 +933,10 @@ public function MostrarCertificadoExportacion($id_certificado)
 
     //$fecha = Helpers::formatearFecha($data->fecha_emision);//dia del mes del año
     //$fecha = Carbon::createFromFormat('Y-m-d H:i:s', $data->fecha_emision); //formato unico
-    $fecha_emision = !empty($data->fecha_emision) 
+    $fecha_emision = !empty($data->fecha_emision)
         ? Carbon::parse($data->fecha_emision)->translatedFormat('d/m/Y') //formato moldeable con fecha y hora
         : '--------';
-    $fecha_vigencia = !empty($data->fecha_vigencia) 
+    $fecha_vigencia = !empty($data->fecha_vigencia)
         ? Carbon::parse($data->fecha_vigencia)->translatedFormat('d/m/Y')
         : '--------';
     $empresa = $data->dictamen->inspeccione->solicitud->empresa ?? null;
@@ -933,7 +952,7 @@ public function MostrarCertificadoExportacion($id_certificado)
     //Busca el registro del certificado que tiene el id igual a $id_sustituye
     Certificado_Exportacion::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
-    
+
 
     $url = route('QR-certificado', ['id' => $data->id_certificado]);
     $qrCode = new QrCode(
@@ -994,7 +1013,7 @@ public function MostrarCertificadoExportacion($id_certificado)
         $convenio = $lotes[0]->lotesGranel->first()?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa?->convenio_corresp
             ?? $lotes[0]->lotesGranel->first()?->empresa?->convenio_corresp
             ?? 'NA';
-        
+
     //return response()->json(['message' => 'No se encontraron características.', $data], 404)
 
     //$pdf = Pdf::loadView('pdfs.certificado_exportacion_ed12', [//formato del PDF
@@ -1025,12 +1044,12 @@ public function MostrarCertificadoExportacion($id_certificado)
         'botellas' => $botellas ?? 'No encontrado',
         'cajas' => $cajas ?? 'No encontrado',
         //'presentacion' => $presentacion ?? 'No encontrado',
-        
+
         'firmaDigital' => $firmaDigital,
         'qrCodeBase64' => $qrCodeBase64
     ];
 
-    
+
     if (isset($data->fecha_emision) && $data->fecha_emision < '2025-07-01') {
         $edicion = 'pdfs.certificado_exportacion_ed12';
     } else {
@@ -1147,14 +1166,14 @@ public function subirCertificado(Request $request)
     // Generar nombre de archivo con num_certificado + cadena aleatoria
     $nombreArchivo = $nombreCertificado.'_'. uniqid() .'.pdf'; //uniqid() para asegurar nombre único
 
-    
+
     $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->dictamen->inspeccione->solicitud->empresa->id_empresa)->first();
     $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
         return !empty($numero);
     });
     // Ruta de carpeta física donde se guardará
     $rutaCarpeta = "public/uploads/{$numeroCliente}/certificados_exportacion";
-   
+
     // Guardar nuevo archivo
     $upload = Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
     if (!$upload) {
@@ -1292,8 +1311,8 @@ public function documentos($id)
 
         //$id_lote_granel = $lote_envasado->lotesGranel->first()->id_lote_granel ?? null;
         //$id_lote_granel = $lote_envasado->lotesGranel->first()?->certificadoGranel ?? null;
-        $id_lote_granel = $lote_envasado->lotesGranel->first()?->certificadoGranel 
-            ?? $lote_envasado->lotesGranel->first() 
+        $id_lote_granel = $lote_envasado->lotesGranel->first()?->certificadoGranel
+            ?? $lote_envasado->lotesGranel->first()
             ?? null;
         if (!$id_lote_granel) {
             continue;
@@ -1447,7 +1466,7 @@ public function guardarVobo(Request $request)
 
     }
 
-     
+
     activity()->disableLogging();//Desactivar TRAZABILIDAD para este registro
     $certificado->vobo = json_encode($vobo);
     $certificado->save();
