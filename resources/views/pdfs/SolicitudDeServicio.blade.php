@@ -1031,7 +1031,8 @@
             </td>
         </tr>
         <td class="sin-negrita" colspan="2">Comentarios:</td>
-        <td colspan="4">{{ $datos->ultima_validacion_oc->fecha_realizo ?? 'No se ha realizado la validación' }}
+        <td colspan="4">
+            {{-- {{ $datos->ultima_validacion_oc->fecha_realizo ?? 'No se ha realizado la validación' }} --}}
         </td>
         </tr>
     </table>
