@@ -365,7 +365,7 @@
                 ?? ''}} --}}
             {{ $lotesOriginales->map(function($lote) {
                 return $lote->certificadoGranel?->num_certificado ?? $lote->folio_certificado ?? '';
-            })->implode(', ') }}
+            })->filter()->implode(', ') }}
         </td>
     </tr>
 
