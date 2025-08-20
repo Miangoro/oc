@@ -588,7 +588,9 @@ class getFuncionesController extends Controller
             'tipos_agave' => $tipos,
             'lotesEnvasado' => $lotesEnvasado,
             'guias' => $guias,
-            'url_dictamen_envasado' => $lotesEnvasado->marca ?? '',
+            'url_dictamen_envasado' => $lotesEnvasado->pluck('marca')->filter()->values(),
+
+           /*  'url_dictamen_envasado' => $lotesEnvasado->marca ?? '', */
         ]);
     }
 
