@@ -29,7 +29,22 @@ class lotesGranelController extends Controller
 {
     public function UserManagement(Request $request)
     {// Encuentra el lote a granel por ID
-        $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get();
+        /* $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); */
+              $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
+        ? Auth::user()->empresa?->id_empresa
+        : null;
+          if ($empresaIdAut) {
+                  // 👇 Usa la función que ya tienes
+                  $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, null);
+
+                  $empresas = empresa::with('empresaNumClientes')
+                      ->whereIn('id_empresa', $idsEmpresas)
+                      ->get();
+              } else {
+                  $empresas = empresa::with('empresaNumClientes')
+                      ->where('tipo', 2)
+                      ->get();
+              }
         $categorias = categorias::all();
         $clases = clases::all();
         $tipos = tipos::all(); // Obtén todos los tipos de agave
