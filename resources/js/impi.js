@@ -588,10 +588,9 @@ $(document).ready(function() {
 
       // Realizar la solicitud AJAX para obtener los datos de la clase
       $.ajax({
-          url: '/editar2/' + id_dictamen + '/edit',
+          url: '/obtenerImpi/' + id_dictamen + '/edit',
           method: 'GET',
           success: function (data) {
-        
             // Rellenar el formulario con los datos obtenidos
             $('#edit_fecha_solicitud').val(data.fecha_solicitud);
             $('#edit_tramite').val(data.tramite).prop('selected', true).change();

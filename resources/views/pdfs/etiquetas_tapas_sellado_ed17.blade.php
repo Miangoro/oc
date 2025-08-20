@@ -201,7 +201,7 @@
             @endforelse
         </td>
         <td class="verde">VOLUMEN DE LOTE:</td>
-        <td> {{ $datos->solicitud->lote_granel->volumen ?? '' }} L</td>
+        <td> {{-- {{ $datos->solicitud->lote_granel->volumen ?? '' }} L --}}</td>
     </tr>
 
 
@@ -314,7 +314,7 @@
         <td rowspan="2">{{ $datos->solicitud->lote_granel->id_tanque ?? '' }}</td>
         <td rowspan="4" style="width: 6px; border: none;"> </td><!--ESPACIO-->
         <td rowspan="2" class="verde">VOLUMEN DE LOTE:</td>
-        <td rowspan="2" style="width:17%;">{{ $datos->solicitud->lote_granel->volumen ?? '' }} L</td>
+        <td rowspan="2" style="width:17%;">{{-- {{ $datos->solicitud->lote_granel->volumen ?? '' }} L --}}</td>
     </tr>
     <tr>
         <td class="verde">CATEGORÍA Y CLASE:</td>
