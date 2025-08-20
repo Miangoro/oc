@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\TranslatableActivityLog;
-use Spatie\Activitylog\Traits\LogsActivity;
+/*use App\Traits\TranslatableActivityLog;
+use Spatie\Activitylog\Traits\LogsActivity;*/
 
 class Impi extends Model
 {
@@ -36,6 +36,6 @@ class Impi extends Model
         return $this->hasMany(empresaNumCliente::class, 'id_empresa','id_empresa');
     }
 
-    
-    
+
+
 }

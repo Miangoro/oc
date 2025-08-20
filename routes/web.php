@@ -1352,13 +1352,11 @@ Route::middleware(['auth'])->controller(Certificado_NacionalController::class)->
 Route::middleware(['auth'])->controller(impiController::class)->group(function () {
     Route::get('tramiteIMPI', [impiController::class, 'UserManagement'])->name('IMPI');
     Route::resource('tramite-list', impiController::class);
-    Route::post('registrarImpi', [impiController::class, 'store'])->name('tramite-create');
-    ///eliminar
-    Route::delete('eliminar/{id_impi}', [impiController::class, 'destroy'])->name('instalacion.delete');
-    ///obtener el editar
-    Route::get('insta2/{id_impi}/edit', [impiController::class, 'edit'])->name('instalacion.edit');
-    ///editar
-    Route::put('insta2/{id_impi}', [impiController::class, 'update'])->name('tipos.update');
+
+    Route::post('registrarImpi', 'store')->name('registrar');
+    Route::delete('eliminarImpi/{id_impi}', 'destroy')->name('eliminar');
+    Route::get('obtenerImpi/{id_impi}/edit', 'edit')->name('obtener-registros');
+    Route::put('actualizarImpi/{id_impi}', 'update')->name('actualizar');
 
     //Registrar evento
     Route::post('crearEvento', [impiController::class, 'store'])->name('evento-create');

@@ -213,10 +213,18 @@
     <tr>
         <td rowspan="2" class="verde" style="width:12%;">LOTES DE PROCEDENCIA:</td>
         <td rowspan="2" colspan="2">
-            {{ !empty($lotes_procedencia) ? implode(', ', $lotes_procedencia) : 'N/A' }} 
+            {{-- {{ !empty($lotes_procedencia) ? implode(', ', $lotes_procedencia) : 'N/A' }} --}}
+            {{ $lotesOriginales->map(function($lote) {
+                return $lote->nombre_lote;
+            })->implode(', ') }} 
         </td>
         <td rowspan="2" class="verde" style="width:12%;">NO. DE FISICOQUÍMICO:</td>
-        <td rowspan="2">{{ $datos->solicitud->lote_granel->folio_fq ?? ''}}</td>
+        <td rowspan="2">
+            {{-- {{ $datos->solicitud->lote_granel->folio_fq ?? ''}} --}}
+            {{ $lotesOriginales->map(function($lote) {
+                return $lote->folio_fq;
+            })->implode(', ') }}
+        </td>
         <td colspan="3" class="verde">TIPO DE ANÁLISIS:</td>
     </tr>
     <tr>
@@ -343,13 +351,21 @@
 <table class="tabla3" style="border-collapse: collapse;" width=100%>
     <tr>
         <td class="verde" style="width: 17%;">NO. DE ANÁLISIS FISICOQUÍMICO:</td>
-        <td>{{ $datos->solicitud->lote_granel->folio_fq ?? '' }}</td>
+        <td>
+            {{-- {{ $datos->solicitud->lote_granel->folio_fq ?? '' }} --}}
+            {{ $lotesOriginales->map(function($lote) {
+                return $lote->folio_fq;
+            })->implode(', ') }}
+        </td>
         <td style="width: 2px; border:none"></td><!--ESPACIO-->
         <td class="verde" style="width: 17%;">CERTIFICADO NOM A GRANEL:</td>
         <td>
-            {{ $datos->solicitud->lote_granel?->certificadoGranel->num_certificado
+            {{-- {{ $datos->solicitud->lote_granel?->certificadoGranel->num_certificado
                 ?? $datos->solicitud->lote_granel->folio_certificado 
-                ?? ''}}
+                ?? ''}} --}}
+            {{ $lotesOriginales->map(function($lote) {
+                return $lote->certificadoGranel?->num_certificado ?? $lote->folio_certificado ?? '';
+            })->implode(', ') }}
         </td>
     </tr>
 
