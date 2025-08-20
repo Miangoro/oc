@@ -11,6 +11,7 @@ use App\Models\clases;
 use App\Models\Documentacion;
 use App\Models\Documentacion_url;
 use App\Models\BitacoraMezcal;
+use App\Models\maquiladores_model;
 use App\Models\tipos;
 use App\Models\organismos;
 use App\Models\estados;
@@ -40,6 +41,20 @@ class lotesGranelController extends Controller
         return view('catalogo.lotes_granel', compact('lotes', 'empresas', 'categorias', 'clases', 'tipos', 'organismos', 'estados', 'guias', 'documentos'));
     }
 
+ private function obtenerEmpresasVisibles($empresaId)
+  {
+      $idsEmpresas = [];
+
+      if ($empresaId) {
+          $idsEmpresas[] = $empresaId;
+          $idsEmpresas = array_merge(
+              $idsEmpresas,
+              maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+          );
+      }
+
+      return array_unique($idsEmpresas);
+  }
 
     public function index(Request $request)
     {
@@ -76,10 +91,18 @@ class lotesGranelController extends Controller
             $start = $request->input('start');
             $order = $columns[$request->input('order.0.column')];
             $dir = $request->input('order.0.dir');
+
           $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'tipos', 'Organismo','certificadoGranel','fqs'])
-              ->when($empresaId, function ($query) use ($empresaId) {
+
+              /* ->when($empresaId, function ($query) use ($empresaId) {
                   $query->where('id_empresa', $empresaId);
-              })
+              }) */
+             ->when($empresaId, function ($query) use ($empresaId) {
+                $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
+                $query->whereIn('id_empresa', $empresasVisibles);
+            })
+
+
         ->when($search, function ($query, $search) {
             $query->where(function ($q) use ($search) {
             $q->where('id_lote_granel', 'LIKE', "%{$search}%")
@@ -119,9 +142,14 @@ class lotesGranelController extends Controller
     ->get();
 
 
-            $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId) {
+           /*  $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId) {
         return $query->where('id_empresa', $empresaId);
-    })
+    }) */
+   $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId) {
+    $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
+    return $query->whereIn('id_empresa', $empresasVisibles);
+})
+
     ->when($search, function ($query, $search) {
                 return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
                     ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
@@ -312,20 +340,20 @@ class lotesGranelController extends Controller
                     }
 
 
-                    
+
                     //certificado
                     $nestedData['num_certificado'] = $lote->certificadoGranel?->num_certificado
                         ?? $lote?->folio_certificado
                         ?? 'Sin certificado';
 
                     $certificado = CertificadosGranel::where('id_lote_granel', $lote->id_lote_granel)->first();
-                    
+
                     $documento = null;
                     if ($lote && $certificado) {
                         $documento = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
                             ->where('id_documento', 59)
                             ->where('id_doc', $certificado->id_certificado)
-                            
+
                             ->first();
                     } elseif (!$certificado) {
                         $documento = Documentacion_url::where('id_relacion', $lote->id_lote_granel)
@@ -334,12 +362,12 @@ class lotesGranelController extends Controller
                             ->first();
                     }
 
-                    $nestedData['certificado'] = $documento?->url 
-                        ? asset("files/{$numeroCliente}/certificados_granel/{$documento->url}") 
+                    $nestedData['certificado'] = $documento?->url
+                        ? asset("files/{$numeroCliente}/certificados_granel/{$documento->url}")
                         : null;
-                        
 
-                    
+
+
                     $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $lote->id_lote_granel . '">Eliminar</button>';
 
                     $data[] = $nestedData;
