@@ -13,6 +13,7 @@ use App\Models\Documentacion_url;
 use App\Models\LotesGranel;
 use App\Models\Dictamen_Granel;
 use App\Models\CertificadosGranel;
+use App\Models\maquiladores_model;
 use App\Models\tipos;
 use App\Models\User;
 ///Extensiones
@@ -51,7 +52,20 @@ class DictamenGranelController extends Controller  {
         // Pasar los datos a la vista
         return view('dictamenes.find_dictamen_granel', compact('inspecciones', 'empresas', 'lotesGranel', 'inspectores','categorias','clases','tipos'));
     }
+private function obtenerEmpresasVisibles($empresaId)
+{
+    $idsEmpresas = [];
 
+    if ($empresaId) {
+        $idsEmpresas[] = $empresaId;
+        $idsEmpresas = array_merge(
+            $idsEmpresas,
+            maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+        );
+    }
+
+    return array_unique($idsEmpresas);
+}
 
 public function index(Request $request)
 {
@@ -65,9 +79,9 @@ public function index(Request $request)
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
         1 => 'num_dictamen',
-        2 => 'folio', 
-        3 => 'razon_social', 
-        4 => '', 
+        2 => 'folio',
+        3 => 'razon_social',
+        4 => '',
         5 => 'fecha_emision',
         6 => 'estatus',
     ];
@@ -78,7 +92,7 @@ public function index(Request $request)
     $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
     $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
     $orderColumn = $columns[$orderColumnIndex] ?? 'num_dictamen'; // Por defecto
-    
+
     $search = $request->input('search.value');//Define la búsqueda global.
 
 
@@ -88,8 +102,12 @@ public function index(Request $request)
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
     ->select('dictamenes_granel.*', 'empresa.razon_social');
 
-    if ($empresaId) {
+    /* if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
+    } */
+    if ($empresaId) {
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
+        $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
     }
     $baseQuery = clone $query;
     $totalData = $baseQuery->count();// totalData (sin búsqueda)
@@ -135,7 +153,7 @@ public function index(Request $request)
         ])->offset($start)->limit($limit)->get();
 
 
-        
+
     //MANDA LOS DATOS AL JS
     $data = [];
     if (!empty($dictamenes)) {
@@ -238,8 +256,8 @@ public function index(Request $request)
                     ->first();
             }
 
-            $nestedData['certificado'] = $documento?->url 
-                ? asset("files/{$numero_cliente}/certificados_granel/{$documento->url}") 
+            $nestedData['certificado'] = $documento?->url
+                ? asset("files/{$numero_cliente}/certificados_granel/{$documento->url}")
                 : null;
 
             //obtener folios FQ con URL
@@ -259,8 +277,8 @@ public function index(Request $request)
             }
             $fq_documentos = array_filter($fq_documentos, fn($item) => !empty($item['folio']));
             $nestedData['fq_documentos'] = array_values($fq_documentos);
-            
-            
+
+
 
             $data[] = $nestedData;
         }
@@ -312,8 +330,8 @@ public function store(Request $request)
             $lote->ingredientes = $request->ingredientes;
             $lote->id_categoria = $request->id_categoria;
             $lote->id_clase = $request->id_clase;
-            $lote->id_tipo = json_encode($request->id_tipo); 
-            $lote->save(); 
+            $lote->id_tipo = json_encode($request->id_tipo);
+            $lote->save();
 
             $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
@@ -459,8 +477,8 @@ public function update(Request $request, $id_dictamen)
             $lote->ingredientes = $request->ingredientes;
             $lote->id_categoria = $request->id_categoria;
             $lote->id_clase = $request->id_clase;
-            $lote->id_tipo = json_encode($request->id_tipo); 
-            $lote->save(); 
+            $lote->id_tipo = json_encode($request->id_tipo);
+            $lote->save();
 
             $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
@@ -654,7 +672,7 @@ public function MostrarDictamenGranel($id_dictamen)
                 //return response()->json([ 'message' => 'No se encontró Certificado Granel con ese lote granel.' ]);
             }
     }
- 
+
 
     $pdf = [
         'data' => $data,

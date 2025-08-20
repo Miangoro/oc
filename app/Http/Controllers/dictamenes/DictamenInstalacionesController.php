@@ -14,6 +14,7 @@ use App\Models\solicitudesModel;
 use App\Models\User;
 use App\Models\instalaciones;
 use App\Models\Documentacion_url;
+use App\Models\maquiladores_model;
 ///Extensiones
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -51,6 +52,20 @@ class DictamenInstalacionesController extends Controller
         return view('dictamenes.find_dictamen_instalaciones', compact('dictamenes', 'clases', 'categoria', 'inspeccion', 'users'));
     }
 
+        private function obtenerEmpresasVisibles($empresaId)
+        {
+            $idsEmpresas = [];
+
+            if ($empresaId) {
+                $idsEmpresas[] = $empresaId;
+                $idsEmpresas = array_merge(
+                    $idsEmpresas,
+                    maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+                );
+            }
+
+            return array_unique($idsEmpresas);
+        }
 
 public function index(Request $request)
 {
@@ -64,9 +79,9 @@ public function index(Request $request)
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
         1 => 'num_dictamen',
-        2 => 'solicitudes.folio', 
-        3 => 'razon_social', 
-        4 => '', 
+        2 => 'solicitudes.folio',
+        3 => 'razon_social',
+        4 => '',
         5 => 'fecha_emision',
         6 => 'estatus',
     ];
@@ -77,7 +92,7 @@ public function index(Request $request)
     $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
     $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
     $orderColumn = $columns[$orderColumnIndex] ?? 'num_dictamen'; // Por defecto
-    
+
     $search = $request->input('search.value');//Define la búsqueda global.
 
 
@@ -88,9 +103,14 @@ public function index(Request $request)
     ->leftJoin('instalaciones', 'instalaciones.id_instalacion', '=', 'dictamenes_instalaciones.id_instalacion')
     ->select('dictamenes_instalaciones.*', 'empresa.razon_social');
 
-    if ($empresaId) {
+    /* if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
+    } */
+    if ($empresaId) {
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
+        $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
     }
+
     $baseQuery = clone $query;
     $totalData = $baseQuery->count();// totalData (sin búsqueda)
 
@@ -131,12 +151,12 @@ public function index(Request $request)
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
             ->orWhereRaw("DATE_FORMAT(dictamenes_instalaciones.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
             ->orWhere('instalaciones.direccion_completa', 'LIKE', "%{$search}%");
-            
+
             // Si se encontró un valor válido para el tipo_dictamen, agregarlo
             if (!is_null($tipoDictamenValor)) {
                 $q->orWhere('dictamenes_instalaciones.tipo_dictamen', $tipoDictamenValor);
             }
-        
+
         });
 
         $totalFiltered = $query->count();
@@ -158,7 +178,7 @@ public function index(Request $request)
         $query->orderBy($orderColumn, $orderDirection);
     }
 
-    
+
     // Paginación
     $dictamenes = $query
         ->with([// 1 consulta por cada tabla relacionada en conjunto (menos busqueda adicionales de query en BD)
@@ -251,7 +271,7 @@ public function index(Request $request)
                 }
 
                 $nestedData['certificado'] = $documento?->url
-                    ? asset("files/{$numero_cliente}/certificados_instalaciones/{$documento->url}") 
+                    ? asset("files/{$numero_cliente}/certificados_instalaciones/{$documento->url}")
                     : null;
 
 
@@ -259,7 +279,7 @@ public function index(Request $request)
                 }
         }
 
-       
+
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
@@ -652,7 +672,7 @@ public function dictamen_comercializador($id_dictamen)
     } else {
         $edicion = 'pdfs.dictamen_comercializador_ed10';//actual cambiar a ed 5
     }
-    
+
     //return $pdf->stream($datos->num_dictamen . ' Dictamen de cumplimiento de instalaciones como comercializador.pdf');
     return Pdf::loadView($edicion, $pdf)->stream($datos->num_dictamen . ' Dictamen de cumplimiento de instalaciones como comercializador.pdf');
 
@@ -693,7 +713,7 @@ public function dictamen_almacen($id_dictamen)
     $categorias = json_decode($datos->categorias, true);
     $clases = json_decode($datos->clases, true);
     $firmaDigital = Helpers::firmarCadena($datos->num_dictamen . '|' . $datos->fecha_emision . '|' . $datos?->inspeccione?->num_servicio, 'Mejia2307', $datos->id_firmante);  // 9 es el ID del usuario en este ejemplo
-    
+
     //$pdf = Pdf::loadView('pdfs.dictamen_almacen_ed1', [
     $pdf = [
         'datos' => $datos,

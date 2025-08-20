@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\empresa;
 use App\Models\lotes_envasado;
 use App\Models\instalaciones;
+use App\Models\maquiladores_model;
 //Extensiones
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -47,6 +48,20 @@ class DictamenExportacionController extends Controller
         return view('dictamenes.find_dictamen_exportacion', compact('dictamenes', 'inspeccion', 'users', 'empresa'));
     }
 
+    private function obtenerEmpresasVisibles($empresaId)
+{
+    $idsEmpresas = [];
+
+    if ($empresaId) {
+        $idsEmpresas[] = $empresaId;
+        $idsEmpresas = array_merge(
+            $idsEmpresas,
+            maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+        );
+    }
+
+    return array_unique($idsEmpresas);
+}
 
 public function index(Request $request)
 {
@@ -60,13 +75,13 @@ public function index(Request $request)
 
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
-        0 => '',               
+        0 => '',
         1 => 'num_dictamen',
         2 => 'folio', //nombre de mi tabla y atributo
-        3 => 'razon_social', 
+        3 => 'razon_social',
         4 => '', //caracteristicas
         5 => 'fecha_emision',
-        6 => 'estatus',            
+        6 => 'estatus',
         7 => '',// acciones
     ];
 
@@ -74,12 +89,12 @@ public function index(Request $request)
     $totalFiltered = $totalData;*/
     $limit = $request->input('length');
     $start = $request->input('start');
-    
+
     // Columnas ordenadas desde DataTables
     $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
     $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
     $orderColumn = $columns[$orderColumnIndex] ?? 'num_dictamen'; // Por defecto
-    
+
     $search = $request->input('search.value');//Define la búsqueda global.
 
 
@@ -98,13 +113,18 @@ public function index(Request $request)
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%");
         })*/;
 
-    if ($empresaId) {
+   /*  if ($empresaId) {
         $query->where('solicitudes.id_empresa', $empresaId);
+    } */
+    if ($empresaId) {
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
+        $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
     }
+
     $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
     $totalData = $baseQuery->count();// totalData (sin búsqueda)
 
-    
+
     // Búsqueda Global
     if (!empty($search)) {//solo se aplica si hay búsqueda global
         /*1)$query->where(function ($q) use ($search) {
@@ -137,7 +157,7 @@ public function index(Request $request)
         ");
     }
 
-    
+
     //dd($query->toSql(), $query->getBindings());ver que manda
     // Paginación
     //1)$dictamenes = $query->offset($start)->limit($limit)->get();
@@ -471,9 +491,9 @@ public function MostrarDictamenExportacion($id_dictamen)
         $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get()
             : collect(); // Si no hay IDs, devolvemos una colección vacía
 
-        
+
         $DOM = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->registro_productor
-            ?? $lotes[0]->lotesGranel[0]->empresa?->registro_productor 
+            ?? $lotes[0]->lotesGranel[0]->empresa?->registro_productor
             ?? 'NA';
         $convenio = $lotes[0]->lotesGranel[0]->certificadoGranel->dictamen->inspeccione->solicitud->empresa->convenio_corresp ?? 'NA';
         $estado_productor = $lotes[0]->lotesGranel[0]->estados->nombre ?? 'No encontrado';
