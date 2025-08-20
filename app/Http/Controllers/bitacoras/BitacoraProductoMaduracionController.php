@@ -340,17 +340,17 @@ class BitacoraProductoMaduracionController extends Controller
 
           $bitacora->tipo_recipientes = $request->tipo_recipientes;
           $bitacora->tipo_madera = $request->tipo_madera;
-          $bitacora->num_recipientes = $request->num_recipientes;
+          $bitacora->num_recipientes = $request->num_recipientes ?? 0;
           $bitacora->num_recipientes_entrada = $request->num_recipientes_entrada ?? 0;
           $bitacora->fecha_salida = $request->fecha_salida ?? 0;
           $bitacora->num_recipientes_salida = $request->num_recipientes_salida ?? 0;
-          $bitacora->num_recipientes_final = $request->num_recipientes_final;
+          $bitacora->num_recipientes_final = $request->num_recipientes_final ?? 0;
 
           $bitacora->tipo_operacion = $request->tipo_operacion;
           $bitacora->tipo = 2;
 
-          $bitacora->volumen_inicial = $request->volumen_inicial;
-          $bitacora->alcohol_inicial = $request->alcohol_inicial;
+          $bitacora->volumen_inicial = $request->volumen_inicial ?? 0;
+          $bitacora->alcohol_inicial = $request->alcohol_inicial ?? 0;
           $bitacora->procedencia_entrada = $request->procedencia_entrada ?? 0;
           $bitacora->volumen_entrada = $request->volumen_entrada ?? 0;
           $bitacora->alcohol_entrada = $request->alcohol_entrada ?? 0;
@@ -478,9 +478,9 @@ class BitacoraProductoMaduracionController extends Controller
               'operacion_adicional' => $request->operacion_adicional,
               'tipo' => 2,
               'tipo_operacion' => $request->tipo_operacion,
-              'volumen_inicial' => $request->volumen_inicial,
-              'alcohol_inicial' => $request->alcohol_inicial ,
-              'num_recipientes' => $request->num_recipientes,
+              'volumen_inicial' => $request->volumen_inicial ?? 0,
+              'alcohol_inicial' => $request->alcohol_inicial ?? 0,
+              'num_recipientes' => $request->num_recipientes ?? 0,
               'num_recipientes_entrada' => $request->num_recipientes_entrada ?? 0,
               'num_recipientes_salida' => $request->num_recipientes_salida ?? 0,
               'procedencia_entrada' => $request->procedencia_entrada ?? 0,
