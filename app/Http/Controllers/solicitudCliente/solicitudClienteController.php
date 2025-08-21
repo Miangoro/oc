@@ -10,7 +10,8 @@ use App\Models\empresa_norma;
 use App\Models\empresa_actividad;
 use App\Models\empresaNumCliente;
 use App\Models\solicitud_informacion;
-use App\Models\empresa_clasificacion_bebidas;
+use App\Models\catalogo_bebidas;
+use App\Models\respuesta_bebidas;
 use App\Models\catalogo_clasificacion_bebidas;
 use App\Models\estados;
 use App\Mail\correoEjemplo;
@@ -34,7 +35,7 @@ class solicitudClienteController extends Controller
 
   public function registrar(Request $request)
   {
-    dd($request->all());
+    /* dd($request->all()); */
     $empresa = new empresa();
     $empresa->razon_social = $request->razon_social;
     $empresa->domicilio_fiscal = $request->domicilio_fiscal;
@@ -160,28 +161,33 @@ class solicitudClienteController extends Controller
             $actividad->save();
         }
     } */
-    if (is_array($request->clasificacion)) {
-        foreach ($request->clasificacion as $id_clasificacion) {
-
-            if (
-                isset($request->bebida[$id_clasificacion]) &&
-                is_array($request->bebida[$id_clasificacion])
-            ) {
-                foreach ($request->bebida[$id_clasificacion] as $nombre) {
-
-                    if (!empty($nombre)) {
-                        $bebida = new empresa_clasificacion_bebidas();
-                        $bebida->id_clasificacion = $id_clasificacion;
-                        $bebida->nombre = $nombre;
-                        $bebida->id_empresa = $id_empresa;
-                        $bebida->save();
+    if ($request->has('bebida')) {
+        foreach ($request->bebida as $id_clasificacion => $bebidas) {
+            foreach ($bebidas as $valor) {
+                if ($valor) {
+                    // Buscar si es un ID del catálogo
+                    $catalogo = catalogo_bebidas::find($valor);
+                    if ($catalogo) {
+                        respuesta_bebidas::create([
+                            'id_empresa' => $id_empresa,
+                            'id_clasificacion' => $id_clasificacion,
+                            'id_bebida' => $catalogo->id_bebida,
+                            'bebida_personalizada' => null
+                        ]);
+                    } else {
+                        // Si es texto personalizado
+                        respuesta_bebidas::create([
+                            'id_empresa' => $id_empresa,
+                            'id_clasificacion' => $id_clasificacion,
+                            'id_bebida' => null,
+                            'bebida_personalizada' => $valor
+                        ]);
                     }
-
                 }
             }
-
         }
     }
+
 // Guardar normas asociadas a la empresa
     if (is_array($request->norma)) {
         foreach ($request->norma as $id_norma) {

@@ -186,9 +186,9 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                    <td>
-                        {{ $bitacora->fecha 
-                            ? \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('d/') . ucfirst(\Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('F')) . \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('/Y') 
-                            : '----' 
+                        {{ $bitacora->fecha
+                            ? \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('d \d\e F \d\e Y')
+                            : '----'
                         }}
                     </td>
                     <td>{{ $bitacora->cantidad_botellas_cajas ?? '' }}</td> {{-- botellas_por_caja --}}
