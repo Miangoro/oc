@@ -387,6 +387,7 @@ $(function () {
       $('#id_tipo').val(null).trigger('change');
       $('#doc_etiqueta').html('');
       $('#doc_corrugado').html('');
+      $('#doc_cumplimiento').html('');
       $('#id_etiqueta').val('');
       $('#titleSubirEtiquetas').text('Subir etiquetas');
       $('#subirBtnEtiqueta').html('<i class="ri-add-line me-1"></i> Registrar');
@@ -407,6 +408,7 @@ $(function () {
         var datos = data.etiqueta;
         var documentacion_urls = data.documentacion_urls;
         var documentacion_urls_corrugado = data.documentacion_urls_corrugado;
+        var documentacion_urls_cumplimiento = data.documentacion_urls_cumplimiento;
         var numCliente = data.numeroCliente;
         var tipos = JSON.parse(data.etiqueta.id_tipo);
         let valores = datos.destinos.map(d => d.id_direccion);
@@ -415,8 +417,6 @@ $(function () {
         obtenerdestinos(datos.id_empresa, valores, datos.id_marca);
 
         $('#id_etiqueta').val(datos.id_etiqueta);
-
-
 
         /* $('#id_destino').val(valores).trigger('change'); */
 
@@ -432,12 +432,24 @@ $(function () {
         $('#id_tipo').val(tipos).trigger('change');
         $('#botellas_caja').val(datos.botellas_caja);
 
-        $('#doc_etiqueta').html(`<div style="display: flex; align-items: center; gap: 8px;">
+        /* $('#doc_etiqueta').html(`<div style="display: flex; align-items: center; gap: 8px;">
         <a href="/files/${numCliente}/${documentacion_urls[0].url}" target="_blank">
             <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i>
          </a>
         </div>`
-        );
+        ); */
+        if (Array.isArray(documentacion_urls) && documentacion_urls.length > 0) {
+            $('#doc_etiqueta').html(`
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <a href="/files/${numCliente}/${documentacion_urls[0].url}" target="_blank">
+                        <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i>
+                    </a>
+                </div>
+            `);
+        } else {
+            $('#doc_etiqueta').html('');/* <span class="text-muted">Sin documento</span> */
+        }
+
         if (documentacion_urls_corrugado.length > 0 && documentacion_urls_corrugado[0].url) {
           $('#doc_corrugado').html(`
                     <div style="display: flex; align-items: center; gap: 8px;">
@@ -447,6 +459,19 @@ $(function () {
                     </div>
                 `);
         }
+       if (Array.isArray(documentacion_urls_cumplimiento) && documentacion_urls_cumplimiento.length > 0) {
+            $('#doc_cumplimiento').html(`
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <a href="/files/${numCliente}/${documentacion_urls_cumplimiento[0].url}" target="_blank">
+                        <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i>
+                    </a>
+                </div>
+            `);
+        } else {
+            $('#doc_cumplimiento').html('');
+        }
+
+
       });
     });
   });

@@ -160,7 +160,15 @@
                         </div>
                         <div class="col-md-2" id="doc_corrugado"></div>
 
-
+                      <div class="col-md-10  mb-5">
+                            <label for="file49" class="form-label">Constancia/Informe de cumplimiento</label>
+                            <input class="form-control" type="file" id="file49" data-id="49"
+                                name="url_cumplimiento">
+                            <input value="49" class="form-control" type="hidden" name="id_documento_cumplimiento">
+                            <input value="Constancia/Informe de cumplimiento" class="form-control" type="hidden"
+                                name="nombre_documento_cumplimiento">
+                        </div>
+                        <div class="col-md-2" id="doc_cumplimiento"></div>
 
                     </div>
 

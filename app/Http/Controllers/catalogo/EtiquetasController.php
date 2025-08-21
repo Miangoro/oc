@@ -314,6 +314,38 @@ public function UserManagement()
             $documentacion_url->save();
         }
 
+         // Manejar la carga de documentos
+           if ($request->hasFile('url_cumplimiento')) {
+            $file = $request->file('url_cumplimiento');
+            $filename = $request->nombre_documento_cumplimiento . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $filePath = 'uploads/' . $numeroCliente . '/' . $filename;
+
+            // Buscar si ya existe un documento para esta etiqueta
+            $documentacion_url = Documentacion_url::where('id_relacion', $etiqueta->id_etiqueta)->where('id_documento',49)->first();
+
+            if ($documentacion_url) {
+                // Eliminar el archivo anterior si existe
+                $oldFilePath = 'uploads/' . $numeroCliente . '/' . $documentacion_url->url;
+                if (Storage::disk('public')->exists($oldFilePath)) {
+                    Storage::disk('public')->delete($oldFilePath);
+                }
+            } else {
+                // Si no existe un registro, creamos uno nuevo
+                $documentacion_url = new Documentacion_url();
+                $documentacion_url->id_relacion = $etiqueta->id_etiqueta;
+                $documentacion_url->id_documento = $request->id_documento_cumplimiento;
+                $documentacion_url->id_empresa = $empresa->id_empresa;
+            }
+
+            // Guardar el nuevo archivo
+            $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+
+            // Actualizar la información del documento
+            $documentacion_url->nombre_documento = $request->nombre_documento_cumplimiento;
+            $documentacion_url->url = $filename;
+            $documentacion_url->save();
+        }
+
 
         return response()->json(['success' => $request->id_etiqueta ? 'Etiqueta actualizada exitosamente.' : 'Etiqueta registrada exitosamente.']);
     }
@@ -325,6 +357,7 @@ public function UserManagement()
         $etiqueta = etiquetas::with('destinos')->findOrFail($id_etiqueta);
         $documentacion_urls = Documentacion_url::where('id_relacion', $id_etiqueta)->where('id_documento',60)->get(); // Obtener los documentos asociados a la marca
         $documentacion_urls_corrugado = Documentacion_url::where('id_relacion', $id_etiqueta)->where('id_documento',75)->get(); // Obtener los documentos asociados a la marca
+        $documentacion_urls_cumplimiento = Documentacion_url::where('id_relacion', $id_etiqueta)->where('id_documento',49)->get(); // Obtener los documentos asociados a la marca
         $empresa = marcas::with("empresa.empresaNumClientes")->where("id_marca", $etiqueta->id_marca)->first();
         $numeroCliente = $empresa->empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
             return !empty($numero);
@@ -334,6 +367,7 @@ public function UserManagement()
             'etiqueta' => $etiqueta,
             'documentacion_urls' => $documentacion_urls, // Incluir la fecha de vigencia en los datos
             'documentacion_urls_corrugado' => $documentacion_urls_corrugado, // Incluir la fecha de vigencia en los datos
+            'documentacion_urls_cumplimiento' => $documentacion_urls_cumplimiento,
             'numeroCliente' => $numeroCliente
         ]);
     }
