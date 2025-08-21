@@ -901,7 +901,7 @@ public function asignarInspector(Request $request)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
         //descodificar el json
-        $lotesOriginales = [];
+        /*$lotesOriginales = [];
             if (!empty($datos->solicitud->lote_granel->lote_original_id)) {
                 $json = json_decode($datos->solicitud->lote_granel->lote_original_id, true);
 
@@ -909,6 +909,16 @@ public function asignarInspector(Request $request)
                     $lotesOriginales = LotesGranel::whereIn('id_lote_granel', $json['lotes'])
                         ->pluck('nombre_lote')
                         ->toArray();
+                }
+            }*/
+            $lotesOriginales = [];
+            if (!empty($datos->solicitud->lote_granel->lote_original_id)) {
+                $json = json_decode($datos->solicitud->lote_granel->lote_original_id, true);
+
+                if (isset($json['lotes']) && is_array($json['lotes'])) {
+                    $lotesOriginales = LotesGranel::with('certificadoGranel')
+                        ->whereIn('id_lote_granel', $json['lotes'])
+                        ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
                 }
             }
 
@@ -919,7 +929,8 @@ public function asignarInspector(Request $request)
         }
         $pdf = Pdf::loadView($edicion,  [
             'datos' => $datos, 
-            'lotes_procedencia' => $lotesOriginales,
+            'lotesOriginales' => $lotesOriginales,
+            //'lotes_procedencia' => $lotesOriginales,
         ]);
 
         return $pdf->stream('Etiqueta para tapa de la muestra.pdf');

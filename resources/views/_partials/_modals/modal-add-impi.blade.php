@@ -22,10 +22,8 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                {{-- <input type="text" class="form-control" id="tramite" placeholder="no. dictamen"
-                                    name="tramite" aria-label="Nombre"> --}}
-                                <select id="tramite" class="form-select" name="tramite">
-                                    <option value="" disabled selected>Selecciona una opción</option>
+                                <select id="tramite" class="form-select" name="tramite" >
+                                    <option value="" disabled selected>Selecciona una opción</option> 
                                     <option value="1">Registro de marca</option>
                                     <option value="2">Trámite USO DE LA DOM</option>
                                     <option value="3">Inscripción de convenio de correponsabilidad</option>
@@ -39,9 +37,6 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                {{-- <input type="number" class="form-control" id="cliente" placeholder="cliente"
-                                    name="id_empresa" aria-label="Nombre">
-                                <label for="">cliente</label> --}}
                                 <select id="cliente" name="id_empresa" class="form-select select2">
                                     <option value="" disabled selected>Selecciona la empresa</option>
                                     @foreach ($empresas as $empresa)
@@ -108,7 +103,7 @@
 
 
 <!-- EDITAR TRAMITE MODAL -->
-<div class="modal fade" id="editDictamen" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="ModalEditar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
 
@@ -118,8 +113,9 @@
                 <h4 class="address-title mb-2">Editar trámite ante el IMPI</h4>
             </div>
 
-            <form id="EditarDictamen">
-                <input type="hidden" name="id_impi" id="edit_id_impi" value="">
+            <form id="FormEditar">
+                <input type="hidden" name="id_impi" id="edit_id_impi">
+
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-6">

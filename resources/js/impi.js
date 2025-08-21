@@ -13,11 +13,11 @@
  // Datatable (jquery)
  $(function () {
  
-   // Variable declaration for table
-   var dt_user_table = $('.datatables-users'),
-     select2 = $('.select2'),
-     userView = baseUrl + 'app/user/view/account',
-     offCanvasForm = $('#offcanvasAddUser');
+  // Variable declaration for table
+  var dt_user_table = $('.datatables-users'),
+    select2 = $('.select2'),
+    userView = baseUrl + 'app/user/view/account',
+    offCanvasForm = $('#offcanvasAddUser');
  
 
 var select2Elements = $('.select2');
@@ -155,7 +155,7 @@ initializeSelect2(select2Elements);
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
 
-                   `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#editDictamen" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar </a>` +
+                   `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item editar"><i class="ri-edit-box-line ri-20px text-info"></i> Editar </a>` +
                    `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#addEvento" href="javascript:;" class="dropdown-item add-event"><i class="ri-add-box-line  ri-25px"></i> Agregar evento </a> ` +
                    `<a data-id="${full['id_impi']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar </a>` +
                   
@@ -389,8 +389,11 @@ initializeSelect2(select2Elements);
        
      });
    } 
- 
- 
+
+
+
+
+///FUNCION PARA ELIMINAR
 const fv = FormValidation.formValidation(NuevoDictamen, {
     fields: {
 //valida por name
@@ -459,7 +462,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
 
   var formData = new FormData(NuevoDictamen);
     $.ajax({
-        url: 'registrar',
+        url: 'registrarImpi',
         type: 'POST',
         data: formData,
         processData: false,
@@ -481,7 +484,8 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
             });
         },
         error: function (xhr) {
-          console.log('Error por error:', xhr);
+          console.log('Error:', xhr.responseJSON);
+          //console.log('Error2:', xhr.responseText);
             // Mostrar alerta de error
             Swal.fire({
                 icon: 'error',
@@ -493,12 +497,12 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
             });
         }
     });
-  });
+});
 
 
 
-///ELIMINAR REGISTRO
-  $(document).on('click', '.delete-record', function () {
+///FUNCION PARA ELIMINAR
+$(document).on('click', '.delete-record', function () {
     var id_dictamen = $(this).data('id'); // Obtener el ID del registro
     var dtrModal = $('.dtr-bs-modal.show');
 
@@ -525,7 +529,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
             // Enviar solicitud DELETE al servidor
             $.ajax({
                 type: 'DELETE',
-                url: `${baseUrl}eliminar/${id_dictamen}`,
+                url: `${baseUrl}eliminarImpi/${id_dictamen}`,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -544,14 +548,14 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
                     });
                 },
                 error: function (error) {
-                    console.log(error);
-
+                    console.log('Error:', error.responseJSON);
+                    //console.log('Error2:', error.responseText);
                     // Mostrar SweetAlert de error
                     Swal.fire({
                         icon: 'error',
                         title: '¡Error!',
-                        text: 'No se pudo eliminar el registro. Inténtelo más tarde.',
-                        footer: `<pre>${error.responseText}</pre>`,
+                        text: 'Error al eliminar.',
+                        //footer: `<pre>${error.responseText}</pre>`,
                         customClass: {
                             confirmButton: 'btn btn-danger'
                         }
@@ -575,55 +579,58 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
 
 
 
-// FUNCION PARA EDITAR un registro
+///FUNCION PARA OBTENER DATOS
 $(document).ready(function() {
   // Abrir el modal y cargar datos para editar
-  $('.datatables-users').on('click', '.edit-record', function() {
+  $(document).on('click', '.editar', function () {
       var id_dictamen = $(this).data('id');
+      $('#edit_id_dictamen').val(id_dictamen);
 
       // Realizar la solicitud AJAX para obtener los datos de la clase
-      $.get('/insta2/' + id_dictamen + '/edit', function(data) {
-        
-          // Rellenar el formulario con los datos obtenidos
-          $('#edit_id_impi').val(data.id_impi);
-          $('#edit_tramite').val(data.tramite).prop('selected', true).change();
-          $('#edit_fecha_solicitud').val(data.fecha_solicitud);
-          $('#edit_cliente').val(data.id_empresa).prop('selected', true).change();
-          $('#edit_contrasena').val(data.contrasena);
-          $('#edit_pago').val(data.pago);
-          $('#edit_estatus').val(data.estatus).prop('selected', true).change();
-          $('#edit_observaciones').val(data.observaciones);
-          //$('#edit_categorias').val(data.categorias).trigger('change');
-          
-
-          // Mostrar el modal de edición
-          $('#editDictamen').modal('show');
-      }).fail(function() {
-          Swal.fire({
+      $.ajax({
+          url: '/obtenerImpi/' + id_dictamen + '/edit',
+          method: 'GET',
+          success: function (data) {
+            // Rellenar el formulario con los datos obtenidos
+            $('#edit_fecha_solicitud').val(data.fecha_solicitud);
+            $('#edit_tramite').val(data.tramite).prop('selected', true).change();
+            $('#edit_cliente').val(data.id_empresa).prop('selected', true).change();
+            $('#edit_contrasena').val(data.contrasena);
+            $('#edit_pago').val(data.pago);
+            $('#edit_estatus').val(data.estatus).prop('selected', true).change();
+            $('#edit_observaciones').val(data.observaciones);
+            //$('#edit_categorias').val(data.categorias).trigger('change');
+            
+            // Mostrar el modal de edición
+            $('#ModalEditar').modal('show');
+          },
+          error: function (error) {
+            console.error('Error al cargar los datos:', error);
+            Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              text: 'Error al obtener los datos',
+              text: 'Error al cargar los datos.',
               customClass: {
-                  confirmButton: 'btn btn-danger'
+                confirmButton: 'btn btn-danger'
               }
-          });
+            });
+          }
       });
   });
-
-  // Manejar el envío del formulario de edición
-  $('#EditarDictamen').on('submit', function(e) {
+  ///FUNCION PARA ACTUALIZAR
+  $('#FormEditar').on('submit', function(e) {
       e.preventDefault();
 
       var formData = $(this).serialize();
       var id_dictamen = $('#edit_id_impi').val(); // Obtener el ID de la clase desde el campo oculto
 
       $.ajax({
-          url: '/insta2/' + id_dictamen,
+          url: '/actualizarImpi/' + id_dictamen,
           type: 'PUT',
           data: formData,
           success: function(response) {
-              $('#editDictamen').modal('hide'); // Ocultar el modal de edición "DIV"
-              $('#EditarDictamen')[0].reset(); // Limpiar el formulario "FORM"
+              $('#ModalEditar').modal('hide'); // Ocultar el modal de edición "DIV"
+              $('#FormEditar')[0].reset(); // Limpiar el formulario "FORM"
               // Mostrar alerta de éxito
               Swal.fire({
                   icon: 'success',
@@ -650,6 +657,7 @@ $(document).ready(function() {
           }
       });
   });
+
 });
 
 
