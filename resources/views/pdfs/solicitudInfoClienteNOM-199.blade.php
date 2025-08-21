@@ -395,44 +395,44 @@
                 <tr>
                     <td class="table-cell" style="border-bottom: none; "></td>
                     <td class="table-cell" style="width: 125px;">Cerveza</td>
-                    <td class="table-cell" style="width: 30px;">{{ marcarX(1, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="width: 30px; text-align: center; vertical-align: middle;">{{ marcarX(1, $bebidas_ids) }}</td>
                     <td style="border: solid black 1px; border-bottom: none;"></td>
                     <td class="table-cell" style="width: 30px;">Aguardiente</td>
-                    <td style="border: solid black 1px;">{{ marcarX(8, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px;  text-align: center;">{{ marcarX(8, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" rowspan="6" style="border-top: none; width: 90px;"><strong>Bebidas
                             Alcohólicas Fermentadas (2% a 20% Alc. Vol.)</strong></td>
                     <td class="table-cell">“_____Ale”</td>
-                    <td style="border: solid black 1px;">{{ marcarX(2, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(2, $bebidas_ids) }}</td>
                     <td class="table-cell" rowspan="6" style="border-top: none; width: 90px;"><strong>Bebidas
                             Alcohólicas Destiladas (32% a 55% Alc. Vol.)</strong></td>
                     <td class="table-cell">Armagnac</td>
-                    <td style="border: solid black 1px; width: 30px">{{ marcarX(9, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; width: 30px; text-align: center;">{{ marcarX(9, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell">Pulque</td>
-                    <td style="border: solid black 1px;">{{ marcarX(3, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(3, $bebidas_ids) }}</td>
                     <td class="table-cell">Bacanora</td>
-                    <td style="border: solid black 1px;">{{ marcarX(10, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(10, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell">Sake</td>
-                    <td style="border: solid black 1px;">{{ marcarX(4, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(4, $bebidas_ids) }}</td>
                     <td class="table-cell">Brandy</td>
-                    <td style="border: solid black 1px;">{{ marcarX(11, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(11, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell">Sidra</td>
-                    <td style="border: solid black 1px;">{{ marcarX(5, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(5, $bebidas_ids) }}</td>
                     <td class="table-cell">Cachaca</td>
-                    <td style="border: solid black 1px;">{{ marcarX(12, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(12, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell">Vino</td>
-                    <td style="border: solid black 1px;">{{ marcarX(6, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(6, $bebidas_ids) }}</td>
                     <td class="table-cell">Comiteco</td>
-                    <td style="border: solid black 1px;">{{ marcarX(13, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(13, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                    <td class="table-cell">Otro (Especifique):</td>
@@ -441,7 +441,7 @@
                   </td>
 
                     <td class="table-cell">Ginebra</td>
-                    <td style="border: solid black 1px;">{{ marcarX(14, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(14, $bebidas_ids) }}</td>
                 </tr>
 
 
@@ -514,7 +514,7 @@
                 <tr>
                     <td class="table-cell" style="border-bottom: none;"></td>
                     <td class="table-cell" style="width: 100px; vertical-align: top;">Anís</td>
-                    <td class="table-cell" style="width: 30px;">{{ marcarX(15, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="width: 30px; text-align: center;">{{ marcarX(15, $bebidas_ids) }}</td>
                     <td style="border: solid black 1px; border-bottom: none;"></td>
                     <td class="table-cell" style="width: 100px; vertical-align: top;">habanero</td>
                     <td class="table-cell" style="border: solid black 1px;"></td>
@@ -524,63 +524,63 @@
                         style="border-top: none; border-bottom: none; width: 90px;"><strong>Licores o cremas (13.5% a
                             55% Alc. Vol.)</strong></td>
                     <td class="table-cell" style="vertical-align: top;">Amaretto</td>
-                    <td style="border: solid black 1px;">{{ marcarX(16, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(16, $bebidas_ids) }}</td>
                     <td class="table-cell" rowspan="6"
                         style="border-top: none; border-bottom: none; width: 90px;"><strong>Bebidas Alcohólicas
                             Destiladas (32% a 55% Alc. Vol.)</strong></td>
                     <td class="table-cell" style="vertical-align: top;">Kirsch</td>
-                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(28, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="border: solid black 1px; text-align: center;">{{ marcarX(28, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="vertical-align: top;">Crema o licor de cassis</td>
-                    <td style="border: solid black 1px;">{{ marcarX(17, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(17, $bebidas_ids) }}</td>
                     <td class="table-cell" style="vertical-align: top;">Poire o Perry</td>
-                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(29, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="border: solid black 1px; text-align: center;">{{ marcarX(29, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="vertical-align: top;">Crema o licor de café</td>
-                    <td style="border: solid black 1px;">{{ marcarX(18, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(18, $bebidas_ids) }}</td>
                     <td class="table-cell" style="vertical-align: top;">Ron</td>
-                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(30, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="border: solid black 1px; text-align: center;">{{ marcarX(30, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="vertical-align: top;">Crema o licor de cacao</td>
-                    <td style="border: solid black 1px;">{{ marcarX(19, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(19, $bebidas_ids) }}</td>
                     <td class="table-cell" style="vertical-align: top;">Raicilla</td>
-                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(31, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="border: solid black 1px; text-align: center;">{{ marcarX(31, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="vertical-align: top;">Crema o licor de menta</td>
-                    <td style="border: solid black 1px;">{{ marcarX(20, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(20, $bebidas_ids) }}</td>
                     <td class="table-cell" style="vertical-align: top;">Sambuca</td>
-                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(32, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="border: solid black 1px; text-align: center;">{{ marcarX(32, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="vertical-align: top;">Fernet</td>
-                    <td style="border: solid black 1px;">{{ marcarX(21, $bebidas_ids) }}</td>
+                    <td style="border: solid black 1px; text-align: center;">{{ marcarX(21, $bebidas_ids) }}</td>
                     <td class="table-cell" style="vertical-align: top;">Sotol</td>
-                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(33, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="border: solid black 1px; text-align: center;">{{ marcarX(33, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Irish cream</td>
-                    <td class="table-cell">{{ marcarX(22, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="text-align: center;">{{ marcarX(22, $bebidas_ids) }}</td>
                     <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Vodka</td>
-                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(34, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="border: solid black 1px; text-align: center;">{{ marcarX(34, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Licor amargo</td>
-                    <td class="table-cell">{{ marcarX(23, $bebidas_ids) }}</td>
+                    <td class="table-cell text-align: center;">{{ marcarX(23, $bebidas_ids) }}</td>
                     <td style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Whisky o Whiskey</td>
-                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(35, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="border: solid black 1px; text-align: center;">{{ marcarX(35, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Licores de frutas</td>
-                    <td class="table-cell">{{ marcarX(24, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="text-align: center;">{{ marcarX(24, $bebidas_ids) }}</td>
                     <td style="border-top: solid black 1px;"></td>
                     {{-- Cóctel de --}}
                     @php $texto1 = obtenerTexto($bebidas_texto, 'Coctel_de') ?? ''; @endphp
@@ -601,7 +601,7 @@
                 <tr>
                     <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Sambuca</td>
-                    <td class="table-cell">{{ marcarX(25, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="text-align: center;">{{ marcarX(25, $bebidas_ids) }}</td>
                     <td style="padding: 6px;"></td>
                     {{-- Cóctel sabor de --}}
                     {{-- Cóctel sabor de --}}
@@ -622,7 +622,7 @@
                 <tr>
                     <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Xtabentún</td>
-                    <td class="table-cell">{{ marcarX(26, $bebidas_ids) }}</td>
+                    <td class="table-cell" style="text-align: center;">{{ marcarX(26, $bebidas_ids) }}</td>
                     <td style="text-align: center;"><strong>Cócteles (12% a 32% Alc. Vol.)</strong></td>
                     {{-- <td class="table-cell" style="vertical-align: top;">“Cóctel de o al ____________”</td>
                     <td class="table-cell" style="border: solid black 1px;"></td> --}}
