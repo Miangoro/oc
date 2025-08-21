@@ -319,6 +319,9 @@ public function TrackingCertificados($id)
             if ($observaciones) {
                 $contenido .= ", <b>Observaciones para el revisor:</b> $observaciones";
             }
+            if ( $log->subject_type === 'App\Models\Certificado_Exportacion' && $attributes['estatus'] == 2 ) {
+                $contenido .= ", <b>Motivo de la reexpedicion:</b> $motivoCancelado ";
+            }
         }
 
         $bitacora = '';

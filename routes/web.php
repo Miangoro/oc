@@ -1356,7 +1356,7 @@ Route::middleware(['auth'])->controller(impiController::class)->group(function (
     Route::post('registrarImpi', 'store')->name('registrar');
     Route::delete('eliminarImpi/{id_impi}', 'destroy')->name('eliminar');
     Route::get('obtenerImpi/{id_impi}/edit', 'edit')->name('obtener-registros');
-    Route::put('actualizarImpi/{id_impi}', 'update')->name('actualizar');
+    Route::post('actualizarImpi/{id_impi}', 'update')->name('actualizar');
 
     //Registrar evento
     Route::post('crearEvento', [impiController::class, 'store'])->name('evento-create');
