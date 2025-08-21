@@ -1,14 +1,15 @@
 /* Page User List */
 'use strict';
 
- $(document).ready(function () {
-  $('.datepicker').datepicker({
-    format: 'yyyy-mm-dd',
-    autoclose: true,
-    todayHighlight: true,
-    language: 'es' // Configura el idioma a español
+$(document).ready(function () {
+  flatpickr(".flatpickr-datetime", {
+      dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
+      enableTime: false,   // Desactiva la  hora
+      allowInput: true,    // Permite al usuario escribir la fecha manualmente
+      locale: "es",        // idioma a español
   });
 });
+
 
  // Datatable (jquery)
  $(function () {
@@ -66,11 +67,11 @@ initializeSelect2(select2Elements);
        ],
        columnDefs: [
          {
+           targets: 0,
            className: 'control',
            searchable: false,
            orderable: false,
            responsivePriority: 2,
-           targets: 0,
            render: function (data, type, full, meta) {
              return '';
            }
@@ -108,6 +109,8 @@ initializeSelect2(select2Elements);
           }
           else if($tramite == 6){ 
             return '<span style="color:red;">Declaración de uso de marca</span>';
+          }else{
+            return ' ';
           }
           }
         },
@@ -129,6 +132,8 @@ initializeSelect2(select2Elements);
             }
             else if($name == 4){ 
               return '<span class="badge rounded-pill bg-danger">Tramite no favorable</span>';
+            }else{
+              return ' ';
             }
            }
          },
@@ -136,7 +141,7 @@ initializeSelect2(select2Elements);
            // Tabla 7 telefono y correo
            targets: 7,
            render: function (data, type, full, meta) {
-             var $contacto = full['contacto'];
+             var $contacto = full['contacto'] ?? '';
              /*return '<span class="fw-bold">Telefono:</span> <br>'+
               '<span class="fw-bold">Correo:</span>';*/
               return '<span class="user-email">' + $contacto + '</span>';
@@ -346,7 +351,7 @@ initializeSelect2(select2Elements);
            attr: {
             'data-bs-toggle': 'modal',
             'data-bs-dismiss': 'modal',
-            'data-bs-target': '#addDictamen'
+            'data-bs-target': '#ModalAgregar'
            }
          }
        ],
@@ -394,7 +399,7 @@ initializeSelect2(select2Elements);
 
 
 ///FUNCION PARA ELIMINAR
-const fv = FormValidation.formValidation(NuevoDictamen, {
+const fv = FormValidation.formValidation(FormAgregar, {
     fields: {
 //valida por name
       fecha_solicitud: {
@@ -460,7 +465,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
     }
 }).on('core.form.valid', function (e) {
 
-  var formData = new FormData(NuevoDictamen);
+  var formData = new FormData(FormAgregar);
     $.ajax({
         url: 'registrarImpi',
         type: 'POST',
@@ -469,8 +474,8 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
         contentType: false,
         success: function (response) {
           console.log('Funcionando', response);
-            $('#addDictamen').modal('hide');//div que encierra al formulario #addDictamen
-            $('#NuevoDictamen')[0].reset();
+            $('#ModalAgregar').modal('hide');
+            $('#FormAgregar')[0].reset();
   
             dt_user.ajax.reload();
             // Mostrar alerta de éxito
@@ -580,11 +585,13 @@ $(document).on('click', '.delete-record', function () {
 
 
 ///FUNCION PARA OBTENER DATOS
-$(document).ready(function() {
+//$(document).ready(function() {
+$(function () {
+
   // Abrir el modal y cargar datos para editar
   $(document).on('click', '.editar', function () {
       var id_dictamen = $(this).data('id');
-      $('#edit_id_dictamen').val(id_dictamen);
+      $('#edit_id_impi').val(id_dictamen);
 
       // Realizar la solicitud AJAX para obtener los datos de la clase
       $.ajax({
@@ -617,43 +624,98 @@ $(document).ready(function() {
           }
       });
   });
+
   ///FUNCION PARA ACTUALIZAR
-  $('#FormEditar').on('submit', function(e) {
-      e.preventDefault();
-
-      var formData = $(this).serialize();
-      var id_dictamen = $('#edit_id_impi').val(); // Obtener el ID de la clase desde el campo oculto
-
+  // Inicializar validacion para el formulario
+  const form = document.getElementById('FormEditar');
+  const fv = FormValidation.formValidation(form, {
+    fields: {
+      fecha_solicitud: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una fecha'
+                }
+            }
+        },
+      tramite: {
+        validators: {
+            notEmpty: {
+                message: 'Seleccione el trámite'
+            }
+        }
+      },
+      id_empresa: {
+          validators: {
+              notEmpty: {
+                  message: 'Seleccione el cliente'
+              }
+          }
+      },
+      contrasena: {
+          validators: {
+              notEmpty: {
+                  message: 'Introduzca una contraseña'
+              }
+          }
+      },
+      pago: {
+          validators: {
+              notEmpty: {
+                  message: 'Introduzca el pago'
+              }
+          }
+      },
+      estatus: {
+        validators: {
+            notEmpty: {
+                message: 'Seleccione un estatus'
+            }
+        }
+      },
+    },
+    plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+              eleValidClass: '',
+              eleInvalidClass: 'is-invalid',
+              rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+      //enviar el formulario cuando pase la validación
+      var formData = new FormData(form);
+      var id_impi = $('#edit_id_impi').val();
+      
       $.ajax({
-          url: '/actualizarImpi/' + id_dictamen,
-          type: 'PUT',
+          url: '/actualizarImpi/'+ id_impi,
+          type: 'POST',
           data: formData,
-          success: function(response) {
-              $('#ModalEditar').modal('hide'); // Ocultar el modal de edición "DIV"
-              $('#FormEditar')[0].reset(); // Limpiar el formulario "FORM"
-              // Mostrar alerta de éxito
-              Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: response.success,
-                  customClass: {
-                      confirmButton: 'btn btn-success'
-                  }
-              });
-              // Recargar los datos en la tabla sin reinicializar DataTables
-              $('.datatables-users').DataTable().ajax.reload();
+          contentType: false,
+          processData: false,
+          success: function (response) {
+            dt_user.ajax.reload(null, false); 
+            $('#ModalEditar').modal('hide');//ocultar modal
+            Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.success,
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              }
+            });
           },
-          error: function(xhr) {
-            console.log('Error:', xhr.responseText);
-              // Mostrar alerta de error
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'Error al actualizar',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
+          error: function (xhr) {
+            console.log('Error:', xhr.responseJSON);
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al actualizar.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
           }
       });
   });

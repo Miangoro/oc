@@ -1,6 +1,6 @@
 
 <!-- AGREGAR NUEVO TRAMITE MODAL -->
-<div class="modal fade" id="addDictamen" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="ModalAgregar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
 
@@ -10,12 +10,11 @@
                     <h4 class="address-title mb-2">Registrar nuevo trámite ante el IMPI</h4>
                 </div>
 
-                <form id="NuevoDictamen">
+                <form id="FormAgregar">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="date" class="form-control datepicker" id="fecha_solicitud"
-                                    placeholder="fecha" name="fecha_solicitud" aria-label="Nombre">
+                                <input class="form-control flatpickr-datetime" id="fecha_solicitud" name="fecha_solicitud" placeholder="YYYY-MM-DD" value="@php echo date('Y-m-d'); @endphp">
                                 <label for="">Fecha de Solicitud</label>
                             </div>
                         </div>
@@ -113,14 +112,13 @@
                 <h4 class="address-title mb-2">Editar trámite ante el IMPI</h4>
             </div>
 
-            <form id="FormEditar">
+            <form id="FormEditar" method="POST">
                 <input type="hidden" name="id_impi" id="edit_id_impi">
 
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-6">
-                        <input id="edit_fecha_solicitud" type="date" class="form-control datepicker" name="fecha_solicitud" 
-                            placeholder="seleccione fecha">
+                        <input id="edit_fecha_solicitud" class="form-control flatpickr-datetime" name="fecha_solicitud" placeholder="YYYY-MM-DD">
                         <label for="">Fecha de Solicitud</label>
                     </div>
                 </div>
@@ -139,10 +137,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-4">
-                        {{-- <input id="edit_cliente" type="number" class="form-control" placeholder="Nombre del cliente" aria-label="" name="id_empresa" />
-                        <label for="">Nombre del cliente</label> --}}
                         <select id="edit_cliente" name="id_empresa" class="form-select select2">
-                            {{-- <option value="" disabled selected>Selecciona la empresa</option> --}}
                             @foreach ($empresas as $empresa)
                                 <option value="{{ $empresa->id_empresa }}">
                                     {{ $empresa->empresaNumClientes[0]->numero_cliente ?? 
@@ -190,7 +185,7 @@
                 </div>
                 
                 <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                    <button type="submit" id="" class="btn btn-primary me-sm-3 me-1 data-submit">Editar</button>
+                    <button type="submit" class="btn btn-primary">Editar</button>
                     <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </form>

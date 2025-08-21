@@ -123,27 +123,28 @@ class impiController extends Controller
             foreach ($impi as $impi) {
             //MANDA LOS DATOS AL JS
                 //$nestedData['fake_id'] = ++$ids;
-                $nestedData['id_impi'] = $impi->id_impi;
-                $nestedData['folio'] = $impi->folio;
+                $nestedData['id_impi'] = $impi->id_impi ?? '';
+                $nestedData['folio'] = $impi->folio ?? '';
                 //$nestedData['fecha_solicitud'] = $impi->fecha_solicitud;
                 //$nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($impi->fecha_solicitud) ?? 'N/A';
-                $nestedData['fecha_solicitud'] = Helpers::formatearFecha($impi->fecha_solicitud);
-                $nestedData['id_empresa'] = $impi->id_empresa;
-                $nestedData['tramite'] = $impi->tramite;
-                $nestedData['contrasena'] = $impi->contrasena;
-                $nestedData['pago'] = $impi->pago;
-                $nestedData['observaciones'] = $impi->observaciones;
-                $nestedData['estatus'] = $impi->estatus;
+                $nestedData['fecha_solicitud'] = Helpers::formatearFecha($impi->fecha_solicitud) ?? '';
+                $nestedData['id_empresa'] = $impi->id_empresa ?? '';
+                $nestedData['tramite'] = $impi->tramite ?? '';
+                $nestedData['contrasena'] = $impi->contrasena ?? '';
+                $nestedData['pago'] = $impi->pago ?? '';
+                $nestedData['observaciones'] = $impi->observaciones ?? '';
+                $nestedData['estatus'] = $impi->estatus ?? '';
                 //empresa y folio
-                $razonSocial = $impi->empresa ? $impi->empresa->razon_social : '';
-                $numeroCliente = 
-                $impi->empresaNumClientes[0]->numero_cliente ?? 
-                $impi->empresaNumClientes[1]->numero_cliente ?? 
-                $impi->empresaNumClientes[2]->numero_cliente;
-                $nestedData['razon_social'] = '<b>'.$numeroCliente . '</b> <br>' . $razonSocial;
+                $empresa = $dictamen->inspeccione->solicitud->empresa ?? null;
+                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                    ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+                    ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+                $nestedData['numero_cliente'] = $numero_cliente;
+                $nestedData['razon_social'] = $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
+                $nestedData['razon_social'] = '<b>'.$numero_cliente . '</b> <br>' . $empresa;
                 //telefono y correo
-                $tel = $impi->empresa->telefono;
-                $email = $impi->empresa->correo;
+                $tel = $impi->empresa->telefono ?? '';
+                $email = $impi->empresa->correo ?? '';
                 $nestedData['contacto'] = '<b>Teléfono: </b>' .$tel. '<br> <b>Correo: </b>' .$email;
 
                 $data[] = $nestedData;
@@ -251,7 +252,7 @@ public function edit($id_impi)
 public function update(Request $request, $id_impi) 
 {
     $var2 = Impi::findOrFail($id_impi);
-    $var2->id_impi = $request->id_impi;
+    //$var2->id_impi = $request->id_impi;
     $var2->tramite = $request->tramite;
     $var2->fecha_solicitud = $request->fecha_solicitud;
     $var2->id_empresa = $request->id_empresa;
@@ -261,7 +262,7 @@ public function update(Request $request, $id_impi)
     $var2->observaciones = $request->observaciones;
     $var2->save();
 
-    return response()->json(['success' => 'Editado correctamente']);
+    return response()->json(['success' => 'Actualizado correctamente']);
 }
 
 
