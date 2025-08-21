@@ -193,3 +193,21 @@
         </div>
     </div>
 </div>
+
+
+
+{{-- <script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Cuando el modal se cierra
+    $('#ModalAgregar').on('hidden.bs.modal', function () {
+        // Resetear el formulario
+        $('#FormAgregar')[0].reset();
+        // Resetear selects con select2
+        $('#FormAgregar select').val('').trigger('change');
+        // Resetear validaciones de FormValidation (si lo usas)
+        if (typeof fv !== "undefined") {
+            fv.resetForm(true);
+        }
+    });
+});
+</script> --}}
