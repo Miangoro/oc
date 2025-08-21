@@ -161,11 +161,20 @@ class solicitudClienteController extends Controller
             $actividad->save();
         }
     } */
-    if ($request->has('bebida')) {
-        foreach ($request->bebida as $id_clasificacion => $bebidas) {
-            foreach ($bebidas as $valor) {
-                if ($valor) {
-                    // Buscar si es un ID del catálogo
+/*    if ($request->has('bebida')) {
+    foreach ($request->bebida as $id_clasificacion => $bebidas) {
+        foreach ($bebidas as $campo => $valor) { // <- ahora $campo = "Coctel_de:"
+            if ($valor) {
+                // Clasificaciones 5 y 6: siempre texto personalizado
+                if (in_array($id_clasificacion, [5, 6])) {
+                    respuesta_bebidas::create([
+                        'id_empresa' => $id_empresa,
+                        'id_clasificacion' => $id_clasificacion,
+                        'id_bebida' => null,
+                        'bebida_personalizada' => "$campo $valor" // queda "Coctel_de: manguito"
+                    ]);
+                } else {
+                    // Para los demás tipos, intentamos buscar en el catálogo
                     $catalogo = catalogo_bebidas::find($valor);
                     if ($catalogo) {
                         respuesta_bebidas::create([
@@ -175,7 +184,7 @@ class solicitudClienteController extends Controller
                             'bebida_personalizada' => null
                         ]);
                     } else {
-                        // Si es texto personalizado
+                        // Si es un texto libre, se guarda como personalizado
                         respuesta_bebidas::create([
                             'id_empresa' => $id_empresa,
                             'id_clasificacion' => $id_clasificacion,
@@ -187,6 +196,60 @@ class solicitudClienteController extends Controller
             }
         }
     }
+} */
+if ($request->has('bebida')) {
+    foreach ($request->bebida as $id_clasificacion => $bebidas) {
+        foreach ($bebidas as $campo => $valor) {
+            if ($valor) {
+
+                // Clasificación 1 y 3 → guardar id_bebida + personalizado si hay texto libre
+                if (in_array($id_clasificacion, [1, 3])) {
+                    $id_bebida = is_numeric($valor) ? $valor : null;
+                    respuesta_bebidas::create([
+                        'id_empresa' => $id_empresa,
+                        'id_clasificacion' => $id_clasificacion,
+                        'id_bebida' => $id_bebida,
+                        'bebida_personalizada' => is_string($valor) && !is_numeric($valor) ? $valor : null,
+                    ]);
+                    continue;
+                }
+
+                // Clasificaciones 5 y 6 → siempre texto personalizado (Cócteles)
+                if (in_array($id_clasificacion, [5, 6])) {
+                    respuesta_bebidas::create([
+                        'id_empresa' => $id_empresa,
+                        'id_clasificacion' => $id_clasificacion,
+                        'id_bebida' => null,
+                        'bebida_personalizada' => "$campo $valor",
+                    ]);
+                    continue;
+                }
+
+                // Para otras clasificaciones intentamos buscar en catálogo
+                $catalogo = catalogo_bebidas::find($valor);
+                if ($catalogo) {
+                    respuesta_bebidas::create([
+                        'id_empresa' => $id_empresa,
+                        'id_clasificacion' => $id_clasificacion,
+                        'id_bebida' => $catalogo->id_bebida,
+                        'bebida_personalizada' => null,
+                    ]);
+                } else {
+                    // Texto libre ingresado por el usuario
+                    respuesta_bebidas::create([
+                        'id_empresa' => $id_empresa,
+                        'id_clasificacion' => $id_clasificacion,
+                        'id_bebida' => null,
+                        'bebida_personalizada' => $valor,
+                    ]);
+                }
+            }
+        }
+    }
+}
+
+
+
 
 // Guardar normas asociadas a la empresa
     if (is_array($request->norma)) {

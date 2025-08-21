@@ -912,28 +912,28 @@
                             <div class="row gy-3 align-items-start">
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[5][]" class="form-control" type="text" id="inputCoctel61"
-                                            placeholder="Cóctel de" />
+                                        <input name="bebida[5][Coctel_de:]" class="form-control" type="text" id="inputCoctel61"
+                                            placeholder="Cóctel de"/>
                                         <label for="inputCoctel61"><small>Cóctel de</small></label>
                                     </div>
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[5][]" class="form-control" type="text" id="inputCoctel62"
-                                            placeholder="Cóctel sabor de" />
+                                        <input name="bebida[5][Coctel_sabor_de:]" class="form-control" type="text" id="inputCoctel62"
+                                            placeholder="Cóctel sabor de"/>
                                         <label for="inputCoctel62"><small>Cóctel sabor de</small></label>
                                     </div>
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[5][]" class="form-control" type="text" id="inputCoctel63"
+                                        <input name="bebida[5][Coctel_de_o_al:]" class="form-control" type="text" id="inputCoctel63"
                                             placeholder="Cóctel de o al" />
                                         <label for="inputCoctel63"><small>Cóctel de o al</small></label>
                                     </div>
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[5][]" class="form-control" type="text" id="inputCoctel64"
+                                        <input name="bebida[5][Coctel_con:]" class="form-control" type="text" id="inputCoctel64"
                                             placeholder="Cóctel con" />
                                         <label for="inputCoctel64"><small>Cóctel con</small></label>
                                     </div>
@@ -949,7 +949,7 @@
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
 
-                                        <input name="bebida[6][]" class="form-control" type="text" id="inputBebida65"
+                                        <input name="bebida[6][Bebida_alcoholica_preparada_de:]" class="form-control" type="text" id="inputBebida65"
                                             placeholder="Bebida alcohólica preparada de" />
                                         <label for="inputBebida65" class="custom-option-body"><small>Bebida alcohólica
                                                 preparada de</small></label>
@@ -958,7 +958,7 @@
 
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[6][]" class="form-control" type="text" id="inputBebida66"
+                                        <input name="bebida[6][Bebida_alcoholica_preparada_de_o_al:]" class="form-control" type="text" id="inputBebida66"
                                             placeholder="Bebida alcohólica preparada de o al" />
                                         <label for="inputBebida66">
                                             <small>Bebida alcohólica preparada de o al</small>
@@ -968,8 +968,8 @@
 
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[6][]" class="form-control" type="text" id="inputBebida67"
-                                            placeholder="Bebida alcohólica preparada sabor de" />
+                                        <input name="bebida[6][Bebida_alcoholica_preparada_sabor_de:]" class="form-control" type="text" id="inputBebida67"
+                                            placeholder="Bebida alcohólica preparada sabor de"/>
                                         <label for="inputBebida67">
                                             <small>Bebida alcohólica preparada sabor de</small>
                                         </label>
@@ -977,8 +977,8 @@
                                 </div>
                                 <div class="col-md">
                                     <div class="form-floating form-floating-outline">
-                                        <input name="bebida[6][]" class="form-control" type="text" id="inputBebida68"
-                                            placeholder="Bebida alcohólica preparada con" />
+                                        <input name="bebida[6][Bebida_alcoholica_preparada_con:]" class="form-control" type="text" id="inputBebida68"
+                                            placeholder="Bebida alcohólica preparada con"/>
                                         <label for="inputBebida68">
                                             <small>Bebida alcohólica preparada con</small>
                                         </label>

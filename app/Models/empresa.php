@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class empresa extends Model
@@ -29,6 +30,10 @@ class empresa extends Model
     {
         return $this->hasMany(empresaNumCliente::class, 'id_empresa', 'id_empresa')
                 ->whereNotNull('numero_cliente');
+    }
+    public function empresaNullNumClientes()
+    {
+        return $this->hasMany(empresaNumCliente::class, 'id_empresa', 'id_empresa');
     }
 
     public function users()
@@ -193,6 +198,9 @@ class empresa extends Model
         return $this->belongsTo(solicitud_informacion::class, 'id_empresa', 'id_empresa');
     }
 
-
+    public function respuestasBebidas()
+    {
+        return $this->hasMany(respuesta_bebidas::class, 'id_empresa', 'id_empresa');
+    }
 
 }

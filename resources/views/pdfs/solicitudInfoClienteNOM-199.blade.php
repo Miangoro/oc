@@ -358,6 +358,35 @@
                 instalaciones en domicilios diferentes donde lleve a cabo su actividad (planta de producción, envasado,
                 bodega de maduración u otro) agregar las tablas necesarias y especificar domicilios*</b></p>
 
+        @php
+            // Obtener todos los id_bebida de la empresa
+            $bebidas_ids = $empresa->respuestasBebidas()->pluck('id_bebida')->toArray();
+
+            // Obtener los textos personalizados para clasificaciones 1 y 3
+            $bebidas_personalizadas = $empresa
+                ->respuestasBebidas()
+                ->whereIn('id_clasificacion', [1, 3])
+                ->whereNull('id_bebida')
+                ->pluck('bebida_personalizada', 'id_clasificacion')
+                ->toArray();
+
+            if (!function_exists('marcarX')) {
+                function marcarX($id_bebida, $bebidas_ids, $id_clasificacion = null, $bebidas_personalizadas = [])
+                {
+                    // Si es clasificación 1 o 3 y tiene personalizado
+                    if (
+                        $id_clasificacion &&
+                        in_array($id_clasificacion, [1, 3]) &&
+                        isset($bebidas_personalizadas[$id_clasificacion])
+                    ) {
+                        return $bebidas_personalizadas[$id_clasificacion];
+                    }
+                    return in_array($id_bebida, $bebidas_ids) ? 'X' : '';
+                }
+            }
+        @endphp
+
+
         <div class="table-title">
             Clasificación de Bebida(s) Alcohólica(s) por su proceso de elaboración.
         </div>
@@ -366,50 +395,53 @@
                 <tr>
                     <td class="table-cell" style="border-bottom: none; "></td>
                     <td class="table-cell" style="width: 125px;">Cerveza</td>
-                    <td class="table-cell" style="width: 30px;"></td>
+                    <td class="table-cell" style="width: 30px;">{{ marcarX(1, $bebidas_ids) }}</td>
                     <td style="border: solid black 1px; border-bottom: none;"></td>
                     <td class="table-cell" style="width: 30px;">Aguardiente</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(8, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" rowspan="6" style="border-top: none; width: 90px;"><strong>Bebidas
                             Alcohólicas Fermentadas (2% a 20% Alc. Vol.)</strong></td>
                     <td class="table-cell">“_____Ale”</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(2, $bebidas_ids) }}</td>
                     <td class="table-cell" rowspan="6" style="border-top: none; width: 90px;"><strong>Bebidas
                             Alcohólicas Destiladas (32% a 55% Alc. Vol.)</strong></td>
                     <td class="table-cell">Armagnac</td>
-                    <td style="border: solid black 1px; width: 30px"></td>
+                    <td style="border: solid black 1px; width: 30px">{{ marcarX(9, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell">Pulque</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(3, $bebidas_ids) }}</td>
                     <td class="table-cell">Bacanora</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(10, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell">Sake</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(4, $bebidas_ids) }}</td>
                     <td class="table-cell">Brandy</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(11, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell">Sidra</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(5, $bebidas_ids) }}</td>
                     <td class="table-cell">Cachaca</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(12, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell">Vino</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(6, $bebidas_ids) }}</td>
                     <td class="table-cell">Comiteco</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(13, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
-                    <td class="table-cell">Otro (Especifique):</td>
-                    <td style="border: solid black 1px;"></td>
+                   <td class="table-cell">Otro (Especifique):</td>
+                  <td style="border: solid black 1px;">
+                      {{ marcarX(7, $bebidas_ids, 1, $bebidas_personalizadas) }}
+                  </td>
+
                     <td class="table-cell">Ginebra</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(14, $bebidas_ids) }}</td>
                 </tr>
 
 
@@ -446,6 +478,35 @@
         </tr>
     </table> <br>
 
+    @php
+        $bebidas_texto = $empresa
+            ->respuestasBebidas()
+            ->whereNotNull('bebida_personalizada')
+            ->pluck('bebida_personalizada')
+            ->toArray();
+
+        if (!function_exists('textoDespuesDeDosPuntos')) {
+            function textoDespuesDeDosPuntos($valor, $prefijo)
+            {
+                if (str_starts_with($valor, $prefijo . ':')) {
+                    return trim(substr($valor, strlen($prefijo) + 1));
+                }
+                return null;
+            }
+        }
+
+        if (!function_exists('obtenerTexto')) {
+            function obtenerTexto($bebidas_texto, $prefijo)
+            {
+                foreach ($bebidas_texto as $b) {
+                    if ($t = textoDespuesDeDosPuntos($b, $prefijo)) {
+                        return $t;
+                    }
+                }
+                return null;
+            }
+        }
+    @endphp
 
     <div class="container" style="border-bottom: solid black 2px; padding-bottom: 10px; border-top: solid black 2px;">
         <div class="tablas">
@@ -453,7 +514,7 @@
                 <tr>
                     <td class="table-cell" style="border-bottom: none;"></td>
                     <td class="table-cell" style="width: 100px; vertical-align: top;">Anís</td>
-                    <td class="table-cell" style="width: 30px;"></td>
+                    <td class="table-cell" style="width: 30px;">{{ marcarX(15, $bebidas_ids) }}</td>
                     <td style="border: solid black 1px; border-bottom: none;"></td>
                     <td class="table-cell" style="width: 100px; vertical-align: top;">habanero</td>
                     <td class="table-cell" style="border: solid black 1px;"></td>
@@ -463,95 +524,223 @@
                         style="border-top: none; border-bottom: none; width: 90px;"><strong>Licores o cremas (13.5% a
                             55% Alc. Vol.)</strong></td>
                     <td class="table-cell" style="vertical-align: top;">Amaretto</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(16, $bebidas_ids) }}</td>
                     <td class="table-cell" rowspan="6"
                         style="border-top: none; border-bottom: none; width: 90px;"><strong>Bebidas Alcohólicas
                             Destiladas (32% a 55% Alc. Vol.)</strong></td>
                     <td class="table-cell" style="vertical-align: top;">Kirsch</td>
-                    <td class="table-cell" style="border: solid black 1px;"></td>
+                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(28, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="vertical-align: top;">Crema o licor de cassis</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(17, $bebidas_ids) }}</td>
                     <td class="table-cell" style="vertical-align: top;">Poire o Perry</td>
-                    <td class="table-cell" style="border: solid black 1px;"></td>
+                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(29, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="vertical-align: top;">Crema o licor de café</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(18, $bebidas_ids) }}</td>
                     <td class="table-cell" style="vertical-align: top;">Ron</td>
-                    <td class="table-cell" style="border: solid black 1px;"></td>
+                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(30, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="vertical-align: top;">Crema o licor de cacao</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(19, $bebidas_ids) }}</td>
                     <td class="table-cell" style="vertical-align: top;">Raicilla</td>
-                    <td class="table-cell" style="border: solid black 1px;"></td>
+                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(31, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="vertical-align: top;">Crema o licor de menta</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(20, $bebidas_ids) }}</td>
                     <td class="table-cell" style="vertical-align: top;">Sambuca</td>
-                    <td class="table-cell" style="border: solid black 1px;"></td>
+                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(32, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="vertical-align: top;">Fernet</td>
-                    <td style="border: solid black 1px;"></td>
+                    <td style="border: solid black 1px;">{{ marcarX(21, $bebidas_ids) }}</td>
                     <td class="table-cell" style="vertical-align: top;">Sotol</td>
-                    <td class="table-cell" style="border: solid black 1px;"></td>
+                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(33, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Irish cream</td>
-                    <td class="table-cell"></td>
+                    <td class="table-cell">{{ marcarX(22, $bebidas_ids) }}</td>
                     <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Vodka</td>
-                    <td class="table-cell" style="border: solid black 1px;"></td>
+                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(34, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Licor amargo</td>
-                    <td class="table-cell"></td>
+                    <td class="table-cell">{{ marcarX(23, $bebidas_ids) }}</td>
                     <td style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Whisky o Whiskey</td>
-                    <td class="table-cell" style="border: solid black 1px;"></td>
+                    <td class="table-cell" style="border: solid black 1px;">{{ marcarX(35, $bebidas_ids) }}</td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Licores de frutas</td>
-                    <td class="table-cell"></td>
+                    <td class="table-cell">{{ marcarX(24, $bebidas_ids) }}</td>
                     <td style="border-top: solid black 1px;"></td>
-                    <td class="table-cell" style="vertical-align: top;">“Cóctel de _______”</td>
-                    <td class="table-cell" style="border: solid black 1px;"></td>
+                    {{-- Cóctel de --}}
+                    @php $texto1 = obtenerTexto($bebidas_texto, 'Coctel_de') ?? ''; @endphp
+                    <td class="table-cell" style="vertical-align: top;">
+                        “Cóctel de
+                        <span style="border-bottom:1px solid black; display:inline-block; min-width:80px;">
+                            {{ $texto1 }}
+                        </span>
+                        ”
+                    </td>
+                    <td class="table-cell" style="border: solid black 1px;">
+                        @if ($texto1)
+                            X
+                        @endif
+                    </td>
+
                 </tr>
                 <tr>
                     <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Sambuca</td>
-                    <td class="table-cell"></td>
+                    <td class="table-cell">{{ marcarX(25, $bebidas_ids) }}</td>
                     <td style="padding: 6px;"></td>
-                    <td class="table-cell">“Cóctel sabor de___________”</td>
-                    <td class="table-cell" style="border: solid black 1px;"></td>
+                    {{-- Cóctel sabor de --}}
+                    {{-- Cóctel sabor de --}}
+                    @php $texto2 = obtenerTexto($bebidas_texto, 'Coctel_sabor_de') ?? ''; @endphp
+                    <td class="table-cell">
+                        “Cóctel sabor de
+                        <span style="border-bottom:1px solid black; display:inline-block; min-width:80px;">
+                            {{ $texto2 }}
+                        </span>
+                        ”
+                    </td>
+                    <td class="table-cell" style="border: solid black 1px;">
+                        @if ($texto2)
+                            X
+                        @endif
+                    </td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Xtabentún</td>
-                    <td class="table-cell"></td>
+                    <td class="table-cell">{{ marcarX(26, $bebidas_ids) }}</td>
                     <td style="text-align: center;"><strong>Cócteles (12% a 32% Alc. Vol.)</strong></td>
-                    <td class="table-cell" style="vertical-align: top;">“Cóctel de o al ____________”</td>
-                    <td class="table-cell" style="border: solid black 1px;"></td>
+                    {{-- <td class="table-cell" style="vertical-align: top;">“Cóctel de o al ____________”</td>
+                    <td class="table-cell" style="border: solid black 1px;"></td> --}}
+                    {{-- Cóctel de o al --}}
+                    {{-- Cóctel de o al --}}
+                    @php $texto3 = obtenerTexto($bebidas_texto, 'Coctel_de_o_al') ?? ''; @endphp
+                    <td class="table-cell" style="vertical-align: top;">
+                        “Cóctel de o al
+                        <span style="border-bottom:1px solid black; display:inline-block; min-width:80px;">
+                            {{ $texto3 }}
+                        </span>
+                        ”
+                    </td>
+                    <td class="table-cell" style="border: solid black 1px;">
+                        @if ($texto3)
+                            X
+                        @endif
+                    </td>
                 </tr>
                 <tr>
                     <td class="table-cell" style="border-top: none;"></td>
                     <td class="table-cell" style="vertical-align: top;">Otro (Especifique):</td>
-                    <td style="border: solid black 1px; padding: 6px;"></td>
+                    <td style="border: solid black 1px; padding: 6px;">
+                        {{ marcarX(27, $bebidas_ids, 3, $bebidas_personalizadas) }}
+                    </td>
+
                     <td style="border-bottom: solid black 1px;"></td>
-                    <td class="table-cell" style="vertical-align: top;">“Cóctel con __________”</td>
-                    <td class="table-cell" style="border: solid black 1px;"></td>
+                    {{--  <td class="table-cell" style="vertical-align: top;">“Cóctel con __________”</td>
+                    <td class="table-cell" style="border: solid black 1px;"></td> --}}
+
+                    {{-- Cóctel con --}}
+                    @php $texto4 = obtenerTexto($bebidas_texto, 'Coctel_con') ?? ''; @endphp
+                    <td class="table-cell" style="vertical-align: top;">
+                        “Cóctel con
+                        <span style="border-bottom:1px solid black; display:inline-block; min-width:80px;">
+                            {{ $texto4 }}
+                        </span>
+                        ”
+                    </td>
+                    <td class="table-cell" style="border: solid black 1px;">
+                        @if ($texto4)
+                            X
+                        @endif
+                    </td>
                 </tr>
             </table>
 
         </div>
+
         <table class="custom-table">
+            <tr>
+                <th colspan="6">Bebidas alcohólicas preparadas (2% a 12% Alc. Vol.)</th>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    “Bebida alcohólica preparada de
+                    <span style="border-bottom: 1px solid black; display: inline-block; min-width: 200px;">
+                        {{ $texto = obtenerTexto($bebidas_texto, 'Bebida_alcoholica_preparada_de') ?? '' }}
+                    </span>
+                    ”
+                </td>
+                <!-- Casilla marcada si hay texto -->
+                <td style="text-align: center;">
+                    @if ($texto)
+                        X
+                    @endif
+                </td>
+
+                <td colspan="2">
+                    “Bebida alcohólica preparada de o al
+                    <span style="border-bottom: 1px solid black; display: inline-block; min-width: 200px;">
+                        {{ $texto2 = obtenerTexto($bebidas_texto, 'Bebida_alcoholica_preparada_de_o_al') ?? '' }}
+                    </span>
+                    ”
+                </td>
+                <td style="text-align: center;">
+                    @if ($texto2)
+                        X
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    “Bebida alcohólica preparada sabor de
+                    <span style="border-bottom: 1px solid black; display: inline-block; min-width: 200px;">
+                        {{ $texto3 = obtenerTexto($bebidas_texto, 'Bebida_alcoholica_preparada_sabor_de') ?? '' }}
+                    </span>
+                    ”
+                </td>
+                <td style="text-align: center;">
+                    @if ($texto3)
+                        X
+                    @endif
+                </td>
+
+                <td colspan="2">
+                    “Bebida alcohólica preparada con
+                    <span style="border-bottom: 1px solid black; display: inline-block; min-width: 200px;">
+                        {{ $texto4 = obtenerTexto($bebidas_texto, 'Bebida_alcoholica_preparada_con') ?? '' }}
+                    </span>
+                    ”
+                </td>
+                <td style="text-align: center;">
+                    @if ($texto4)
+                        X
+                    @endif
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">Rompope</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        {{--  <table class="custom-table">
             <tr>
                 <th colspan="6">Bebidas alcohólicas preparadas (2% a 12% Alc. Vol.)</th>
             </tr>
@@ -559,6 +748,7 @@
                 <td colspan="2" style="width: 30px;">“Bebida alcohólica preparada de ___________________________”
                 </td>
                 <td></td>
+
                 <td colspan="2" style="width: 30px;">“Bebida alcohólica preparada de o al
                     ___________________________”</td>
                 <td></td>
@@ -566,6 +756,7 @@
             <tr>
                 <td colspan="2">“Bebida alcohólica preparada sabor de ___________________________”</td>
                 <td></td>
+
                 <td colspan="2">“Bebida alcohólica preparada con ________________________”</td>
                 <td></td>
             </tr>
@@ -576,7 +767,7 @@
                 <td></td>
                 <td></td>
             </tr>
-        </table>
+        </table> --}}
 
     </div>
 
@@ -611,7 +802,7 @@
 
     @php
         // Obtener las normas activas para la empresa
-        $idsNormas = $empresa->empresaNumClientes->pluck('id_norma')->toArray();
+        $idsNormas = $empresa->empresaNullNumClientes->pluck('id_norma')->toArray();
 
         // Marcar si tiene cada norma
         $nom199 = in_array(4, $idsNormas) ? 'X' : '';
@@ -710,38 +901,11 @@
                 <td colspan="2" style="border-top: none; border-left: none; border-bottom: none;"></td>
             </tr>
 
-            {{-- tabla 2 --}}
-            {{--    <tr>
-            <th colspan="6" style="border-bottom: none;">Actividad del cliente:</th>
-        </tr>
-        <tr>
-            <td rowspan="2" style="border-top: none; border-right: none; border-bottom: none;">Productor</td>
-            <td rowspan="2" style="border: none;">
-                <div class="checkbox-cell-smallss"></div>
-            </td>
-            <td style="border: none;">Envasador</td>
-            <td style="border: none;">
-                <div class="checkbox-cell-smallss"></div>
-            </td>
-            <td style="border: none;">Importador</td>
-            <td style="border-top: none; border-left: none; border-bottom: none;">
-                <div class="checkbox-cell-small"></div>
-            </td>
-        </tr>
-        <tr>
-            <td style="border: none;">Comercializador</td>
-            <td style="border: none;">
-                <div class="checkbox-cell-smallss"></div>
-            </td>
-            <td colspan="2" style="border-top: none; border-left: none; border-bottom: none;"></td>
-        </tr>
- --}}
-
-
             <tr>
                 <th colspan="6"
                     style="height: 48px; text-align: end; vertical-align: top; border-top: solid black 2px;">NOMBRE Y
-                    FIRMA DEL SOLICITANTE:</th>
+                    FIRMA DEL SOLICITANTE: <span
+                        style="text-transform: uppercase;">{{ $empresa->razon_social ?? '' }}</span> </th>
             </tr>
             <tr>
                 <td colspan="6" style="font-size: 10px;">Para consulta del proceso de certificación, consultar la
@@ -809,7 +973,7 @@
                     <strong>Nombre y Puesto de quien realiza la revisión</strong>
                 </td>
                 <td style="height: 60px;">
-                    {{ $empresa->solicitud_informacion->user->name ?? '---' }} 
+                    {{ $empresa->solicitud_informacion->user->name ?? '---' }}
                     {{ $empresa->solicitud_informacion->user->puesto ?? '---' }}
                 </td>
                 <td style="width: 145px; height: 60px; color: white; background-color: #4d93c8; text-align: center;">
