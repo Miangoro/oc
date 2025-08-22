@@ -41,7 +41,10 @@ class Certificado_InstalacionesController extends Controller
             //->where('fecha_emision','>','2024-12-31')
             ->orderBy('id_dictamen', 'desc')
             ->get();
-        $users = User::where('tipo', 1)->get();
+        $users = User::where('tipo', 1)
+            ->where('id', '!=', 1)
+            ->where('estatus', '!=', 'Inactivo')
+            ->get();
         $revisores = Revisor::all();
 
         $empresa = empresa::where('tipo', 2)->get();

@@ -59,7 +59,11 @@ class Certificado_ExportacionController extends Controller
             ->orderBy('id_dictamen', 'desc')
             ->get();
 
-        $users = User::where('tipo',1)->get(); //Solo Prrsonal OC
+        //$users = User::where('tipo',1)->get();
+        $users = User::where('tipo', 1)
+            ->where('id', '!=', 1)
+            ->where('estatus', '!=', 'Inactivo')
+            ->get();
         $empresa = empresa::where('tipo', 2)->get();
         $revisores = Revisor::all();
         $hologramas = activarHologramasModelo::all();
