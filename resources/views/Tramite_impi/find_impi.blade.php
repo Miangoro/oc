@@ -71,6 +71,7 @@
 
 </div><!--CARD-->
 
+
 <!-- Modal -->
 @include('_partials/_modals/modal-add-impi')
 @include('_partials/_modals/modal-add-impi-evento')

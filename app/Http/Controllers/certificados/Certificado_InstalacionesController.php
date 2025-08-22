@@ -676,6 +676,7 @@ public function obtenerRevisores(Request $request)
     $tipo = $request->get('tipo');
     $revisores = User::where('tipo', $tipo)
         ->where('id', '!=', 1)
+        ->where('estatus', '!=', 'Inactivo')
         ->get(['id', 'name']);
 
     return response()->json($revisores);
