@@ -15,6 +15,15 @@
 
 @section('page-style')
     <!-- Page -->
+    <style>
+      .hover-scale {
+          transition: transform 0.2s  ease-in-out; /* transición suave */
+      }
+
+      .hover-scale:hover {
+          transform: scale(1.03); /* se agranda un 5% */
+      }
+    </style>
     @vite(['resources/assets/vendor/scss/pages/cards-statistics.scss', 'resources/assets/vendor/scss/pages/cards-analytics.scss', 'resources/assets/vendor/scss/pages/ui-carousel.scss'])
 @endsection
 
@@ -527,7 +536,7 @@
                                             <tr>
                                                 <td class="{{ $revisor?->id == auth()->id() ? 'bg-primary text-white fw-bold' : '' }}"
                                                     style="padding: 0.25rem 0.5rem;">
-                                                    <div class="d-flex align-items-center gap-2"
+                                                    <div class="d-flex align-items-center gap-2 hover-scale"
                                                         style="background-color: #f0f0f0;  border-radius: 13px; padding: 0.10rem 0.5rem;">
                                                         <div class="avatar flex-shrink-0">
                                                             @if (!empty($revisor?->profile_photo_path))

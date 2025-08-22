@@ -275,7 +275,7 @@ public function revisionesPorMes(Request $request)
           $html .= '
           <tr>
               <td class="' . $classTd . '" style="padding: 0.25rem 0.5rem;">
-                  <div class="d-flex align-items-center gap-2" style="background-color: #f0f0f0; border-radius: 13px; padding: 0.10rem 0.5rem;">
+                  <div class="d-flex align-items-center gap-2 hover-scale" style="background-color: #f0f0f0; border-radius: 13px; padding: 0.10rem 0.5rem;">
                       <div class="avatar flex-shrink-0">';
           if (!empty($revisor?->profile_photo_path)) {
               $html .= '<img src="/storage/' . $revisor->profile_photo_path . '" alt="' . htmlspecialchars($revisor->name) . '" class="rounded-pill" style="width: 36px; height: 36px; object-fit: cover;">';
