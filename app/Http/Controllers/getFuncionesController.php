@@ -88,9 +88,12 @@ class getFuncionesController extends Controller
             ->toArray();
         $idsEmpresas = array_merge([$empresa->id_empresa], $idsMaquiladoras);
 
+        // Obtener instalaciones de todas las empresas relacionadas
+        $instalacionesConMaqui = instalaciones::whereIn('id_empresa', $idsEmpresas)->get();
 
         return response()->json([
             'instalaciones' => $empresa->obtenerInstalaciones(),
+            'instalacionesConMaqui' => $instalacionesConMaqui,
             'lotes_granel' => $empresa->todos_lotes_granel(),
             'marcas' => $marcas,
             'guias' => $empresa->guias(),
@@ -416,7 +419,7 @@ class getFuncionesController extends Controller
             'id_dictamen_envasado' => $data->id_lote_envasado ?? null,
             'num_dictamen_envasado' => $data->num_dictamen ?? null,
             'url_etiqueta_envasado' => $url_etiqueta_envasado->etiquetas->url_etiqueta->url ?? '',
-         
+
 
         ]);
     }

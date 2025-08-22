@@ -37,7 +37,8 @@ class User extends Authenticatable
         'password',
         'id_empresa',
         'password_original',
-        'tipo'
+        'tipo',
+        'id_instalacion'
     ];
 
     public function empresa()
@@ -78,6 +79,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    protected $casts = [
+        'id_instalacion' => 'array',
+    ];
 
     public function inspecciones()
     {

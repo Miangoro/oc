@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Log;
 
 class UsuariosController extends Controller
 {
-    
+
 
     /**
    *Redirecciona a la vista de usuarios clientes.
@@ -62,7 +62,7 @@ class UsuariosController extends Controller
    */
 
    public function pdfAsignacionUsuario($id)
-    {     Carbon::setLocale('es'); // Establece la localización a español  
+    {     Carbon::setLocale('es'); // Establece la localización a español
         $currentDate = Carbon::now();
 
     // Obtener el día
@@ -117,10 +117,10 @@ class UsuariosController extends Controller
       })
       ->offset($start)
       ->limit($limit)
-    
+
       ->get();
 
-  
+
     } else {
       $search = $request->input('search.value');
 
@@ -140,7 +140,7 @@ class UsuariosController extends Controller
       ->limit($limit)
       ->orderBy($order, $dir)
       ->get();
-  
+
 
       $totalFiltered = User::with('empresa')->where('id', 'LIKE', "%{$search}%")
         ->where("tipo",3)
@@ -222,11 +222,11 @@ class UsuariosController extends Controller
       // update the value
       $users = User::updateOrCreate(
         ['id' => $userID],
-        ['name' => $request->name, 'email' => $request->email, 
+        ['name' => $request->name, 'email' => $request->email,
         'telefono' => $request->telefono, 'id_contacto' => $request->id_contacto,
-        'id_empresa' => $request->id_empresa]
+        'id_empresa' => $request->id_empresa,  'id_instalacion' => $request->id_instalacion,]
       );
- $users->syncRoles($request->rol_id); 
+ $users->syncRoles($request->rol_id);
       // user updated
       return response()->json('Modificado');
     } else {
@@ -238,12 +238,12 @@ class UsuariosController extends Controller
       if (empty($userEmail)) {
         $users = User::updateOrCreate(
           ['id' => $userID],
-          ['name' => $request->name, 'email' => $request->email, 
+          ['name' => $request->name, 'email' => $request->email,
           'telefono' => $request->telefono, 'id_contacto' => $request->id_contacto,
-           'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa,'tipo'=>3]
+           'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa,'tipo'=>3,  'id_instalacion' => $request->id_instalacion,]
         );
 
-         $users->syncRoles($request->rol_id); 
+         $users->syncRoles($request->rol_id);
 
         // user created
         return response()->json('Registrado');

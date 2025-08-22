@@ -83,6 +83,12 @@ class BitacoraMezcalController extends Controller
               $empresaIdAut = Auth::user()->empresa?->id_empresa;
           }
 
+          $instalacionAuth = Auth::check() && Auth::user()->tipo == 3
+              ? (array) Auth::user()->id_instalacion // ya es array gracias al cast en el modelo
+              : [];
+
+          $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
+
         $search = $request->input('search.value');
         /* $totalData = BitacoraMezcal::count(); */
         $totalData = BitacoraMezcal::whereIn('tipo', [1, 3])->count();
@@ -94,22 +100,16 @@ class BitacoraMezcalController extends Controller
         $dir = $request->input('order.0.dir')?? 'desc';
 
         $query = BitacoraMezcal::query()->whereIn('tipo', [1, 3]);
+
         $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, $empresaId);
             if (count($idsEmpresas)) {
                 $query->whereIn('id_empresa', $idsEmpresas);
             }
+          // Filtro por instalaciones del usuario
+                if (!empty($instalacionAuth)) {
+            $query->whereIn('id_instalacion', $instalacionAuth);
+        }
 
-        /* $query = BitacoraMezcal::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
-                  $query->where('id_empresa', $empresaIdAut);
-              })->whereIn('tipo', [1, 3]); */
-
-        /* if ($empresaId) {
-            $query->where('id_empresa', $empresaId);
-
-            if ($instalacionId) {
-                $query->where('id_instalacion', $instalacionId);
-            }
-        } */
          if ($empresaId) {
               $empresa = empresa::find($empresaId);
 
@@ -134,7 +134,7 @@ class BitacoraMezcalController extends Controller
                       $query->where('id_instalacion', $instalacionId);
                   }
               }
-          } 
+          }
 
 
         $filteredQuery = clone $query;
