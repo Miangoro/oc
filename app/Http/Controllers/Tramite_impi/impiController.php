@@ -10,6 +10,9 @@ use App\Models\Impi;
 use App\Models\Impi_evento;
 use App\Models\empresa;
 
+use Illuminate\Support\Facades\Storage;
+
+
 
 class impiController extends Controller
 {
@@ -229,7 +232,6 @@ public function destroy($id_impi)
 
 
 
-
 ///FUNCION PARA OBTENER DATOS
 public function edit($id_impi)
 {
@@ -266,6 +268,52 @@ public function update(Request $request, $id_impi)
     return response()->json(['success' => 'Actualizado correctamente']);
 }
 
+
+
+///FUNCION PARA REGISTRAR
+public function evento(Request $request)
+{
+    $validated = $request->validate([
+        'id_impi' => 'required|exists:tramite_impi,id_impi',
+        'evento' => 'required|string',
+        'descripcion' => 'required|string',
+        'url_anexo' => 'nullable|mimes:pdf|max:3072',
+    ]);
+
+    $impi = Impi::findOrFail($validated['id_impi']);
+    $empresa = Empresa::with("empresaNumClientes")
+                ->where("id_empresa", $impi->id_empresa)
+                ->first();
+    
+    $numeroCliente = $empresa->empresaNumClientes
+                    ->pluck('numero_cliente')
+                    ->first(function ($numero) {
+                        return !empty($numero);
+                    });
+
+    $url_anexo = null;
+    if ($request->hasFile('url_anexo')) {
+        $nombreArchivo = $impi->folio.'_'. uniqid() .'.pdf';
+        $rutaCarpeta = "public/uploads/{$numeroCliente}/tramites_impi";
+        Storage::putFileAs($rutaCarpeta, $request->file('url_anexo'), $nombreArchivo);
+
+        $url_anexo = "$nombreArchivo";
+    }
+
+    // Guardar evento
+    $evento = new Impi_evento();
+    $evento->id_impi = $validated['id_impi'];
+    $evento->evento = $validated['evento'];
+    $evento->descripcion = $validated['descripcion'];
+    $evento->url_anexo = $url_anexo;
+    $evento->save();
+
+    // Actualizar estatus en tramite_impi
+    $impi->estatus = $request->estatus;
+    $impi->save();
+
+    return response()->json(['success' => 'Evento registrado correctamente']);
+}
 
 
 
