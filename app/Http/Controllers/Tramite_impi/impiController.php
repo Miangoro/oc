@@ -317,6 +317,26 @@ public function evento(Request $request)
 
 
 
+///FUNCION PARA TRAZABILIDAD
+
+public function tracking($id)
+{
+    $var1 = Impi_evento::where('id_impi', $id)
+    /*return response()->json([
+        'id_impi' => $var1->id_impi,
+        'evento' => $var1->evento,
+        'descripcion' => $var1->descripcion,
+        'url_anexo' => $var1->url_anexo,
+    ]);*/
+    ->orderBy('created_at', 'asc')
+    ->get();
+
+    return response()->json($var1);
+}
+
+
+
+
 
 
 }//fin CONTROLLER

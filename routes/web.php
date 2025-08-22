@@ -1360,6 +1360,8 @@ Route::middleware(['auth'])->controller(impiController::class)->group(function (
 
     //Registrar evento
     Route::post('crearEvento', 'evento')->name('crear-eventoIMPI');
+    //Trazabilidad
+    Route::get('/trazabilidadImpi/{id}', 'tracking')->name('trazabilidad de eventos');
 });
 
 //-------------------RESUMEN DE INFORMACION DEL CLIENTE-------------------

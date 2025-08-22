@@ -163,6 +163,9 @@ initializeSelect2(select2Elements);
                    `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item editar"><i class="ri-edit-box-line ri-20px text-info"></i> Editar </a>` +
 
                    `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#addEvento" href="javascript:;" class="dropdown-item add-event"><i class="ri-add-box-line  ri-25px"></i> Agregar evento </a> ` +
+
+                   `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad" href="javascript:;"> 
+                   <i class="ri-history-line text-secondary"></i> Trazabilidad</a> ` +
                    
                    `<a data-id="${full['id_impi']}" class="dropdown-item waves-effect text-danger eliminar"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar </a>` +
                   
@@ -698,6 +701,50 @@ var formData = new FormData(NuevoEvento);
           });
       }
   });
+});
+
+
+
+
+///VER TRAZABILIDAD
+$(document).on("click", ".trazabilidad", function () {
+    let idImpi = $(this).data("id");
+    $("#ListTracking").html(""); // limpia la lista
+
+    $.get(`/trazabilidadImpi/${idImpi}`, function (data) {
+        if (data.length === 0) {
+            $("#ListTracking").append(
+                `<li class="timeline-item timeline-item-transparent">
+                    <span class="timeline-point timeline-point-secondary"></span>
+                    <div class="mt-2 pb-3 border border-secondary p-3 rounded text-center">
+                        <h6 class="text-muted">Sin eventos registrados</h6>
+                    </div>
+                </li>`
+            );
+        } else {
+            data.forEach(ev => {
+                $("#ListTracking").append(`
+                    <li class="timeline-item timeline-item-transparent">
+                        <span class="timeline-point timeline-point-primary"></span>
+                        <div class="mt-2 pb-3 border border-blue p-3 rounded">
+                            <h6 class="text-primary mb-1"><i class="ri-user-line me-1"></i> ${ev.evento}</h6>
+                            <p class="mb-2">${ev.descripcion}</p>
+                            ${ev.url_anexo 
+                                ? `<a href="/storage/uploads/${ev.url_anexo}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="ri-file-download-line me-1"></i> Ver anexo
+                                   </a>` 
+                                : ""
+                            }
+                            <p class="text-muted small mt-2 mb-0">
+                                <i class="ri-time-line me-1"></i> ${new Date(ev.created_at).toLocaleString()}
+                            </p>
+                        </div>
+                    </li>
+                    <hr>
+                `);
+            });
+        }
+    });
 });
 
 
