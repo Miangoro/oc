@@ -5,7 +5,7 @@
         <div class="modal-content">
 
             <div class="modal-header bg-primary pb-4">
-                <h5 class="modal-title text-white">Registrar nuevo trámite ante el IMPI</h5>
+                <h5 class="modal-title text-white">Registrar trámite ante el IMPI</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -108,7 +108,7 @@
         <div class="modal-content">
 
             <div class="modal-header bg-primary pb-4">
-                <h5 class="modal-title text-white">Editar trámite ante el IMPI</h5>
+                <h5 class="modal-title text-white">Editar trámite ante el IMPI <span id="folio"></span></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -188,7 +188,7 @@
                 
                 <div class="d-flex mt-6 justify-content-center">
                     <button type="submit" class="btn btn-primary me-2">
-                        <i class="ri-add-line"></i>Editar</button>
+                        <i class="ri-pencil-fill"></i>Editar</button>
                     <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                 </div>
 

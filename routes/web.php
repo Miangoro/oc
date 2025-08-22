@@ -1359,7 +1359,7 @@ Route::middleware(['auth'])->controller(impiController::class)->group(function (
     Route::post('actualizarImpi/{id_impi}', 'update')->name('actualizar');
 
     //Registrar evento
-    Route::post('crearEvento', [impiController::class, 'store'])->name('evento-create');
+    Route::post('crearEvento', 'evento')->name('crear-eventoIMPI');
 });
 
 //-------------------RESUMEN DE INFORMACION DEL CLIENTE-------------------

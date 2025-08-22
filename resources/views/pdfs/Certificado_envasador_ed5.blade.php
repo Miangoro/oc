@@ -171,9 +171,8 @@
     }
 
     .signature {
-      margin: 20px 10px;
       text-align: center;
-      margin-top: 20px;
+      margin-top: -2%;
     }
 
     .signature-line {
@@ -181,7 +180,6 @@
       border-top: 1px solid #000;
       width: 240px;
       margin: 0 auto;
-      padding-top: 5px;
     }
 
     .signature-name {
@@ -370,21 +368,21 @@
 
         <tr>
           <td class="td-margins"
-            style="width: 243px; font-weight: bold; font-size: 12px; padding-right: 4px; padding-left: 1px; padding-top: 7px; padding-bottom: 7px;">
+            style="width: 243px; font-weight: bold; font-size: 12px; padding-right: 4px; padding-left: 1px; padding-top: 4px; padding-bottom: 4px;">
             <strong>Domicilio de la unidad de envasado:</strong>
           </td>
           <td class="td-margins"
-            style="text-align: left; padding-left: 12px; margin-left: 5px; padding-top: 7px; padding-bottom: 7px;">
+            style="text-align: left; padding-left: 12px; margin-left: 5px; padding-top: 4px; padding-bottom: 4px;">
             {{ $direccion_completa }}
           </td>
         </tr>
         <tr>
           <td class="td-margins"
-            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 7px;padding-bottom: 7px;">
+            style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px; padding-top: 4px;padding-bottom: 4px;">
             <strong>No. de dictamen de cumplimiento con la NOM:</strong>
           </td>
           <td class="td-margins"
-            style="text-align: left; padding-left: 12px; margin-left: 5px; padding-top: 7px; padding-bottom: 7px;">
+            style="text-align: left; padding-left: 12px; margin-left: 5px; padding-top: 4px; padding-bottom: 4px;">
             {{ $num_dictamen }}
           </td>
         </tr>
