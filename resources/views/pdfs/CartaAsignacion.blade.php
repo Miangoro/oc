@@ -110,7 +110,7 @@
             @endphp
 
             @foreach ($datos as $eslabon)
-            <strong>{{$eslabon->actividad}}</strong>@if ($i > 0),@endif
+            <strong>{{$eslabon->actividad}}</strong>{{ !$loop->last ? ',' : '' }}
             @php
                 $i++;
             @endphp
