@@ -241,11 +241,13 @@ public function TrackingCertificados($id)
                 $cert_sust = Certificado_Exportacion::find($parsed['id_sustituye']);
                 $num_sustituido = optional($cert_sust)->num_certificado ?? 'Desconocido';
                 $observaciones = "Sustituye al certificado: <span class='badge bg-secondary'>$num_sustituido</span>";
+                //se agrego
                 $motivoree = json_decode(optional($cert_sust)->observaciones, true);
                 $motivoreexpedido = $motivoree['observaciones'] ?? null;
 
             } else {
                 $observaciones = $obs;
+                //se agrego
                 $motivoreexpedido = $obs;
                 
             }
@@ -324,6 +326,7 @@ public function TrackingCertificados($id)
             if ($observaciones) {
                 $contenido .= ", <b>Observaciones para el revisor:</b> $observaciones";
 
+                //se agrego
                 if ( $log->subject_type === 'App\Models\Certificado_Exportacion' && $attributes['estatus'] == 2 ) {
                     $contenido .= ", <b>Motivo de reexpedicion:</b> $motivoreexpedido ";
                 }

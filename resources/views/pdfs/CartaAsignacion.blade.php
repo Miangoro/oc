@@ -108,12 +108,12 @@
                 $total = count($datos);
                 $i = 0;
             @endphp
+
             @foreach ($datos as $eslabon)
-            
-            <strong>{{$eslabon->actividad}}</strong>@if ($i > 0),@endif
+            <strong>{{$eslabon->actividad}}</strong>{{ !$loop->last ? ',' : '' }}
             @php
-            $i++;
-        @endphp
+                $i++;
+            @endphp
             @endforeach
             
             por consiguiente se le designa el número:</p>

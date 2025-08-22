@@ -33,7 +33,11 @@ class Certificado_NacionalController extends Controller
         $solicitud = solicitudesModel::where('id_tipo',13)
             ->orderBy('id_solicitud', 'desc')
             ->get();
-        $users = User::where('tipo',1)->get(); //Solo Personal OC
+        $users = User::where('tipo', 1)//Solo Personal OC
+            ->where('id', '!=', 1)//administrador oculto
+            ->where('estatus', '!=', 'Inactivo')//Solo activos
+            ->get();
+
         $empresa = empresa::where('tipo', 2)->get();
         //$revisores = Revisor::all();
         $hologramas = activarHologramasModelo::all();

@@ -152,11 +152,15 @@ public function pdfCartaAsignacion($id)
 {
     $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, e.created_at, info_procesos, s.fecha_registro,
     e.correo, e.telefono, p.id_producto, nc.id_norma, a.id_actividad, e.estado
-    FROM empresa e LEFT JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
+    FROM empresa e 
+    LEFT JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
     LEFT JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
-    JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa) JOIN catalogo_actividad_cliente ac
-    ON (a.id_actividad = ac.id_actividad) JOIN empresa_num_cliente nc ON (nc.id_empresa = e.id_empresa)
-    WHERE nc.numero_cliente="' . $id . '" GROUP BY nc.numero_cliente');
+
+    JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa) 
+    JOIN catalogo_actividad_cliente ac ON (a.id_actividad = ac.id_actividad)
+
+    JOIN empresa_num_cliente nc ON (nc.id_empresa = e.id_empresa)
+    WHERE nc.numero_cliente="'.$id.'" ');
 
     $fecha_registro = Carbon::parse($res[0]->created_at)->translatedFormat('j \d\e F \d\e\l Y');
     // Obtener ID de la empresa

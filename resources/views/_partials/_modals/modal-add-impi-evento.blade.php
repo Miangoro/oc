@@ -52,12 +52,13 @@
                         </div>
                     </div>
 
-
-                    <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary me-sm-3 me-1">crear</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                    
+                    <div class="d-flex mt-6 justify-content-center">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="ri-add-line"></i>Crear</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
+
                 </form>
             </div>
         </div>

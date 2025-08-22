@@ -17,8 +17,9 @@ class impiController extends Controller
     public function UserManagement()
     {
       $tramites = Impi::all();
-      $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+      $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get();
       $evento = Impi_evento::all();
+
       return view('Tramite_impi.find_impi', compact('tramites', 'empresas'));
     }
 

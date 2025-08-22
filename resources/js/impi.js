@@ -161,8 +161,10 @@ initializeSelect2(select2Elements);
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
 
                    `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item editar"><i class="ri-edit-box-line ri-20px text-info"></i> Editar </a>` +
+
                    `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#addEvento" href="javascript:;" class="dropdown-item add-event"><i class="ri-add-box-line  ri-25px"></i> Agregar evento </a> ` +
-                   `<a data-id="${full['id_impi']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar </a>` +
+                   
+                   `<a data-id="${full['id_impi']}" class="dropdown-item waves-effect text-danger eliminar"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar </a>` +
                   
                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
                  '<a href="' + userView + '" class="dropdown-item">View</a>' +
@@ -398,10 +400,11 @@ initializeSelect2(select2Elements);
 
 
 
-///FUNCION PARA ELIMINAR
-const fv = FormValidation.formValidation(FormAgregar, {
-    fields: {
-//valida por name
+///FUNCION PARA REGISTRAR
+//Inicializar validacion del formulario
+const formAdd = document.getElementById('FormAgregar');
+const fv = FormValidation.formValidation(formAdd, {
+    fields: {//valida por name
       fecha_solicitud: {
             validators: {
                 notEmpty: {
@@ -444,28 +447,21 @@ const fv = FormValidation.formValidation(FormAgregar, {
               }
           }
         },
-        /*'categorias[]': {
-            validators: {
-                notEmpty: {
-                    message: 'Seleccione una categoría de agave'
-                }
-            }
-        },*/
     },
     plugins: {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
             eleValidClass: '',
-            rowSelector: function (field, ele) {
-                return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
-            }
+            eleInvalidClass: 'is-invalid',
+            rowSelector: '.form-floating'
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
     }
 }).on('core.form.valid', function (e) {
 
-  var formData = new FormData(FormAgregar);
+//enviar el formulario cuando pase la validación
+  var formData = new FormData(formAdd);
     $.ajax({
         url: 'registrarImpi',
         type: 'POST',
@@ -473,7 +469,7 @@ const fv = FormValidation.formValidation(FormAgregar, {
         processData: false,
         contentType: false,
         success: function (response) {
-          console.log('Funcionando', response);
+          console.log('Registrado:', response);
             $('#ModalAgregar').modal('hide');
             $('#FormAgregar')[0].reset();
   
@@ -504,10 +500,18 @@ const fv = FormValidation.formValidation(FormAgregar, {
     });
 });
 
+// Limpiar formulario y validación al cerrar el modal
+$('#ModalAgregar').on('hidden.bs.modal', function () {
+    formAdd.reset();// Resetear los campos del formulario
+    fv.resetForm(true);// Limpiar validaciones y errores
+    $('.select2').val(null).trigger('change');// Si tienes Select2, también limpiar selección
+});
+
+
 
 
 ///FUNCION PARA ELIMINAR
-$(document).on('click', '.delete-record', function () {
+$(document).on('click', '.eliminar', function () {
     var id_dictamen = $(this).data('id'); // Obtener el ID del registro
     var dtrModal = $('.dtr-bs-modal.show');
 
@@ -586,7 +590,7 @@ $(document).on('click', '.delete-record', function () {
 
 ///FUNCION PARA OBTENER DATOS
 //$(document).ready(function() {
-$(function () {
+//$(function () {
 
   // Abrir el modal y cargar datos para editar
   $(document).on('click', '.editar', function () {
@@ -626,9 +630,10 @@ $(function () {
   });
 
   ///FUNCION PARA ACTUALIZAR
-  // Inicializar validacion para el formulario
-  const form = document.getElementById('FormEditar');
-  const fv = FormValidation.formValidation(form, {
+  // Inicializar validacion del formulario
+  
+  const formEdit = document.getElementById('FormEditar');
+  const fv2 = FormValidation.formValidation(formEdit, {
     fields: {
       fecha_solicitud: {
             validators: {
@@ -685,7 +690,7 @@ $(function () {
     }
   }).on('core.form.valid', function () {
       //enviar el formulario cuando pase la validación
-      var formData = new FormData(form);
+      var formData = new FormData(formEdit);
       var id_impi = $('#edit_id_impi').val();
       
       $.ajax({
@@ -720,13 +725,13 @@ $(function () {
       });
   });
 
-});
+//});
 
 
 
 
 ///REGISTRAR EVENTO
-const fv2 = FormValidation.formValidation(NuevoEvento, { //FORMULARIO ID
+const fv3 = FormValidation.formValidation(NuevoEvento, { //FORMULARIO ID
   fields: {
 //valida por name
 /*    fecha_solicitud: {

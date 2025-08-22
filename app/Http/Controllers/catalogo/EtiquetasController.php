@@ -31,10 +31,14 @@ class EtiquetasController extends Controller
 public function UserManagement()
 {
     $empresaId = null;
-
+    /*
     // Solo si el usuario es tipo 3 (empresa)
     if (auth()->user()->tipo == 3) {
         $empresaId = auth()->user()->empresa?->id_empresa;
+    }
+    */
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaId = Auth::user()->empresa?->id_empresa;
     }
 
     // Marcas filtradas por empresa
@@ -96,6 +100,7 @@ public function UserManagement()
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
+
         $search = $request->input('search.value');
 
         if (empty($search)) {
@@ -105,6 +110,7 @@ public function UserManagement()
                     $q2->where('id_empresa', $empresaId);
                 });
             })
+            ->orderBy($order, $dir)
             ->offset($start)
             ->limit($limit)
             ->get();
@@ -140,6 +146,7 @@ public function UserManagement()
         });
 
     $sql = $filteredQuery
+        ->orderBy($order, $dir)
         ->offset($start)
         ->limit($limit)
         ->get();
