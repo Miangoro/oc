@@ -10,25 +10,23 @@
 
             <div class="modal-body">
                 <form id="NuevoEvento">
-                    
+                <input type="hidden" name="id_impi" id="id_impi">
+
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-6">
-                            <input type="text" class="form-control" placeholder="Titulo"
-                                name="evento" aria-label="Nombre">
+                            <input type="text" class="form-control" name="evento" placeholder="Titulo">
                             <label for="">Titulo</label>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-6">
-                            <textarea name="descripcion" class="form-control h-px-100" 
-                                    placeholder="Descripción"></textarea>
+                            <textarea name="descripcion" class="form-control h-px-100" placeholder="Descripción"></textarea>
                             <label for="">Descripción</label>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select id="" class="form-select" name="estatus"
-                                aria-label="Default select example">
+                            <select id="edit_estatus" class="form-select" name="estatus">
                                 <option value="1">Pendiente</option>
                                 <option value="2">Trámite</option>
                                 <option value="3">Trámite favorable</option>
@@ -40,12 +38,8 @@
 
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-12">
-                            <input type="file" class="form-control" id="" placeholder="Titulo"
-                                name="anexo" >
+                            <input type="file" class="form-control" name="url_anexo" >
                             <label for="">Anexos</label>
-
-                            <div id="documentoActual">sin documento</div>
-                            <div id="botonEliminarDocumento" class="mt-2">botno eliminar</div>
                         </div>
                     </div>
                     

@@ -911,7 +911,7 @@ public function asignarInspector(Request $request)
                         ->toArray();
                 }
             }*/
-            $lotesOriginales = [];
+            $lotesOriginales = collect();
             if (!empty($datos->solicitud->lote_granel->lote_original_id)) {
                 $json = json_decode($datos->solicitud->lote_granel->lote_original_id, true);
 
@@ -939,13 +939,27 @@ public function asignarInspector(Request $request)
     public function etiqueta_granel($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
+
+        $lotesOriginales = collect();
+        if (!empty($datos->solicitud->lote_granel->lote_original_id)) {
+            $json = json_decode($datos->solicitud->lote_granel->lote_original_id, true);
+
+            if (isset($json['lotes']) && is_array($json['lotes'])) {
+                $lotesOriginales = LotesGranel::with('certificadoGranel')
+                    ->whereIn('id_lote_granel', $json['lotes'])
+                    ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
+            }
+        }
         
         if ($datos->solicitud->fecha_solicitud < '2025-08-07') {//edicion del formato
             $edicion = 'pdfs.etiqueta_lotes_mezcal_granel'; // ed16
         } else {
             $edicion = 'pdfs.etiqueta_lotes_mezcal_granel_ed17';
         }
-        $pdf = Pdf::loadView($edicion, ['datos' => $datos]);
+        $pdf = Pdf::loadView($edicion, [
+            'datos' => $datos,
+            'lotesOriginales' => $lotesOriginales,
+        ]);
 
         return $pdf->stream('Etiqueta para lotes de mezcal a granel.pdf');
     }

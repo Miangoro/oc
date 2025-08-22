@@ -13,16 +13,20 @@ class Impi_evento extends Model
 
     protected $table = 'evento_impi';
     protected $primaryKey = 'id_evento';
+
     protected $fillable = [
         'id_evento',
         'id_impi', 
         'evento', 
         'descripcion',
         'url_anexo',
-        'color'
     ];
 
 
+    /* Public function impi()
+    {
+        return $this->belongsTo(Impi::class, 'id_impi', 'id_impi');   
+    }  */
 
     
 }

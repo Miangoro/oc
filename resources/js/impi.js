@@ -203,151 +203,6 @@ initializeSelect2(select2Elements);
        // Opciones Exportar Documentos
        buttons: [
          {
-           extend: 'collection',
-           className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-           text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-           buttons: [
-             {
-               extend: 'print',
-               title: 'Categorías de Agave',
-               text: '<i class="ri-printer-line me-1" ></i>Print',
-               className: 'dropdown-item',
-               exportOptions: {
-                 columns: [1, 2, 3],
-                 // prevent avatar to be print
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               },
-               customize: function (win) {
-                 //customize print view for dark
-                 $(win.document.body)
-                   .css('color', config.colors.headingColor)
-                   .css('border-color', config.colors.borderColor)
-                   .css('background-color', config.colors.body);
-                 $(win.document.body)
-                   .find('table')
-                   .addClass('compact')
-                   .css('color', 'inherit')
-                   .css('border-color', 'inherit')
-                   .css('background-color', 'inherit');
-               }
-             },
-             {
-               extend: 'csv',
-               title: 'Users',
-               text: '<i class="ri-file-text-line me-1" ></i>Csv',
-               className: 'dropdown-item',
-               exportOptions: {
-                 columns: [1, 2, 3],
-                 // prevent avatar to be print
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             },
-             {
-               extend: 'excel',
-               title: 'Categorías de Agave',
-               text: '<i class="ri-file-excel-line me-1"></i>Excel',
-               className: 'dropdown-item',
-               exportOptions: {
-                 columns: [1, 2, 3],
-                 // prevent avatar to be display
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             },
-             {
-               extend: 'pdf',
-               title: 'Categorías de Agave',
-               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
-               className: 'dropdown-item',
-               exportOptions: {
-                 columns: [1, 2, 3],
-                 // prevent avatar to be display
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             },
-             {
-               extend: 'copy',
-               title: 'Categorías de Agave',
-               text: '<i class="ri-file-copy-line me-1"></i>Copy',
-               className: 'dropdown-item',
-               exportOptions: {
-                 columns: [1, 2, 3],
-                 // prevent avatar to be copy
-                 format: {
-                   body: function (inner, coldex, rowdex) {
-                     if (inner.length <= 0) return inner;
-                     var el = $.parseHTML(inner);
-                     var result = '';
-                     $.each(el, function (index, item) {
-                       if (item.classList !== undefined && item.classList.contains('user-name')) {
-                         result = result + item.lastChild.firstChild.textContent;
-                       } else if (item.innerText === undefined) {
-                         result = result + item.textContent;
-                       } else result = result + item.innerText;
-                     });
-                     return result;
-                   }
-                 }
-               }
-             }
-           ]
-         },
-         {
            text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Trámite</span>',
            className: 'add-new btn btn-primary waves-effect waves-light',
            attr: {
@@ -491,7 +346,7 @@ const fv = FormValidation.formValidation(formAdd, {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
-                text: '¡Error al subir!',
+                text: 'Error al registrar.',
                 customClass: {
                     confirmButton: 'btn btn-danger'
                 }
@@ -631,7 +486,6 @@ $(document).on('click', '.eliminar', function () {
 
   ///FUNCION PARA ACTUALIZAR
   // Inicializar validacion del formulario
-  
   const formEdit = document.getElementById('FormEditar');
   const fv2 = FormValidation.formValidation(formEdit, {
     fields: {
@@ -730,61 +584,81 @@ $(document).on('click', '.eliminar', function () {
 
 
 
+
+
+
+// Cuando das clic en "Agregar evento"
+$(document).on('click', '.add-event', function() {
+    let id = $(this).data('id'); // trae el id_impi del botón
+    $('#id_impi').val(id); // lo guardamos en el input hidden
+
+    // Realizar la solicitud AJAX para obtener los datos de la clase
+      $.ajax({
+          url: '/obtenerImpi/' + id + '/edit',
+          method: 'GET',
+          success: function (data) {
+            console.log(data.estatus)
+            //$('#estatus').val(data.estatus).trigger('change');
+            //$('#estatus').val(data.estatus).prop('selected', true).change();
+            $('#edit_estatus').val(data.estatus).prop('selected', true).change();
+
+            // Mostrar el modal de edición
+            $('#addEvento').modal('show');
+          },
+          error: function (error) {
+            console.error('Error al cargar los datos:', error);
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al cargar los datos.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+      });
+});
 ///REGISTRAR EVENTO
-const fv3 = FormValidation.formValidation(NuevoEvento, { //FORMULARIO ID
+const fv3 = FormValidation.formValidation(NuevoEvento, {
   fields: {
 //valida por name
-/*    fecha_solicitud: {
-          validators: {
-              notEmpty: {
-                  message: 'Seleccione una fecha'
-              }
+    evento: {
+      validators: {
+          notEmpty: {
+              message: 'Este campo es obligatorio.'
           }
-      },
-      tramite: {
-        validators: {
-            notEmpty: {
-                message: 'Seleccione el trámite'
-            }
-        }
+      }
     },
-    id_empresa: {
-          validators: {
-              notEmpty: {
-                  message: 'Seleccione el cliente'
-              }
+    descripcion: {
+      validators: {
+          notEmpty: {
+              message: 'Este campo es obligatorio.'
           }
-      },
-      contrasena: {
-          validators: {
-              notEmpty: {
-                  message: 'Introduzca una contraseña'
-              }
+      }
+    },
+    /*estatus: {
+      validators: {
+          notEmpty: {
+              message: 'Seleccione '
           }
-      },
-      pago: {
-          validators: {
-              notEmpty: {
-                  message: 'Introduzca el pago'
-              }
-          }
-      },
-      estatus: {
+      }
+    },
+    anexo: {
         validators: {
             notEmpty: {
-                message: 'Seleccione un estatus'
+                message: 'Introduzca una contraseña'
             }
         }
-      },*/
+    },*/
+
   },
   plugins: {
       trigger: new FormValidation.plugins.Trigger(),
       bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          rowSelector: function (field, ele) {
-              return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
-          }
-      }),
+            eleValidClass: '',
+            eleInvalidClass: 'is-invalid',
+            rowSelector: '.form-floating'
+        }),
       submitButton: new FormValidation.plugins.SubmitButton(),
       autoFocus: new FormValidation.plugins.AutoFocus()
   }
@@ -798,15 +672,14 @@ var formData = new FormData(NuevoEvento);
       processData: false,
       contentType: false,
       success: function (response) {
-        console.log('Funcionando2 :D', response);
+        console.log('Registrado:', response);
           $('#addEvento').modal('hide');//modal que encierra al formulario #addEvento
           $('#NuevoEvento')[0].reset();
-
           dt_user.ajax.reload();
           // Mostrar alerta de éxito
           Swal.fire({
               icon: 'success',
-              title: '¡Éxito22!',
+              title: '¡Éxito!',
               text: response.success,
               customClass: {
                   confirmButton: 'btn btn-success'
@@ -814,12 +687,11 @@ var formData = new FormData(NuevoEvento);
           });
       },
       error: function (xhr) {
-        console.log('Error por error:', xhr.responseText);
-          // Mostrar alerta de error
+        console.log('Error:', xhr.responseJSON);
           Swal.fire({
               icon: 'error',
-              title: '¡Error22!',
-              text: '¡Error al subir22!',
+              title: '¡Error!',
+              text: 'Error al registrar.',
               customClass: {
                   confirmButton: 'btn btn-danger'
               }
