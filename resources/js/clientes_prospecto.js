@@ -105,11 +105,10 @@ $(function () {
             } else {
               var $colorRegimen = 'warning';
             }
-            return `${
-              $verified
-                ? '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                : '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-            }`;
+            return `${$verified
+              ? '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+              : '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+              }`;
           }
         },
         {
@@ -383,18 +382,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -742,6 +741,8 @@ $(function () {
     }
   }).on('core.form.valid', function () {
     // adding or updating user when form successfully validate
+    $('#btnAddV').addClass('d-none');
+    $('#btnSpinnerV').removeClass('d-none');
     $.ajax({
       data: $('#addNewUserForm').serialize(),
       url: `${baseUrl}empresas-list`,
@@ -749,7 +750,8 @@ $(function () {
       success: function (status) {
         dt_user.draw();
         offCanvasForm.offcanvas('hide');
-
+        $('#btnSpinnerV').addClass('d-none');
+        $('#btnAddV').removeClass('d-none');
         // sweetalert
         Swal.fire({
           icon: 'success',
@@ -762,15 +764,22 @@ $(function () {
       },
       error: function (err) {
         offCanvasForm.offcanvas('hide');
+        let mensaje = 'Ocurrió un error inesperado.'; // Mensaje por defecto
+        if (err.responseJSON && err.responseJSON.message) {
+          mensaje = err.responseJSON.message; // Mensaje del backend
+        }
         Swal.fire({
-          title: 'Duplicate Entry!',
-          text: 'Your email should be unique.',
+          title: '¡Error!',
+          text: mensaje,
           icon: 'error',
           customClass: {
-            confirmButton: 'btn btn-success'
+            confirmButton: 'btn btn-danger'
           }
         });
+        $('#btnSpinnerV').addClass('d-none');
+        $('#btnAddV').removeClass('d-none');
       }
+
     });
   });
 
@@ -930,8 +939,8 @@ $(function () {
           $('#aceptarCliente').modal('hide');
           Swal.fire({
             icon: 'success',
-            title: `${status} Exitosamente`,
-            text: `Solicitud ${status} Exitosamente.`,
+            title: `Aceptado`,
+            text: `Cliente aceptado exitosamente.`,
             customClass: { confirmButton: 'btn btn-success' }
           });
         },

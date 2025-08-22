@@ -11,7 +11,7 @@
         font-family: 'Roboto', Arial, sans-serif;
     }
     .success-card {
-        max-width: 650px;
+        max-width: 800px;
         margin: auto;
         padding: 40px;
         border-radius: 20px;
@@ -21,11 +21,11 @@
         animation: fadeIn 0.5s ease-in-out;
     }
     .success-img {
-        max-width: 180px;
-        margin-bottom: 25px;
+        max-width: 280px;
+        margin-bottom: -30px;
     }
     .success-title {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
         font-weight: bold;
         color: #28a745;
         margin-bottom: 15px;

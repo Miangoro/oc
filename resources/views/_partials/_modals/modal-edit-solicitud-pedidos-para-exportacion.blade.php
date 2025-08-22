@@ -199,23 +199,24 @@
                                         </div>
                                     </span>
                                     <div class="p-2">
-                                        <table id="tablaLotesEdit" class="table table-bordered mb-2 table-sm"
-                                            style="width: 100%; border-collapse: collapse;">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Nombre del Lote</th>
-                                                    <th>SKU</th>
-                                                    <th>Contenido alcohólico</th>
-                                                    <th>Presentación</th>
-                                                    <th>Cantidad de botellas</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <!-- Aquí se insertarán dinámicamente los datos -->
-                                            </tbody>
-                                        </table>
-
+                                        <div class="table-responsive">
+                                            <table id="tablaLotesEdit" class="table table-bordered mb-2 table-sm"
+                                                style="width: 100%; border-collapse: collapse;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Nombre del Lote</th>
+                                                        <th>SKU</th>
+                                                        <th>Contenido alcohólico</th>
+                                                        <th>Presentación</th>
+                                                        <th>Cantidad de botellas</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Aquí se insertarán dinámicamente los datos -->
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -771,6 +772,7 @@
                         contenedor.append(`
                         <div class="row mt-2">
                             <div class="col-12">
+                              <div class="table-responsive">
                                 <table id="${tablaEnvasadoEdit}" class="table table-bordered table-sm mb-2">
                                     <thead>
                                         <tr>
@@ -784,6 +786,7 @@
                                     </thead>
                                     <tbody></tbody>
                                 </table>
+                                 </div>
                             </div>
                         </div>
                     `);
@@ -820,6 +823,7 @@
                     if ($tabla.length === 0) {
                         // Si no existe la tabla, créala dinámicamente en el contenedor correcto
                         $(`#caracteristicas_Ex_edit_${sectionCountEdit} .card-body`).append(`
+                        <div class="table-responsive">
                           <table id="tablaLotes_edit_${sectionCountEdit}" class="table table-bordered table-sm mt-3">
                             <thead>
                                 <tr>
@@ -832,6 +836,7 @@
                             </thead>
                             <tbody></tbody>
                         </table>
+                         </div>
                     `);
                         $tabla = $(`#tablaLotes_edit_${sectionCountEdit}`);
                     }

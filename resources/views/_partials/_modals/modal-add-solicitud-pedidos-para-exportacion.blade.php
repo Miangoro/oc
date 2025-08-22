@@ -689,6 +689,7 @@
                         contenedor.append(`
                         <div class="row mt-2">
                             <div class="col-12">
+                              <div class="table-responsive">
                                 <table id="${tablaEnvasadoID}" class="table table-bordered table-sm mb-2">
                                     <thead>
                                         <tr>
@@ -702,6 +703,7 @@
                                     </thead>
                                     <tbody></tbody>
                                 </table>
+                                </div>
                             </div>
                         </div>
                     `);
@@ -741,6 +743,7 @@
                         $(`#caracteristicas_Ex${sectionCount} .card-body`).append(`
                         <div class="row">
                             <div class="col-12">
+                              <div class="table-responsive">
                                 <table id="tablaLotes_${sectionCount}" class="table table-bordered table-sm mt-3">
                                         <thead>
                                             <tr>
@@ -753,6 +756,7 @@
                                         </thead>
                                     <tbody></tbody>
                                 </table>
+                                </div>
                             </div>
                         </div>
                     `);

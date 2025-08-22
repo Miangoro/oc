@@ -4456,7 +4456,7 @@ $(function () {
       }
 
       var newSection = `
-      <div class="card mt-4" id="caracteristicas_Ex_edit_${sectionCountEdit}">
+      <div class="card mt-4" id="caracteristicas_Ex_edit_${sectionCountEdit}" >
                                  <div class="badge rounded-2 bg-label-primary  fw-bold fs-6 px-4 py-4 mb-5">
                                 Características del Producto
                             </div>
