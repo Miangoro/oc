@@ -497,11 +497,11 @@
                                 <table class="table table-bordered table-hover">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>👤 Revisor</th>
-                                            <th class="text-center">🏗️ Instalaciones</th>
-                                            <th class="text-center">🌾 Granel</th>
-                                            <th class="text-center">🚢 Exportación</th>
-                                            <th class="text-center">Pendientes</th>
+                                            <th>{{-- 👤 --}}<i class="ri-user-3-fill"></i> Revisor</th>
+                                            <th class="text-center">🏗️{{-- <i class="ri-building-4-fill"> --}}</i> Instalaciones</th>
+                                            <th class="text-center">🌾{{-- <i class="ri-plant-line"></i> --}} Granel</th>
+                                            <th class="text-center">🚢{{-- <i class="ri-ship-line"></i> --}} Exportación</th>
+                                            <th class="text-center">{{-- <i class="ri-time-line"></i> --}} Pendientes</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbody-revisiones">
