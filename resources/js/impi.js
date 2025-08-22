@@ -402,9 +402,8 @@ initializeSelect2(select2Elements);
 
 ///FUNCION PARA REGISTRAR
 //Inicializar validacion del formulario
-//const fv = FormValidation.formValidation(FormAgregar, {
-const form = document.getElementById('FormAgregar');
-const fv = FormValidation.formValidation(form, {
+const formAdd = document.getElementById('FormAgregar');
+const fv = FormValidation.formValidation(formAdd, {
     fields: {//valida por name
       fecha_solicitud: {
             validators: {
@@ -453,9 +452,8 @@ const fv = FormValidation.formValidation(form, {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
             eleValidClass: '',
-            rowSelector: function (field, ele) {
-                return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
-            }
+            eleInvalidClass: 'is-invalid',
+            rowSelector: '.form-floating'
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
@@ -463,7 +461,7 @@ const fv = FormValidation.formValidation(form, {
 }).on('core.form.valid', function (e) {
 
 //enviar el formulario cuando pase la validación
-  var formData = new FormData(form);
+  var formData = new FormData(formAdd);
     $.ajax({
         url: 'registrarImpi',
         type: 'POST',
@@ -502,25 +500,13 @@ const fv = FormValidation.formValidation(form, {
     });
 });
 
-/*
-//  Aquí limpias validaciones al cerrar el modal
+// Limpiar formulario y validación al cerrar el modal
 $('#ModalAgregar').on('hidden.bs.modal', function () {
-    $('#FormAgregar')[0].reset();                   // Limpia inputs
-    $('#FormAgregar select').val('').trigger('change'); // Limpia selects con select2
-    fv.resetForm(true);                             // Limpia validaciones de FormValidation
+    formAdd.reset();// Resetear los campos del formulario
+    fv.resetForm(true);// Limpiar validaciones y errores
+    $('.select2').val(null).trigger('change');// Si tienes Select2, también limpiar selección
 });
-// Modal AGREGAR
-    $('#ModalAgregar').on('hidden.bs.modal', function () {
-        // Resetear formulario
-        $('#FormAgregar')[0].reset();
-        // Resetear selects con select2
-        $('#FormAgregar select').val('').trigger('change');
-        // Resetear validaciones
-        if (typeof fvAgregar !== "undefined") {
-            fvAgregar.resetForm(true);
-        }
-    });
-    */
+
 
 
 
