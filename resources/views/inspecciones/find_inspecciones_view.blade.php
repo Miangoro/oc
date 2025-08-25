@@ -250,19 +250,23 @@
             case 1:
                 etiquetaHref = '{{ url('etiqueta_agave_art') }}/' + id_solicitud;
                 etiquetaTexto = 'Etiqueta para agave (%ART)';
+                pdfBlanco = 'etiqueta_agave_art.pdf';
                 break;
             case 3:
                 etiquetaHref = '{{ url('etiquetas_tapas_sellado') }}/' + id_solicitud;
                 etiquetaTexto = 'Etiqueta para tapa de la muestra';
+                pdfBlanco = 'etiqueta_tapa_muestra.pdf';
                 break;
             case 4:
             case 5:
                 etiquetaHref = '{{ url('etiqueta_lotes_mezcal_granel') }}/' + id_solicitud;
                 etiquetaTexto = 'Etiqueta para lotes de mezcal a granel';
+                pdfBlanco = 'etiqueta_lotes_mezcal.pdf';
                 break;
             case 7:
                 etiquetaHref = '{{ url('etiqueta-barrica') }}/' + id_solicitud;
                 etiquetaTexto = 'Etiqueta de ingreso a barricas';
+                pdfBlanco = 'etiqueta_ingreso_maduración.pdf';
                 break;
         }
 
@@ -275,13 +279,36 @@
         }*/
        if (etiquetaHref !== '') {
             $('.etiqueta_name').text(etiquetaTexto);
+
+            // Limpiar TR antes
+            $('#links_etiquetas').closest('tr').next('.etiquetaBlanco').remove();
+
             if (inspectorName !== 'Sin inspector') {
                 $('#links_etiquetas').attr('href', etiquetaHref).html('<i class="ri-file-pdf-2-fill ri-40px text-danger"></i>');
+
+                // PDF en blanco (generado dinámicamente)
+                let trBlanco = `
+                    <tr class="etiquetasNA etiquetaBlanco">
+                        <td>Etiqueta en blanco</td>
+                        <td>
+                            <a href="/img_pdf/${pdfBlanco}" target="_blank">
+                                <i class="ri-file-pdf-2-fill ri-40px text-secondary"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `;
+                $('#links_etiquetas').closest('tr').after(trBlanco);
+
             } else {
                 $('#links_etiquetas').removeAttr('href').text('Sin inspección asignada');
+                $('#links_etiquetas').closest('tr').next('.etiquetaBlanco').remove();//limpiar TR
             }
             $('.etiquetasNA').show(); // mostrar el tr siempre
         } else {
+            //limpiar TR
+            $('#links_etiquetas').removeAttr('href').text('');
+            $('#links_etiquetas').closest('tr').next('.etiquetaBlanco').remove();
+
             $('.etiquetasNA').hide(); // ocultar el tr si no hay PDF
         }
 
