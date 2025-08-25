@@ -204,7 +204,6 @@
 
 
 
-
         <!-- Modal -->
         @include('_partials._modals.modal-pdfs-frames')
         @include('_partials._modals.modal-solicitudes')
