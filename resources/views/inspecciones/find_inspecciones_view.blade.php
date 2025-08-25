@@ -266,7 +266,7 @@
             case 7:
                 etiquetaHref = '{{ url('etiqueta-barrica') }}/' + id_solicitud;
                 etiquetaTexto = 'Etiqueta de ingreso a barricas';
-                pdfBlanco = 'etiqueta_ingreso_maduración.pdf';
+                pdfBlanco = 'etiqueta_ingreso_maduracion.pdf';
                 break;
         }
 
@@ -311,6 +311,7 @@
 
             $('.etiquetasNA').hide(); // ocultar el tr si no hay PDF
         }
+
 
         ///DOCUMENTACION DE LA SOLICITUD GENERADA
         $.ajax({
