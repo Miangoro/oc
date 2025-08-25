@@ -6,7 +6,7 @@ use App\Helpers\Helpers;
 use App\Models\Destinos;
 use App\Models\Documentacion_url;
 use App\Models\empresa;
-use App\Models\Instalaciones;
+use App\Models\instalaciones;
 use App\Models\LotesGranel;
 use App\Models\tipos;
 use App\Models\guias;
@@ -106,9 +106,9 @@ class getFuncionesController extends Controller
                 ->orderByDesc('id_lote_envasado')
                 ->get(),
             'direcciones_destino' => Destinos::where("id_empresa", $empresa->id_empresa)->where('tipo_direccion', 1)->get(),
-            'instalaciones_produccion' => Instalaciones::where('tipo', 'like', '%Productora%')->whereIn("id_empresa", $idsEmpresas)->get(),
-            'instalaciones_comercializadora' => Instalaciones::where('tipo', 'like', '%Comercializadora%')->whereIn("id_empresa", $idsEmpresas)->get(),
-            'instalaciones_envasadora' => Instalaciones::where('tipo', 'like', '%Envasadora%')->whereIn('id_empresa', $idsEmpresas)->get(),
+            'instalaciones_produccion' => instalaciones::where('tipo', 'like', '%Productora%')->whereIn("id_empresa", $idsEmpresas)->get(),
+            'instalaciones_comercializadora' => instalaciones::where('tipo', 'like', '%Comercializadora%')->whereIn("id_empresa", $idsEmpresas)->get(),
+            'instalaciones_envasadora' => instalaciones::where('tipo', 'like', '%Envasadora%')->whereIn('id_empresa', $idsEmpresas)->get(),
         ]);
     }
 
