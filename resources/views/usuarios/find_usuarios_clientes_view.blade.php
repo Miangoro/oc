@@ -121,11 +121,14 @@
         </div>
 
     </div>
+
+
     <!-- Users List Table -->
     <div class="card">
         <div class="card-header pb-0">
             <h3 class="card-title mb-0">Usuarios clientes</h3>
         </div>
+
         <div class="card-datatable table-responsive">
             <table class="datatables-users table">
                 <thead>
@@ -144,12 +147,14 @@
                 </thead>
             </table>
         </div>
-        <!-- Offcanvas to add new user -->
+
+        <!-- Offcanvas to add new user FORMULARIO AGREGAR/EDITAR-->
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
             <div class="offcanvas-header border-bottom bg-primary">
                 <h5 id="offcanvasAddUserLabel" class="offcanvas-title text-white">Titulo Agregar</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
+
             <div class="offcanvas-body mx-0 flex-grow-0 h-100">
                 <form class="add-new-user pt-0" id="addNewUserForm">
                     <input type="hidden" name="id" id="user_id">
@@ -191,12 +196,12 @@
                         <label for="country">Cliente</label>
                     </div>
 
-                    <div class="form-floating form-floating-outline mb-5">
-                        <select name="id_instalacion[]" id="id_instalacion" multiple class="select2 form-select"
-                            data-placeholder="Seleccione la instalacion">
+                    <div class="form-floating form-floating-outline mb-5 select2-primary">
+                        <select id="id_instalacion" name="id_instalacion[]" multiple 
+                        class="select2 form-select" data-placeholder="Seleccione la instalacion">
                             {{-- <option value="0">No asignar instalacion</option> --}}
                         </select>
-                        <label for="id_instalacion">Asignar instalacion especifica</label>
+                        <label>Asignar instalacion especifica</label>
                     </div>
 
                     <div class="form-floating form-floating-outline mb-5">
@@ -228,11 +233,13 @@
                                 class="ri-close-line"></i> Cancelar</button>
                     </div>
 
-
                 </form>
             </div>
         </div>
+
     </div>
+
+
 <script>
 function instalaciones() {
     let empresaId = $('#id_empresa').val();
@@ -260,6 +267,7 @@ function instalaciones() {
 
             $select.html(contenido);
             $select.trigger('change'); // actualizar select2
+            
         },
         error: function() {
             console.error('Error al obtener instalaciones');

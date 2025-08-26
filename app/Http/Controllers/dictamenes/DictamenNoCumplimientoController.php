@@ -379,7 +379,7 @@ public function DictamenNoCumplimiento($id_dictamen)
         'data' => $data,
         'num_dictamen' => $data->num_dictamen ?? 'No encontrado',
         'observaciones' => $data->observaciones ?? 'No encontrado',
-        'inspector' => $data->firmante->name ?? 'No encontrado',
+        'inspector' => $data->inspeccione->inspector->name ?? 'No encontrado',
         'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'dom_fiscal' => $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
         'cp' => $data->inspeccione->solicitud->empresa->cp ?? "No encontrado",
