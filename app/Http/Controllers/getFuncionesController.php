@@ -259,6 +259,7 @@ class getFuncionesController extends Controller
     }
 
 
+
     public function getDocumentosSolicitud($id_solicitud)
     {
         if (!$id_solicitud) {
@@ -353,34 +354,20 @@ class getFuncionesController extends Controller
         }
 
 
+
         // Obtener número de cliente para LOTE GRANEL
         $numero_cliente_granel = 'N/A';
-        /*if ($solicitud->empresa && $solicitud->empresa->empresaNumClientes->isNotEmpty()) {
-            $cliente = $solicitud->empresa->empresaNumClientes
-                ->first(fn($item) => !empty($item->numero_cliente));
-            $numero_cliente = $cliente?->numero_cliente ?? 'No encontrado';
-        }
         foreach ($certificados as $certificado) {
-            $numero_cliente_granel = empresa::where('id_empresa', $certificado->loteGranel->empresa->empresaNumClientes);
+            $empresa = $certificado->loteGranel?->empresa;
 
-            if ($numero_cliente_granel) {
-                $lote_gra = LotesGranel::find($idLote)->value('id_empresa');
+            if ($empresa && $empresa->empresaNumClientes->isNotEmpty()) {
+                $cliente = $empresa->empresaNumClientes
+                    ->first(fn($item) => !empty($item->numero_cliente));
 
-                $numero_cliente_granel = empresa::where('id_empresa', $lote_gra->empresa->empresaNumClientes);
+                $numero_cliente_granel = $cliente?->numero_cliente ?? 'N/A';
+                break; // si solo quieres el primero válido, salimos
             }
-        }*/
-            foreach ($certificados as $certificado) {
-                $empresa = $certificado->loteGranel?->empresa;
-
-                if ($empresa && $empresa->empresaNumClientes->isNotEmpty()) {
-                    $cliente = $empresa->empresaNumClientes
-                        ->first(fn($item) => !empty($item->numero_cliente));
-
-                    $numero_cliente_granel = $cliente?->numero_cliente ?? 'N/A';
-                    break; // si solo quieres el primero válido, salimos
-                }
-            }
-
+        }
 
         //CERTIFICADO GRANEL URL
         $urls_certificados = collect();
@@ -430,13 +417,14 @@ class getFuncionesController extends Controller
                 ]);
             }
         }
-
+        
         return response()->json([
             'success' => true,
             'data' => $documentos,
             'numero_cliente' => $numero_cliente,
             'fqs' => $fqs,
-            'numero_cliente_lote' =>  $numero_cliente_granel, //$solicitud->lote_granel?->empresa?->empresaNumClientes
+            'numero_cliente_lote' =>  $numero_cliente_granel,
+            //'numero_cliente_lote' =>  $numero_cliente, //$solicitud->lote_granel?->empresa?->empresaNumClientes
                 //->first(fn($item) => !empty($item->numero_cliente))
                 //?->numero_cliente ?? 'N/A',
             'url_etiqueta' => $url_etiqueta ?? '',
@@ -448,11 +436,9 @@ class getFuncionesController extends Controller
             'id_dictamen_envasado' => $data->id_lote_envasado ?? null,
             'num_dictamen_envasado' => $data->num_dictamen ?? null,
             'url_etiqueta_envasado' => $url_etiqueta_envasado->etiquetas->url_etiqueta->url ?? '',
-
-
         ]);
-    }
 
+    }//fin function getDocumentosSolicitud
 
 
 
