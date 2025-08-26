@@ -48,8 +48,9 @@ class BitacoraMezcalController extends Controller
         return view('bitacoras.find_BitacoraMezcal_view', compact('bitacora', 'empresas', 'tipo_usuario'));
 
     }
-        private function obtenerEmpresasVisibles($empresaIdAut, $empresaId)
-      {
+
+    private function obtenerEmpresasVisibles($empresaIdAut, $empresaId)
+    {
           $idsEmpresas = [];
           if ($empresaIdAut) {
               $idsEmpresas[] = $empresaIdAut;
@@ -64,7 +65,8 @@ class BitacoraMezcalController extends Controller
               );
           }
           return array_unique($idsEmpresas);
-      }
+    }
+
 
     public function index(Request $request)
     {
@@ -105,10 +107,10 @@ class BitacoraMezcalController extends Controller
             if (count($idsEmpresas)) {
                 $query->whereIn('id_empresa', $idsEmpresas);
             }
-          // Filtro por instalaciones del usuario
-                if (!empty($instalacionAuth)) {
-            $query->whereIn('id_instalacion', $instalacionAuth);
-        }
+            //Filtro por instalaciones del usuario
+            if (!empty($instalacionAuth)) {
+                $query->whereIn('id_instalacion', $instalacionAuth);
+            }
 
          if ($empresaId) {
               $empresa = empresa::find($empresaId);
@@ -255,46 +257,100 @@ class BitacoraMezcalController extends Controller
         ]);
     }
 
-     public function PDFBitacoraMezcal(Request $request)
-    {
-        $empresaId = $request->query('empresa');
-        $empresaSeleccionada = empresa::with('empresaNumClientes')->find($empresaId);
-        $instalacionId = $request->query('instalacion');
-        $title = 'PRODUCTOR'; // Cambia a 'Envasador' si es necesario
-        $idsEmpresas = [$empresaId];
-        if ($empresaId) {
-            $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
-                ->pluck('id_maquilador')
-                ->toArray();
 
-            if (count($idsMaquiladores)) {
-                $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
-            }
+
+///PDf BITACORA
+public function PDFBitacoraMezcal(Request $request)
+{
+    /*$empresaId = $request->query('empresa');
+    $empresaSeleccionada = empresa::with('empresaNumClientes')->find($empresaId);
+    $instalacionId = $request->query('instalacion');
+    $title = 'PRODUCTOR'; // Cambia a 'Envasador' si es necesario
+    $idsEmpresas = [$empresaId];
+    if ($empresaId) {
+        $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
+            ->pluck('id_maquilador')
+            ->toArray();
+
+        if (count($idsMaquiladores)) {
+            $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
         }
-        $bitacoras = BitacoraMezcal::with([
-            'empresaBitacora.empresaNumClientes',
-            'firmante',
-        ])->whereIn('tipo', [1, 3])
-        ->when($empresaId, function ($query) use ($idsEmpresas) {
-            $query->whereIn('id_empresa', $idsEmpresas);
-        })
-        /* ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
-            $query->where('id_empresa', $empresaId);
-            if ($instalacionId) {
-                $query->where('id_instalacion', $instalacionId);
-            }
-        }) */
-        ->orderBy('id', 'desc')
-        ->get();
-          if ($bitacoras->isEmpty()) {
-              return response()->json([
-                  'message' => 'No hay registros de bitácora para los filtros seleccionados.'
-              ], 404);
-          }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaSeleccionada'))
-        ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
-        return $pdf->stream('Bitácora Mezcal a Granel.pdf');
     }
+    $bitacoras = BitacoraMezcal::with([
+        'empresaBitacora.empresaNumClientes',
+        'firmante',
+    ])->whereIn('tipo', [1, 3])
+    ->when($empresaId, function ($query) use ($idsEmpresas) {
+        $query->whereIn('id_empresa', $idsEmpresas);
+    })
+
+    ->orderBy('id', 'desc')
+    ->get();
+        if ($bitacoras->isEmpty()) {
+            return response()->json([
+                'message' => 'No hay registros de bitácora para los filtros seleccionados.'
+            ], 404);
+        }
+    $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaSeleccionada'))
+    ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
+    return $pdf->stream('Bitácora Mezcal a Granel.pdf');*/
+    $user = Auth::user();
+
+    // Empresa seleccionada desde query
+    $empresaId = $request->query('empresa');
+    $empresaSeleccionada = $empresaId 
+        ? Empresa::with('empresaNumClientes')->find($empresaId) 
+        : null;
+
+    // Instalaciones del usuario (array por el cast en el modelo)
+    $idsInstalaciones = $user->id_instalacion ?? [];
+
+    // Instalación seleccionada desde query (opcional)
+    $instalacionId = $request->query('instalacion');
+    if ($instalacionId) {
+        $idsInstalaciones = [intval($instalacionId)];
+    }
+
+    $title = 'PRODUCTOR';
+
+    // Armar IDs de empresa (con maquiladores)
+    $idsEmpresas = $empresaId ? [$empresaId] : [];
+    if ($empresaId) {
+        $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
+            ->pluck('id_maquilador')
+            ->toArray();
+
+        if (count($idsMaquiladores)) {
+            $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
+        }
+    }
+
+    $bitacoras = BitacoraMezcal::with([
+        'empresaBitacora.empresaNumClientes',
+        'firmante',
+    ])
+    ->whereIn('tipo', [1, 3])
+    ->when(!empty($idsEmpresas), function ($query) use ($idsEmpresas) {
+        $query->whereIn('id_empresa', $idsEmpresas);
+    })
+    ->when(!empty($idsInstalaciones), function ($query) use ($idsInstalaciones) {
+        $query->whereIn('id_instalacion', $idsInstalaciones);
+    })
+    ->orderBy('id', 'desc')
+    ->get();
+
+    if ($bitacoras->isEmpty()) {
+        return response()->json([
+            'message' => 'No hay registros de bitácora para los filtros seleccionados.'
+        ], 404);
+    }
+
+    $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaSeleccionada'))
+        ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
+
+    return $pdf->stream('Bitácora Mezcal a Granel.pdf');
+}
+
 
 
     public function store(Request $request)
@@ -341,7 +397,8 @@ class BitacoraMezcalController extends Controller
             $bitacora->volumen_final = $request->volumen_final;
             $bitacora->alcohol_final = $request->alc_vol_final;
             $bitacora->observaciones = $request->observaciones;
-            $bitacora->id_usuario_registro = auth()->id();
+            //$bitacora->id_usuario_registro = auth()->id();
+            $bitacora->id_usuario_registro = Auth::id() ?? null;
 
 
             $bitacora->save();
@@ -402,7 +459,7 @@ class BitacoraMezcalController extends Controller
                 ],
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error al obtener bitácora para editar: ' . $e->getMessage());
+            Log::error('Error al obtener bitácora para editar: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'No se encontró la bitácora.'], 404);
         }
     }
@@ -454,7 +511,8 @@ class BitacoraMezcalController extends Controller
               'volumen_final'    => $request->volumen_final,
               'alcohol_final'    => $request->alc_vol_final,
               'observaciones'    => $request->observaciones,
-              'id_usuario_registro' => auth()->id(),
+              //'id_usuario_registro' => auth()->id(),
+              'id_usuario_registro' => Auth::id() ?? null,
 
           ]);
 
@@ -466,8 +524,10 @@ class BitacoraMezcalController extends Controller
         try {
           $bitacora = BitacoraMezcal::findOrFail($id_bitacora);
           // Solo usuarios tipo 2 pueden firmar
-          if (auth()->user()->tipo === 2) {
-              $bitacora->id_firmante = auth()->id();
+          //if (auth()->user()->tipo === 2) {
+          if (Auth::user()->tipo === 2) {
+              //$bitacora->id_firmante = auth()->id();
+              $bitacora->id_firmante = Auth::id();
               $bitacora->save();
               return response()->json(['message' => 'Bitácora firmada correctamente.']);
           }

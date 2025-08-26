@@ -21,36 +21,30 @@ class BitacoraProductoMaduracionController extends Controller
     public function UserManagement()
     {
         $bitacora = BitacoraProductoMaduracion::all();
-/*         $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); */
-           /*  if (Auth::check() && Auth::user()->tipo == 3) {
-        $empresaIdA = Auth::user()->empresa?->id_empresa;
-        $empresas = empresa::with('empresaNumClientes')->where('id_empresa', $empresaIdA)->get();
-          } else {
-              $empresas = empresa::with('empresaNumClientes')
-                  ->where('tipo', 2)
-                  ->get();
-          } */
-         $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
-        ? Auth::user()->empresa?->id_empresa
-        : null;
-          if ($empresaIdAut) {
-                  // 👇 Usa la función que ya tienes
-                  $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, null);
 
-                  $empresas = empresa::with('empresaNumClientes')
-                      ->whereIn('id_empresa', $idsEmpresas)
-                      ->get();
-              } else {
-                  $empresas = empresa::with('empresaNumClientes')
-                      ->where('tipo', 2)
-                      ->get();
-              }
+        $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
+            ? Auth::user()->empresa?->id_empresa
+            : null;
+
+            if ($empresaIdAut) {
+                // Solo su empresa (ya no necesitamos obtener empresas visibles)
+                $empresas = empresa::with('empresaNumClientes')
+                    ->where('id_empresa', $empresaIdAut)
+                    ->get();
+            } else {
+                // Admin o superuser ve todas
+                $empresas = empresa::with('empresaNumClientes')
+                    ->where('tipo', 2)
+                    ->get();
+            }
+
       $tipo_usuario =  Auth::user()->tipo;
-        return view('bitacoras.BitacoraProductoMaduracion_view', compact('bitacora', 'empresas', 'tipo_usuario'));
 
+        return view('bitacoras.BitacoraProductoMaduracion_view', compact('bitacora', 'empresas', 'tipo_usuario'));
     }
-     private function obtenerEmpresasVisibles($empresaIdAut, $empresaId)
-      {
+
+    private function obtenerEmpresasVisibles($empresaIdAut, $empresaId)
+    {
           $idsEmpresas = [];
           if ($empresaIdAut) {
               $idsEmpresas[] = $empresaIdAut;
@@ -65,193 +59,168 @@ class BitacoraProductoMaduracionController extends Controller
               );
           }
           return array_unique($idsEmpresas);
-      }
-
-    public function index(Request $request)
-    {
-      $empresaId = $request->input('empresa');
-      DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
-
-        $columns = [
-            1 => 'id',
-            2 => 'fecha',
-            3 => 'id_lote_granel',
-        ];
-
-        $empresaIdAut = null;
-          if (Auth::check() && Auth::user()->tipo == 3) {
-              $empresaIdAut = Auth::user()->empresa?->id_empresa;
-          }
-
-        $search = $request->input('search.value');
-        /* $totalData = BitacoraMezcal::count(); */
-        $totalData = BitacoraProductoMaduracion::where('tipo', 2)->count();
-        $totalFiltered = $totalData;
-
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')]  ?? 'id';
-        $dir = $request->input('order.0.dir') ?? 'desc';
-
-        $query = BitacoraProductoMaduracion::query()->where('tipo', 2);
-        $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, $empresaId);
-                      if (count($idsEmpresas)) {
-                          $query->whereIn('id_empresa', $idsEmpresas);
-                      }
-
-        /* $query = BitacoraProductoMaduracion::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
-                  $query->where('id_empresa', $empresaIdAut);
-              })->where('tipo', 2); */
-
-        /* if ($empresaId) {
-            $query->where('id_empresa', $empresaId);
-
-            if ($instalacionId) {
-                $query->where('id_instalacion', $instalacionId);
-            }
-        } */
-        /* if ($empresaId) {
-              $empresa = empresa::find($empresaId);
-
-              if ($empresa) {
-                  // Buscar maquiladores hijos en la tabla intermedia
-                  $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
-                  ->pluck('id_maquilador')
-                  ->toArray();
-
-
-                  // Si tiene hijos, se asume maquiladora
-                  if (count($idsMaquiladores)) {
-                      $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
-                  } else {
-                      // Sin hijos, solo su propio ID
-                      $idsEmpresas = [$empresaId];
-                  }
-
-                  $query->whereIn('id_empresa', $idsEmpresas);
-              }
-          } */
-
-
-          $filteredQuery = clone $query;
-          if (!empty($search)) {
-              $filteredQuery->where(function ($q) use ($search) {
-                  $lower = strtolower($search);
-
-                  if ($lower === 'firmado') {
-                      $q->whereNotNull('id_firmante')->where('id_firmante', '<>', 0);
-                  } elseif ($lower === 'sin firmar') {
-                      $q->where(function ($sub) {
-                          $sub->whereNull('id_firmante')->orWhere('id_firmante', 0);
-                      });
-                  } else {
-                    $q->where('fecha', 'LIKE', "%{$search}%")
-                      ->orWhere('id_lote_granel', 'LIKE', "%{$search}%")
-                     ->orWhere('procedencia_entrada', 'LIKE', "%{$search}%")
-                    ->orWhere('destino_salidas', 'LIKE', "%{$search}%")
-                    ->orWhere('volumen_inicial', 'LIKE', "%{$search}%")
-                    ->orWhere('alcohol_inicial', 'LIKE', "%{$search}%")
-                    ->orWhere('volumen_entrada', 'LIKE', "%{$search}%")
-                    ->orWhere('alcohol_entrada', 'LIKE', "%{$search}%")
-                    ->orWhere('volumen_salidas', 'LIKE', "%{$search}%")
-                    ->orWhere('alcohol_salidas', 'LIKE', "%{$search}%")
-                    ->orWhere('volumen_final', 'LIKE', "%{$search}%")
-                    ->orWhere('alcohol_final', 'LIKE', "%{$search}%")
-                    ->orWhere('num_recipientes_final', 'LIKE', "%{$search}%")
-                      ->orWhere(function ($date) use ($search) {
-                       $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
-                      ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
-                          $sub->where('razon_social', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('loteBitacora', function ($sub) use ($search) {
-                          $sub->where('nombre_lote', 'LIKE', "%{$search}%")
-                              ->orWhere('folio_fq', 'LIKE', "%{$search}%")
-                              ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
-                      });
-                  }
-              });
-              /* $totalFiltered = $query->count(); */
-               $totalFiltered = $filteredQuery->count();
-          } else{
-              $totalFiltered = $filteredQuery->count();
-          }
-
-        $bitacoras = $filteredQuery->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir)
-            ->get();
-
-        $data = [];
-        $counter = $start + 1;
-        foreach ($bitacoras as $bitacora) {
-          $razonSocial = $bitacora->empresaBitacora->razon_social ?? 'Sin razón social';
-           $numeroCliente = null;
-                if ($bitacora->empresaBitacora && $bitacora->empresaBitacora->empresaNumClientes) {
-                    $clientes = $bitacora->empresaBitacora->empresaNumClientes;
-                    foreach ([0, 1, 2] as $index) {
-                        if (isset($clientes[$index]) && !empty($clientes[$index]->numero_cliente)) {
-                            $numeroCliente = $clientes[$index]->numero_cliente;
-                            break;
-                        }
-                    }
-                }
-                $numeroCliente = $numeroCliente ?? 'Sin número cliente';
-
-            $nestedData = [
-                'fake_id' => $counter++,
-                'fecha' => Helpers::formatearFecha($bitacora->fecha),
-                'id' => $bitacora->id,
-                //numero de cliente
-                'razon_social' => $razonSocial,
-                'numero_cliente' => $numeroCliente,
-                'cliente' => '<b>' . $numeroCliente . '</b><br>' . $razonSocial,
-                //
-                'nombre_lote' => $bitacora->loteBitacora->nombre_lote ?? 'N/A',
-                'folio_fq' => $bitacora->loteBitacora->folio_fq ?? 'N/A',
-                'folio_certificado' => $bitacora->loteBitacora->folio_certificado ?? 'N/A',
-                'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
-                'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A',
-
-                  'tipo_recipientes' => $bitacora->tipo_recipientes ?? 'N/A',
-                  'tipo_madera' => $bitacora->tipo_madera ?? 'N/A',
-                  'num_recipientes' => $bitacora->num_recipientes ?? 'N/A',
-
-                  // Entradas
-                  'num_recipientes_entrada' => $bitacora->num_recipientes_entrada ?? 'N/A',
-                  'procedencia_entrada' => $bitacora->procedencia_entrada ?? 'N/A',
-                  'volumen_entrada' => $bitacora->volumen_entrada ?? 'N/A',
-                  'alcohol_entrada' => $bitacora->alcohol_entrada ?? 'N/A',
-
-                  // Salidas
-                  'fecha_salida' => Helpers::formatearFecha($bitacora->fecha_salida),
-                  'num_recipientes_salida' => $bitacora->num_recipientes_salida ?? 'N/A',
-                  'volumen_salidas' => $bitacora->volumen_salidas ?? 'N/A',
-                  'alcohol_salidas' => $bitacora->alcohol_salidas ?? 'N/A',
-                  'destino_salidas' => $bitacora->destino_salidas ?? 'N/A',
-
-                  // Final
-                  'num_recipientes_final' => $bitacora->num_recipientes_final ?? 'N/A',
-                  'volumen_final' => $bitacora->volumen_final ?? 'N/A',
-                  'alcohol_final' => $bitacora->alcohol_final ?? 'N/A',
-
-                  'observaciones' => $bitacora->observaciones ?? 'N/A',
-                  'id_firmante' => $bitacora->id_firmante ?? 'N/A',
-            ];
-            $data[] = $nestedData;
-        }
-
-        return response()->json([
-            'draw' => intval($request->input('draw')),
-            'recordsTotal' => intval($totalData),
-            'recordsFiltered' => intval($totalFiltered),
-            'code' => 200,
-            'data' => $data,
-        ]);
     }
 
-     public function PDFProductoMaduracion(Request $request)
-    {
-        $empresaId = $request->query('empresa');
+
+public function index(Request $request)
+{
+    $empresaId = $request->input('empresa');
+    DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
+
+    $columns = [
+        1 => 'id',
+        2 => 'fecha',
+        3 => 'id_lote_granel',
+    ];
+
+    $empresaIdAut = null;
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaIdAut = Auth::user()->empresa?->id_empresa;
+    }
+
+    $search = $request->input('search.value');
+    $totalData = BitacoraProductoMaduracion::where('tipo', 2)->count();
+    $totalFiltered = $totalData;
+
+    $limit = $request->input('length');
+    $start = $request->input('start');
+    $order = $columns[$request->input('order.0.column')]  ?? 'id';
+    $dir = $request->input('order.0.dir') ?? 'desc';
+
+    $query = BitacoraProductoMaduracion::query()->where('tipo', 2);
+
+    // --- FILTRO POR EMPRESAS ---
+    $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, $empresaId);
+    if (count($idsEmpresas)) {
+        $query->whereIn('id_empresa', $idsEmpresas);
+    }
+
+    // --- FILTRO POR INSTALACIONES ---
+    $user = Auth::user();
+    if (!empty($user->id_instalacion)) {
+        $idsInstalaciones = $user->id_instalacion;
+
+        if (is_array($idsInstalaciones) && count($idsInstalaciones) > 0) {
+            $query->whereIn('id_instalacion', $idsInstalaciones);
+        }
+    }
+
+    // --- FILTRO DE BUSQUEDA ---
+    $filteredQuery = clone $query;
+    if (!empty($search)) {
+        $filteredQuery->where(function ($q) use ($search) {
+            $lower = strtolower($search);
+
+            if ($lower === 'firmado') {
+                $q->whereNotNull('id_firmante')->where('id_firmante', '<>', 0);
+            } elseif ($lower === 'sin firmar') {
+                $q->where(function ($sub) {
+                    $sub->whereNull('id_firmante')->orWhere('id_firmante', 0);
+                });
+            } else {
+                $q->where('fecha', 'LIKE', "%{$search}%")
+                  ->orWhere('id_lote_granel', 'LIKE', "%{$search}%")
+                  ->orWhere('procedencia_entrada', 'LIKE', "%{$search}%")
+                  ->orWhere('destino_salidas', 'LIKE', "%{$search}%")
+                  ->orWhere('volumen_inicial', 'LIKE', "%{$search}%")
+                  ->orWhere('alcohol_inicial', 'LIKE', "%{$search}%")
+                  ->orWhere('volumen_entrada', 'LIKE', "%{$search}%")
+                  ->orWhere('alcohol_entrada', 'LIKE', "%{$search}%")
+                  ->orWhere('volumen_salidas', 'LIKE', "%{$search}%")
+                  ->orWhere('alcohol_salidas', 'LIKE', "%{$search}%")
+                  ->orWhere('volumen_final', 'LIKE', "%{$search}%")
+                  ->orWhere('alcohol_final', 'LIKE', "%{$search}%")
+                  ->orWhere('num_recipientes_final', 'LIKE', "%{$search}%")
+                  ->orWhere(function ($date) use ($search) {
+                      $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+                  })
+                  ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
+                      $sub->where('razon_social', 'LIKE', "%{$search}%");
+                  })
+                  ->orWhereHas('loteBitacora', function ($sub) use ($search) {
+                      $sub->where('nombre_lote', 'LIKE', "%{$search}%")
+                          ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+                          ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
+                  });
+            }
+        });
+        $totalFiltered = $filteredQuery->count();
+    } else {
+        $totalFiltered = $filteredQuery->count();
+    }
+
+    $bitacoras = $filteredQuery->offset($start)
+        ->limit($limit)
+        ->orderBy($order, $dir)
+        ->get();
+
+
+    $data = [];
+    $counter = $start + 1;
+    foreach ($bitacoras as $bitacora) {
+
+        $razonSocial = $bitacora->empresaBitacora->razon_social ?? 'Sin razón social';
+        $numeroCliente = null;
+        if ($bitacora->empresaBitacora && $bitacora->empresaBitacora->empresaNumClientes) {
+            $clientes = $bitacora->empresaBitacora->empresaNumClientes;
+            foreach ([0, 1, 2] as $index) {
+                if (isset($clientes[$index]) && !empty($clientes[$index]->numero_cliente)) {
+                    $numeroCliente = $clientes[$index]->numero_cliente;
+                    break;
+                }
+            }
+        }
+        $numeroCliente = $numeroCliente ?? 'Sin número cliente';
+
+        $nestedData = [
+            'fake_id' => $counter++,
+            'fecha' => Helpers::formatearFecha($bitacora->fecha),
+            'id' => $bitacora->id,
+            'razon_social' => $razonSocial,
+            'numero_cliente' => $numeroCliente,
+            'cliente' => '<b>' . $numeroCliente . '</b><br>' . $razonSocial,
+            'nombre_lote' => $bitacora->loteBitacora->nombre_lote ?? 'N/A',
+            'folio_fq' => $bitacora->loteBitacora->folio_fq ?? 'N/A',
+            'folio_certificado' => $bitacora->loteBitacora->folio_certificado ?? 'N/A',
+            'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
+            'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A',
+            'tipo_recipientes' => $bitacora->tipo_recipientes ?? 'N/A',
+            'tipo_madera' => $bitacora->tipo_madera ?? 'N/A',
+            'num_recipientes' => $bitacora->num_recipientes ?? 'N/A',
+            'num_recipientes_entrada' => $bitacora->num_recipientes_entrada ?? 'N/A',
+            'procedencia_entrada' => $bitacora->procedencia_entrada ?? 'N/A',
+            'volumen_entrada' => $bitacora->volumen_entrada ?? 'N/A',
+            'alcohol_entrada' => $bitacora->alcohol_entrada ?? 'N/A',
+            'fecha_salida' => Helpers::formatearFecha($bitacora->fecha_salida),
+            'num_recipientes_salida' => $bitacora->num_recipientes_salida ?? 'N/A',
+            'volumen_salidas' => $bitacora->volumen_salidas ?? 'N/A',
+            'alcohol_salidas' => $bitacora->alcohol_salidas ?? 'N/A',
+            'destino_salidas' => $bitacora->destino_salidas ?? 'N/A',
+            'num_recipientes_final' => $bitacora->num_recipientes_final ?? 'N/A',
+            'volumen_final' => $bitacora->volumen_final ?? 'N/A',
+            'alcohol_final' => $bitacora->alcohol_final ?? 'N/A',
+            'observaciones' => $bitacora->observaciones ?? 'N/A',
+            'id_firmante' => $bitacora->id_firmante ?? 'N/A',
+        ];
+
+        $data[] = $nestedData;
+    }
+
+    return response()->json([
+        'draw' => intval($request->input('draw')),
+        'recordsTotal' => intval($totalData),
+        'recordsFiltered' => intval($totalFiltered),
+        'code' => 200,
+        'data' => $data,
+    ]);
+}
+
+
+
+///PDf BITACORA
+public function PDFProductoMaduracion(Request $request)
+{
+    /*$empresaId = $request->query('empresa');
         $empresaSeleccionada = empresa::with('empresaNumClientes')->find($empresaId);
         $title = 'PRODUCTOR'; // Cambia a 'Envasador' si es necesario
         $idsEmpresas = [$empresaId];
@@ -274,7 +243,7 @@ class BitacoraProductoMaduracionController extends Controller
           })
        /*  ->when($empresaId, function ($query) use ($empresaId) {
             $query->where('id_empresa', $empresaId);
-        }) */
+        }) *
         ->orderBy('id', 'desc')
         ->get();
        /*  $empresaPadre = null;
@@ -292,7 +261,7 @@ class BitacoraProductoMaduracionController extends Controller
                 // Es empresa padre
                 $empresaPadre = empresa::with('empresaNumClientes')->find($empresaId);
             }
-        } */
+        } *
           if ($bitacoras->isEmpty()) {
               return response()->json([
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'
@@ -301,7 +270,63 @@ class BitacoraProductoMaduracionController extends Controller
         $pdf = Pdf::loadView('pdfs.Bitacora_Maduracion', compact('bitacoras', 'title', 'empresaSeleccionada'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
         return $pdf->stream('Bitácora Producto en Maduración.pdf');
+    */
+    //$user = auth()->user();
+    $user = Auth::user();
+    
+    // Si el usuario tiene varias instalaciones, aquí las tienes como array
+    $idsInstalaciones = $user->id_instalacion ?? [];
+
+    // Si quieres filtrar también por empresa (opcional desde request)
+    $empresaId = $request->query('empresa');
+
+    $empresaSeleccionada = $empresaId 
+        ? empresa::with('empresaNumClientes')->find($empresaId) 
+        : null;
+
+    $title = 'PRODUCTOR'; 
+
+    // Armamos los IDs de empresa a consultar
+    $idsEmpresas = $empresaId ? [$empresaId] : [];
+
+    if ($empresaId) {
+        $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
+            ->pluck('id_maquilador')
+            ->toArray();
+
+        if (count($idsMaquiladores)) {
+            $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
+        }
     }
+
+    $bitacoras = BitacoraProductoMaduracion::with([
+        'empresaBitacora.empresaNumClientes',
+        'firmante',
+        'loteBitacora',
+    ])
+    ->where('tipo', 2)
+    ->when(!empty($idsEmpresas), function ($query) use ($idsEmpresas) {
+        $query->whereIn('id_empresa', $idsEmpresas);
+    })
+    ->when(!empty($idsInstalaciones), function ($query) use ($idsInstalaciones) {
+        $query->whereIn('id_instalacion', $idsInstalaciones);
+    })
+    ->orderBy('id', 'desc')
+    ->get();
+
+    if ($bitacoras->isEmpty()) {
+        return response()->json([
+            'message' => 'No hay registros de bitácora para los filtros seleccionados.'
+        ], 404);
+    }
+
+    $pdf = Pdf::loadView('pdfs.Bitacora_Maduracion', compact('bitacoras', 'title', 'empresaSeleccionada'))
+        ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
+
+    return $pdf->stream('Bitácora Producto en Maduración.pdf');
+}
+
+
 
 
     public function store(Request $request)
