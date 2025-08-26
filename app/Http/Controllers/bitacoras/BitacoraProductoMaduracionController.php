@@ -96,14 +96,34 @@ public function index(Request $request)
     }
 
     // --- FILTRO POR INSTALACIONES ---
-    $user = Auth::user();
+  /*   $user = Auth::user();
     if (!empty($user->id_instalacion)) {
         $idsInstalaciones = $user->id_instalacion;
 
         if (is_array($idsInstalaciones) && count($idsInstalaciones) > 0) {
             $query->whereIn('id_instalacion', $idsInstalaciones);
         }
+    } */
+   $user = Auth::user();
+
+    if ($user && $user->tipo == 3) {
+        $idsInstalaciones = (array) $user->id_instalacion;
+        $idsInstalaciones = array_filter(array_map('intval', $idsInstalaciones), fn($id) => $id > 0);
+
+        // Si no tiene instalaciones, devolver vacío
+        if (empty($idsInstalaciones)) {
+            return response()->json([
+                'draw' => intval($request->input('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'code' => 200,
+                'data' => []
+            ]);
+        }
+
+        $query->whereIn('id_instalacion', $idsInstalaciones);
     }
+
 
     // --- FILTRO DE BUSQUEDA ---
     $filteredQuery = clone $query;
@@ -180,6 +200,7 @@ public function index(Request $request)
             'numero_cliente' => $numeroCliente,
             'cliente' => '<b>' . $numeroCliente . '</b><br>' . $razonSocial,
             'nombre_lote' => $bitacora->loteBitacora->nombre_lote ?? 'N/A',
+            'instalacion' => $bitacora->instalacion->direccion_completa ?? 'N/A',
             'folio_fq' => $bitacora->loteBitacora->folio_fq ?? 'N/A',
             'folio_certificado' => $bitacora->loteBitacora->folio_certificado ?? 'N/A',
             'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
@@ -273,18 +294,18 @@ public function PDFProductoMaduracion(Request $request)
     */
     //$user = auth()->user();
     $user = Auth::user();
-    
+
     // Si el usuario tiene varias instalaciones, aquí las tienes como array
     $idsInstalaciones = $user->id_instalacion ?? [];
 
     // Si quieres filtrar también por empresa (opcional desde request)
     $empresaId = $request->query('empresa');
 
-    $empresaSeleccionada = $empresaId 
-        ? empresa::with('empresaNumClientes')->find($empresaId) 
+    $empresaSeleccionada = $empresaId
+        ? empresa::with('empresaNumClientes')->find($empresaId)
         : null;
 
-    $title = 'PRODUCTOR'; 
+    $title = 'PRODUCTOR';
 
     // Armamos los IDs de empresa a consultar
     $idsEmpresas = $empresaId ? [$empresaId] : [];

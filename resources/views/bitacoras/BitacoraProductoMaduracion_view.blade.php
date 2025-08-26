@@ -24,12 +24,12 @@
 
 @section('page-script')
     <script>
-      window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar bitácoras'));
-      window.puedeEditarElUsuario = @json(auth()->user()->can('Editar bitácoras'));
-      window.adminBitacoras = @json(auth()->user()->can('Admin bitácoras'));
-      window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar bitácoras'));
-      window.puedeFirmarElUsuario = @json(auth()->user()->can('Firmar bitácoras'));
-      window.tipoUsuario = {{ auth()->user()->tipo }};
+        window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar bitácoras'));
+        window.puedeEditarElUsuario = @json(auth()->user()->can('Editar bitácoras'));
+        window.adminBitacoras = @json(auth()->user()->can('Admin bitácoras'));
+        window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar bitácoras'));
+        window.puedeFirmarElUsuario = @json(auth()->user()->can('Firmar bitácoras'));
+        window.tipoUsuario = {{ auth()->user()->tipo }};
         const opcionesEmpresas = `{!! collect($empresas)->map(function ($e) {
                 $num = $e->empresaNumClientes[0]->numero_cliente ?? ($e->empresaNumClientes[1]->numero_cliente ?? '');
                 return "<option value='{$e->id_empresa}'>{$num} | {$e->razon_social}</option>";
@@ -55,6 +55,7 @@
                         <th>#</th>
                         <th>ID</th>
                         <th>Cliente</th>
+                        <th>Instalación</th>
                         <th>Datos Iniciales</th>
                         <th>Entradas</th>
                         <th>Salidas</th>

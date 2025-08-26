@@ -14,6 +14,7 @@ class BitacoraProductoMaduracion extends Model
        protected $primaryKey = 'id';
        protected $fillable = [
         'id_empresa',
+        'id_instalacion',
         'tipo_operacion',
         'tipo', // 1=Productor, 2=Envasador, 3=Comercializador
         'fecha',
@@ -56,6 +57,10 @@ class BitacoraProductoMaduracion extends Model
         return $this->belongsTo(User::class, 'id_firmante');
     }
 
+    public function instalacion()
+    {
+        return $this->belongsTo(instalaciones::class, 'id_instalacion','id_instalacion');
+    }
 
 
 }

@@ -45,7 +45,8 @@ class BitacoraMezcalController extends Controller
                       ->get();
               }
       $tipo_usuario =  Auth::user()->tipo;
-        return view('bitacoras.find_BitacoraMezcal_view', compact('bitacora', 'empresas', 'tipo_usuario'));
+        $instalacionesUsuario = Auth::user()->instalaciones ?? [];
+        return view('bitacoras.find_BitacoraMezcal_view', compact('bitacora', 'empresas', 'tipo_usuario', 'instalacionesUsuario'));
 
     }
 
@@ -85,11 +86,23 @@ class BitacoraMezcalController extends Controller
               $empresaIdAut = Auth::user()->empresa?->id_empresa;
           }
 
-          $instalacionAuth = Auth::check() && Auth::user()->tipo == 3
-              ? (array) Auth::user()->id_instalacion // ya es array gracias al cast en el modelo
-              : [];
+          $instalacionAuth = [];
+if (Auth::check() && Auth::user()->tipo == 3) {
+    $instalacionAuth = (array) Auth::user()->id_instalacion; // cast a array
+    $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
 
-          $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
+    // Si el usuario tipo 3 no tiene instalaciones, devolver vacío
+    if (empty($instalacionAuth)) {
+        return response()->json([
+            'draw' => intval($request->input('draw')),
+            'recordsTotal' => 0,
+            'recordsFiltered' => 0,
+            'code' => 200,
+            'data' => []
+        ]);
+    }
+}
+
 
         $search = $request->input('search.value');
         /* $totalData = BitacoraMezcal::count(); */
@@ -108,7 +121,12 @@ class BitacoraMezcalController extends Controller
                 $query->whereIn('id_empresa', $idsEmpresas);
             }
             //Filtro por instalaciones del usuario
-            if (!empty($instalacionAuth)) {
+          /*   if (!empty($instalacionAuth)) {
+                $query->whereIn('id_instalacion', $instalacionAuth);
+            } */
+
+                // Filtro por instalaciones solo si el usuario es tipo 3
+            if (Auth::check() && Auth::user()->tipo == 3 && !empty($instalacionAuth)) {
                 $query->whereIn('id_instalacion', $instalacionAuth);
             }
 
@@ -296,10 +314,17 @@ public function PDFBitacoraMezcal(Request $request)
     return $pdf->stream('Bitácora Mezcal a Granel.pdf');*/
     $user = Auth::user();
 
+        // Si el usuario tiene varias instalaciones, aquí las tienes como array
+    $idsInstalaciones = $user->id_instalacion ?? [];
+    if ($user->tipo === 3 && empty($idsInstalaciones)) {
+        return response()->json([
+            'message' => 'El usuario no tiene instalaciones asignadas.'
+        ], 403);
+    }
     // Empresa seleccionada desde query
     $empresaId = $request->query('empresa');
-    $empresaSeleccionada = $empresaId 
-        ? Empresa::with('empresaNumClientes')->find($empresaId) 
+    $empresaSeleccionada = $empresaId
+        ? Empresa::with('empresaNumClientes')->find($empresaId)
         : null;
 
     // Instalaciones del usuario (array por el cast en el modelo)

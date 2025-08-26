@@ -44,6 +44,7 @@ $(function () {
         { data: null }, // 0 -> # (control o vacío)
         { data: 'fake_id' }, // 1 -> ID
         { data: 'razon_social' }, // 2 -> Cliente (campo directo)
+        {data: 'instalacion'}, // 2.1 -> Instalación (relación)
         { data: null }, // 3 -> Datos Iniciales (fecha + lote)
         { data: null }, // 4 -> Entradas
         { data: null }, // 5 -> Salidas
@@ -81,6 +82,14 @@ $(function () {
         {
           targets: 3,
           responsivePriority: 1,
+          render: function (data, type, full) {
+            var $instalacion = full['instalacion'] ?? 'N/A';
+            return `<span>${$instalacion}</span>`;
+          }
+        },
+        {
+          targets: 4,
+          responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $volumen_inicial = full['volumen_inicial'] ?? 'N/A';
             var $alcohol_inicial = full['alcohol_inicial'] ?? 'N/A';
@@ -101,7 +110,7 @@ $(function () {
           }
         },
         {
-          targets: 4,
+          targets: 5,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $procedencia_entrada = full['procedencia_entrada'] ?? 'N/A';
@@ -131,7 +140,7 @@ $(function () {
         },
         ////salidas
         {
-          targets: 5,
+          targets: 6,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $volumen_salidas = full['volumen_salidas'] ?? 'N/A';
@@ -159,7 +168,7 @@ $(function () {
           }
         },
         {
-          targets: 6,
+          targets: 7,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $volumen_final = full['volumen_final'] ?? 'N/A';
@@ -183,7 +192,7 @@ $(function () {
           }
         },
         {
-          targets: 7,
+          targets: 8,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $estatus = full['id_firmante'] ?? null;
@@ -201,7 +210,7 @@ $(function () {
         },
         {
           // Actions
-          targets: 8,
+          targets: 9,
           title: 'Acciones',
           searchable: false,
           orderable: false,

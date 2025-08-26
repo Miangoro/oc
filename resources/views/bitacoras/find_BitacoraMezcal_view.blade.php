@@ -28,11 +28,27 @@
       window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar bitácoras'));
       window.puedeFirmarElUsuario = @json(auth()->user()->can('Firmar bitácoras'));
       window.adminBitacoras = @json(auth()->user()->can('Admin bitácoras'));
-      window.tipoUsuario = {{ auth()->user()->tipo }};
+     /*  window.tipoUsuario = {{ auth()->user()->tipo }}; */
+     window.tipoUsuario = {{ (int) auth()->user()->tipo }};
+
         const opcionesEmpresas = `{!! collect($empresas)->map(function ($e) {
                 $num = $e->empresaNumClientes[0]->numero_cliente ?? ($e->empresaNumClientes[1]->numero_cliente ?? '');
                 return "<option value='{$e->id_empresa}'>{$num} | {$e->razon_social}</option>";
             })->implode('') !!}`;
+
+       window.opcionesInstalacionesAutenticadas = `
+  @forelse($instalacionesUsuario as $inst)
+      @php
+          $ids = is_array($inst->id_instalacion) ? $inst->id_instalacion : [$inst->id_instalacion];
+      @endphp
+      @foreach($ids as $idInst)
+          <option value="{{ $idInst }}">{{ $inst->tipo }} | {{ $inst->direccion_completa }}</option>
+      @endforeach
+  @empty
+      <option value="">Sin instalaciones asignadas</option>
+  @endforelse
+`;
+
     </script>
     @vite(['resources/js/bitacora_mezcal.js'])
 @endsection
