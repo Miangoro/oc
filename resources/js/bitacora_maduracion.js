@@ -426,6 +426,7 @@ $(function () {
     $('#filtroEmpresa').on('change', cargarInstalaciones);
   });
 
+
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   $(document).on('click', '#verBitacoraBtn', function () {
     const empresaId = $('#filtroEmpresa').val();

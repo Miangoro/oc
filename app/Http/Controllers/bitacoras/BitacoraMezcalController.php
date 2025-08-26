@@ -8,6 +8,7 @@ use App\Models\LotesGranel;
 use App\Models\BitacoraMezcal;
 use App\Models\empresa;
 use App\Models\maquiladores_model;
+use App\Models\instalaciones;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Log;
@@ -45,8 +46,9 @@ class BitacoraMezcalController extends Controller
                       ->get();
               }
       $tipo_usuario =  Auth::user()->tipo;
-        $instalacionesUsuario = Auth::user()->instalaciones ?? [];
-        return view('bitacoras.find_BitacoraMezcal_view', compact('bitacora', 'empresas', 'tipo_usuario', 'instalacionesUsuario'));
+        $instalacionesIds = Auth::user()->id_instalacion ?? [];
+         $instalacionesUsuario = instalaciones::whereIn('id_instalacion', $instalacionesIds)->get();
+        return view('bitacoras.find_BitacoraMezcal_view', compact('bitacora', 'empresas', 'tipo_usuario', 'instalacionesIds','instalacionesUsuario'));
 
     }
 
