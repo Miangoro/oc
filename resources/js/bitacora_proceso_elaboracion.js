@@ -989,6 +989,7 @@ $(function () {
             // Cargar campos simples
             $('#edit_fecha_ingreso').val(bitacora.fecha_ingreso);
             $('#edit_id_empresa').val(bitacora.id_empresa).trigger('change');
+            $('#edit_id_instalacion').data('selected', bitacora.id_instalacion);
             $('#edit_lote_granel').val(bitacora.lote_granel);
             $('#edit_numero_tapada').val(bitacora.numero_tapada);
             $('#edit_numero_guia').val(bitacora.numero_guia);
