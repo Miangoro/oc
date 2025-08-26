@@ -19,7 +19,7 @@
                                 <!-- GENERALES -->
                                 <input type="hidden" name="id" id="edit_bitacora_id">
                                 <div class="row">
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-1 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control datepicker"
                                                 id="edit_fecha_ingreso" name="fecha_ingreso"
@@ -45,14 +45,22 @@
                                             <label for="id_empresa" class="form-label">Cliente</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                     <div class="col-md-4 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <select id="edit_id_instalacion" name="id_instalacion" class="select2 form-select">
+                                            <option value="" disabled selected>Seleccione una instalación</option>
+                                            </select>
+                                            <label for="id_instalacion" class="form-label">Selecciona la instalación</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="edit_lote_granel"
                                                 name="lote_granel" placeholder="Lote a granel">
                                             <label for="lote_granel">Lote a granel</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-2 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="edit_numero_tapada"
                                                 name="numero_tapada" placeholder="Nº de tapada">

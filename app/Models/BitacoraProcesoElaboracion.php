@@ -13,6 +13,7 @@ class BitacoraProcesoElaboracion extends Model
     protected $fillable = [
         'fecha_ingreso',
         'id_empresa',
+        'id_instalacion',
         'lote_granel',
         'numero_tapada',
         'numero_guia',

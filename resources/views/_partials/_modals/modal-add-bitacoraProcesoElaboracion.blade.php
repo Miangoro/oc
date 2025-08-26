@@ -20,7 +20,7 @@
 
                                 <!-- GENERALES -->
                                 <div class="row">
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-1 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control datepicker" id="fecha_ingreso"
                                                 name="fecha_ingreso" placeholder="Fecha de ingreso">
@@ -28,7 +28,8 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 mb-3">
-                                        <div class="form-floating form-floating-outline">
+                                        <div class="form-floating form-floating-outline"
+                                            onchange="cargarInstalaciones();">
                                             <select id="id_empresa" name="id_empresa" class="select2 form-select">
                                                 @if ($tipo_usuario != 3)
                                                     <option value="" disabled selected>Selecciona el cliente
@@ -44,14 +45,26 @@
                                             <label for="id_empresa" class="form-label">Cliente</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <select id="id_instalacion" name="id_instalacion"
+                                                class="select2 form-select">
+                                                <option value="" disabled selected>Seleccione una instalación
+                                                </option>
+                                            </select>
+                                            <label for="id_instalacion" class="form-label">Selecciona la
+                                                instalación</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="lote_granel"
                                                 name="lote_granel" placeholder="Lote a granel">
                                             <label for="lote_granel">Lote a granel</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 mb-3">
+                                    <div class="col-md-2 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="numero_tapada"
                                                 name="numero_tapada" placeholder="Nº de tapada">
@@ -88,7 +101,7 @@
                                                                     name="numero_guia" placeholder="N° de guía"></span>
                                                         </td>
                                                         <td> {{-- <span class="position-relative d-block mb-1"> --}}
-                                                                <div class="form-floating form-floating-outline mb-4">
+                                                            <div class="form-floating form-floating-outline mb-4">
                                                                 <select id="tipo_agave" name="id_tipo[]"
                                                                     class="select2 form-select mb-4" multiple>
                                                                     @foreach ($tipos as $tipo)
@@ -386,16 +399,19 @@
                                             <tr>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
-                                                        <input type="number" step="0.01" class="form-control bg-light"
+                                                        <input type="number" step="0.01"
+                                                            class="form-control bg-light"
                                                             name="volumen_total_formulado"
-                                                            id="volumen_total_formulado" style="pointer-events: none;" readonly placeholder="Vol.">
+                                                            id="volumen_total_formulado" style="pointer-events: none;"
+                                                            readonly placeholder="Vol.">
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
-                                                        <input type="number" step="0.01" class="form-control bg-light"
-                                                            readonly style="pointer-events: none;" name="puntas_volumen" id="puntas_volumen"
-                                                            placeholder="Vol.">
+                                                        <input type="number" step="0.01"
+                                                            class="form-control bg-light" readonly
+                                                            style="pointer-events: none;" name="puntas_volumen"
+                                                            id="puntas_volumen" placeholder="Vol.">
                                                     </span>
                                                 </td>
                                                 <td>
@@ -407,9 +423,10 @@
                                                 </td>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
-                                                        <input type="number" step="0.01" class="form-control bg-light"
-                                                            readonly style="pointer-events: none;" name="mezcal_volumen" id="mezcal_volumen"
-                                                            placeholder="Vol.">
+                                                        <input type="number" step="0.01"
+                                                            class="form-control bg-light" readonly
+                                                            style="pointer-events: none;" name="mezcal_volumen"
+                                                            id="mezcal_volumen" placeholder="Vol.">
                                                     </span>
                                                 </td>
                                                 <td>
@@ -421,9 +438,10 @@
                                                 </td>
                                                 <td>
                                                     <span class="position-relative d-block mb-1">
-                                                        <input type="number" step="0.01" class="form-control bg-light"
-                                                            readonly style="pointer-events: none;" name="colas_volumen" id="colas_volumen"
-                                                            placeholder="Vol.">
+                                                        <input type="number" step="0.01"
+                                                            class="form-control bg-light" readonly
+                                                            style="pointer-events: none;" name="colas_volumen"
+                                                            id="colas_volumen" placeholder="Vol.">
                                                     </span>
                                                 </td>
                                                 <td>
@@ -467,4 +485,42 @@
     </div>
 </div>
 
-<script></script>
+<script>
+    function cargarInstalaciones() {
+        var empresa = $("#id_empresa").val();
+        if (empresa !== "" && empresa !== null && empresa !== undefined) {
+            $.ajax({
+                url: '/getDatos/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    var contenido =
+                    '<option value="" disabled selected>Seleccione una instalación</option>';
+
+                    for (let index = 0; index < response.instalaciones.length; index++) {
+                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+
+                        contenido += '<option value="' + response.instalaciones[index].id_instalacion +
+                            '">' + tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                            '</option>';
+                    }
+
+                    if (response.instalaciones.length == 0) {
+                        contenido = '<option value="">Sin instalaciones registradas</option>';
+                    }
+
+                    $('#id_instalacion').html(contenido);
+                },
+                error: function() {}
+            });
+        }
+    }
+
+
+    function limpiarTipo(tipo) {
+        try {
+            return JSON.parse(tipo).join(', ');
+        } catch (e) {
+            return tipo;
+        }
+    }
+</script>

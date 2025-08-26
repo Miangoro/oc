@@ -294,6 +294,7 @@ class BitacoraProcesoElaboracionController extends Controller
           $request->validate([
               'fecha_ingreso'           => 'required|date',
               'id_empresa'              => 'required|integer|exists:empresa,id_empresa',
+              'id_instalacion'        => 'nullable|integer|exists:instalaciones,id_instalacion',
               'lote_granel'             => 'required|string|max:100',
               'numero_tapada'           => 'required|string|max:100',
               'numero_guia'             => 'required|string|max:100',
@@ -341,6 +342,7 @@ class BitacoraProcesoElaboracionController extends Controller
               $bitacora = BitacoraProcesoElaboracion::create([
                   'fecha_ingreso'            => $request->fecha_ingreso,
                   'id_empresa'               => $request->id_empresa,
+                  'id_instalacion'         => $request->id_instalacion ?? 0,
                   'lote_granel'              => $request->lote_granel,
                   'numero_tapada'            => $request->numero_tapada,
                   'numero_guia'              => $request->numero_guia,
@@ -415,6 +417,7 @@ class BitacoraProcesoElaboracionController extends Controller
                         'id'                     => $bitacora->id,
                         'fecha_ingreso'          => $bitacora->fecha_ingreso,
                         'id_empresa'             => $bitacora->id_empresa,
+                        'id_instalacion'         => $bitacora->id_instalacion,
                         'lote_granel'            => $bitacora->lote_granel,
                         'numero_tapada'          => $bitacora->numero_tapada,
                         'numero_guia'            => $bitacora->numero_guia,
@@ -515,6 +518,7 @@ class BitacoraProcesoElaboracionController extends Controller
           $request->validate([
               'fecha_ingreso'           => 'required|date',
               'id_empresa'              => 'required|integer|exists:empresa,id_empresa',
+              'id_instalacion'        => 'nullable|integer|exists:instalaciones,id_instalacion',
               'lote_granel'             => 'required|string|max:100',
               'numero_tapada'           => 'required|string|max:100',
               'numero_guia'             => 'required|string|max:100',
@@ -565,6 +569,7 @@ class BitacoraProcesoElaboracionController extends Controller
               $bitacora->update([
                   'fecha_ingreso'            => $request->fecha_ingreso,
                   'id_empresa'               => $request->id_empresa,
+                  'id_instalacion'         => $request->id_instalacion ?? 0,
                   'lote_granel'              => $request->lote_granel,
                   'numero_tapada'            => $request->numero_tapada,
                   'numero_guia'              => $request->numero_guia,
