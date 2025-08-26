@@ -37,6 +37,7 @@ $(function () {
         { data: '' }, // Responsive control
         { data: 'fake_id', title: '#' },
         { data: 'fecha_ingreso', title: 'Fecha ingreso' },
+        { data: 'instalacion' },
         { data: 'cliente', title: 'Cliente' },
         { data: 'numero_tapada', title: 'N° tapada' },
         { data: 'lote_granel', title: 'Lote granel' },

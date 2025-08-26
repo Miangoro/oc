@@ -53,6 +53,7 @@
                         <th></th> {{-- Responsive control --}}
                         <th>#</th>
                         <th>Fecha ingreso</th>
+                        <th>Instalación</th>
                         <th>Cliente</th>
                         <th>N° Tapada</th>
                         <th>Lote Granel</th>

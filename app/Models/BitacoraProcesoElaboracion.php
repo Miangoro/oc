@@ -42,6 +42,10 @@ class BitacoraProcesoElaboracion extends Model
     {
         return $this->belongsTo(empresa::class, 'id_empresa');
     }
+     public function instalacion()
+    {
+        return $this->belongsTo(instalaciones::class, 'id_instalacion');
+    }
     public function firmante()
     {
         return $this->belongsTo(User::class, 'id_firmante');

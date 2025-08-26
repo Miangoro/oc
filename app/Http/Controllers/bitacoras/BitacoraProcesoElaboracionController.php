@@ -213,6 +213,7 @@ class BitacoraProcesoElaboracionController extends Controller
               $nestedData['nombre_cliente'] = $bitacora->empresaBitacora->razon_social ?? 'Sin razón social';
               $nestedData['cliente'] = '<b>' . $numeroCliente . '</b><br>' . $razonSocial ?? 'N/A';
               $nestedData['id_empresa'] = $bitacora->id_empresa ?? 'N/A';
+              $nestedData['instalacion'] = $bitacora->instalacion->direccion_completa ?? 'N/A';
               $nestedData['numero_tapada'] = $bitacora->numero_tapada ?? 'N/A';
               $nestedData['lote_granel'] = $bitacora->lote_granel ?? 'N/A';
               $nestedData['id_firmante'] = $bitacora->id_firmante ?? 'N/A';
