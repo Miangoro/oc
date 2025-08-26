@@ -353,8 +353,37 @@ class getFuncionesController extends Controller
         }
 
 
-        $urls_certificados = collect();
+        // Obtener número de cliente para LOTE GRANEL
+        $numero_cliente_granel = 'N/A';
+        /*if ($solicitud->empresa && $solicitud->empresa->empresaNumClientes->isNotEmpty()) {
+            $cliente = $solicitud->empresa->empresaNumClientes
+                ->first(fn($item) => !empty($item->numero_cliente));
+            $numero_cliente = $cliente?->numero_cliente ?? 'No encontrado';
+        }
+        foreach ($certificados as $certificado) {
+            $numero_cliente_granel = empresa::where('id_empresa', $certificado->loteGranel->empresa->empresaNumClientes);
 
+            if ($numero_cliente_granel) {
+                $lote_gra = LotesGranel::find($idLote)->value('id_empresa');
+
+                $numero_cliente_granel = empresa::where('id_empresa', $lote_gra->empresa->empresaNumClientes);
+            }
+        }*/
+            foreach ($certificados as $certificado) {
+                $empresa = $certificado->loteGranel?->empresa;
+
+                if ($empresa && $empresa->empresaNumClientes->isNotEmpty()) {
+                    $cliente = $empresa->empresaNumClientes
+                        ->first(fn($item) => !empty($item->numero_cliente));
+
+                    $numero_cliente_granel = $cliente?->numero_cliente ?? 'N/A';
+                    break; // si solo quieres el primero válido, salimos
+                }
+            }
+
+
+        //CERTIFICADO GRANEL URL
+        $urls_certificados = collect();
         foreach ($certificados as $certificado) {
             $url = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)->where('id_doc', $certificado->id_certificado)
                 ->where('id_documento', 59)
@@ -374,8 +403,8 @@ class getFuncionesController extends Controller
                 }
         }
 
+        //FQ'S
         $fqs = collect();
-
         foreach ($certificados as $certificado) {
             $documentos2 = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
                 ->whereIn('id_documento', [58, 134])
@@ -407,7 +436,7 @@ class getFuncionesController extends Controller
             'data' => $documentos,
             'numero_cliente' => $numero_cliente,
             'fqs' => $fqs,
-            'numero_cliente_lote' =>  $numero_cliente, //$solicitud->lote_granel?->empresa?->empresaNumClientes
+            'numero_cliente_lote' =>  $numero_cliente_granel, //$solicitud->lote_granel?->empresa?->empresaNumClientes
                 //->first(fn($item) => !empty($item->numero_cliente))
                 //?->numero_cliente ?? 'N/A',
             'url_etiqueta' => $url_etiqueta ?? '',
