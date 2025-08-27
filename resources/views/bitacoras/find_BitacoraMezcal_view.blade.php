@@ -43,14 +43,17 @@ function limpiarTipoPHP($tipo) {
 
 
 
-         window.opcionesInstalacionesAutenticadas = `
-    @forelse($instalacionesUsuario as $inst)
-        <option value="">-- Todas las Instalaciones --</option>
-        <option value="{{ $inst->id_instalacion }}">{{ limpiarTipoPHP($inst->tipo) }} | {{ $inst->direccion_completa }}</option>
-    @empty
-        <option value="">Sin instalaciones asignadas</option>
-    @endforelse
-    `;
+       window.opcionesInstalacionesAutenticadas = `
+<option value="" selected>-- Selecciona la instalación --</option>
+@forelse($instalacionesUsuario as $inst)
+    <option value="{{ $inst->id_instalacion }}">
+        {{ limpiarTipoPHP($inst->tipo) }} | {{ $inst->direccion_completa }}
+    </option>
+@empty
+    <option value="">Sin instalaciones asignadas</option>
+@endforelse
+`;
+
 
     </script>
     @vite(['resources/js/bitacora_mezcal.js'])
