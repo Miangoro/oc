@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\LotesGranel;
 use App\Models\empresa;
 use App\Models\maquiladores_model;
+use App\Models\instalaciones;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Log;
@@ -39,8 +40,9 @@ class BitacoraProductoMaduracionController extends Controller
             }
 
       $tipo_usuario =  Auth::user()->tipo;
-
-        return view('bitacoras.BitacoraProductoMaduracion_view', compact('bitacora', 'empresas', 'tipo_usuario'));
+       $instalacionesIds = Auth::user()->id_instalacion ?? [];
+         $instalacionesUsuario = instalaciones::whereIn('id_instalacion', $instalacionesIds)->get();
+        return view('bitacoras.BitacoraProductoMaduracion_view', compact('bitacora', 'empresas', 'tipo_usuario', 'instalacionesIds','instalacionesUsuario'));
     }
 
     private function obtenerEmpresasVisibles($empresaIdAut, $empresaId)
@@ -65,6 +67,7 @@ class BitacoraProductoMaduracionController extends Controller
 public function index(Request $request)
 {
     $empresaId = $request->input('empresa');
+    $instalacionId = $request->input('instalacion');
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
 
     $columns = [
@@ -124,7 +127,31 @@ public function index(Request $request)
         $query->whereIn('id_instalacion', $idsInstalaciones);
     }
 
+ if ($empresaId) {
+              $empresa = empresa::find($empresaId);
 
+              if ($empresa) {
+                  // Buscar maquiladores hijos en la tabla intermedia
+                  $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
+                  ->pluck('id_maquilador')
+                  ->toArray();
+
+
+                  // Si tiene hijos, se asume maquiladora
+                  if (count($idsMaquiladores)) {
+                      $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
+                  } else {
+                      // Sin hijos, solo su propio ID
+                      $idsEmpresas = [$empresaId];
+                  }
+
+                  $query->whereIn('id_empresa', $idsEmpresas);
+
+                  if ($instalacionId) {
+                      $query->where('id_instalacion', $instalacionId);
+                  }
+              }
+          }
     // --- FILTRO DE BUSQUEDA ---
     $filteredQuery = clone $query;
     if (!empty($search)) {

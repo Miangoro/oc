@@ -7,6 +7,7 @@ use App\Models\BitacoraProcesoElaboracion;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\LotesGranel;
+use App\Models\instalaciones;
 use App\Models\empresa;
 use App\Models\BitacoraProcesoMoliendaDestilacion;
 use App\Models\BitacoraProcesoSegundaDestilacion;
@@ -37,13 +38,15 @@ class BitacoraProcesoElaboracionController extends Controller
           }
       $tipos = tipos::all(); // Obtén todos los tipos de agave
       $tipo_usuario =  Auth::user()->tipo;
-      return view('bitacoras.BitacoraProcesoElaboracion_view', compact('bitacora', 'empresas', 'tipo_usuario', 'tipos'));
+      $instalacionesIds = Auth::user()->id_instalacion ?? [];
+      $instalacionesUsuario = instalaciones::whereIn('id_instalacion', $instalacionesIds)->get();
+      return view('bitacoras.BitacoraProcesoElaboracion_view', compact('bitacora', 'empresas', 'tipo_usuario', 'tipos',  'instalacionesIds','instalacionesUsuario'));
   }
 
   public function index(Request $request)
   {
       $empresaId = $request->input('empresa');
-
+      $instalacionId = $request->input('instalacion');
       DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
         $columns = [                     // id oculto o de control
             1 => 'id',
@@ -62,7 +65,22 @@ class BitacoraProcesoElaboracionController extends Controller
           if (Auth::check() && Auth::user()->tipo == 3) {
               $empresaIdAut = Auth::user()->empresa?->id_empresa;
           }
+          $instalacionAuth = [];
+            if (Auth::check() && Auth::user()->tipo == 3) {
+                $instalacionAuth = (array) Auth::user()->id_instalacion; // cast a array
+                $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
 
+                // Si el usuario tipo 3 no tiene instalaciones, devolver vacío
+                if (empty($instalacionAuth)) {
+                    return response()->json([
+                        'draw' => intval($request->input('draw')),
+                        'recordsTotal' => 0,
+                        'recordsFiltered' => 0,
+                        'code' => 200,
+                        'data' => []
+                    ]);
+                }
+           }
       $search = $request->input('search.value'); // <-- aquí viene el valor del campo de búsqueda de DataTables
       $totalData = BitacoraProcesoElaboracion::count(); // Cambiado por el modelo correcto
       $totalFiltered = $totalData;
@@ -76,6 +94,9 @@ class BitacoraProcesoElaboracionController extends Controller
                   $query->where('id_empresa', $empresaIdAut);
               });
 
+if (Auth::check() && Auth::user()->tipo == 3 && !empty($instalacionAuth)) {
+                $query->whereIn('id_instalacion', $instalacionAuth);
+            }
         /* if ($empresaId) {
             $query->where('id_empresa', $empresaId);
         } */
@@ -94,6 +115,9 @@ class BitacoraProcesoElaboracionController extends Controller
                       $idsEmpresas = [$empresaId];
                   }
                   $query->whereIn('id_empresa', $idsEmpresas);
+                  if ($instalacionId) {
+                      $query->where('id_instalacion', $instalacionId);
+                  }
               }
           }
 

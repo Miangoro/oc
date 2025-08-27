@@ -13,6 +13,7 @@ use App\Models\categorias;
 use App\Models\BitacoraProductoTerminado;
 use App\Models\empresa;
 use App\Models\maquiladores_model;
+use App\Models\instalaciones;
 use Carbon\Carbon;
 use App\Models\tipos;
 use App\Helpers\Helpers;
@@ -56,7 +57,9 @@ class BitacoraPTComController extends Controller
         $clases = clases::all();
         $marcas = marcas::all();
         $categorias = categorias::all();
-        return view('bitacoras.BitacoraProductoTerminadoCom_view', compact('bitacora', 'empresas', 'tipo_usuario', 'tipos', 'clases', 'marcas', 'categorias'));
+      $instalacionesIds = Auth::user()->id_instalacion ?? [];
+      $instalacionesUsuario = instalaciones::whereIn('id_instalacion', $instalacionesIds)->get();
+        return view('bitacoras.BitacoraProductoTerminadoCom_view', compact('bitacora', 'empresas', 'tipo_usuario', 'tipos', 'clases', 'marcas', 'categorias',  'instalacionesIds','instalacionesUsuario'));
 
     }
 
@@ -84,7 +87,7 @@ class BitacoraPTComController extends Controller
     public function index(Request $request)
     {
       $empresaId = $request->input('empresa');
-
+      $instalacionId = $request->input('instalacion');
       DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
 
         $columns = [
@@ -97,7 +100,22 @@ class BitacoraPTComController extends Controller
           if (Auth::check() && Auth::user()->tipo == 3) {
               $empresaIdAut = Auth::user()->empresa?->id_empresa;
           }
+        $instalacionAuth = [];
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $instalacionAuth = (array) Auth::user()->id_instalacion; // cast a array
+            $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
 
+            // Si el usuario tipo 3 no tiene instalaciones, devolver vacío
+            if (empty($instalacionAuth)) {
+                return response()->json([
+                    'draw' => intval($request->input('draw')),
+                    'recordsTotal' => 0,
+                    'recordsFiltered' => 0,
+                    'code' => 200,
+                    'data' => []
+                ]);
+            }
+        }
         $search = $request->input('search.value');
         /* $totalData = BitacoraProductoTerminado::count(); */
         $totalData = BitacoraProductoTerminado::where('tipo', 3)->count();
@@ -114,7 +132,15 @@ class BitacoraPTComController extends Controller
             if (count($idsEmpresas)) {
                 $query->whereIn('id_empresa', $idsEmpresas);
             }
-
+ if (Auth::check() && Auth::user()->tipo == 3 && !empty($instalacionAuth)) {
+            $query->whereIn('id_instalacion', $instalacionAuth);
+        }
+        if ($empresaId) {
+            $query->where('id_empresa', $empresaId);
+        }
+       if ($instalacionId) {
+          $query->where('id_instalacion', $instalacionId);
+        }
 /*         $query = BitacoraProductoTerminado::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
                   $query->where('id_empresa', $empresaIdAut);
               })->where('tipo', 3);

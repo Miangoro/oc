@@ -31,6 +31,7 @@ $(function () {
         url: baseUrl + 'bitacoraProcesoElaboracion-list',
         data: function (d) {
           d.empresa = $('#filtroEmpresa').val();
+          d.instalacion = $('#filtroInstalacion').val();
         }
       },
       columns: [
@@ -189,6 +190,26 @@ $(function () {
             $(node).find('select').select2();
           }
         },
+         {
+          className: 'dt-custom-select p-0 me-2 btn-outline-dark form-select-sm',
+          text: '',
+          init: function (api, node) {
+            $(node).removeClass('btn btn-secondary');
+
+            // Si usuario tipo 3 y tiene instalaciones, usar las precargadas
+            let htmlOpciones = window.tipoUsuario === 3
+              ? window.opcionesInstalacionesAutenticadas
+              : '<option value="">-- Todas las Instalaciones --</option>';
+
+            $(node).html(`
+              <select id="filtroInstalacion" class="form-select select2" style="min-width: 280px;">
+                ${htmlOpciones}
+              </select>
+            `);
+
+            $(node).find('select').select2();
+          }
+        },
         {
           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar Bitácora</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
@@ -241,7 +262,7 @@ $(function () {
           dropdownParent: $(document.body)
         });
         // Opcional: recargar tabla al cambiar filtros
-        $('#filtroEmpresa').on('change', function () {
+        $('#filtroEmpresa, #filtroInstalacion').on('change', function () {
           dt_user.ajax.reload();
         });
       }
@@ -290,13 +311,51 @@ $(function () {
   initializeSelect2($('.select2'));
  */
 
-  /*   $(document).on('select2:select', '#filtroEmpresa', function (e) {
+    $(document).on('select2:select', '#filtroEmpresa', function (e) {
     const selectedText = $(this).find('option:selected').text();
     $('#filtroEmpresa').next('.select2-container').find('.select2-selection__rendered').attr('title', selectedText);
-  }); */
-  /*     $('#filtroEmpresa').on('change', function () {
+  });
+      $('#filtroEmpresa, #filtroInstalacion').on('change', function () {
     $('.datatables-users').DataTable().ajax.reload();
-  }); */
+  });
+$(document).ready(function () {
+  function cargarInstalaciones() {
+    // Si es usuario tipo 3, usar instalaciones precargadas
+    if (window.tipoUsuario === 3) {
+      $('#filtroInstalacion').html(window.opcionesInstalacionesAutenticadas).trigger('change');
+      return;
+    }
+
+    let empresaId = $('#filtroEmpresa').val();
+    if (!empresaId) {
+      $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
+      return;
+    }
+
+    $.ajax({
+      url: '/getDatos/' + empresaId,
+      method: 'GET',
+      success: function (response) {
+        let opciones = '<option value="">-- Todas las Instalaciones --</option>';
+        if (response.instalaciones.length > 0) {
+          response.instalaciones.forEach(function (inst) {
+            let tipoLimpio = limpiarTipo(inst.tipo);
+            opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
+          });
+        } else {
+          opciones += '<option value="">Sin instalaciones registradas</option>';
+        }
+        $('#filtroInstalacion').html(opciones).trigger('change');
+      },
+      error: function () {
+        $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+      }
+    });
+  }
+
+  cargarInstalaciones();
+  $('#filtroEmpresa').on('change', cargarInstalaciones);
+});
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   /*   $(document).on('click', '.verBitacoraBtn', function () {

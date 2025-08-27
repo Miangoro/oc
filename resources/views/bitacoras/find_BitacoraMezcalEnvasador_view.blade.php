@@ -21,7 +21,12 @@
 @section('vendor-script')
     @vite(['resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js'])
 @endsection
-
+@php
+function limpiarTipoPHP($tipo) {
+    $decoded = json_decode($tipo, true);
+    return is_array($decoded) ? implode(', ', $decoded) : $tipo;
+}
+@endphp
 @section('page-script')
     <script>
       window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar bitácoras'));
@@ -34,6 +39,16 @@
                 $num = $e->empresaNumClientes[0]->numero_cliente ?? ($e->empresaNumClientes[1]->numero_cliente ?? '');
                 return "<option value='{$e->id_empresa}'>{$num} | {$e->razon_social}</option>";
             })->implode('') !!}`;
+                   window.opcionesInstalacionesAutenticadas = `
+<option value="" selected>-- Selecciona la instalación --</option>
+@forelse($instalacionesUsuario as $inst)
+    <option value="{{ $inst->id_instalacion }}">
+        {{ limpiarTipoPHP($inst->tipo) }} | {{ $inst->direccion_completa }}
+    </option>
+@empty
+    <option value="">Sin instalaciones asignadas</option>
+@endforelse
+`;
     </script>
     @vite(['resources/js/bitacora_mezcal_envasador.js'])
 @endsection

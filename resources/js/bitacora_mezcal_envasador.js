@@ -298,6 +298,7 @@ $(function () {
         search: '',
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
+        emptyTable: 'No hay datos disponibles en la tabla',
         paginate: {
           sFirst: 'Primero',
           sLast: 'Último',
@@ -330,19 +331,26 @@ $(function () {
             $(node).find('select').select2();
           }
         },
-           {
+            {
           className: 'dt-custom-select p-0 me-2 btn-outline-dark form-select-sm',
           text: '',
           init: function (api, node) {
             $(node).removeClass('btn btn-secondary');
+
+            // Si usuario tipo 3 y tiene instalaciones, usar las precargadas
+            let htmlOpciones = window.tipoUsuario === 3
+              ? window.opcionesInstalacionesAutenticadas
+              : '<option value="">-- Todas las Instalaciones --</option>';
+
             $(node).html(`
               <select id="filtroInstalacion" class="form-select select2" style="min-width: 280px;">
-                <option value="">-- Todas las Instalaciones --</option>
+                ${htmlOpciones}
               </select>
             `);
+
             $(node).find('select').select2();
           }
-        }, 
+        },
         {
           text: '<i class="ri-eye-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Ver Bitácora</span>',
           className: 'btn btn-info waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4 mt-md-0',
@@ -429,43 +437,45 @@ $(function () {
     $('.datatables-users').DataTable().ajax.reload();
   });
 
-  $(document).ready(function () {
-    function cargarInstalaciones() {
-      let empresaId = $('#filtroEmpresa').val();
-
-      if (empresaId) {
-        $.ajax({
-          url: '/getDatos/' + empresaId,
-          method: 'GET',
-          success: function (response) {
-            let opciones = '<option value="">-- Todas las Instalaciones --</option>';
-
-            if (response.instalaciones.length > 0) {
-              response.instalaciones.forEach(function (inst) {
-                let tipoLimpio = limpiarTipo(inst.tipo);
-                opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
-              });
-            } else {
-              opciones += '<option value="">Sin instalaciones registradas</option>';
-            }
-
-            $('#filtroInstalacion').html(opciones).trigger('change');
-          },
-          error: function () {
-            $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
-          }
-        });
-      } else {
-        $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
-      }
+$(document).ready(function () {
+  function cargarInstalaciones() {
+    // Si es usuario tipo 3, usar instalaciones precargadas
+    if (window.tipoUsuario === 3) {
+      $('#filtroInstalacion').html(window.opcionesInstalacionesAutenticadas).trigger('change');
+      return;
     }
 
-    // Ejecutar al cargar la página
-    cargarInstalaciones();
+    let empresaId = $('#filtroEmpresa').val();
+    if (!empresaId) {
+      $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
+      return;
+    }
 
-    // Ejecutar cuando cambie el select
-    $('#filtroEmpresa').on('change', cargarInstalaciones);
-  });
+    $.ajax({
+      url: '/getDatos/' + empresaId,
+      method: 'GET',
+      success: function (response) {
+        let opciones = '<option value="">-- Todas las Instalaciones --</option>';
+        if (response.instalaciones.length > 0) {
+          response.instalaciones.forEach(function (inst) {
+            let tipoLimpio = limpiarTipo(inst.tipo);
+            opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
+          });
+        } else {
+          opciones += '<option value="">Sin instalaciones registradas</option>';
+        }
+        $('#filtroInstalacion').html(opciones).trigger('change');
+      },
+      error: function () {
+        $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+      }
+    });
+  }
+
+  cargarInstalaciones();
+  $('#filtroEmpresa').on('change', cargarInstalaciones);
+});
+
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   $(document).on('click', '#verBitacoraBtn', function () {

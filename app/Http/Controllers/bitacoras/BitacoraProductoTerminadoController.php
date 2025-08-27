@@ -11,6 +11,7 @@ use App\Models\clases;
 use App\Models\marcas;
 use App\Models\categorias;
 use App\Models\BitacoraProductoTerminado;
+use App\Models\instalaciones;
 use App\Models\empresa;
 use App\Models\maquiladores_model;
 use Carbon\Carbon;
@@ -56,7 +57,9 @@ class BitacoraProductoTerminadoController extends Controller
             $clases = clases::all();
             $marcas = marcas::all();
             $categorias = categorias::all();
-        return view('bitacoras.BitacoraProductoEnvasador_view', compact('bitacora', 'empresas', 'tipo_usuario', 'tipos', 'clases', 'marcas', 'categorias'));
+             $instalacionesIds = Auth::user()->id_instalacion ?? [];
+         $instalacionesUsuario = instalaciones::whereIn('id_instalacion', $instalacionesIds)->get();
+        return view('bitacoras.BitacoraProductoEnvasador_view', compact('bitacora', 'empresas', 'tipo_usuario', 'tipos', 'clases', 'marcas', 'categorias', 'instalacionesIds', 'instalacionesUsuario'));
 
     }
      private function obtenerEmpresasVisibles($empresaIdAut, $empresaId)
@@ -83,7 +86,7 @@ class BitacoraProductoTerminadoController extends Controller
     public function index(Request $request)
     {
       $empresaId = $request->input('empresa');
-
+      $instalacionId = $request->input('instalacion');
       DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
 
         $columns = [
@@ -96,6 +99,23 @@ class BitacoraProductoTerminadoController extends Controller
           if (Auth::check() && Auth::user()->tipo == 3) {
               $empresaIdAut = Auth::user()->empresa?->id_empresa;
           }
+
+          $instalacionAuth = [];
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $instalacionAuth = (array) Auth::user()->id_instalacion; // cast a array
+            $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
+
+            // Si el usuario tipo 3 no tiene instalaciones, devolver vacío
+            if (empty($instalacionAuth)) {
+                return response()->json([
+                    'draw' => intval($request->input('draw')),
+                    'recordsTotal' => 0,
+                    'recordsFiltered' => 0,
+                    'code' => 200,
+                    'data' => []
+                ]);
+            }
+        }
 
         $search = $request->input('search.value');
         /* $totalData = BitacoraProductoTerminado::count(); */
@@ -116,9 +136,17 @@ class BitacoraProductoTerminadoController extends Controller
                   $query->where('id_empresa', $empresaIdAut);
               })->where('tipo', 2);
  */
-        /* if ($empresaId) {
+         if (Auth::check() && Auth::user()->tipo == 3 && !empty($instalacionAuth)) {
+                $query->whereIn('id_instalacion', $instalacionAuth);
+            }
+
+        if ($empresaId) {
             $query->where('id_empresa', $empresaId);
-        } */
+        }
+
+        if ($instalacionId) {
+          $query->where('id_instalacion', $instalacionId);
+        }
          /* if ($empresaId) {
               $empresa = empresa::find($empresaId);
 

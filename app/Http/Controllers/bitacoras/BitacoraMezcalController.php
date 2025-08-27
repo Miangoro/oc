@@ -89,21 +89,21 @@ class BitacoraMezcalController extends Controller
           }
 
           $instalacionAuth = [];
-if (Auth::check() && Auth::user()->tipo == 3) {
-    $instalacionAuth = (array) Auth::user()->id_instalacion; // cast a array
-    $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $instalacionAuth = (array) Auth::user()->id_instalacion; // cast a array
+            $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
 
-    // Si el usuario tipo 3 no tiene instalaciones, devolver vacío
-    if (empty($instalacionAuth)) {
-        return response()->json([
-            'draw' => intval($request->input('draw')),
-            'recordsTotal' => 0,
-            'recordsFiltered' => 0,
-            'code' => 200,
-            'data' => []
-        ]);
-    }
-}
+            // Si el usuario tipo 3 no tiene instalaciones, devolver vacío
+            if (empty($instalacionAuth)) {
+                return response()->json([
+                    'draw' => intval($request->input('draw')),
+                    'recordsTotal' => 0,
+                    'recordsFiltered' => 0,
+                    'code' => 200,
+                    'data' => []
+                ]);
+            }
+        }
 
 
         $search = $request->input('search.value');

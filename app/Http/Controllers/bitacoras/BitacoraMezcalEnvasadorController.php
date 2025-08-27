@@ -8,6 +8,7 @@ use App\Models\LotesGranel;
 use App\Models\BitacoraMezcal;
 use App\Models\empresa;
 use App\Models\maquiladores_model;
+use App\Models\instalaciones;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Log;
@@ -46,7 +47,9 @@ class BitacoraMezcalEnvasadorController extends Controller
                       ->get();
               }
       $tipo_usuario =  Auth::user()->tipo;
-        return view('bitacoras.find_BitacoraMezcalEnvasador_view', compact('bitacora', 'empresas', 'tipo_usuario'));
+      $instalacionesIds = Auth::user()->id_instalacion ?? [];
+         $instalacionesUsuario = instalaciones::whereIn('id_instalacion', $instalacionesIds)->get();
+        return view('bitacoras.find_BitacoraMezcalEnvasador_view', compact('bitacora', 'empresas', 'tipo_usuario', 'instalacionesIds','instalacionesUsuario'));
     }
 
     private function obtenerEmpresasVisibles($empresaIdAut, $empresaId)
@@ -82,6 +85,23 @@ class BitacoraMezcalEnvasadorController extends Controller
           if (Auth::check() && Auth::user()->tipo == 3) {
               $empresaIdAut = Auth::user()->empresa?->id_empresa;
           }
+            $instalacionAuth = [];
+                if (Auth::check() && Auth::user()->tipo == 3) {
+                    $instalacionAuth = (array) Auth::user()->id_instalacion; // cast a array
+                    $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
+
+                    // Si el usuario tipo 3 no tiene instalaciones, devolver vacío
+                    if (empty($instalacionAuth)) {
+                        return response()->json([
+                            'draw' => intval($request->input('draw')),
+                            'recordsTotal' => 0,
+                            'recordsFiltered' => 0,
+                            'code' => 200,
+                            'data' => []
+                        ]);
+                    }
+                }
+
 
         $search = $request->input('search.value');
         /* $totalData = BitacoraMezcal::count(); */
@@ -109,6 +129,9 @@ class BitacoraMezcalEnvasadorController extends Controller
                 $query->where('id_instalacion', $instalacionId);
             }
         } */
+       if (Auth::check() && Auth::user()->tipo == 3 && !empty($instalacionAuth)) {
+                $query->whereIn('id_instalacion', $instalacionAuth);
+            }
          if ($empresaId) {
               $empresa = empresa::find($empresaId);
 
@@ -133,7 +156,7 @@ class BitacoraMezcalEnvasadorController extends Controller
                       $query->where('id_instalacion', $instalacionId);
                   }
               }
-          } 
+          }
          $filteredQuery = clone $query;
         if (!empty($search)) {
             $filteredQuery->where(function ($q) use ($search) {
