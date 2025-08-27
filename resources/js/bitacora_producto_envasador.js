@@ -1371,7 +1371,9 @@ $(document).ready(function () {
   $(document).ready(function () {
     // Al abrir el modal, cargar marcas para el cliente seleccionado
     $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
+      cargarInstalaciones();
       cargarMarcas();
+
     });
 
     // Al cambiar la empresa, recargar marcas

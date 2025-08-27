@@ -1474,5 +1474,23 @@ $(document).ready(function () {
     });
   });
 
+
+      $(document).ready(function () {
+    // Al abrir modal, disparas la carga inicial para el cliente seleccionado
+    $('#RegistrarBitacora').on('shown.bs.modal', function () {
+      var empresaSeleccionada = $('#id_empresa').val();
+      if (empresaSeleccionada) {
+        cargarInstalaciones(empresaSeleccionada);
+      } else {
+      }
+    });
+
+    // También cuando cambia el select
+    $('#id_empresa').on('change', function () {
+      var empresa = $(this).val();
+      cargarInstalaciones(empresa);
+    });
+  });
+
   /* fin chelo */
 });
