@@ -233,17 +233,16 @@
                       <label for="exampleFormControlTextarea1">Comentarios</label>
                     </div>
 
-
-
-
-
         </div>
         <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Valiar</button>
         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
       </form>
     </div>
   </div>
+
+
 </div>
+
 
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')

@@ -521,6 +521,8 @@ $(document).on('click', '.edit-record', function () {
   // clearing form data when offcanvas hidden
   offCanvasForm.on('hidden.bs.offcanvas', function () {
     fv.resetForm(true);
+
+    $('#addNewUserForm select').val(null).trigger('change');//Limpia selects del formulario
   });
 
   const phoneMaskList = document.querySelectorAll('.phone-mask');

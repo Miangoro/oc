@@ -605,8 +605,11 @@ $(function () {
     });
   }
 
-  //Agregar
-  $(function () {
+
+
+
+//AGREGAR CLIENTES CONFIRMADOS
+$(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
       headers: {
@@ -824,7 +827,8 @@ $(function () {
     $('#estado, #normas, #actividad').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
-  });
+});
+
 
 
 $(document).ready(function() {
@@ -882,8 +886,8 @@ $(document).ready(function() {
         }
     });
 };*/
-//Editar cliente confirmado
-  window.abrirModal = function(id_empresa) {
+///OBTENER REGISTRO DE CLIENTES CONFIRMADOS
+window.abrirModal = function(id_empresa) {
       $.ajax({
           url: '/edit_cliente_confirmado/' + id_empresa,
           method: 'GET',
@@ -916,15 +920,22 @@ $(document).ready(function() {
                   $('#es_maquilador').val(dato.es_maquilador);
 
                   maquilador(dato.es_maquilador);
-                  if (dato?.maquiladora?.id_maquiladora) {
+                  /*if (dato?.maquiladora?.id_maquiladora) {
                     $('#id_maquiladora').val(dato.maquiladora.id_maquiladora).trigger('change');
                   }else{
                     const firstOptionValue = $('#id_maquiladora option:first').val();
                     $('#id_maquiladora').val(firstOptionValue).trigger('change');
+                  }*/
+                  if (dato?.maquiladoras?.length > 0) {
+                      let maquiladorasIds = dato.maquiladoras.map(m => m.id_maquiladora);
+                      $('#id_maquiladora').val(maquiladorasIds).trigger('change');
+                  } else {
+                      $('#id_maquiladora').val([]).trigger('change');
                   }
 
-                  $('#estatus').val(dato.estatus).trigger('change');
 
+
+                  $('#estatus').val(dato.estatus).trigger('change');
 
 
                   $('#EditClientesConfirmados').modal('show');
@@ -941,9 +952,9 @@ $(document).ready(function() {
               alert(errorMsg);
           }
       });
-  };
-
-  $('#ClientesConfirmadosEditForm').on('submit', function(event) {
+};
+///EDITAR CLIENTES CONFIRMADOS
+$('#ClientesConfirmadosEditForm').on('submit', function(event) {
       event.preventDefault();
       var formData = $(this).serialize();
 
@@ -977,13 +988,14 @@ $(document).ready(function() {
               });
           }
       });
-  });
+});
    // Limpiar campos al cerrar el modal
-   $('#EditClientesConfirmados').on('hidden.bs.modal', function() {
+  $('#EditClientesConfirmados').on('hidden.bs.modal', function() {
     $('#ClientesConfirmadosEditForm')[0].reset();
-});
+  });
 });
 
 
-//end
-});
+
+
+});//end

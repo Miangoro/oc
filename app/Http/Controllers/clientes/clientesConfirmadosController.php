@@ -35,7 +35,12 @@ class clientesConfirmadosController extends Controller
         $fisicas = empresa::where('tipo', 2)->where('regimen', 'Persona física')->count();
         $morales = empresa::where('tipo', 2)->where('regimen', 'Persona moral')->count();
         //$usuarios = User::all();
-        $usuarios = User::where("tipo",1)->get();
+        //$usuarios = User::where("tipo",1)->get();
+        $usuarios = User::where('tipo', 1)
+            ->where('id', '!=', 1)
+            ->where('estatus', '!=', 'Inactivo')
+            ->get();
+
         $estados = estados::all(); // Obtener todos los estados
         $normas = normas_catalo::where('id_norma', '!=', 3)->get();
         $actividadesClientes = catalogo_actividad_cliente::all();
@@ -393,11 +398,15 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
 }
 
 
+
+///FUNCION EDITAR CLIENTES CONFIRMADOS
 public function edit_cliente_confirmado($id_empresa)
 {
-   
     try {
-        $empresa = empresa::with(['empresaNumClientes', 'catalogoActividades','maquiladora'])->where('id_empresa', $id_empresa)->get();
+        $empresa = empresa::with(['empresaNumClientes', 'catalogoActividades',
+            'maquiladora',  // relación 1 a 1
+            'maquiladoras'  // relación 1 a muchos
+        ])->where('id_empresa', $id_empresa)->get();
         if ($empresa->isEmpty()) {
             return response()->json(['error' => 'No se encontraron contratos para esta empresa.'], 404);
         }
@@ -406,7 +415,6 @@ public function edit_cliente_confirmado($id_empresa)
         return response()->json(['error' => 'Error al obtener los datos de esta empresa: ' . $e->getMessage()], 500);
     }
 }
-
 // -- Funciones para actualizar Cientes Confirmados -- //
 public function editar_cliente_confirmado(Request $request)
 {
@@ -451,7 +459,6 @@ public function editar_cliente_confirmado(Request $request)
       $cliente->save();
 
 
-
       // Obtener el id_empresa del cliente recién creado
       $id_empresa = $cliente->id_empresa;
 
@@ -481,22 +488,35 @@ public function editar_cliente_confirmado(Request $request)
           ]);
       }
 
-      if($validatedData['es_maquilador']=='Si'){
+
+        //si es maquilador
+        /*if($validatedData['es_maquilador']=='Si'){
+                maquiladores_model::where('id_maquilador', $id_empresa)->delete();
+                    maquiladores_model::create([
+                    'id_maquilador' => $id_empresa,
+                    'id_maquiladora' => $request->id_maquiladora,
+                ]);
+        }*/
+        if ($validatedData['es_maquilador'] == 'Si' && !empty($request->id_maquiladora)) {
+            // Borro las relaciones viejas
             maquiladores_model::where('id_maquilador', $id_empresa)->delete();
+
+            // Inserto todas las nuevas
+            foreach ($request->id_maquiladora as $id_maquiladora) {
                 maquiladores_model::create([
-                'id_maquilador' => $id_empresa,
-                'id_maquiladora' => $request->id_maquiladora,
-            ]);
-      }
+                    'id_maquilador'  => $id_empresa,
+                    'id_maquiladora' => $id_maquiladora,
+                ]);
+            }
+        }
+
       
-
-
-
       return response()->json([
           'success' => true,
           'message' => 'Cliente registrado exitosamente',
       ]);
-  }
+}
+
 
 
 //Función para eliminar CLIENTE
@@ -566,112 +586,120 @@ public function actualizarRegistros(Request $request)
 }
 
 
-    /* funcion para insertar datos */
-    public function registrarClientes(Request $request)
-    {
-        $validatedData = $request->validate([
-          'razon_social' => 'required|string|max:255',
-          'regimen' => 'required|string',
-          'domicilio_fiscal' => 'required|string|max:255',
-          'representante' => 'nullable|string|max:255',
-          'estado' => 'required|exists:estados,id',
-          'cp' => 'required|string|max:5',
-          'rfc' => 'required|string|max:13',
-          'correo' => 'required|string|max:255',
-          'telefono' => 'nullable|string|max:15',
-          'id_contacto' => 'required|exists:users,id',
-          'normas' => 'required|array',
-          'numeros_clientes' => 'required|array', // Asegúrate de que sea un array
-          'registro_productor' => 'max:5',
-            'convenio_corresp' => 'max:5',
-            'es_maquilador' => '',
-            'estatus' => ''
-        ]);
 
-        // Crear una nueva instancia del modelo Dictamen_Granel
-        $cliente = new empresa();
-        $cliente->razon_social = $validatedData['razon_social'];
-        $cliente->regimen = $validatedData['regimen'];
-        $cliente ->domicilio_fiscal = $validatedData['domicilio_fiscal'];
-        /* solamente es prueba  */
-        $cliente->representante = isset($validatedData['representante']) && !empty($validatedData['representante'])
+///FUNCION REGISTRAR CLIENTES CONFIRMADOS
+public function registrarClientes(Request $request)
+{
+    $validatedData = $request->validate([
+        'razon_social' => 'required|string|max:255',
+        'regimen' => 'required|string',
+        'domicilio_fiscal' => 'required|string|max:255',
+        'representante' => 'nullable|string|max:255',
+        'estado' => 'required|exists:estados,id',
+        'cp' => 'required|string|max:5',
+        'rfc' => 'required|string|max:13',
+        'correo' => 'required|string|max:255',
+        'telefono' => 'nullable|string|max:15',
+        'id_contacto' => 'required|exists:users,id',
+        'normas' => 'required|array',
+        'numeros_clientes' => 'required|array', // Asegúrate de que sea un array
+        'registro_productor' => 'max:5',
+        'convenio_corresp' => 'max:5',
+        'es_maquilador' => '',
+        'estatus' => ''
+    ]);
+
+    // Crear una nueva instancia del modelo Dictamen_Granel
+    $cliente = new empresa();
+    $cliente->razon_social = $validatedData['razon_social'];
+    $cliente->regimen = $validatedData['regimen'];
+    $cliente ->domicilio_fiscal = $validatedData['domicilio_fiscal'];
+    /* solamente es prueba  */
+    $cliente->representante = isset($validatedData['representante']) && !empty($validatedData['representante'])
         ? $validatedData['representante']
         : 'No aplica';
-        /*  */
-        $cliente->cp = $validatedData['cp'];
-        $cliente->estado = $validatedData['estado'];
-        $cliente->rfc = $validatedData['rfc'];
-        $cliente->correo = $validatedData['correo'];
-        $cliente->telefono = $validatedData['telefono'];
-        $cliente->id_contacto = $validatedData['id_contacto'];
-        $cliente->tipo = 2;
-        $cliente->registro_productor = $validatedData['registro_productor'];
-        $cliente->convenio_corresp = $validatedData['convenio_corresp'];
-        $cliente->es_maquilador = $validatedData['es_maquilador'];
-        $cliente->estatus = $validatedData['estatus'];
+    /*  */
+    $cliente->cp = $validatedData['cp'];
+    $cliente->estado = $validatedData['estado'];
+    $cliente->rfc = $validatedData['rfc'];
+    $cliente->correo = $validatedData['correo'];
+    $cliente->telefono = $validatedData['telefono'];
+    $cliente->id_contacto = $validatedData['id_contacto'];
+    $cliente->tipo = 2;
+    $cliente->registro_productor = $validatedData['registro_productor'];
+    $cliente->convenio_corresp = $validatedData['convenio_corresp'];
+    $cliente->es_maquilador = $validatedData['es_maquilador'];
+    $cliente->estatus = $validatedData['estatus'];
 
-        $cliente->save();
+    $cliente->save();
 
 
+    // Obtener el id_empresa del cliente recién creado
+    $id_empresa = $cliente->id_empresa;
 
-        // Obtener el id_empresa del cliente recién creado
-        $id_empresa = $cliente->id_empresa;
+    // 1. Registrar siempre la norma con id_norma = 3
+    $empresaNumCliente = new empresaNumCliente();
+    $empresaNumCliente->id_empresa = $id_empresa;
+    $empresaNumCliente->numero_cliente = null; // Número de cliente genérico o fijo para esta norma
+    $empresaNumCliente->id_norma = 3;
+    $empresaNumCliente->save();
 
-        // 1. Registrar siempre la norma con id_norma = 3
-        $empresaNumCliente = new empresaNumCliente();
-        $empresaNumCliente->id_empresa = $id_empresa;
-        $empresaNumCliente->numero_cliente = null; // Número de cliente genérico o fijo para esta norma
-        $empresaNumCliente->id_norma = 3;
-        $empresaNumCliente->save();
+    // 2. Registrar el resto de normas, omitiendo la norma con id_norma = 3
+    foreach ($validatedData['normas'] as $index => $id_norma) {
+        if ($id_norma != 3 && isset($validatedData['numeros_clientes'][$index])) {
+            $numero_cliente = $validatedData['numeros_clientes'][$index];
 
-        // 2. Registrar el resto de normas, omitiendo la norma con id_norma = 3
-        foreach ($validatedData['normas'] as $index => $id_norma) {
-            if ($id_norma != 3 && isset($validatedData['numeros_clientes'][$index])) {
-                $numero_cliente = $validatedData['numeros_clientes'][$index];
+            // Crear una nueva instancia del modelo empresaNumCliente para cada norma
+            $empresaNumCliente = new empresaNumCliente();
+            $empresaNumCliente->id_empresa = $id_empresa;
+            $empresaNumCliente->numero_cliente = $numero_cliente;
+            $empresaNumCliente->id_norma = $id_norma;
 
-                // Crear una nueva instancia del modelo empresaNumCliente para cada norma
-                $empresaNumCliente = new empresaNumCliente();
-                $empresaNumCliente->id_empresa = $id_empresa;
-                $empresaNumCliente->numero_cliente = $numero_cliente;
-                $empresaNumCliente->id_norma = $id_norma;
-
-                $empresaNumCliente->save();
-            }
+            $empresaNumCliente->save();
         }
-          // Registrar las actividades seleccionadas utilizando Eloquent
-          foreach ($request->actividad as $id_actividad) {
+    }
+        // Registrar las actividades seleccionadas utilizando Eloquent
+        foreach ($request->actividad as $id_actividad) {
             empresa_actividad::create([
                 'id_empresa' => $cliente->id_empresa,
                 'id_actividad' => $id_actividad,
             ]);
         }
 
-        if($validatedData['es_maquilador']=='Si'){
-                maquiladores_model::create([
-                'id_maquilador' => $id_empresa,
-                'id_maquiladora' => $request->id_maquiladora,
+    //si es maquilador
+    /*if($validatedData['es_maquilador']=='Si'){
+            maquiladores_model::create([
+            'id_maquilador' => $id_empresa,
+            'id_maquiladora' => $request->id_maquiladora,
+        ]);
+    }*/
+    if ($validatedData['es_maquilador'] == 'Si' && !empty($request->id_maquiladora)) {
+        foreach ($request->id_maquiladora as $id_maquiladora) {
+            maquiladores_model::create([
+                'id_maquilador'  => $id_empresa,
+                'id_maquiladora' => $id_maquiladora,
             ]);
         }
-
-
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
-
-        $data1 = [
-            'title' => 'Nuevo registro de cliente confirmado',
-            'message' => 'Se ha registrado un nuevo cliente confirmado  : ' . $cliente->razon_social . '.',
-            'url' => 'clientes-historial',
-        ];
-        foreach ($users as $user) {
-          $user->notify(new GeneralNotification($data1));
-      }
-
-
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Cliente registrado exitosamente',
-        ]);
     }
+
+
+    $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+    $data1 = [
+        'title' => 'Nuevo registro de cliente confirmado',
+        'message' => 'Se ha registrado un nuevo cliente confirmado  : ' . $cliente->razon_social . '.',
+        'url' => 'clientes-historial',
+    ];
+    foreach ($users as $user) {
+        $user->notify(new GeneralNotification($data1));
+    }
+
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Cliente registrado exitosamente',
+    ]);
+}
 
 
 

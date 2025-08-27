@@ -162,10 +162,16 @@ class empresa extends Model
         return $this->belongsToMany(normas_catalo::class, 'empresa_num_cliente', 'id_empresa', 'id_norma');
     }
 
-    public function maquiladora()
+
+    public function maquiladora()//se deja por si esta en uso
     {
         return $this->belongsTo(maquiladores_model::class, 'id_empresa', 'id_maquilador');
     }
+    public function maquiladoras()//nuevo modelo para maquiladores
+    {
+        return $this->hasMany(maquiladores_model::class, 'id_maquilador', 'id_empresa');
+    }
+
 
     public function actividades()
     {
