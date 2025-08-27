@@ -199,6 +199,13 @@ $(function () {
 
 
 
+  //Mover el último tipo-agave al final visualmente
+  $('#id_tipo').on('select2:select', function (e) {
+    const selectedElement = $(e.params.data.element);
+    selectedElement.detach();
+    $(this).append(selectedElement).trigger('change.select2');
+  });
+
   $(function () {
 
 
@@ -328,6 +335,9 @@ $(function () {
 
   initializeSelect2(select2Elements);
 
+
+
+
   // Eliminar Registro Marca
   $(document).on('click', '.delete-record', function () {
     var id = $(this).data('id'),
@@ -411,6 +421,7 @@ $(function () {
         var documentacion_urls_cumplimiento = data.documentacion_urls_cumplimiento;
         var numCliente = data.numeroCliente;
         var tipos = JSON.parse(data.etiqueta.id_tipo);
+
         let valores = datos.destinos.map(d => d.id_direccion);
         // Rellenar el formulario con los datos obtenidos
         $('#id_empresa').val(datos.id_empresa).trigger('change');
@@ -430,6 +441,15 @@ $(function () {
         $('#id_clase').val(datos.id_clase).trigger('change');
         //$('#id_tipo').val(datos.etiqueta.id_tipo).trigger('change');
         $('#id_tipo').val(tipos).trigger('change');
+          //reordenar los tipos-agave según el orden del array
+          var select = $('#id_tipo');
+          var container = select.next('.select2-container').find('.select2-selection__rendered');
+          container.html(''); // limpiar selección renderizada
+          tipos.forEach(function(valor) {
+              var option = select.find('option[value="' + valor + '"]').text();
+              container.append('<li class="select2-selection__choice">' + option + '</li>');
+          });
+
         $('#botellas_caja').val(datos.botellas_caja);
 
         /* $('#doc_etiqueta').html(`<div style="display: flex; align-items: center; gap: 8px;">
