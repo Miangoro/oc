@@ -168,8 +168,8 @@
                             </div>
                         </div>
                         <div style="display: none" class="col-md-6 maquiladora">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <select name="id_maquiladora" class="select2 form-select" required>
+                            <div class="form-floating form-floating-outline mb-4 select2-primary">
+                                <select name="id_maquiladora[]" multiple class="select2 form-select" required>
                                     @foreach ($empresas_confirmadas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
                                     @endforeach

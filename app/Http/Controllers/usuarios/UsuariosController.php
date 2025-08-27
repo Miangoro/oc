@@ -31,7 +31,11 @@ class UsuariosController extends Controller
   {
     $empresas = empresa::where('tipo', 2)->get();
     // dd('UserManagement');
-    $usuarios = User::where("tipo",1)->get();
+    //$usuarios = User::where("tipo",1)->get();
+    $usuarios = User::where('tipo', 1)
+        ->where('id', '!=', 1)
+        ->where('estatus', '!=', 'Inactivo')
+        ->get();
     $users = User::with('empresa')
     ->offset(1)
     ->limit(10)
@@ -41,7 +45,8 @@ class UsuariosController extends Controller
     $notVerified = User::whereNull('email_verified_at')->get()->count();
     $usersUnique = $users->unique(['email']);
     $userDuplicates = $users->diff($usersUnique)->count();
-    $roles = Role::All();
+    //$roles = Role::All();
+    $roles = Role::where('id', '!=', 1)->get();
 
     return view('usuarios.find_usuarios_clientes_view', [
       'totalUser' => $userCount,
