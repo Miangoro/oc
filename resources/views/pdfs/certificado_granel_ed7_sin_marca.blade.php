@@ -314,7 +314,7 @@
 			<td class="columna" style="width:12%">No. de lote</td>
 			<td class="columna-norm">{{ $nombre_lote }}</td>
 			<td class="columna" style="width:12%">No. de análisis</td>
-            <td class="columna-norm" style="width:18%">{{ $n_analisis }}</td>
+            <td class="columna-norm" style="width:18%">{{ str_replace(',', ', ', $n_analisis) }}</td>
 		</tr>
 		<tr>
 			<td class="columna">Ingredientes</td>
