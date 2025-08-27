@@ -95,11 +95,12 @@ if (dt_user_table.length) {
             <br> <span style="font-size:11px">${data.razon_social}<span>`;
         }
       },
-      { data: null,  render: function(data, type, row) {
-          return ` `;
-        }},
-      { data: 'fecha_emision' },
+      { data: 'motivo'},
+      /*{ data: null,  render: function(data, type, row) {
+          return `${data.motivo}`;
+        }},*/
 
+      { data: 'fecha_emision' },
       { data: 'action', orderable: false, searchable: false }
 
     ],

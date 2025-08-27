@@ -154,6 +154,7 @@ public function index(Request $request)
         foreach ($dictamenes as $dictamen) {
             $nestedData['id_dictamen'] = $dictamen->id_dictamen ?? 'No encontrado';
             $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
+            $nestedData['motivo'] = "<span class='small'><b>Motivo de incumplimiento:</b> $dictamen->observaciones</span>";
 
             $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
             $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
