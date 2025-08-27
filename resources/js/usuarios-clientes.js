@@ -372,7 +372,7 @@ $(function () {
 
 
 //EDIT record
-  $(document).on('click', '.edit-record', function () {
+$(document).on('click', '.edit-record', function () {
     var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
 
@@ -394,10 +394,19 @@ $(function () {
       //$('#id_empresa').val(data.id_empresa).prop('selected', true).change();
       $('#id_empresa').val(data.id_empresa).trigger('change');
       $('#id_contacto').val(data.id_contacto).trigger('change');
-       $('#rol_id').val(data.roles[0].name).prop('selected', true).change();
-       
+      $('#rol_id').val(data.roles[0].name).prop('selected', true).change();
+
+        // esperar a que AJAX termine y entonces setear instalaciones
+        $(document).one('ajaxStop', function () {
+          if (data.id_instalacion && data.id_instalacion.length > 0) {
+            $('#id_instalacion').val(data.id_instalacion).trigger('change');
+          }
+        });
+
     });
-  });
+});
+
+
 
   // changing the title
   $('.add-new').on('click', function () {

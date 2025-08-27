@@ -214,45 +214,51 @@ class UsuariosController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
+
+
   public function store(Request $request)
   {
     $userID = $request->id;
 
     if ($userID) {
-      // update the value
-      $users = User::updateOrCreate(
-        ['id' => $userID],
-        ['name' => $request->name, 'email' => $request->email,
-        'telefono' => $request->telefono, 'id_contacto' => $request->id_contacto,
-        'id_empresa' => $request->id_empresa,  'id_instalacion' => $request->id_instalacion,]
-      );
- $users->syncRoles($request->rol_id);
-      // user updated
-      return response()->json('Modificado');
-    } else {
-      // create new one if email is unique
-      $userEmail = User::where('email', $request->email)->first();
-
-      $pass = Str::random(10);
-
-      if (empty($userEmail)) {
+        // update the value
         $users = User::updateOrCreate(
           ['id' => $userID],
           ['name' => $request->name, 'email' => $request->email,
           'telefono' => $request->telefono, 'id_contacto' => $request->id_contacto,
-           'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa,'tipo'=>3,  'id_instalacion' => $request->id_instalacion,]
+          'id_empresa' => $request->id_empresa, 
+          'id_instalacion' => $request->id_instalacion, ]
         );
+        $users->syncRoles($request->rol_id);
+        // user updated
+        return response()->json('Modificado');
+    } else {
+        // create new one if email is unique
+        $userEmail = User::where('email', $request->email)->first();
 
-         $users->syncRoles($request->rol_id);
+        $pass = Str::random(10);
 
-        // user created
-        return response()->json('Registrado');
-      } else {
-        // user already exist
-        return response()->json(['message' => "ya existe"], 422);
-      }
+        if (empty($userEmail)) {
+          $users = User::updateOrCreate(
+            ['id' => $userID],
+            ['name' => $request->name, 'email' => $request->email,
+            'telefono' => $request->telefono, 'id_contacto' => $request->id_contacto,
+            'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa,'tipo'=>3, 
+            'id_instalacion' => $request->id_instalacion, ]
+          );
+
+          $users->syncRoles($request->rol_id);
+
+          // user created
+          return response()->json('Registrado');
+        } else {
+          // user already exist
+          return response()->json(['message' => "ya existe"], 422);
+        }
     }
   }
+
+
 
   /**
    * Display the specified resource.

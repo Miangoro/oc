@@ -154,6 +154,7 @@ public function index(Request $request)
         foreach ($dictamenes as $dictamen) {
             $nestedData['id_dictamen'] = $dictamen->id_dictamen ?? 'No encontrado';
             $nestedData['num_dictamen'] = $dictamen->num_dictamen ?? 'No encontrado';
+            $nestedData['motivo'] = "<span class='small'><b>Motivo de incumplimiento:</b> $dictamen->observaciones</span>";
 
             $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
             $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
@@ -379,7 +380,7 @@ public function DictamenNoCumplimiento($id_dictamen)
         'data' => $data,
         'num_dictamen' => $data->num_dictamen ?? 'No encontrado',
         'observaciones' => $data->observaciones ?? 'No encontrado',
-        'inspector' => $data->firmante->name ?? 'No encontrado',
+        'inspector' => $data->inspeccione->inspector->name ?? 'No encontrado',
         'empresa' => $data->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'dom_fiscal' => $data->inspeccione->solicitud->empresa->domicilio_fiscal ?? "No encontrado",
         'cp' => $data->inspeccione->solicitud->empresa->cp ?? "No encontrado",
