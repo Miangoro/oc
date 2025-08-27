@@ -829,6 +829,19 @@ $(function () {
     });
 });
 
+//limpiar el formulario al cerrar el modal de agregar confirmados
+$('#AddClientesConfirmados').on('hidden.bs.modal', function () {
+  // Resetea los valores del formulario
+  $('#ClientesConfirmadosForm')[0].reset();
+  // Limpia selects con select2
+  $('#ClientesConfirmadosForm .select2').val(null).trigger('change');
+  // Limpia validaciones sin forzar errores
+  fv.resetForm(false);
+  // Restaurar estado inicial de campos ocultos
+  $('#MostrarRepresentante').addClass('d-none');
+  $('#EstadosClass').removeClass('col-md-4').addClass('col-md-6');
+});
+
 
 
 $(document).ready(function() {
