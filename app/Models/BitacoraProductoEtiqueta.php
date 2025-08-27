@@ -12,6 +12,7 @@ class BitacoraProductoEtiqueta extends Model
     protected $primaryKey = 'id';
       protected $fillable = [
           'id_empresa',
+          'id_instalacion',
           'tipo_operacion',
           'tipo',
           'fecha',
@@ -85,5 +86,9 @@ class BitacoraProductoEtiqueta extends Model
         return tipos::whereIn('id_tipo', $ids)->get();
     }
 
+    public function instalacion()
+    {
+        return $this->belongsTo(instalaciones::class, 'id_instalacion','id_instalacion');
+    }
 
 }

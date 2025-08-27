@@ -18,7 +18,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-7 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select onchange="obtenerGranelesEdit(this.value);" id="edit_id_empresa"
                                                 name="id_empresa" class="select2 form-select"
@@ -33,16 +33,27 @@
                                             <label for="id_empresa" class="form-label">Cliente</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-5 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="date" class="form-control datepicker" id="edit_fecha"
-                                                name="fecha" aria-label="Fecha">
-                                            <label for="fecha">Fecha</label>
+                                            <select id="edit_id_instalacion" name="id_instalacion"
+                                                class="select2 form-select">
+                                                <option value="" disabled selected>Seleccione una instalación
+                                                </option>
+                                            </select>
+                                            <label for="id_instalacion" class="form-label">Selecciona la
+                                                instalación</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control datepicker" id="edit_fecha"
+                                                placeholder="Fecha" name="fecha" aria-label="Fecha">
+                                            <label for="fecha">Fecha</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select id="edit_tipo_op" name="tipo_operacion" class=" form-select"
                                                 data-error-message="Por favor selecciona el tipo de operación">
@@ -55,7 +66,7 @@
                                             <label for="tipo_op">Tipo de operación</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select id="edit_id_lote_granel" name="id_lote_granel"
                                                 class="select2 form-select">
@@ -117,8 +128,8 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="number" class="form-control" id="edit_num_recipientes_entrada"
-                                                name="num_recipientes_entrada"
+                                            <input type="number" class="form-control"
+                                                id="edit_num_recipientes_entrada" name="num_recipientes_entrada"
                                                 placeholder="N° de recipientes de entrada"
                                                 aria-label="N° de recipientes de entrada">
                                             <label for="num_recipientes_entrada">N° de recipientes de entrada</label>
@@ -286,6 +297,32 @@
                     const idlote = $('#edit_id_lote_granel').data('selected');
                     if (idlote) {
                         $('#edit_id_lote_granel').val(idlote).trigger('change');
+                    }
+
+
+                    var contenidoIns = '<option value="" disabled>Seleccione una instalación</option>';
+                    var instalacion_id = $("#edit_id_instalacion").data('selected') || "";
+
+                    for (let index = 0; index < response.instalaciones.length; index++) {
+                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+                        var seleccionado = (instalacion_id == response.instalaciones[index]
+                            .id_instalacion) ? "selected" : "";
+
+                        contenidoIns += '<option ' + seleccionado + ' value="' + response.instalaciones[
+                                index].id_instalacion + '">' +
+                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                            '</option>';
+                    }
+
+                    if (response.instalaciones.length == 0) {
+                        contenidoIns = '<option value="">Sin instalaciones registradas</option>';
+                    }
+
+                    $('#edit_id_instalacion').html(contenidoIns);
+
+                    // Si hay un valor seleccionado, aplicarlo después de insertar las opciones
+                    if (instalacion_id) {
+                        $('#edit_id_instalacion').val(instalacion_id).trigger('change');
                     }
 
                 },

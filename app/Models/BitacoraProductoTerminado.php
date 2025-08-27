@@ -12,6 +12,7 @@ class BitacoraProductoTerminado extends Model
     protected $primaryKey = 'id';
       protected $fillable = [
           'id_empresa',
+          'id_instalacion',
           'tipo_operacion',
           'tipo',
           'fecha',
@@ -55,7 +56,7 @@ class BitacoraProductoTerminado extends Model
     public function envasado(){
     return $this->belongsTo(lotes_envasado::class, 'lote_envasado', 'id_lote_envasado');
     }
-    
+
     public function marca()
     {
         return $this->belongsTo(marcas::class, 'id_marca', 'id_marca');
@@ -83,7 +84,10 @@ class BitacoraProductoTerminado extends Model
         return tipos::whereIn('id_tipo', $ids)->get();
     }
 
-
+    public function instalacion()
+    {
+        return $this->belongsTo(instalaciones::class, 'id_instalacion','id_instalacion');
+    }
 
 
 }

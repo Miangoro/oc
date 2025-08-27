@@ -18,7 +18,7 @@
                             <!-- Datos Iniciales -->
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-7 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select onchange="obtenerGraneles(this.value);" id="id_empresa"
                                                 name="id_empresa" class="select2 form-select"
@@ -37,17 +37,30 @@
                                             <label for="id_empresa" class="form-label">Cliente</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-5 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="date" class="form-control datepicker" id="fecha"
+                                            <select id="id_instalacion" name="id_instalacion"
+                                                class="select2 form-select">
+                                                <option value="" disabled selected>Seleccione una instalación
+                                                </option>
+                                            </select>
+                                            <label for="id_instalacion" class="form-label">Selecciona la
+                                                instalación</label>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="row">
+                                  <div class="col-md-4 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control datepicker" id="fecha" placeholder="Fecha"
                                                 name="fecha" aria-label="Fecha">
                                             <label for="fecha">Fecha</label>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select id="tipo_op" name="tipo_operacion" class=" form-select"
                                                 data-error-message="Por favor selecciona el tipo de operación">
@@ -62,7 +75,7 @@
                                             <label for="tipo_op">Tipo de operación</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select id="id_lote_envasado"
                                                 name="id_lote_envasado" class="select2 form-select">
@@ -133,7 +146,7 @@
                                         <div class="form-floating form-floating-outline">
                                             <input type="number" step="0.01" class="form-control"
                                                 id="num_sellos_entrada" name="num_sellos_entrada"
-                                                placeholder="% Alc. entrada" aria-label="N° DE SELLOS entrada">
+                                                placeholder="N° de sellos entrada" aria-label="N° DE SELLOS entrada">
                                             <label for="num_sellos_entrada">N° de sellos entrada</label>
                                         </div>
                                     </div>
@@ -277,7 +290,7 @@
 
                     $('#id_lote_envasado').html(contenido);
 
-/*                     var contenidoI = "";
+                    var contenidoI = "";
                     for (let index = 0; index < response.instalaciones.length; index++) {
                         var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
 
@@ -290,7 +303,7 @@
                     if (response.instalaciones.length == 0) {
                         contenidoI = '<option value="">Sin instalaciones registradas</option>';
                     }
-                    $('#id_instalacion').html(contenidoI); */
+                    $('#id_instalacion').html(contenidoI);
                     /* obtenerDatosEnvasados(); */
                 },
                 error: function() {}

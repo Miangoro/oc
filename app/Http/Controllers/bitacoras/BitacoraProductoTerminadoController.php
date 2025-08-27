@@ -216,6 +216,7 @@ class BitacoraProductoTerminadoController extends Controller
                 'numero_cliente' => $numeroCliente,
                 'cliente' => '<b>' . $numeroCliente . '</b><br>' . $razonSocial,
                 //
+                'id_instalacion' => $bitacora->instalacion->direccion_completa ?? 'N/A',
                   // Datos generales
                 'tipo_operacion' => $bitacora->tipo_operacion ?? 'N/A',
                 'tipo' => $bitacora->tipo ?? 'N/A',
@@ -334,6 +335,7 @@ public function store(Request $request)
     $request->validate([
         'fecha' => 'required|date',
         'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+        'id_instalacion' => 'nullable|integer|exists:instalaciones,id_instalacion',
         'tipo_operacion' => 'required|string',
 
         'lote_granel' => 'nullable|string',
@@ -375,6 +377,7 @@ public function store(Request $request)
         $bitacora = new BitacoraProductoTerminado();
         $bitacora->fecha = $request->fecha;
         $bitacora->id_empresa = $request->id_empresa;
+        $bitacora->id_instalacion = $request->id_instalacion;
         $bitacora->tipo_operacion = $request->tipo_operacion;
 
         $bitacora->lote_granel = $request->lote_granel;
@@ -450,6 +453,7 @@ public function store(Request $request)
                 'bitacora' => [
                     'id' => $bitacora->id,
                     'id_empresa' => $bitacora->id_empresa,
+                    'id_instalacion' => $bitacora->id_instalacion,
                     'tipo_operacion' => $bitacora->tipo_operacion,
                     'tipo' => $bitacora->tipo,
                     'fecha' => $fecha_formateada,
@@ -497,6 +501,7 @@ public function store(Request $request)
             'edit_bitacora_id' => 'required|exists:bitacora_producto_terminado,id',
             'fecha' => 'required|date',
             'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+            'id_instalacion' => 'nullable|integer|exists:instalaciones,id_instalacion',
             'tipo_operacion' => 'required|string',
 
             'lote_granel' => 'nullable|string',
@@ -539,6 +544,7 @@ public function store(Request $request)
         $bitacora->update([
             'fecha' => $request->fecha,
             'id_empresa' => $request->id_empresa,
+            'id_instalacion' => $request->id_instalacion,
             'tipo_operacion' => $request->tipo_operacion,
 
             'lote_granel' => $request->lote_granel,

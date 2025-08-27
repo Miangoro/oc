@@ -44,6 +44,7 @@ $(function () {
         { data: null }, // 0 -> # (control o vacío)
         { data: 'fake_id' }, // 1 -> ID
         { data: 'razon_social' }, // 2 -> Cliente (campo directo)
+        {data: 'id_instalacion'},
         { data: null }, // 3 -> Datos Iniciales (fecha + lote)
         { data: null }, // 4 -> Entradas
         { data: null }, // 5 -> Salidas
@@ -78,8 +79,16 @@ $(function () {
             return `<span>${$empresa}</span>`;
           }
         },
-        {
+         {
           targets: 3,
+          responsivePriority: 1,
+          render: function (data, type, full) {
+            var $id_instalacion = full['id_instalacion'] ?? 'N/A';
+            return `<span>${$id_instalacion}</span>`;
+          }
+        },
+        {
+          targets: 4,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $fecha = full['fecha'] ?? 'N/A';
@@ -118,7 +127,7 @@ $(function () {
           }
         },
         {
-          targets: 4,
+          targets: 5,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $serie_entrada = full['serie_entrada'] ?? 'N/A';
@@ -137,7 +146,7 @@ $(function () {
         },
         ////salidas
         {
-          targets: 5,
+          targets: 6,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $serie_salidas = full['serie_salidas'] ?? 'N/A';
@@ -155,7 +164,7 @@ $(function () {
           }
         },
         {
-          targets: 6,
+          targets: 7,
           responsivePriority: 1,
          render: function (data, type, full, meta) {
             var $serie_mermas = (full['serie_merma'] || '').trim();
@@ -186,7 +195,7 @@ $(function () {
 
         },
         {
-          targets: 7,
+          targets: 8,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $estatus = full['id_firmante'] ?? null;
@@ -204,7 +213,7 @@ $(function () {
         },
         {
           // Actions
-          targets: 8,
+          targets: 9,
           title: 'Acciones',
           searchable: false,
           orderable: false,
@@ -642,6 +651,7 @@ $(function () {
           $('#edit_bitacora_id').val(bitacora.id);
           $('#edit_id_empresa').val(bitacora.id_empresa).trigger('change');
           $('#edit_fecha').val(bitacora.fecha);
+          $('#edit_id_instalacion').data('selected', bitacora.id_instalacion);
           $('#edit_id_lote_envasado').data('selected', bitacora.id_lote_envasado).trigger('change');
           $('#edit_serie_inicial').val(bitacora.serie_inicial);
           $('#edit_num_sellos_inicial').val(bitacora.num_sellos_inicial);

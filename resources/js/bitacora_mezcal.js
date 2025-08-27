@@ -485,11 +485,9 @@ $(document).ready(function () {
   function cargarInstalaciones() {
     // Si es usuario tipo 3, usar instalaciones precargadas
     if (window.tipoUsuario === 3) {
-        console.log('autenticando...');
       $('#filtroInstalacion').html(window.opcionesInstalacionesAutenticadas).trigger('change');
       return;
     }
-    console.log('Cargando instalaciones para la empresa seleccionada...');
 
     let empresaId = $('#filtroEmpresa').val();
     if (!empresaId) {

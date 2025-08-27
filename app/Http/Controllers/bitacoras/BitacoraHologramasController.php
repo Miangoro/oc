@@ -192,6 +192,7 @@ class BitacoraHologramasController extends Controller
                 'razon_social' => $razonSocial,
                 'numero_cliente' => $numeroCliente,
                 'cliente' => '<b>' . $numeroCliente . '</b><br>' . $razonSocial,
+                 'id_instalacion' => $bitacora->instalacion->direccion_completa ?? 'N/A',
                 //
                 'nombre_lote' => $bitacora->loteBitacora->nombre ?? 'N/A',
                 'folio_fq' => $bitacora->loteBitacora->folio_fq ?? 'N/A',
@@ -287,6 +288,7 @@ class BitacoraHologramasController extends Controller
         $request->validate([
             'fecha' => 'required|date',
             'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+            'id_instalacion' => 'nullable|integer',
             'id_lote_envasado' => 'required|integer|exists:lotes_envasado,id_lote_envasado',
             'tipo_operacion' => 'required|string',
             'serie_inicial' => 'nullable|string',
@@ -306,6 +308,7 @@ class BitacoraHologramasController extends Controller
             $bitacora = new BitacoraHologramas();
             $bitacora->fecha = $request->fecha;
             $bitacora->id_empresa = $request->id_empresa;
+            $bitacora->id_instalacion = $request->id_instalacion ?? 0;
             $bitacora->id_lote_envasado = $request->id_lote_envasado;
             $bitacora->tipo_operacion = $request->tipo_operacion;
             $bitacora->tipo = 2;
@@ -359,7 +362,7 @@ class BitacoraHologramasController extends Controller
                 'bitacora' => [
                     'id' => $bitacora->id,
                     'id_empresa' => $bitacora->id_empresa,
-                    /* 'id_instalacion' => $bitacora->id_instalacion, */
+                    'id_instalacion' => $bitacora->id_instalacion,
                     'fecha' => $fecha_formateada, // para que el input date lo acepte
                     'id_lote_envasado' => $bitacora->id_lote_envasado,
                     'serie_inicial'    =>     $bitacora->serie_inicial,
@@ -391,7 +394,7 @@ class BitacoraHologramasController extends Controller
               'edit_bitacora_id' => 'required|exists:bitacora_hologramas,id',
               'id_empresa'       => 'required|exists:empresa,id_empresa',
               'id_lote_envasado' => 'required|integer|exists:lotes_envasado,id_lote_envasado',
-              /* 'id_instalacion' => 'required|integer', */
+              'id_instalacion' => 'required|integer',
               'tipo_operacion' => 'required|string',
               'serie_inicial' => 'nullable|string',
               'num_sellos_inicial' => 'nullable|string',
@@ -411,7 +414,7 @@ class BitacoraHologramasController extends Controller
           $bitacora->update([
               'id_empresa'       => $request->id_empresa,
               'id_lote_envasado'   => $request->id_lote_envasado,
-              /* 'id_instalacion'   => $request->id_instalacion, */
+              'id_instalacion'   => $request->id_instalacion ?? 0,
               'fecha'            => $request->fecha,
               'tipo' => 2,
               'tipo_operacion' => $request->tipo_operacion,

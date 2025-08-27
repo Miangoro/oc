@@ -18,7 +18,7 @@
                             <!-- Datos Iniciales -->
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-7 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select onchange="obtenerGraneles(this.value);" id="id_empresa"
                                                 name="id_empresa" class="select2 form-select"
@@ -37,17 +37,28 @@
                                             <label for="id_empresa" class="form-label">Cliente</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-5 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="date" class="form-control datepicker" id="fecha"
-                                                name="fecha" aria-label="Fecha">
-                                            <label for="fecha">Fecha</label>
+                                            <select class=" form-select select2" id="id_instalacion"
+                                                name="id_instalacion" aria-label="id_instalacion">
+                                                <option value="" disabled selected>Lista de instalaciones</option>
+                                                <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
+                                            </select>
+                                            <label for="id_instalacion" class="form-label">Instalaciones</label>
                                         </div>
                                     </div>
+
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                  <div class="col-md-4 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control datepicker" id="fecha"
+                                                name="fecha" aria-label="Fecha" placeholder="Fecha" autocomplete="off">
+                                            <label for="fecha">Fecha</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select id="tipo_op" name="tipo_operacion" class=" form-select"
                                                 data-error-message="Por favor selecciona el tipo de operación">
@@ -62,7 +73,7 @@
                                             <label for="tipo_op">Tipo de operación</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select id="id_lote_granel" name="id_lote_granel"
                                                 class="select2 form-select">
@@ -309,6 +320,24 @@
                         contenido = '<option value="">Sin lotes registrados</option>';
                     } else {}
                     $('#id_lote_granel').html(contenido);
+
+
+                    var contenidoIns =
+                    '<option value="" disabled selected>Seleccione una instalación</option>';
+
+                    for (let index = 0; index < response.instalaciones.length; index++) {
+                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+
+                        contenidoIns += '<option value="' + response.instalaciones[index].id_instalacion +
+                            '">' + tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                            '</option>';
+                    }
+
+                    if (response.instalaciones.length == 0) {
+                        contenidoIns = '<option value="">Sin instalaciones registradas</option>';
+                    }
+
+                    $('#id_instalacion').html(contenidoIns);
 
                 },
                 error: function() {}

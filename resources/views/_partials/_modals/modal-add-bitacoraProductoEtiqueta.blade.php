@@ -65,7 +65,7 @@
 
                                 <!-- NUEVOS CAMPOS AGREGADOS -->
                                 <div class="row">
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select class="form-select select2" id="id_lote_granel"
                                                 name="id_lote_granel" onchange="obtenerDatosGraneles();">
@@ -76,7 +76,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select class="form-select select2" id="id_lote_envasado"
                                                 name="id_lote_envasado">
@@ -84,6 +84,22 @@
                                                 </option>
                                             </select>
                                             <label for="id_lote_envasado">Lote envasado</label>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <select id="id_instalacion" name="id_instalacion"
+                                                class="select2 form-select">
+                                                <option value="" disabled selected>Seleccione una instalación
+                                                </option>
+                                            </select>
+                                            <label for="id_instalacion" class="form-label">Selecciona la
+                                                instalación</label>
                                         </div>
                                     </div>
 
@@ -130,8 +146,8 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="folio_fq" name="folio_fq"
-                                                placeholder="Análisis Fisicoquímicos">
+                                            <input type="text" class="form-control" id="folio_fq"
+                                                name="folio_fq" placeholder="Análisis Fisicoquímicos">
                                             <label for="folio_fq">Análisis Fisicoquímicos</label>
                                         </div>
                                     </div>
@@ -390,7 +406,8 @@
                     for (let i = 0; i < response.lotes_envasado.length; i++) {
                         let lote = response.lotes_envasado[i];
                         // Construir texto concatenado
-                        let texto = lote.nombre + ' - ' + (lote.cant_bot_restantes || 0) + ' botellas - ' + (lote.presentacion ?? 'N/A') + ' ' + lote.unidad;
+                        let texto = lote.nombre + ' - ' + (lote.cant_bot_restantes || 0) + ' botellas - ' +
+                            (lote.presentacion ?? 'N/A') + ' ' + lote.unidad;
 
                         contenidoEnvasado += '<option value="' + lote.id_lote_envasado + '">' + texto +
                             '</option>';
@@ -402,6 +419,24 @@
 
                     $('#id_lote_envasado').html(contenidoEnvasado).trigger('change');
 
+
+
+                    var contenidoIns =
+                    '<option value="" disabled selected>Seleccione una instalación</option>';
+
+                    for (let index = 0; index < response.instalaciones.length; index++) {
+                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+
+                        contenidoIns += '<option value="' + response.instalaciones[index].id_instalacion +
+                            '">' + tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                            '</option>';
+                    }
+
+                    if (response.instalaciones.length == 0) {
+                        contenidoIns = '<option value="">Sin instalaciones registradas</option>';
+                    }
+
+                    $('#id_instalacion').html(contenidoIns);
                 },
                 error: function() {}
             });

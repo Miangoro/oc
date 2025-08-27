@@ -22,7 +22,7 @@
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <select id="edit_id_empresa"
+                                            <select id="edit_id_empresa" onchange="obtenerInstalacionEdit();"
                                                 name="id_empresa" class="select2 form-select"
                                                 data-error-message="por favor selecciona la empresa">
                                                 @if ($tipo_usuario != 3)
@@ -64,7 +64,7 @@
 
                                 <!-- NUEVOS CAMPOS AGREGADOS -->
                                 <div class="row">
-                                      <div class="col-md-4 mb-3">
+                                      <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select class="form-select select2" id="edit_lote_granel"
                                                 name="lote_granel"{{--  onchange="editObtenerDatosGraneles();" --}}>
@@ -74,7 +74,7 @@
                                             <label for="id_lote_granel">Lote a granel</label>
                                         </div>
                                     </div>
-                                     <div class="col-md-4 mb-3">
+                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select class="form-select select2" id="edit_lote_envasado" {{-- onchange="editObtenerDatosGranelesInspecciones();" --}}
                                                 name="lote_envasado">
@@ -82,6 +82,20 @@
                                                 </option>
                                             </select>
                                             <label for="id_lote_envasado">Lote envasado</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <select id="edit_id_instalacion" name="id_instalacion"
+                                                class="select2 form-select">
+                                                <option value="" disabled selected>Seleccione una instalación
+                                                </option>
+                                            </select>
+                                            <label for="id_instalacion" class="form-label">Selecciona la
+                                                instalación</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4 mb-3">
@@ -410,5 +424,42 @@
          }
 
 
+function obtenerInstalacionEdit() {
+    var empresa = $("#edit_id_empresa").val();
+    if (empresa !== "" && empresa !== null && empresa !== undefined) {
+
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var contenido = '<option value="" disabled>Seleccione una instalación</option>';
+                var instalacion_id = $("#edit_id_instalacion").data('selected') || "";
+
+                for (let index = 0; index < response.instalaciones.length; index++) {
+                    var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+                    var seleccionado = (instalacion_id == response.instalaciones[index].id_instalacion) ? "selected" : "";
+
+                    contenido += '<option ' + seleccionado + ' value="' + response.instalaciones[index].id_instalacion + '">' +
+                        tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                        '</option>';
+                }
+
+                if (response.instalaciones.length == 0) {
+                    contenido = '<option value="">Sin instalaciones registradas</option>';
+                }
+
+                $('#edit_id_instalacion').html(contenido);
+
+                // Si hay un valor seleccionado, aplicarlo después de insertar las opciones
+                if (instalacion_id) {
+                    $('#edit_id_instalacion').val(instalacion_id).trigger('change');
+                }
+            },
+            error: function() {
+                console.error('Error al cargar las instalaciones.');
+            }
+        });
+    }
+}
 
 </script>

@@ -44,6 +44,7 @@ $(function () {
         { data: null }, // 0 -> # (control o vacío)
         { data: 'fake_id' }, // 1 -> ID
         { data: 'razon_social' }, // 2 -> Cliente (campo directo)
+        {data : 'id_instalacion'}, // Nuevo campo de Instalación
         { data: null }, // 3 -> Datos Iniciales (fecha + lote)
         { data: null }, // 4 -> Entradas
         { data: null }, // 5 -> Salidas
@@ -78,8 +79,16 @@ $(function () {
             return `<span>${$empresa}</span>`;
           }
         },
-        {
+         {
           targets: 3,
+          responsivePriority: 1,
+          render: function (data, type, full) {
+            var $id_instalacion = full['id_instalacion'] ?? 'N/A';
+            return `<span>${$id_instalacion}</span>`;
+          }
+        },
+        {
+          targets: 4,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var fecha = full['fecha'] ?? 'N/A';
@@ -105,7 +114,7 @@ $(function () {
         },
 
         {
-          targets: 4,
+          targets: 5,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $procedencia_entrada = full['procedencia_entrada'] ?? 'N/A';
@@ -130,7 +139,7 @@ $(function () {
         },
         ////salidas
         {
-          targets: 5,
+          targets: 6,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $cant_cajas_salidas = full['cant_cajas_salidas'] ?? 'N/A';
@@ -155,7 +164,7 @@ $(function () {
         },
 
         {
-          targets: 6, // Asegúrate que sigue siendo la columna correcta
+          targets: 7, // Asegúrate que sigue siendo la columna correcta
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $cant_cajas_salidas = full['cant_cajas_salidas'] ?? 'N/A';
@@ -174,7 +183,7 @@ $(function () {
           }
         },
         {
-          targets: 7,
+          targets: 8,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $estatus = full['id_firmante'] ?? null;
@@ -192,7 +201,7 @@ $(function () {
         },
         {
           // Actions
-          targets: 8,
+          targets: 9,
           title: 'Acciones',
           searchable: false,
           orderable: false,
@@ -788,7 +797,7 @@ $(function () {
           $('#edit_fecha').val(bitacora.fecha);
           $('#edit_tipo_op').val(bitacora.tipo_operacion).trigger('change');
           $('#edit_tipo').val(bitacora.tipo);
-
+          $('#edit_id_instalacion').data('selected', bitacora.id_instalacion);
           $('#edit_lote_granel').data('selected', bitacora.lote_granel);
           $('#edit_lote_envasado').data('selected', bitacora.lote_envasado);
 

@@ -13,6 +13,7 @@ class BitacoraHologramas extends Model
        protected $fillable = [
         'fecha',
         'id_empresa',
+        'id_instalacion',
         'id_lote_envasado',
         'tipo_operacion',
         'tipo',
@@ -51,5 +52,9 @@ class BitacoraHologramas extends Model
     {
         return $this->belongsTo(User::class, 'id_firmante');
     }
-
+    public function instalacion()
+    {
+        return $this->belongsTo(instalaciones::class, 'id_instalacion','id_instalacion');
+    }
 }
+

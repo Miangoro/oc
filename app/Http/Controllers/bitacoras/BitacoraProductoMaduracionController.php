@@ -355,6 +355,7 @@ public function PDFProductoMaduracion(Request $request)
         $request->validate([
           'fecha' => 'required|date',
           'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+          'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
           'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
           'tipo_recipientes' => 'nullable|string|max:255',
           'tipo_madera' => 'nullable|string|max:255',
@@ -382,6 +383,7 @@ public function PDFProductoMaduracion(Request $request)
           $bitacora = new BitacoraProductoMaduracion();
           $bitacora->fecha = $request->fecha;
           $bitacora->id_empresa = $request->id_empresa;
+          $bitacora->id_instalacion = $request->id_instalacion ?? 0;
           $bitacora->id_lote_granel = $request->id_lote_granel;
 
           $bitacora->tipo_recipientes = $request->tipo_recipientes;
@@ -450,7 +452,7 @@ public function PDFProductoMaduracion(Request $request)
                 'bitacora' => [
                     'id' => $bitacora->id,
                     'id_empresa' => $bitacora->id_empresa,
-
+                    'id_instalacion' => $bitacora->id_instalacion,
                     'fecha' => $fecha_formateada, // para que el input date lo acepte
                     'id_lote_granel' => $bitacora->id_lote_granel,
 
@@ -495,6 +497,7 @@ public function PDFProductoMaduracion(Request $request)
           $request->validate([
               'edit_bitacora_id' => 'required|exists:bitacora_maduracion,id',
               'id_empresa'       => 'required|exists:empresa,id_empresa',
+              'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
               'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
               'operacion_adicional' => 'nullable|string',
               'tipo_operacion' => 'required|string',
@@ -519,6 +522,7 @@ public function PDFProductoMaduracion(Request $request)
 
           $bitacora->update([
               'id_empresa'       => $request->id_empresa,
+              'id_instalacion' => $request->id_instalacion ?? 0,
               'id_lote_granel'   => $request->id_lote_granel,
               'fecha'            => $request->fecha,
               'operacion_adicional' => $request->operacion_adicional,

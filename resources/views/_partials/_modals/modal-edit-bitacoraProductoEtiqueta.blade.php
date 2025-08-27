@@ -64,7 +64,7 @@
 
                                 <!-- NUEVOS CAMPOS AGREGADOS -->
                                 <div class="row">
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select class="form-select select2" onchange="obtenerDatosGranelesEdit();"
                                                 id="edit_id_lote_granel" name="id_lote_granel">
@@ -75,7 +75,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select class="form-select select2" id="edit_id_lote_envasado"
                                                 name="id_lote_envasado">
@@ -83,6 +83,20 @@
                                                 </option>
                                             </select>
                                             <label for="id_lote_envasado">Lote envasado</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <select id="edit_id_instalacion" name="id_instalacion"
+                                                class="select2 form-select">
+                                                <option value="" disabled selected>Seleccione una instalación
+                                                </option>
+                                            </select>
+                                            <label for="id_instalacion" class="form-label">Selecciona la
+                                                instalación</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4 mb-3">
@@ -95,7 +109,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
@@ -417,6 +430,33 @@
                         $('#edit_id_lote_envasado').val(idInst).trigger('change');
                     }
 
+
+                    var contenidoIns = '<option value="" disabled>Seleccione una instalación</option>';
+                    var instalacion_id = $("#edit_id_instalacion").data('selected') || "";
+
+                    for (let index = 0; index < response.instalaciones.length; index++) {
+                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+                        var seleccionado = (instalacion_id == response.instalaciones[index]
+                            .id_instalacion) ? "selected" : "";
+
+                        contenidoIns += '<option ' + seleccionado + ' value="' + response.instalaciones[
+                                index].id_instalacion + '">' +
+                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                            '</option>';
+                    }
+
+                    if (response.instalaciones.length == 0) {
+                        contenidoIns = '<option value="">Sin instalaciones registradas</option>';
+                    }
+
+                    $('#edit_id_instalacion').html(contenidoIns);
+
+                    // Si hay un valor seleccionado, aplicarlo después de insertar las opciones
+                    if (instalacion_id) {
+                        $('#edit_id_instalacion').val(instalacion_id).trigger('change');
+                    }
+
+
                 },
                 error: function() {}
             });
@@ -431,7 +471,7 @@
                 method: 'GET',
                 success: function(response) {
                     // Setear valores para los campos individuales
-                   /*  $('#edit_volumen_inicial').val(response.lotes_granel.volumen_restante); */
+                    /*  $('#edit_volumen_inicial').val(response.lotes_granel.volumen_restante); */
                     /* $('#edit_alcohol_inicial').val(response.lotes_granel.cont_alc); */
                     $('#edit_folio_fq').val(response.lotes_granel.folio_fq);
                 },
