@@ -45,8 +45,9 @@ class Certificado_NacionalController extends Controller
         return view('certificados.find_certificados_nacional', compact('certificados','solicitud', 'users', 'empresa', 'hologramas'));
     }
 
-     private function obtenerEmpresasVisibles($empresaId)
-  {
+
+private function obtenerEmpresasVisibles($empresaId)
+{
       $idsEmpresas = [];
 
       if ($empresaId) {
@@ -58,14 +59,19 @@ class Certificado_NacionalController extends Controller
       }
 
       return array_unique($idsEmpresas);
-  }
+}
+
 public function index(Request $request)
 {
     //Permiso de empresa
     $empresaId = null;
+    $instalacionAuth = [];
     if (Auth::check() && Auth::user()->tipo == 3) {
         $empresaId = Auth::user()->empresa?->id_empresa;
+        $instalacionAuth = (array) Auth::user()->id_instalacion;
+        $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
     }
+
 
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
 
@@ -100,13 +106,17 @@ public function index(Request $request)
         ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
         ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
         ->select('certificados_nacional.*', 'empresa.razon_social');
-    /* if ($empresaId) {
-        $query->where('solicitudes.id_empresa', $empresaId);
-    } */
-      if ($empresaId) {
-        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
+    
+    // Filtro por empresa
+    if ($empresaId) {
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
         $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
     }
+    // Filtro por instalaciones del usuario
+    if (!empty($instalacionAuth)) {
+        $query->whereIn('solicitudes.id_instalacion', $instalacionAuth);
+    }
+
     $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
     $totalData = $baseQuery->count();// totalData (sin búsqueda)
 

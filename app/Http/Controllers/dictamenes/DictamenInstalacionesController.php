@@ -67,13 +67,19 @@ class DictamenInstalacionesController extends Controller
             return array_unique($idsEmpresas);
         }
 
+
+
 public function index(Request $request)
 {
     //Permiso de empresa
     $empresaId = null;
+    $instalacionAuth = [];
     if (Auth::check() && Auth::user()->tipo == 3) {
         $empresaId = Auth::user()->empresa?->id_empresa;
+        $instalacionAuth = (array) Auth::user()->id_instalacion;
+        $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
     }
+
 
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
@@ -103,12 +109,14 @@ public function index(Request $request)
     ->leftJoin('instalaciones', 'instalaciones.id_instalacion', '=', 'dictamenes_instalaciones.id_instalacion')
     ->select('dictamenes_instalaciones.*', 'empresa.razon_social');
 
-    /* if ($empresaId) {
-        $query->where('solicitudes.id_empresa', $empresaId);
-    } */
+    // Filtro por empresa (incluye maquiladores si quieres)
     if ($empresaId) {
-        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
         $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
+    }
+    // Filtro por instalaciones para usuario tipo 3
+    if (!empty($instalacionAuth)) {
+        $query->whereIn('solicitudes.id_instalacion', $instalacionAuth);
     }
 
     $baseQuery = clone $query;
@@ -123,6 +131,9 @@ public function index(Request $request)
         'almacén y bodega' => 4,
         'área de maduración' => 5,
     ];
+
+
+///BUSCADOR ACTIVO
     // Búsqueda Global
     if (!empty($search)) {
         // Convertir a minúsculas sin tildes para comparar
@@ -160,9 +171,13 @@ public function index(Request $request)
         });
 
         $totalFiltered = $query->count();
-    } else {
+
+
+
+    } else { ///SIN BUSQUEDA
         $totalFiltered = $totalData;
     }
+
 
     // Ordenamiento especial para num_dictamen con formato 'UMC-###'
     if ($orderColumn === 'num_dictamen') {

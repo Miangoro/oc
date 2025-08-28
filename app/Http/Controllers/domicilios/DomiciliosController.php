@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;//Permiso empresa
 
+use App\Models\maquiladores_model;
+
+
 class DomiciliosController extends Controller
 {
     public function UserManagement()
@@ -27,6 +30,10 @@ class DomiciliosController extends Controller
        
         return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos'));
     }
+
+
+
+
 
     public function index(Request $request)
     {
@@ -46,54 +53,84 @@ class DomiciliosController extends Controller
 
         $search = [];
 
-        //Permiso de empresa
-        $empresaId = null;
-        if (Auth::check() && Auth::user()->tipo == 3) {
-            $empresaId = Auth::user()->empresa?->id_empresa;
+    // Permiso de empresa
+    $empresaId = null;
+    $instalacionAuth = [];
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaId = Auth::user()->empresa?->id_empresa;
+        $instalacionAuth = (array) Auth::user()->id_instalacion;
+        $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
+    }
+
+    $totalData = instalaciones::whereHas('empresa', function ($query) use ($empresaId) {
+        $query->where('tipo', 2);
+        if ($empresaId) {
+            $query->where('id_empresa', $empresaId);
         }
-        
+    })->count();
 
-        $totalData = instalaciones::whereHas('empresa', function ($query) use ($empresaId) {
+    $totalFiltered = $totalData;
+
+    $limit = $request->input('length');
+    $start = $request->input('start');
+    $order = $columns[$request->input('order.0.column')] ?? 'id_instalacion';
+    $dir = $request->input('order.0.dir') ?? 'asc';
+
+    $search = $request->input('search.value');
+
+    $query = instalaciones::with('empresa')
+        ->whereHas('empresa', function ($query) use ($empresaId) {
             $query->where('tipo', 2);
-
             if ($empresaId) {
                 $query->where('id_empresa', $empresaId);
             }
-        })->count();
+        });
+
+    // Filtrar por instalaciones del usuario tipo 3
+    if (!empty($instalacionAuth)) {
+        $query->whereIn('id_instalacion', $instalacionAuth);
+    }
 
 
-        $totalFiltered = $totalData;
-
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
-
+//SIN BUSQUEDA
         if (empty($request->input('search.value'))) {
-            $instalaciones = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
+            $query = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
                 ->whereHas('empresa', function ($query) use ($empresaId) {
                     $query->where('tipo', 2);
 
                     if ($empresaId) {
-                            $query->where('id_empresa', $empresaId);
-                        }
-                })
+                        $query->where('id_empresa', $empresaId);
+                    }
+                });
+
+            // FILTRO POR INSTALACIONES DEL USUARIO TIPO 3
+            if (!empty($instalacionAuth)) {
+                $query->whereIn('id_instalacion', $instalacionAuth);
+            }
+
+            $instalaciones = $query
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
-        } else {
+
+
+} else {///BUSCADOR ACTIVO
             $search = $request->input('search.value');
-            $instalaciones = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
-                ->whereHas('empresa', function ($query)  use($empresaId){
+
+            $query = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
+                ->whereHas('empresa', function ($query) use ($empresaId) {
                     $query->where('tipo', 2);
 
                     if ($empresaId) {
                         $query->where('id_empresa', $empresaId);
                     }
                 })
+                // FILTRO POR INSTALACIONES DEL USUARIO TIPO 3
+                ->when(!empty($instalacionAuth), function ($q) use ($instalacionAuth) {
+                    $q->whereIn('id_instalacion', $instalacionAuth);
+                })
                 ->where(function ($query) use ($search) {
-                    
                     $query->where('responsable', 'LIKE', "%{$search}%")
                         ->orWhereHas('empresa', function ($subQuery) use ($search) {
                             $subQuery->where('razon_social', 'LIKE', "%{$search}%");
@@ -110,39 +147,15 @@ class DomiciliosController extends Controller
                         ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
                         ->orWhere('folio', 'LIKE', "%{$search}%")
                         ->orWhere('tipo', 'LIKE', "%{$search}%");
-                    
-                })
+                });
+
+            $instalaciones = $query
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
-       
 
-            $totalFiltered = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
-                ->whereHas('empresa', function ($query) {
-                    $query->where('tipo', 2);
-                })
-                ->where(function ($query) use ($search) {
-                    $query->where('responsable', 'LIKE', "%{$search}%")
-                        ->orWhereHas('empresa', function ($subQuery) use ($search) {
-                            $subQuery->where('razon_social', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
-                            $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('estados', function ($subQuery) use ($search) {
-                            $subQuery->where('nombre', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('organismos', function ($subQuery) use ($search) {
-                            $subQuery->where('organismo', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
-                        ->orWhere('folio', 'LIKE', "%{$search}%")
-                        ->orWhere('tipo', 'LIKE', "%{$search}%");
-                        
-                    
-                })
-                ->count();
+            $totalFiltered = $query->count();
 
         }
 
@@ -166,42 +179,14 @@ class DomiciliosController extends Controller
                 $nestedData['responsable'] = $instalacion->responsable ?? 'N/A';
                 $nestedData['estado'] = $instalacion->estados->nombre  ?? 'N/A';
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
-                /*$nestedData['folio'] =
-                    '<b>Certificadora:</b>' . ($instalacion->organismos->organismo ?? 'OC CIDAM') . '<br>' .
-                    '<b>Número de certificado:</b>' . ($instalacion->folio ?? 'N/A') . '<br>' .
-                    '<b>Fecha de emisión:</b>' . (Helpers::formatearFecha($instalacion->fecha_emision)) . '<br>' .
-                    '<b>Fecha de vigencia:</b>' . (Helpers::formatearFecha($instalacion->fecha_vigencia)) . '<br>';
-                */$nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; 
+                $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; 
                 $nestedData['url'] = !empty($instalacion->documentos_certificados_instalaciones->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first() . '/' . implode(',', $instalacion->documentos_certificados_instalaciones->pluck('url')->toArray()) : '';
                 $nestedData['nombre_documento'] = !empty($instalacion->documentos_certificados_instalaciones->pluck('nombre_documento')->toArray()) ? implode(',', $instalacion->documentos_certificados_instalaciones->pluck('nombre_documento')->toArray()) : 'Documento sin nombre';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($instalacion->fecha_vigencia);
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
 
-/* $nestedData['certificadora'] = $instalacion->organismos->organismo ?? 'OC CIDAM';
 
-
-$nestedData['folio'] = $instalacion->folio ?? 'N/A';
-$relacionCertificado = $instalacion->dictame->certificado ?? null;
-$nestedData['folio_relacion'] = $relacionCertificado->num_certificado ?? 'N/A';
-
-// Ahora puedes usar el número de cliente en la URL
-if ($relacionCertificado) {
-    // Obtén la URL del certificado desde la tabla Documentacion_url
-$documentacion = Documentacion_url::where('id_relacion', $instalacion->id_instalacion)
-    ->where('id_documento',128)
-    ->where('id_doc', $relacionCertificado->id_certificado)
-    ->first();
-
-$nestedData['url_certificado'] = '/files/' .$numeroCliente. '/certificados_instalaciones/' . rawurlencode($documentacion->url);
-} else {
-$documentacion = Documentacion_url::where('id_relacion', $instalacion->id_instalacion)
-    ->where('id_documento',128)
-    ->where('id_doc', null)
-    ->first();
-
-$nestedData['url_certificado'] = null;
-} */
 $nestedData['certificadora'] = $instalacion->organismos->organismo ?? 'OC CIDAM';
 $folio = $instalacion->folio ?? null;
 
@@ -220,9 +205,6 @@ $nestedData['folio'] = $instalacion->folio ?? null;
 $nestedData['documentos'] = $documentos;
 
 
-
-
-
                 $data[] = $nestedData;
             }
         }
@@ -235,6 +217,14 @@ $nestedData['documentos'] = $documentos;
             'data' => $data,
         ]);
     }
+
+
+
+
+
+
+
+
 
 
     ///FUNCION ELIMINAR

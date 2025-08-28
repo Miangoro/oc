@@ -52,8 +52,9 @@ class Certificado_InstalacionesController extends Controller
         return view('certificados.find_certificados_instalaciones', compact('certificados','dictamenes', 'users', 'revisores', 'empresa'));
     }
 
-  private function obtenerEmpresasVisibles($empresaId)
-  {
+
+private function obtenerEmpresasVisibles($empresaId)
+{
       $idsEmpresas = [];
 
       if ($empresaId) {
@@ -65,14 +66,17 @@ class Certificado_InstalacionesController extends Controller
       }
 
       return array_unique($idsEmpresas);
-  }
+}
 
 public function index(Request $request)
 {
     //Permiso de empresa
     $empresaId = null;
+    $instalacionAuth = [];
     if (Auth::check() && Auth::user()->tipo == 3) {
         $empresaId = Auth::user()->empresa?->id_empresa;
+        $instalacionAuth = (array) Auth::user()->id_instalacion;
+        $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
     }
 
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
@@ -103,13 +107,16 @@ public function index(Request $request)
         ->leftJoin('instalaciones', 'instalaciones.id_instalacion', '=', 'dictamenes_instalaciones.id_instalacion')
         ->select('certificados.*', 'empresa.razon_social');
 
-    /* if ($empresaId) {
-        $query->where('solicitudes.id_empresa', $empresaId);
-    } */
-      if ($empresaId) {
-        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
+    // Filtro por empresa
+    if ($empresaId) {
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
         $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
     }
+    // Filtro por instalaciones del usuario
+    if (!empty($instalacionAuth)) {
+        $query->whereIn('solicitudes.id_instalacion', $instalacionAuth);
+    }
+
     $baseQuery = clone $query;
     $totalData = $baseQuery->count();
 

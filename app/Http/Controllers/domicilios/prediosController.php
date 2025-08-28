@@ -68,6 +68,9 @@ public function UserManagement() {
 }
 
 
+
+
+
     public function index(Request $request)
     {
         $columns = [
@@ -83,14 +86,11 @@ public function UserManagement() {
             10 => 'estatus'
         ];
 
-        $search = [];
-
-        //Permiso de empresa
-        $empresaId = null;
+        // Permiso de empresa
+         $empresaId = null;
         if (Auth::check() && Auth::user()->tipo == 3) {
             $empresaId = Auth::user()->empresa?->id_empresa;
         }
-
 
         // Obtener el total de registros filtrados
         $totalData = Predios::whereHas('empresa', function ($query)  use ($empresaId) {
@@ -102,85 +102,108 @@ public function UserManagement() {
 
         $totalFiltered = $totalData;
 
+        
         $limit = $request->input('length');
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')] ?? 'id_predio';
         $dir = $request->input('order.0.dir') ?? 'asc';
 
+        $query = Predios::with('empresa');
+
+        // Filtrar por empresa si aplica
+        if ($empresaId) {
+            $query->whereHas('empresa', function ($q) use ($empresaId) {
+                $q->where('tipo', 2)
+                ->where('id_empresa', $empresaId);
+            });
+        } else {
+            $query->whereHas('empresa', function ($q) {
+                $q->where('tipo', 2);
+            });
+        }
+
+
+
+
+//SIN BUSQUEDA
         if (empty($request->input('search.value'))) {
             $predios = Predios::with('empresa') // Carga la relación
-                ->whereHas('empresa', function ($query) use ($empresaId){
-                    $query->where('tipo', 2);
-                                        if ($empresaId) {
-                            $query->where('id_empresa', $empresaId);
-                        }
-                })
-                ->offset($start)
-                ->limit($limit)
-                ->orderByDesc('id_predio')
+            ->whereHas('empresa', function ($query) use ($empresaId) {
+                $query->where('tipo', 2);
 
-                ->get();
-        } else {
+                if ($empresaId) {
+                    $query->where('id_empresa', $empresaId);
+                }
+            })
+            ->offset($start)
+            ->limit($limit)
+            ->orderBy($order ?? 'id_predio', $dir ?? 'desc')
+            ->get();
+
+
+        } else {///BUSCADOR ACTIVO
             $search = $request->input('search.value');
 
-            $predios = Predios::with('empresa')
-                ->whereHas('empresa', function ($query) use($empresaId) {
-                    $query->where('tipo', 2);
-                    if ($empresaId) {
-                        $query->where('id_empresa', $empresaId);
-                    }
-                })
-                ->where(function ($query) use ($search) {
-                    $query->whereHas('empresa', function ($q) use ($search) {
-                        $q->where('razon_social', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
-                        $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('solicitudes', function ($q) use ($search) {
-                        $q->where('folio', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('solicitudes.inspeccion', function ($q) use ($search) {
-                        $q->where('num_servicio', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhere('num_predio', 'LIKE', "%{$search}%")
-                    ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
-                    ->orWhere('ubicacion_predio', 'LIKE', "%{$search}%")
-                    ->orWhere('tipo_predio', 'LIKE', "%{$search}%")
-                    ->orWhere('puntos_referencia', 'LIKE', "%{$search}%")
-                    ->orWhere('superficie', 'LIKE', "%{$search}%");
-                })
-                ->offset($start)
-                ->limit($limit)
-                ->orderByDesc('id_predio')
+    $predios = Predios::with('empresa')
+        ->whereHas('empresa', function ($query) use ($empresaId) {
+            $query->where('tipo', 2);
+            if ($empresaId) {
+                $query->where('id_empresa', $empresaId);
+            }
+        })
+        ->where(function ($query) use ($search) {
+            $query->whereHas('empresa', function ($q) use ($search) {
+                $q->where('razon_social', 'LIKE', "%{$search}%");
+            })
+            ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
+                $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
+            })
+            ->orWhereHas('solicitudes', function ($q) use ($search) {
+                $q->where('folio', 'LIKE', "%{$search}%");
+            })
+            ->orWhereHas('solicitudes.inspeccion', function ($q) use ($search) {
+                $q->where('num_servicio', 'LIKE', "%{$search}%");
+            })
+            ->orWhere('num_predio', 'LIKE', "%{$search}%")
+            ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
+            ->orWhere('ubicacion_predio', 'LIKE', "%{$search}%")
+            ->orWhere('tipo_predio', 'LIKE', "%{$search}%")
+            ->orWhere('puntos_referencia', 'LIKE', "%{$search}%")
+            ->orWhere('superficie', 'LIKE', "%{$search}%");
+        })
+        ->offset($start)
+        ->limit($limit)
+        ->orderBy($order ?? 'id_predio', $dir ?? 'desc')
+        ->get();
 
-                ->get();
-
-            $totalFiltered = Predios::with('empresa')
-                ->whereHas('empresa', function ($query) {
-                    $query->where('tipo', 2);
-                })
-                ->where(function ($query) use ($search) {
-                    $query->whereHas('empresa', function ($q) use ($search) {
-                        $q->where('razon_social', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
-                        $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('solicitudes', function ($q) use ($search) {
-                        $q->where('folio', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('solicitudes.inspeccion', function ($q) use ($search) {
-                        $q->where('num_servicio', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhere('num_predio', 'LIKE', "%{$search}%")
-                    ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
-                    ->orWhere('ubicacion_predio', 'LIKE', "%{$search}%")
-                    ->orWhere('tipo_predio', 'LIKE', "%{$search}%")
-                    ->orWhere('puntos_referencia', 'LIKE', "%{$search}%")
-                    ->orWhere('superficie', 'LIKE', "%{$search}%");
-                })
-                ->count();
+    $totalFiltered = Predios::with('empresa')
+        ->whereHas('empresa', function ($query) use ($empresaId) {
+            $query->where('tipo', 2);
+            if ($empresaId) {
+                $query->where('id_empresa', $empresaId);
+            }
+        })
+        ->where(function ($query) use ($search) {
+            $query->whereHas('empresa', function ($q) use ($search) {
+                $q->where('razon_social', 'LIKE', "%{$search}%");
+            })
+            ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
+                $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
+            })
+            ->orWhereHas('solicitudes', function ($q) use ($search) {
+                $q->where('folio', 'LIKE', "%{$search}%");
+            })
+            ->orWhereHas('solicitudes.inspeccion', function ($q) use ($search) {
+                $q->where('num_servicio', 'LIKE', "%{$search}%");
+            })
+            ->orWhere('num_predio', 'LIKE', "%{$search}%")
+            ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
+            ->orWhere('ubicacion_predio', 'LIKE', "%{$search}%")
+            ->orWhere('tipo_predio', 'LIKE', "%{$search}%")
+            ->orWhere('puntos_referencia', 'LIKE', "%{$search}%")
+            ->orWhere('superficie', 'LIKE', "%{$search}%");
+        })
+        ->count();
         }
 
         $data = [];

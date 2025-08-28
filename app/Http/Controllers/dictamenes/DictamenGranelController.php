@@ -52,6 +52,9 @@ class DictamenGranelController extends Controller  {
         // Pasar los datos a la vista
         return view('dictamenes.find_dictamen_granel', compact('inspecciones', 'empresas', 'lotesGranel', 'inspectores','categorias','clases','tipos'));
     }
+
+
+
 private function obtenerEmpresasVisibles($empresaId)
 {
     $idsEmpresas = [];
@@ -71,8 +74,11 @@ public function index(Request $request)
 {
     //Permiso de empresa
     $empresaId = null;
+    $instalacionAuth = [];
     if (Auth::check() && Auth::user()->tipo == 3) {
         $empresaId = Auth::user()->empresa?->id_empresa;
+        $instalacionAuth = (array) Auth::user()->id_instalacion;
+        $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
     }
 
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
@@ -102,13 +108,16 @@ public function index(Request $request)
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
     ->select('dictamenes_granel.*', 'empresa.razon_social');
 
-    /* if ($empresaId) {
-        $query->where('solicitudes.id_empresa', $empresaId);
-    } */
+    // Filtro por empresa
     if ($empresaId) {
-        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
         $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
     }
+    // Filtro por instalaciones del usuario
+    if (!empty($instalacionAuth)) {
+        $query->whereIn('solicitudes.id_instalacion', $instalacionAuth);
+    }
+
     $baseQuery = clone $query;
     $totalData = $baseQuery->count();// totalData (sin búsqueda)
 
