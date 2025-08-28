@@ -323,7 +323,7 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                           $loteGranel->save();
 
                           // Registrar bitácora de salida
-                          BitacoraMezcal::create([
+                          /*BitacoraMezcal::create([
                               'fecha' => now()->toDateString(),
                               'id_tanque' => $loteGranel->id_tanque ?? 0,
                               'id_empresa' => $loteGranel->id_empresa,
@@ -345,7 +345,7 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                               'alcohol_final' => $loteGranel->cont_alc,
                               'observaciones' => 'Salida por creación del lote envasado: ' . $lotes->nombre,
                               'id_firmante' => 0,
-                          ]);
+                          ]);*/
                       }
                   }
 

@@ -56,7 +56,6 @@ class DictamenEnvasadoController extends Controller
 private function obtenerEmpresasVisibles($empresaId)
 {
     $idsEmpresas = [];
-
     if ($empresaId) {
         $idsEmpresas[] = $empresaId;
         $idsEmpresas = array_merge(
@@ -68,7 +67,6 @@ private function obtenerEmpresasVisibles($empresaId)
     return array_unique($idsEmpresas);
 }
 
-
 public function index(Request $request)
 {
     $empresaId = null;
@@ -77,8 +75,19 @@ public function index(Request $request)
         $empresaId = Auth::user()->empresa?->id_empresa;
         $instalacionAuth = (array) Auth::user()->id_instalacion;
         $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
+
+        if (empty($instalacionAuth)) {
+            return response()->json([
+                'draw' => intval($request->input('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'code' => 200,
+                'data' => []
+            ]);
+        }
     }
 
+    
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
@@ -122,7 +131,7 @@ public function index(Request $request)
     $baseQuery = clone $query;
     $totalData = $baseQuery->count();// totalData (sin búsqueda)
 
-    
+
     // Búsqueda Global
     if (!empty($search)) {
         $query->where(function ($q) use ($search) {
