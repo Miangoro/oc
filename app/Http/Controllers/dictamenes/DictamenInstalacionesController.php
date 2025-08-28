@@ -52,22 +52,21 @@ class DictamenInstalacionesController extends Controller
         return view('dictamenes.find_dictamen_instalaciones', compact('dictamenes', 'clases', 'categoria', 'inspeccion', 'users'));
     }
 
-        private function obtenerEmpresasVisibles($empresaId)
-        {
-            $idsEmpresas = [];
 
-            if ($empresaId) {
-                $idsEmpresas[] = $empresaId;
-                $idsEmpresas = array_merge(
-                    $idsEmpresas,
-                    maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
-                );
-            }
+private function obtenerEmpresasVisibles($empresaId)
+{
+    $idsEmpresas = [];
 
-            return array_unique($idsEmpresas);
-        }
+    if ($empresaId) {
+        $idsEmpresas[] = $empresaId;
+        $idsEmpresas = array_merge(
+            $idsEmpresas,
+            maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+        );
+    }
 
-
+    return array_unique($idsEmpresas);
+}
 
 public function index(Request $request)
 {
@@ -78,6 +77,17 @@ public function index(Request $request)
         $empresaId = Auth::user()->empresa?->id_empresa;
         $instalacionAuth = (array) Auth::user()->id_instalacion;
         $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
+
+        // Si no tiene instalaciones, no ve nada
+        if (empty($instalacionAuth)) {
+            return response()->json([
+                'draw' => intval($request->input('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'code' => 200,
+                'data' => []
+            ]);
+        } 
     }
 
 

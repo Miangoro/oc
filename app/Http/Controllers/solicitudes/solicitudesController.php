@@ -91,11 +91,6 @@ class solicitudesController extends Controller
 
 
 
-
-
-
-
-
     public function index(Request $request)
     {
 
