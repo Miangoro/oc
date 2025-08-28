@@ -48,7 +48,7 @@ class DictamenExportacionController extends Controller
         return view('dictamenes.find_dictamen_exportacion', compact('dictamenes', 'inspeccion', 'users', 'empresa'));
     }
 
-    
+
 private function obtenerEmpresasVisibles($empresaId)
 {
     $idsEmpresas = [];
@@ -77,8 +77,19 @@ public function index(Request $request)
         $empresaId = Auth::user()->empresa?->id_empresa;
         $instalacionAuth = (array) Auth::user()->id_instalacion;
         $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
+
+        if (empty($instalacionAuth)) {
+            return response()->json([
+                'draw' => intval($request->input('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'code' => 200,
+                'data' => []
+            ]);
+        }
     }
 
+    
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
 
     // Mapear las columnas según el orden DataTables (índice JS)
@@ -93,11 +104,8 @@ public function index(Request $request)
         7 => '',// acciones
     ];
 
-    /*$totalData = Dictamen_Exportacion::count();
-    $totalFiltered = $totalData;*/
     $limit = $request->input('length');
     $start = $request->input('start');
-
     // Columnas ordenadas desde DataTables
     $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
     $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
@@ -106,10 +114,6 @@ public function index(Request $request)
     $search = $request->input('search.value');//Define la búsqueda global.
 
 
-    //1)$query = Dictamen_Exportacion::query();
-    /*2)$query = Dictamen_Exportacion::select('inspecciones.*')
-    ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion');
-    */
     $query = Dictamen_Exportacion::query()
         ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
         ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
@@ -121,13 +125,7 @@ public function index(Request $request)
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%");
         })*/;
 
-   /*  if ($empresaId) {
-        $query->where('solicitudes.id_empresa', $empresaId);
-    } */
-    /*if ($empresaId) {
-        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
-        $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
-    }*/
+
     // Filtro por empresa
     if ($empresaId) {
         $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
@@ -142,12 +140,8 @@ public function index(Request $request)
     $totalData = $baseQuery->count();// totalData (sin búsqueda)
 
 
-    // Búsqueda Global
-    if (!empty($search)) {//solo se aplica si hay búsqueda global
-        /*1)$query->where(function ($q) use ($search) {
-            $q->where('num_dictamen', 'LIKE', "%{$search}%")
-              ->orWhere('num_servicio', 'LIKE', "%{$search}%");
-        });*/
+    //solo se aplica si hay búsqueda
+    if (!empty($search)) {  //BUSCADOR ACTIVO
         $query->where(function ($q) use ($search) {
             $q->where('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")

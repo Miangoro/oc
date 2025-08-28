@@ -323,7 +323,10 @@
             <td>{{ $lote->lotesGranel->first()->cont_alc ?? "No encontrada" }}% Alc. Vol.</td>
             <td style="font-size: 15px;" rowspan="2"><b>Especie de agave o maguey</b></td>
             <td style="font-size: 12px;" rowspan="2">
-                {{ $lote->lotesGranel->first()->tiposRelacionados->pluck('nombre')->implode(', ') ?? 'No encontrado' }}
+                {{-- {{ $lote->lotesGranel->first()->tiposRelacionados->pluck('nombre')->implode(', ') ?? 'No encontrado' }} --}}
+                {!! $lote->lotesGranel->first()->tiposRelacionados->map(function ($tipo) {
+                    return $tipo->nombre . '<br> (<i>' . $tipo->cientifico . '</i>)';
+                })->implode('<br>') !!}
             </td>
         </tr>
         <tr>

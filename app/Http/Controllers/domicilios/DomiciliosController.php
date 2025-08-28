@@ -33,26 +33,23 @@ class DomiciliosController extends Controller
 
 
 
+private function obtenerEmpresasVisibles($empresaId)
+{
+    $idsEmpresas = [];
 
+    if ($empresaId) {
+        $idsEmpresas[] = $empresaId;
+        $idsEmpresas = array_merge(
+            $idsEmpresas,
+            maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+        );
+    }
 
-    public function index(Request $request)
-    {
-        $columns = [
-            1 => 'id_instalacion',
-            2 => 'direccion_completa',
-            3 => 'estado',
-            4 => 'folio',
-            5 => 'tipo',
-            6 => 'certificacion',
-            7 => 'url',
-            8 => 'fecha_emision',
-            9 => 'fecha_vigencia',
-            10 => 'responsable',
-            11 => 'nombre_documento',
-        ];
+    return array_unique($idsEmpresas);
+}
 
-        $search = [];
-
+public function index(Request $request)
+{
     // Permiso de empresa
     $empresaId = null;
     $instalacionAuth = [];
@@ -60,16 +57,43 @@ class DomiciliosController extends Controller
         $empresaId = Auth::user()->empresa?->id_empresa;
         $instalacionAuth = (array) Auth::user()->id_instalacion;
         $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
+
+        if (empty($instalacionAuth)) {
+            return response()->json([
+                'draw' => intval($request->input('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'code' => 200,
+                'data' => []
+            ]);
+        }
     }
 
-    $totalData = instalaciones::whereHas('empresa', function ($query) use ($empresaId) {
+    $columns = [
+        1 => 'id_instalacion',
+        2 => 'direccion_completa',
+        3 => 'estado',
+        4 => 'folio',
+        5 => 'tipo',
+        6 => 'certificacion',
+        7 => 'url',
+        8 => 'fecha_emision',
+        9 => 'fecha_vigencia',
+        10 => 'responsable',
+        11 => 'nombre_documento',
+    ];
+
+    $search = [];
+
+    
+    /*$totalData = instalaciones::whereHas('empresa', function ($query) use ($empresaId) {
         $query->where('tipo', 2);
         if ($empresaId) {
             $query->where('id_empresa', $empresaId);
         }
     })->count();
 
-    $totalFiltered = $totalData;
+    $totalFiltered = $totalData;*/
 
     $limit = $request->input('length');
     $start = $request->input('start');
@@ -78,23 +102,43 @@ class DomiciliosController extends Controller
 
     $search = $request->input('search.value');
 
-    $query = instalaciones::with('empresa')
+
+    /*$query = instalaciones::with('empresa')
         ->whereHas('empresa', function ($query) use ($empresaId) {
             $query->where('tipo', 2);
             if ($empresaId) {
                 $query->where('id_empresa', $empresaId);
             }
-        });
+        });*/
 
     // Filtrar por instalaciones del usuario tipo 3
+    /*if (!empty($instalacionAuth)) {
+        $query->whereIn('id_instalacion', $instalacionAuth);
+    }*/
+
+    $query = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
+        ->whereHas('empresa', function ($q) {
+            $q->where('tipo', 2);
+        });
+
+    // Filtro por empresa (propia + maquiladores)
+    if ($empresaId) {
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
+        $query->whereIn('id_empresa', $empresasVisibles);
+    }
+    // Filtro por instalaciones asignadas al usuario tipo 3
     if (!empty($instalacionAuth)) {
         $query->whereIn('id_instalacion', $instalacionAuth);
     }
 
+    $baseQuery = clone $query;
+    $totalData = $baseQuery->count();// totalData (sin búsqueda)
+
+
 
 //SIN BUSQUEDA
-        if (empty($request->input('search.value'))) {
-            $query = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
+        /*if (empty($search)) {
+            /*$query = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
                 ->whereHas('empresa', function ($query) use ($empresaId) {
                     $query->where('tipo', 2);
 
@@ -114,9 +158,31 @@ class DomiciliosController extends Controller
                 ->orderBy($order, $dir)
                 ->get();
 
+        $totalFiltered = $query->count();*
+        $query = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
+            ->whereHas('empresa', function ($q) {
+                $q->where('tipo', 2);
+            });
 
-} else {///BUSCADOR ACTIVO
-            $search = $request->input('search.value');
+        if ($empresaId) {
+            $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
+            $query->whereIn('id_empresa', $empresasVisibles);
+        }
+
+        if (!empty($instalacionAuth)) {
+            $query->whereIn('id_instalacion', $instalacionAuth);
+        }
+
+        $instalaciones = $query
+            ->offset($start)
+            ->limit($limit)
+            ->orderBy($order, $dir)
+            ->get();
+
+        $totalFiltered = $query->count();
+
+} else*/ if (!empty($search)) {///BUSCADOR ACTIVO
+            /*$search = $request->input('search.value');
 
             $query = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
                 ->whereHas('empresa', function ($query) use ($empresaId) {
@@ -155,9 +221,36 @@ class DomiciliosController extends Controller
                 ->orderBy($order, $dir)
                 ->get();
 
-            $totalFiltered = $query->count();
+            $totalFiltered = $query->count();*/
+            $query->where(function ($q) use ($search) {
+                    $q->where('responsable', 'LIKE', "%{$search}%")
+                    ->orWhereHas('empresa', function ($subQuery) use ($search) {
+                        $subQuery->where('razon_social', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
+                        $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('estados', function ($subQuery) use ($search) {
+                        $subQuery->where('nombre', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('organismos', function ($subQuery) use ($search) {
+                        $subQuery->where('organismo', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
+                    ->orWhere('folio', 'LIKE', "%{$search}%")
+                    ->orWhere('tipo', 'LIKE', "%{$search}%");
+                });
+            }
 
-        }
+        $instalaciones = $query
+            ->offset($start)
+            ->limit($limit)
+            ->orderBy($order, $dir)
+            ->get();
+
+        $totalFiltered = $query->count();
+
+        
 
         $data = [];
 
