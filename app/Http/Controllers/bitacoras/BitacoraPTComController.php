@@ -397,7 +397,7 @@ public function store(Request $request)
         $bitacora = new BitacoraProductoTerminado();
         $bitacora->fecha = $request->fecha;
         $bitacora->id_empresa = $request->id_empresa;
-        $bitacora->id_instalacion = $request->id_instalacion;
+        $bitacora->id_instalacion = $request->id_instalacion ?? 0;
         $bitacora->tipo_operacion = $request->tipo_operacion;
 
         $bitacora->lote_granel = $request->lote_granel;
@@ -565,7 +565,7 @@ public function store(Request $request)
         $bitacora->update([
             'fecha' => $request->fecha,
             'id_empresa' => $request->id_empresa,
-            'id_instalacion' => $request->id_instalacion,
+            'id_instalacion' => $request->id_instalacion ?? 0,
             'tipo_operacion' => $request->tipo_operacion,
 
             'lote_granel' => $request->lote_granel,
