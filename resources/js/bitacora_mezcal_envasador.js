@@ -79,7 +79,7 @@ $(function () {
             return `<span>${$empresa}</span>`;
           }
         },
-       {
+        {
           targets: 4,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
@@ -103,8 +103,8 @@ $(function () {
               '<br><span class="fw-bold small">Folio FQ: </span>' +
               '<span class="small">' + $folio_fq + '</span>' +
 
-                          '<br><span class="fw-bold small">Folios Procedencia: </span>' +
-                  '<span class="small">' + lotes_procedencia + '</span>' +
+              '<br><span class="fw-bold small">Folios Procedencia: </span>' +
+              '<span class="small">' + lotes_procedencia + '</span>' +
 
               '<br><span class="fw-bold small">Inventario Inicial:</span>' +
               '<br>&nbsp;&nbsp;<span class="fw-bold small">Volumen:</span> ' +
@@ -121,7 +121,7 @@ $(function () {
 
             if ($obs && $obs.toUpperCase() !== 'N/A') {
               html += '<br><span class="fw-bold small">Observaciones: </span>' +
-                      '<span class="small">' + $obs + '</span>';
+                '<span class="small">' + $obs + '</span>';
             }
 
             return html;
@@ -335,7 +335,7 @@ $(function () {
             $(node).find('select').select2();
           }
         },
-            {
+        {
           className: 'dt-custom-select p-0 me-2 btn-outline-dark form-select-sm',
           text: '',
           init: function (api, node) {
@@ -378,18 +378,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== ''
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -441,44 +441,44 @@ $(function () {
     $('.datatables-users').DataTable().ajax.reload();
   });
 
-$(document).ready(function () {
-  function cargarInstalaciones() {
-    // Si es usuario tipo 3, usar instalaciones precargadas
-    if (window.tipoUsuario === 3) {
-      $('#filtroInstalacion').html(window.opcionesInstalacionesAutenticadas).trigger('change');
-      return;
-    }
-
-    let empresaId = $('#filtroEmpresa').val();
-    if (!empresaId) {
-      $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
-      return;
-    }
-
-    $.ajax({
-      url: '/getDatos/' + empresaId,
-      method: 'GET',
-      success: function (response) {
-        let opciones = '<option value="">-- Todas las Instalaciones --</option>';
-        if (response.instalaciones.length > 0) {
-          response.instalaciones.forEach(function (inst) {
-            let tipoLimpio = limpiarTipo(inst.tipo);
-            opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
-          });
-        } else {
-          opciones += '<option value="">Sin instalaciones registradas</option>';
-        }
-        $('#filtroInstalacion').html(opciones).trigger('change');
-      },
-      error: function () {
-        $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+  $(document).ready(function () {
+    function cargarInstalaciones() {
+      // Si es usuario tipo 3, usar instalaciones precargadas
+      if (window.tipoUsuario === 3) {
+        $('#filtroInstalacion').html(window.opcionesInstalacionesAutenticadas).trigger('change');
+        return;
       }
-    });
-  }
 
-  cargarInstalaciones();
-  $('#filtroEmpresa').on('change', cargarInstalaciones);
-});
+      let empresaId = $('#filtroEmpresa').val();
+      if (!empresaId) {
+        $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
+        return;
+      }
+
+      $.ajax({
+        url: '/getDatos/' + empresaId,
+        method: 'GET',
+        success: function (response) {
+          let opciones = '<option value="">-- Todas las Instalaciones --</option>';
+          if (response.instalaciones.length > 0) {
+            response.instalaciones.forEach(function (inst) {
+              let tipoLimpio = limpiarTipo(inst.tipo);
+              opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
+            });
+          } else {
+            opciones += '<option value="">Sin instalaciones registradas</option>';
+          }
+          $('#filtroInstalacion').html(opciones).trigger('change');
+        },
+        error: function () {
+          $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+        }
+      });
+    }
+
+    cargarInstalaciones();
+    $('#filtroEmpresa').on('change', cargarInstalaciones);
+  });
 
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
