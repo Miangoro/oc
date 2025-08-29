@@ -443,6 +443,7 @@ $(document).ready(function () {
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   $(document).on('click', '#verBitacoraBtn', function () {
     const empresaId = $('#filtroEmpresa').val();
+    const instalacionId = $('#filtroInstalacion').val();
 
     if (!empresaId) {
       Swal.fire({
@@ -458,7 +459,9 @@ $(document).ready(function () {
     }
 
     let urlPDF = `/BitacoraProductoEtiquetaPDF?empresa=${empresaId}`;
-
+if (instalacionId) {
+      urlPDF += `&instalacion=${instalacionId}`;
+    }
     urlPDF += `&t=${new Date().getTime()}`;
 
     $('#cargando').show();

@@ -293,11 +293,13 @@ class BitacoraPTComController extends Controller
 
      public function PDFBitacoraPTCom(Request $request)
     {
+        $user = Auth::user();
+        $instalacionId = $request->query('instalacion');
         $empresaId = $request->query('empresa');
         $empresaSeleccionada = empresa::with('empresaNumClientes')->find($empresaId);
         /* $instalacionId = $request->query('instalacion'); */
         $title = 'COMERCIALIZADOR'; // Cambia a 'Envasador' si es necesario
-        $idsEmpresas = [$empresaId];
+         $idsEmpresas = $empresaId ? [$empresaId] : [];
         if ($empresaId) {
             $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
                 ->pluck('id_maquilador')
@@ -307,6 +309,15 @@ class BitacoraPTComController extends Controller
                 $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
             }
         }
+         $idsInstalaciones = $user->id_instalacion ?? [];
+        if ($user->tipo === 3 && empty($idsInstalaciones)) {
+                  return response()->json([
+                      'message' => 'El usuario no tiene instalaciones asignadas.'
+                  ], 403);
+          }
+      if ($instalacionId) {
+           $idsInstalaciones = [intval($instalacionId)];
+          }
         $bitacoras = BitacoraProductoTerminado::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
@@ -317,7 +328,10 @@ class BitacoraPTComController extends Controller
                 /* inicio */
         ->when($empresaId, function ($query) use ($idsEmpresas) {
               $query->whereIn('id_empresa', $idsEmpresas);
-          })
+          })->when(!empty($idsInstalaciones), function ($query) use ($idsInstalaciones) {
+        $query->whereIn('id_instalacion', $idsInstalaciones);
+    })
+
           /* fin */
         ->orderBy('id', 'desc')
         ->get();

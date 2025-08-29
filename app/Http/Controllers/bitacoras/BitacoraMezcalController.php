@@ -278,10 +278,6 @@ if (Auth::check() && Auth::user()->tipo == 3) {
     }
 
 
-
-///PDf BITACORA
-public function PDFBitacoraMezcal(Request $request)
-{
     /*$empresaId = $request->query('empresa');
     $empresaSeleccionada = empresa::with('empresaNumClientes')->find($empresaId);
     $instalacionId = $request->query('instalacion');
@@ -314,6 +310,9 @@ public function PDFBitacoraMezcal(Request $request)
     $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaSeleccionada'))
     ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
     return $pdf->stream('Bitácora Mezcal a Granel.pdf');*/
+///PDf BITACORA
+public function PDFBitacoraMezcal(Request $request)
+{
     $user = Auth::user();
 
         // Si el usuario tiene varias instalaciones, aquí las tienes como array

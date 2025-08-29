@@ -309,9 +309,12 @@ if (Auth::check() && Auth::user()->tipo == 3) {
 
      public function PDFProductoEtiqueta(Request $request)
     {
+        $user = Auth::user();
+        $instalacionId = $request->query('instalacion');
         $empresaId = $request->query('empresa');
         $empresaSeleccionada = empresa::with('empresaNumClientes')->find($empresaId);
-        $idsEmpresas = [$empresaId];
+
+        $idsEmpresas = $empresaId ? [$empresaId] : [];
         if ($empresaId) {
             $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
                 ->pluck('id_maquilador')
@@ -321,6 +324,15 @@ if (Auth::check() && Auth::user()->tipo == 3) {
                 $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
             }
         }
+            $idsInstalaciones = $user->id_instalacion ?? [];
+        if ($user->tipo === 3 && empty($idsInstalaciones)) {
+                  return response()->json([
+                      'message' => 'El usuario no tiene instalaciones asignadas.'
+                  ], 403);
+          }
+      if ($instalacionId) {
+           $idsInstalaciones = [intval($instalacionId)];
+          }
         $bitacoras = BitacoraProductoEtiqueta::with([
             'empresaBitacora.empresaNumClientes',
             'loteGranelBitacora',
@@ -333,24 +345,11 @@ if (Auth::check() && Auth::user()->tipo == 3) {
         ->when($empresaId, function ($query) use ($idsEmpresas) {
               $query->whereIn('id_empresa', $idsEmpresas);
           })
+          ->when(!empty($idsInstalaciones), function ($query) use ($idsInstalaciones) {
+        $query->whereIn('id_instalacion', $idsInstalaciones);
+    })
         ->orderBy('id', 'desc')
         ->get();
-       /*  $empresaPadre = null;
-        if ($empresaId) {
-            // Ver si la empresa enviada es una maquiladora
-            $esMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)->exists();
-
-            if ($esMaquiladora) {
-                // Buscar su empresa padre
-                $idMaquiladora = maquiladores_model::where('id_maquilador', $empresaId)
-                    ->value('id_maquiladora');
-
-                $empresaPadre = empresa::with('empresaNumClientes')->find($idMaquiladora);
-            } else {
-                // Es empresa padre
-                $empresaPadre = empresa::with('empresaNumClientes')->find($empresaId);
-            }
-        } */
           if ($bitacoras->isEmpty()) {
               return response()->json([
                   'message' => 'No hay registros de bitácora para los filtros seleccionados.'

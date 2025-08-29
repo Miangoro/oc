@@ -405,10 +405,12 @@ private function esJsonValido($string)
 
      public function PDFBitacoraMezcal(Request $request)
     {
+        $user = Auth::user();
         $empresaId = $request->query('empresa');
         $empresaSeleccionada = empresa::with('empresaNumClientes')->find($empresaId);
         $instalacionId = $request->query('instalacion');
         $title = 'ENVASADOR'; // Cambia a 'Envasador' si es necesario
+
         $idsEmpresas = [$empresaId];
         if ($empresaId) {
             $idsMaquiladores = maquiladores_model::where('id_maquiladora', $empresaId)
@@ -419,13 +421,24 @@ private function esJsonValido($string)
                 $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
             }
         }
+         $idsInstalaciones = $user->id_instalacion ?? [];
+          if ($user->tipo === 3 && empty($idsInstalaciones)) {
+              return response()->json([
+                  'message' => 'El usuario no tiene instalaciones asignadas.'
+              ], 403);
+      }
+      if ($instalacionId) {
+              $idsInstalaciones = [intval($instalacionId)];
+          }
         $bitacoras = BitacoraMezcal::with([
             'empresaBitacora.empresaNumClientes',
             'firmante',
         ])->whereIn('tipo', [2, 3])
         ->when($empresaId, function ($query) use ($idsEmpresas) {
             $query->whereIn('id_empresa', $idsEmpresas);
-        })
+        }) ->when(!empty($idsInstalaciones), function ($query) use ($idsInstalaciones) {
+        $query->whereIn('id_instalacion', $idsInstalaciones);
+    })
 
        /*  ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
             $query->where('id_empresa', $empresaId);

@@ -321,10 +321,14 @@ public function PDFProductoMaduracion(Request $request)
     */
     //$user = auth()->user();
     $user = Auth::user();
-
+  $instalacionId = $request->query('instalacion');
     // Si el usuario tiene varias instalaciones, aquí las tienes como array
     $idsInstalaciones = $user->id_instalacion ?? [];
-
+    if ($user->tipo === 3 && empty($idsInstalaciones)) {
+                  return response()->json([
+                      'message' => 'El usuario no tiene instalaciones asignadas.'
+                  ], 403);
+          }
     // Si quieres filtrar también por empresa (opcional desde request)
     $empresaId = $request->query('empresa');
 
@@ -346,7 +350,9 @@ public function PDFProductoMaduracion(Request $request)
             $idsEmpresas = array_merge([$empresaId], $idsMaquiladores);
         }
     }
-
+if ($instalacionId) {
+              $idsInstalaciones = [intval($instalacionId)];
+          }
     $bitacoras = BitacoraProductoMaduracion::with([
         'empresaBitacora.empresaNumClientes',
         'firmante',
