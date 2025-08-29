@@ -622,14 +622,12 @@
             <td colspan="3">
                 {{-- @if($muestreo_granel == 'X') {{ $datos->lote_granel->folio_fq ?? '---------------' }} @else --------------- @endif --}}
                 @php
-                    use App\Models\LotesGranel;
-                    
                     $lotesProcedencia = collect();
                     if (!empty($datos->lote_granel->lote_original_id)) {
                         $json = json_decode($datos->lote_granel->lote_original_id, true);
 
                         if (isset($json['lotes']) && is_array($json['lotes'])) {
-                            $lotesProcedencia = LotesGranel::with('certificadoGranel')
+                            $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
                                 ->whereIn('id_lote_granel', $json['lotes'])
                                 ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
                         }
