@@ -74,6 +74,22 @@ class getFuncionesController extends Controller
         return $this->renderVista('_partials._modals.modal-add-asignar-inspector', $inspectores);
     }
 
+    public function getDatosMaquila(empresa $empresa)
+    {
+         $idsMaquilador = maquiladores_model::where('id_maquilador', $empresa->id_empresa)
+        ->pluck('id_maquiladora')
+        ->toArray();
+
+        $idsEmpresasD = array_merge([$empresa->id_empresa], $idsMaquilador);
+
+        $empresasDestino = empresa::with('empresaNumClientes')->whereIn('id_empresa', $idsEmpresasD)
+            ->get(['id_empresa','razon_social']); // Trae también la relación empresaNumClientes
+
+
+          return response()->json([
+            'empresasDestino' => $empresasDestino
+        ]);
+    }
 
     public function getDatos(empresa $empresa)
     {
@@ -86,6 +102,7 @@ class getFuncionesController extends Controller
         $idsMaquiladoras = maquiladores_model::where('id_maquiladora', $empresa->id_empresa)
             ->pluck('id_maquilador')
             ->toArray();
+
         $idsEmpresas = array_merge([$empresa->id_empresa], $idsMaquiladoras);
 
         // Obtener instalaciones de todas las empresas relacionadas
@@ -417,7 +434,7 @@ class getFuncionesController extends Controller
                 ]);
             }
         }
-        
+
         return response()->json([
             'success' => true,
             'data' => $documentos,

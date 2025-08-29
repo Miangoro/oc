@@ -56,7 +56,7 @@ class lotesGranelController extends Controller
         return view('catalogo.lotes_granel', compact('lotes', 'empresas', 'categorias', 'clases', 'tipos', 'organismos', 'estados', 'guias', 'documentos'));
     }
 
- private function obtenerEmpresasVisibles($empresaId)
+     private function obtenerEmpresasVisibles($empresaId)
   {
       $idsEmpresas = [];
 
@@ -65,7 +65,7 @@ class lotesGranelController extends Controller
           $idsEmpresas = array_merge(
               $idsEmpresas,
               maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
-          );
+          );/* id_maquiladora  id_maquilador */
       }
 
       return array_unique($idsEmpresas);
@@ -107,14 +107,46 @@ class lotesGranelController extends Controller
             $order = $columns[$request->input('order.0.column')];
             $dir = $request->input('order.0.dir');
 
-          $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'tipos', 'Organismo','certificadoGranel','fqs'])
+            $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
+            $esMaquilador = maquiladores_model::where('id_maquilador', $empresaId)->exists();
 
-              /* ->when($empresaId, function ($query) use ($empresaId) {
-                  $query->where('id_empresa', $empresaId);
-              }) */
-             ->when($empresaId, function ($query) use ($empresaId) {
-                $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
-                $query->whereIn('id_empresa', $empresasVisibles);
+            $LotesGranel = LotesGranel::with([
+                'empresa', 'categoria', 'clase', 'tipos', 'Organismo', 'certificadoGranel', 'fqs'
+            ])
+            ->when($empresaId, function ($query) use ($empresaId, $empresasVisibles, $esMaquilador) {
+
+                if ($esMaquilador) {
+                    // Maquilador: sus propios registros y donde es destino
+                    $query->where(function($q) use ($empresaId) {
+                        $q->where('id_empresa', $empresaId)
+                          ->orWhere('id_empresa_destino', $empresaId);
+                    });
+
+                } else {
+                    // Empresa principal
+                    $hayDestino = LotesGranel::whereIn('id_empresa', $empresasVisibles)
+                                              ->where('id_empresa_destino', $empresaId)
+                                              ->exists();
+
+                    $query->where(function($q) use ($empresaId, $empresasVisibles, $hayDestino) {
+                        if ($hayDestino) {
+                            // Solo mostrar registros donde id_empresa = su id o id_empresa_destino = su id
+                            $q->whereIn('id_empresa', $empresasVisibles)
+                              ->where(function($cond) use ($empresaId) {
+                                  $cond->where('id_empresa', $empresaId)
+                                      ->orWhere('id_empresa_destino', $empresaId);
+                              });
+                        } else {
+                            // Mostrar registros propios y de maquiladores sin destino
+                            $q->where('id_empresa', $empresaId)
+                              ->orWhere(function($q2) use ($empresasVisibles) {
+                                  $q2->whereIn('id_empresa', $empresasVisibles)
+                                    ->whereNull('id_empresa_destino');
+                              });
+                        }
+                    });
+                }
+
             })
 
 
@@ -160,11 +192,37 @@ class lotesGranelController extends Controller
            /*  $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId) {
         return $query->where('id_empresa', $empresaId);
     }) */
-   $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId) {
+$totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId) {
     $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
-    return $query->whereIn('id_empresa', $empresasVisibles);
-})
+    $esMaquilador = maquiladores_model::where('id_maquilador', $empresaId)->exists();
 
+    if ($esMaquilador) {
+        $query->where(function ($q) use ($empresaId) {
+            $q->where('id_empresa', $empresaId)
+              ->orWhere('id_empresa_destino', $empresaId);
+        });
+    } else {
+        $hayDestino = LotesGranel::whereIn('id_empresa', $empresasVisibles)
+                                  ->where('id_empresa_destino', $empresaId)
+                                  ->exists();
+
+        $query->where(function($q) use ($empresaId, $empresasVisibles, $hayDestino) {
+            if ($hayDestino) {
+                $q->whereIn('id_empresa', $empresasVisibles)
+                  ->where(function($cond) use ($empresaId) {
+                      $cond->where('id_empresa', $empresaId)
+                           ->orWhere('id_empresa_destino', $empresaId);
+                  });
+            } else {
+                $q->where('id_empresa', $empresaId)
+                  ->orWhere(function($q2) use ($empresasVisibles) {
+                      $q2->whereIn('id_empresa', $empresasVisibles)
+                         ->whereNull('id_empresa_destino');
+                  });
+            }
+        });
+    }
+})
     ->when($search, function ($query, $search) {
                 return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
                     ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
@@ -408,7 +466,6 @@ class lotesGranelController extends Controller
             ]);
         }
     }
-
 
     public function getLotesList(Request $request)
     {

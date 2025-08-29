@@ -15,10 +15,10 @@
                     <div class="form-section mb-4 p-3 border rounded">
                         <h6 class="mb-3">Información del Lote</h6>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12" id="select_empresa">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select onchange="obtenerDatosEmpresa()" id="id_empresa" name="id_empresa"
-                                        class="select2 form-select"
+                                    <select onchange="obtenerDatosEmpresa(); obtenerDestinoEmpresa();" id="id_empresa"
+                                        name="id_empresa" class="select2 form-select"
                                         data-error-message="por favor selecciona la empresa">
                                         <option value="" disabled selected>Selecciona el cliente</option>
                                         @foreach ($empresas as $empresa)
@@ -31,6 +31,22 @@
                                     <label for="id_empresa" class="form-label">Cliente</label>
                                 </div>
                             </div>
+
+                            <div class="col-md-6 d-none" id="select_destino">
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <select id="id_empresa_destino" name="id_empresa_destino"
+                                        class="select2 form-select"
+                                        data-error-message="por favor selecciona la empresa">
+                                        <option value="" disabled selected>Selecciona la empresa destino</option>
+
+                                    </select>
+                                    <label for="id_empresa_destino" class="form-label">Empresa destino</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Campo para seleccionar lote original -->
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="text" id="nombre_lote" name="nombre_lote" class="form-control"
@@ -39,11 +55,7 @@
                                     <label for="nombre_lote">Nombre del Lote</label>
                                 </div>
                             </div>
-
-                        </div>
-                        <!-- Campo para seleccionar lote original -->
-                        <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="tipo_lote" name="tipo_lote" class=" form-select"
                                         data-error-message="Por favor selecciona el tipo de lote">
@@ -54,7 +66,11 @@
                                     <label for="tipo_lote">Tipo de Lote</label>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="es_creado_a_partir" name="es_creado_a_partir" class="form-select">
                                         <option value="" disabled selected>¿Creado a partir de otro lote?</option>
@@ -65,7 +81,7 @@
                                         lote?</label>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-4">
+                            <div class="col-md-6 mb-4">
                                 <div class="form-floating form-floating-outline">
                                     <input type="text" class="form-control" id="id_tanque" name="id_tanque"
                                         placeholder="ID del Tanque(s)" aria-label="ID del Tanque">
@@ -172,9 +188,9 @@
                             </div>
                         </div>
                         <div class="row">
-                           <div class="col-md-4">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select id="id_estado" name="id_estado" class="select2 form-select" >
+                                    <select id="id_estado" name="id_estado" class="select2 form-select">
                                         <option value="" disabled selected>Selecciona el origen
                                         </option>
                                         @foreach ($estados as $estado)
@@ -283,7 +299,7 @@
                                 <div class="col-md-6 mb-4">
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" id="fecha_emision" name="fecha_emision"
-                                            autocomplete="off" class="feorm-control datepicker"
+                                            autocomplete="off" class="form-control datepicker"
                                             placeholder="Fecha de Emisión" />
                                         <label for="fecha_emision">Fecha de Emisión</label>
                                     </div>
@@ -362,11 +378,12 @@
 
                     <!-- Botones -->
                     <div class="d-flex justify-content-center mt-3">
-                      <button disabled class="btn btn-primary d-none me-2" type="button" id="btnSpinner">
+                        <button disabled class="btn btn-primary d-none me-2" type="button" id="btnSpinner">
                             <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
                             Registrando...
                         </button>
-                        <button type="submit" class="btn btn-primary me-2" id="btnAdd"><i class="ri-add-line me-1"></i>
+                        <button type="submit" class="btn btn-primary me-2" id="btnAdd"><i
+                                class="ri-add-line me-1"></i>
                             Registrar</button>
                         <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"><i
                                 class="ri-close-line me-1"></i> Cancelar</button>
@@ -435,8 +452,59 @@
         });
     }
 
+
+
+function obtenerDestinoEmpresa() {
+    var empresa = $("#id_empresa").val();
+    if (!empresa) return;
+
+    $.ajax({
+        url: '/getDatosMaquila/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            var $selectDestino = $('#id_empresa_destino');
+             var $selectDestinoContainer = $('#select_destino');
+            var $selectEmpresaContainer = $('#select_empresa');
+            $selectDestino.empty();
+
+            var opciones = [];
+
+            if (response.empresasDestino.length > 0) {
+                response.empresasDestino.forEach(function(emp) {
+                    var numeroCliente = (emp.empresa_num_clientes[0]?.numero_cliente ??
+                                         emp.empresa_num_clientes[1]?.numero_cliente ?? '');
+                    opciones.push(`<option value="${emp.id_empresa}">${numeroCliente} | ${emp.razon_social}</option>`);
+                });
+            } else {
+                opciones.push(`<option value="${empresa}" selected>Propia empresa</option>`);
+            }
+
+            $selectDestino.append(opciones.join(''));
+
+            // Deshabilitar si solo hay una opción
+            if ($selectDestino.find('option').length === 1) {
+                $selectDestino.prop('disabled', true);
+                 $selectDestinoContainer.addClass('d-none'); // Oculta el select destino si solo hay uno
+                $selectEmpresaContainer.removeClass('col-md-12').addClass('col-md-12'); // Mantiene la empresa principal full width
+            } else {
+                $selectDestino.prop('disabled', false);
+                $selectDestinoContainer.removeClass('d-none');
+                $selectEmpresaContainer.removeClass('col-md-12').addClass('col-md-6'); // Ajusta ancho
+            }
+
+            $(document).trigger('empresaDestinoCargada', [$selectDestino]);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al cargar los datos de la empresa:', error);
+            alert('Error al cargar los datos. Por favor, intenta nuevamente.');
+        }
+    });
+}
+
+
     // Llamar a obtenerDatosEmpresa cuando se selecciona la empresa
     $('#id_empresa').change(function() {
         obtenerDatosEmpresa();
+        obtenerDestinoEmpresa();
     });
 </script>
