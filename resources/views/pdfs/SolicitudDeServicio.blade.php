@@ -621,7 +621,24 @@
                 laboratorio:</td>
             <td colspan="3">
                 {{-- @if($muestreo_granel == 'X') {{ $datos->lote_granel->folio_fq ?? '---------------' }} @else --------------- @endif --}}
+                @php
+                    $lotesProcedencia = collect();
+                    if (!empty($datos->lote_granel->lote_original_id)) {
+                        $json = json_decode($datos->lote_granel->lote_original_id, true);
+
+                        if (isset($json['lotes']) && is_array($json['lotes'])) {
+                            $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
+                                ->whereIn('id_lote_granel', $json['lotes'])
+                                ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
+                        }
+                    }
+                @endphp
                 @if($muestreo_granel != 'X')
+                {{-- {{ $lotesProcedencia->map(function($lote) {
+                        return $lote->folio_fq;
+                    })->implode(', ') }}  --}}
+                    {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
+
                     {{ $datos->lote_granel->folio_fq ?? '---------------' }}
                 @else --------------- @endif
             </td>
