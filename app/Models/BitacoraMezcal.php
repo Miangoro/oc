@@ -64,5 +64,10 @@ class BitacoraMezcal extends Model
         return $this->belongsTo(instalaciones::class, 'id_instalacion','id_instalacion');
     }
 
+    public function lotesProcedencia()
+    {
+        return $this->hasMany(LotesGranel::class, 'lote_original_id', 'id_lote_granel');
+    }
+
 
 }

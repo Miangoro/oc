@@ -89,6 +89,7 @@ $(function () {
             var $volumen_inicial = full['volumen_inicial'] ?? 'N/A';
             var $alcohol_inicial = full['alcohol_inicial'] ?? 'N/A';
             var $id_tanque = full['id_tanque'] ?? 'N/A';
+            var lotes_procedencia = full['folios_procedencia'] ?? 'N/A';
             var $certificado = full['folio_certificado'] ?? 'N/A';
             var $obs = (full['observaciones'] || '').trim();
 
@@ -101,6 +102,9 @@ $(function () {
 
               '<br><span class="fw-bold small">Folio FQ: </span>' +
               '<span class="small">' + $folio_fq + '</span>' +
+
+                          '<br><span class="fw-bold small">Folios Procedencia: </span>' +
+                  '<span class="small">' + lotes_procedencia + '</span>' +
 
               '<br><span class="fw-bold small">Inventario Inicial:</span>' +
               '<br>&nbsp;&nbsp;<span class="fw-bold small">Volumen:</span> ' +

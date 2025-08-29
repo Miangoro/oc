@@ -289,6 +289,8 @@ class BitacoraMezcalEnvasadorController extends Controller
                 'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
                 'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A',
                 'id_tanque' => $bitacora->id_tanque ?? 'N/A',
+                //procedencia de los lotes
+                'folios_procedencia' => implode(', ', $this->obtenerFoliosProcedencia($bitacora->loteBitacora)),
                 //Entradas
                 'procedencia_entrada' => $bitacora->procedencia_entrada ?? 'N/A',
                 'volumen_entrada' => $bitacora->volumen_entrada ?? 'N/A',
@@ -318,6 +320,88 @@ class BitacoraMezcalEnvasadorController extends Controller
             'data' => $data,
         ]);
     }
+
+      private function obtenerFoliosProcedencia($lote)
+      {
+          $folios = [];
+
+          if (!$lote || empty($lote->lote_original_id)) {
+              return $folios; // No hay procedencia
+          }
+
+          $origen = $lote->lote_original_id;
+
+          // Si es JSON, decodificar
+          if (is_string($origen) && $this->esJsonValido($origen)) {
+              $origenData = json_decode($origen, true);
+              if (!empty($origenData['lotes'])) {
+                  foreach ($origenData['lotes'] as $idLoteOrigen) {
+                      $loteOrigen = LotesGranel::find($idLoteOrigen);
+                      if ($loteOrigen && !empty($loteOrigen->folio_fq)) {
+                          $folios[] = $loteOrigen->folio_fq;
+                      }
+                  }
+              }
+          } else {
+              // Si solo es un ID numérico
+              $loteOrigen = LotesGranel::find($origen);
+              if ($loteOrigen && !empty($loteOrigen->folio_fq)) {
+                  $folios[] = $loteOrigen->folio_fq;
+              }
+          }
+
+          return $folios;
+      }
+
+      private function esJsonValido($string)
+      {
+          json_decode($string);
+          return json_last_error() === JSON_ERROR_NONE;
+      }
+
+
+/*     private function obtenerFoliosProcedencia($lote)
+{
+    $folios = [];
+
+    if (!$lote) {
+        return $folios;
+    }
+
+    // Agregar folio_fq del lote actual
+    if (!empty($lote->folio_fq)) {
+        $folios[] = $lote->folio_fq;
+    }
+
+    // Revisar procedencia (puede ser JSON)
+    if (!empty($lote->lote_original_id)) {
+        $origen = $lote->lote_original_id;
+
+        // Si es JSON, decodificar
+        if (is_string($origen) && $this->esJsonValido($origen)) {
+            $origenData = json_decode($origen, true);
+            if (!empty($origenData['lotes'])) {
+                foreach ($origenData['lotes'] as $idLoteOrigen) {
+                    $loteOrigen = LotesGranel::find($idLoteOrigen);
+                    $folios = array_merge($folios, $this->obtenerFoliosProcedencia($loteOrigen));
+                }
+            }
+        } else {
+            // Si solo es un ID
+            $loteOrigen = LotesGranel::find($origen);
+            $folios = array_merge($folios, $this->obtenerFoliosProcedencia($loteOrigen));
+        }
+    }
+
+    return $folios;
+}
+
+private function esJsonValido($string)
+{
+    json_decode($string);
+    return json_last_error() === JSON_ERROR_NONE;
+}
+ */
 
      public function PDFBitacoraMezcal(Request $request)
     {
