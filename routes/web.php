@@ -752,6 +752,7 @@ Route::middleware(['auth'])->controller(tiposController::class)->group(function 
 //------------------- FUNCIONES -------------------
 Route::middleware(['auth'])->controller(getFuncionesController::class)->group(function () {
     Route::get('/getDatos/{empresa}', 'getDatos')->name('getDatos');
+    Route::get('/getDatosMaquila/{empresa}', 'getDatosMaquila')->name('getDatosMaquila');
     Route::get('/getDatosLoteEnvasado/{idLoteEnvasado}', 'getDatosLoteEnvasado');
     Route::get('/getDatos2/{lote_granel}', 'getDatos2')->name('getDatos2');
     Route::get('/getDatosSolicitud/{id_solicitud}', 'getDatosSolicitud')->name('getDatosSolicitud');
