@@ -109,6 +109,7 @@ public function index(Request $request)
     $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
     $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
     $orderColumn = $columns[$orderColumnIndex] ?? 'num_dictamen'; // Por defecto
+    
     $search = $request->input('search.value');//Define la búsqueda global.
 
 
