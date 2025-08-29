@@ -19,6 +19,7 @@ use App\Models\tipos;
 use App\Models\clases;
 use App\Models\categorias;
 use App\Models\Destinos;
+use Illuminate\Support\Facades\Auth;//Permiso empresa
 
 use App\Models\Exception;
 use Exception as GlobalException;
@@ -323,12 +324,13 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                           $loteGranel->save();
 
                           // Registrar bitácora de salida
-                          /*BitacoraMezcal::create([
+                          BitacoraMezcal::create([
                               'fecha' => now()->toDateString(),
                               'id_tanque' => $loteGranel->id_tanque ?? 0,
                               'id_empresa' => $loteGranel->id_empresa,
                               'id_lote_granel' => $loteGranel->id_lote_granel,
-                              'id_instalacion' => auth()->user()->id_instalacion ?? 0,
+                              /* 'id_instalacion' => auth()->user()->id_instalacion ?? 0, */
+                              'id_instalacion' => Auth::user()->id_instalacion[0] ?? 0,
                               'tipo_operacion' => 'Salidas',
                               'tipo' => 2,
                               'procedencia_entrada' => 'Salida por creación de lote envasado',
@@ -345,7 +347,7 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                               'alcohol_final' => $loteGranel->cont_alc,
                               'observaciones' => 'Salida por creación del lote envasado: ' . $lotes->nombre,
                               'id_firmante' => 0,
-                          ]);*/
+                          ]);
                       }
                   }
 

@@ -1219,7 +1219,8 @@ private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParc
             'id_tanque' => $loteOrigen->id_tanque ?? 0,
             'id_empresa' => $loteOrigen->id_empresa,
             //'id_instalacion' => auth()->user()->id_instalacion ?? 0,
-            'id_instalacion' => /* Auth::user()->id_instalacion ?? */ 0,
+            /* 'id_instalacion' => Auth::user()->id_instalacion ?? 0, */
+            'id_instalacion' => Auth::user()->id_instalacion[0] ?? 0,
             'tipo_operacion' => 'Salidas',
             'tipo' => 3,
             'procedencia_entrada' => 'Salida por creación de lote nuevo',
@@ -1255,7 +1256,8 @@ private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParc
             'id_tanque' => $loteDestino->id_tanque ?? 0,
             'id_empresa' => $loteDestino->id_empresa,
             //'id_instalacion' => auth()->user()->id_instalacion ?? 0,
-            'id_instalacion' =>/*  Auth::user()->id_instalacion ?? */ 0,
+            /* 'id_instalacion' => Auth::user()->id_instalacion ?? 0, */
+            'id_instalacion' => Auth::user()->id_instalacion[0] ?? 0,
             'procedencia_entrada' => !empty($lotesOrigenNombres)
             ? 'Creado a partir de: ' . implode(', ', $lotesOrigenNombres)
             : 'Nuevo Lote',
