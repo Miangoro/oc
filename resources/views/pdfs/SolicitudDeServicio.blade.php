@@ -637,7 +637,7 @@
                 {{-- {{ $lotesProcedencia->map(function($lote) {
                         return $lote->folio_fq;
                     })->implode(', ') }}  --}}
-                    {{ $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' }}
+                    {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
 
                     {{ $datos->lote_granel->folio_fq ?? '---------------' }}
                 @else --------------- @endif
