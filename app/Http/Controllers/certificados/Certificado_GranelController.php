@@ -118,6 +118,7 @@ public function index(Request $request)
         ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
         ->select('certificados_granel.*', 'empresa.razon_social');
 
+        
     // Filtro por empresa
     if ($empresaId) {
         $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
@@ -808,26 +809,6 @@ public function CertificadoGranel($id_certificado, $conMarca = true)
     $watermarkText = $certificado->estatus === 1;
     $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ? CertificadosGranel::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
-    //origen
-    if ($certificado->id_certificado == 1076) {
-        $estado = 'JALISCO';
-    } else if ( empty($certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id) ){
-        $estado = $certificado->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado';
-    }else{
-        //$estado = $certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id->lotes;
-        $id_lote = json_decode($certificado->dictamen->inspeccione->solicitud->lote_granel->lote_original_id, true);
-        // Paso 2: Obtener el primer ID del array 'lotes'
-        $ultimoId = end($id_lote['lotes']) ?? null;
-
-        $certificadoGranel = CertificadosGranel::where('id_lote_granel', $ultimoId)->first();
-
-            if ($certificadoGranel) {
-                $estado = $certificadoGranel->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'JALISCO';
-            } else {
-                $estado = "OAXACA";
-                //return response()->json([ 'message' => 'No se encontró Certificado Granel con ese lote granel.' ]);
-            }
-    }
 
     if ($certificado->estatus == 2) {
         $volumen = $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen_restante ?? 'No encontrado';
@@ -852,8 +833,7 @@ public function CertificadoGranel($id_certificado, $conMarca = true)
         'watermarkText' => $watermarkText,
         'id_sustituye' => $nombre_id_sustituye,
         //lote
-        //'estado' => $certificado->dictamen->inspeccione->solicitud->instalacion->estados->nombre ?? 'No encontrado',
-        'estado' => $estado,
+        'estado' => $certificado->loteGranel->estados->nombre ?? 'No encontrado',
         'categoria' => $certificado->dictamen->inspeccione->solicitud->lote_granel->categoria->categoria ?? 'No encontrado',
         'clase' => $certificado->dictamen->inspeccione->solicitud->lote_granel->clase->clase ?? 'No encontrado',
         'nombre_lote' => $certificado->dictamen->inspeccione->solicitud->lote_granel->nombre_lote?? 'No encontrado',
