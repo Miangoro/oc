@@ -92,18 +92,34 @@
                     @endif
 
                     @php
-                        $observaciones = $datos->observaciones ?? '';
-                        $observacionesConEnlaces = preg_replace(
-                            '~(https?://[^\s]+)~',
-                            '<a href="$1" target="_blank">$1</a>',
-                            e($observaciones)
-                        );
-                        $contieneEnlace = preg_match('~https?://[^\s]+~', $observaciones);
-                    @endphp
+    $observaciones = $datos->observaciones ?? '';
 
-                    @if (!empty($observaciones) && !$contieneEnlace)
-                        <p class="mt-2"><strong>Observaciones:</strong> {{ $observaciones }}</p>
-                    @endif
+    // Primero escapamos el texto
+    $observacionesEscapadas = e($observaciones);
+
+    // Insertar salto de línea antes de "inicio" y "fin"
+    $observacionesConSaltos = str_replace(
+        ['inicio', 'fin'],
+        ['<br>inicio', '<br>fin'],
+        $observacionesEscapadas
+    );
+
+    // Convertir links a enlaces clicables
+    $observacionesConEnlaces = preg_replace(
+        '~(https?://[^\s]+)~',
+        '<a href="$1" target="_blank">$1</a>',
+        $observacionesConSaltos
+    );
+
+    $contieneEnlace = preg_match('~https?://[^\s]+~', $observaciones);
+@endphp
+
+@if (!empty($observaciones) && !$contieneEnlace)
+    <p class="mt-2">
+        <strong>Observaciones:</strong> {!! $observacionesConEnlaces !!}
+    </p>
+@endif
+
 
                     @if (!empty($datos->evidencias))
                         <div class="mt-3">
