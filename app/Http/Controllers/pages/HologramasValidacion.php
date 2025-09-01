@@ -32,7 +32,8 @@ class HologramasValidacion extends Controller
 
 
     $folio_numerico = (int) substr($folio, -6); // Suponiendo que los últimos 6 dígitos son el número del folio
-  
+    $ya_activado = false;
+    $datosHolograma = null;
 
     $activaciones = activarHologramasModelo::with('solicitudHolograma')
       ->whereHas('solicitudHolograma', function ($query) use ($marca) {
@@ -43,24 +44,34 @@ class HologramasValidacion extends Controller
 
 
     foreach ($activaciones as $activacion) {
-        $ya_activado = false;
-    $datosHolograma = null;
-      $folios_activados = json_decode($activacion->folios, true);
+    $folios_activados = json_decode($activacion->folios, true);
 
-      for ($i = 0; $i < count($folios_activados['folio_inicial']); $i++) {
-        $activado_folio_inicial = (int) $folios_activados['folio_inicial'][$i];
-        $activado_folio_final = (int) $folios_activados['folio_final'][$i];
-
-        
- 
-
-        if ($folio_numerico >= $activado_folio_inicial && $folio_numerico <= $activado_folio_final && $activacion->solicitudHolograma->tipo == $tipo_holograma) {
-          $ya_activado = true;
-          $datosHolograma = $activacion; // Aquí se guarda el modelo actual
-          break 2; // Salimos de ambos bucles
-        }
-      }
+    if (!isset($folios_activados['folio_inicial'], $folios_activados['folio_final'])) {
+        continue; // si no existen, pasamos a la siguiente activación
     }
+
+    for ($i = 0; $i < count($folios_activados['folio_inicial']); $i++) {
+        // Validamos que existan ambos extremos y no estén vacíos
+        if (empty($folios_activados['folio_inicial'][$i]) || empty($folios_activados['folio_final'][$i])) {
+            continue;
+        }
+
+        $activado_folio_inicial = (int) $folios_activados['folio_inicial'][$i];
+        $activado_folio_final   = (int) $folios_activados['folio_final'][$i];
+
+        // Validamos que el folio esté dentro del rango correcto
+        if (
+            $folio_numerico >= $activado_folio_inicial &&
+            $folio_numerico <= $activado_folio_final &&
+            $activacion->solicitudHolograma->tipo == $tipo_holograma
+        ) {
+            $ya_activado   = true;
+            $datosHolograma = $activacion;
+            break 2; // salir de ambos bucles
+        }
+    }
+}
+
 
 
 
