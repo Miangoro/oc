@@ -207,8 +207,15 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
           const documentos = Array.isArray(full['documentos']) ? full['documentos'] : [];
 
           let certificado = '';
-
-          if (!folio) {
+            if (!folio) {
+              certificado = `<span class="badge rounded-pill bg-danger">Sin certificado</span>`;
+            } else if (documentos.length > 0) {
+              let doc = documentos[0]; // Solo el más reciente
+              certificado = `<a href="${doc.url}" target="_blank" class="text-primary text-decoration-underline fw-bold">${full['folio']}</a>`;
+            } else {
+              certificado = `${folio}`;
+            }
+/*           if (!folio) {
             certificado = `<span class="badge rounded-pill bg-danger">Sin certificado</span>`;
           } else if (documentos.length > 0) {
             certificado = documentos
@@ -220,7 +227,7 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
               .join(', ');
           } else {
             certificado = `${folio}`;
-          }
+          } */
 
           return `<span class="small">
     <b>Certificadora: </b>${full['certificadora']} <br>
@@ -1182,7 +1189,7 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
           var tablaContenido = '';
 
           documentos.forEach(function (doc, index) {
-            var fullUrl = `../files/${numeroCliente}/${doc.url}`;
+            var fullUrl = `../files/${numeroCliente}/certificados_instalaciones/${doc.url}`;
             var nombreDocumento = doc.nombre_documento || 'Documento sin nombre';
 
             tablaContenido += `

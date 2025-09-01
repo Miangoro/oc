@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Documentacion_url;
 use App\Models\instalaciones;
+use App\Models\Certificados;
 use App\Models\empresa;
 use App\Models\estados;
 use App\Models\organismos;
@@ -168,8 +169,10 @@ public function index(Request $request)
                 $nestedData['estado'] = $instalacion->estados->nombre  ?? 'N/A';
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM';
+
                 $nestedData['url'] = !empty($instalacion->documentos_certificados_instalaciones->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first() . '/' . implode(',', $instalacion->documentos_certificados_instalaciones->pluck('url')->toArray()) : '';
                 $nestedData['nombre_documento'] = !empty($instalacion->documentos_certificados_instalaciones->pluck('nombre_documento')->toArray()) ? implode(',', $instalacion->documentos_certificados_instalaciones->pluck('nombre_documento')->toArray()) : 'Documento sin nombre';
+
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($instalacion->fecha_vigencia);
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
@@ -178,7 +181,7 @@ public function index(Request $request)
 $nestedData['certificadora'] = $instalacion->organismos->organismo ?? 'OC CIDAM';
 $folio = $instalacion->folio ?? null;
 
-$documentos = Documentacion_url::where('id_relacion', $instalacion->id_instalacion)
+/* $documentos = Documentacion_url::where('id_relacion', $instalacion->id_instalacion)
     ->whereIn('id_documento', [127, 128, 129])
     ->get()
     ->map(function ($doc) use ($numeroCliente) {
@@ -187,7 +190,29 @@ $documentos = Documentacion_url::where('id_relacion', $instalacion->id_instalaci
             'nombre' => $doc->nombre_documento,
         ];
     })
-    ->toArray();
+    ->toArray(); */
+    $certificadoReciente = Certificados::whereHas('dictamen', function ($q) use ($instalacion) {
+        $q->where('id_instalacion', $instalacion->id_instalacion);
+    })
+    ->orderByDesc('fecha_emision')
+    ->first();
+
+$documentos = [];
+
+if ($certificadoReciente) {
+    $documentos = Documentacion_url::where('id_relacion', $instalacion->id_instalacion)
+        ->whereIn('id_documento', [127, 128, 129])
+        ->get()
+        ->map(function ($doc) use ($numeroCliente) {
+            return [
+                'url' => '/files/' . $numeroCliente . '/certificados_instalaciones/' . rawurlencode($doc->url),
+                'nombre' => $doc->nombre_documento,
+            ];
+        })
+        ->toArray();
+
+    $nestedData['fecha_emision']  = $certificadoReciente->fecha_emision;
+}
 
 $nestedData['folio'] = $instalacion->folio ?? null;
 $nestedData['documentos'] = $documentos;
