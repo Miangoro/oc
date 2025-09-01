@@ -141,6 +141,17 @@
                                         Miembro del consejo
                                     @endif
                                 </p>
+
+                                @if($maquiladora)
+                                   
+                                    @foreach($maquiladora AS $maquiladoras)
+
+                                    @foreach($maquiladoras->maquiladora AS $soymaquilador)
+                                         Soy maquilador de {{ $soymaquilador->razon_social }} <br>
+                                     @endforeach
+                                        
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
 
@@ -186,6 +197,40 @@
                 </div>
             </div>
         </div>
+<div class="row">
+    @foreach($maquiladores as $maquilador)
+        @foreach($maquilador->maquiladores as $m)
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card text-center shadow-lg border-0 h-100">
+                    
+                    <!-- Encabezado -->
+                    <div class="card-header text-white" style="background-color:#053160;">
+                        {{ $m->razon_social }}
+                    </div>
+                    
+                    <!-- Cuerpo -->
+                    <div class="card-body">
+                        <h5 class="card-title text-success" style="color:#30a86a !important;">
+                            RFC: {{ $m->rfc }}
+                        </h5>
+                        <p class="card-text">
+                            <strong>Domicilio Fiscal:</strong> {{ $m->domicilio_fiscal }}
+                        </p>
+                       <!-- <a href="javascript:void(0)" class="btn text-white" style="background-color:#30a86a;">
+                            <i class="bi bi-eye me-2"></i> Ver más
+                        </a>-->
+                    </div>
+                    
+                    <!-- Footer
+                    <div class="card-footer text-muted">
+                        Última actualización: {{ now()->format('d/m/Y') }}
+                    </div> -->
+                </div>
+            </div>
+        @endforeach
+    @endforeach
+</div>
+
 
 
 

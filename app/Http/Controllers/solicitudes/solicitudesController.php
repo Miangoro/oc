@@ -87,27 +87,35 @@ class solicitudesController extends Controller
     }
 
 
+private function obtenerEmpresasVisibles($empresaId)
+{
+    $idsEmpresas = [];
+    if ($empresaId) {
+        $idsEmpresas[] = $empresaId;
+        $idsEmpresas = array_merge(
+            $idsEmpresas,
+            maquiladores_model::where('id_maquiladora', $empresaId)
+                ->pluck('id_maquilador')
+                ->toArray()
+        );
+    }
 
-
-
+    return array_unique($idsEmpresas);
+}
 
 public function index(Request $request)
 {
     $userId = Auth::id();
-    
-    //Permiso de empresa
-    $empresaId = null;
-    if (Auth::check() && Auth::user()->tipo == 3) {
-        $empresaId = Auth::user()->empresa?->id_empresa;
-    }
 
-    // Obtener instalaciones del usuario tipo 3
+    // Permisos de empresa e instalaciones
+    $empresaId = null;
     $instalacionAuth = [];
     if (Auth::check() && Auth::user()->tipo == 3) {
-        $instalacionAuth = (array) Auth::user()->id_instalacion; // cast a array
+        $empresaId = Auth::user()->empresa?->id_empresa;
+        $instalacionAuth = (array) Auth::user()->id_instalacion;
         $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
 
-        // Si no tiene instalaciones, devolvemos vacío
+        // Si no tiene instalaciones, no ve nada
         if (empty($instalacionAuth)) {
             return response()->json([
                 'draw' => intval($request->input('draw')),
@@ -120,123 +128,62 @@ public function index(Request $request)
     }
 
 
-    // Función para obtener empresas visibles (incluye maquiladores)
-    $obtenerEmpresasVisibles = function ($empresaIdAut, $empresaIdInput) {
-        $idsEmpresas = [];
-        if ($empresaIdAut) {
-            $idsEmpresas[] = $empresaIdAut;
-            $idsEmpresas = array_merge($idsEmpresas,
-                maquiladores_model::where('id_maquiladora', $empresaIdAut)->pluck('id_maquilador')->toArray()
-            );
-        }
-        if ($empresaIdInput) {
-            $idsEmpresas[] = $empresaIdInput;
-            $idsEmpresas = array_merge($idsEmpresas,
-                maquiladores_model::where('id_maquiladora', $empresaIdInput)->pluck('id_maquilador')->toArray()
-            );
-        }
-        return array_unique($idsEmpresas);
-    };
-
-    $idsEmpresas = $obtenerEmpresasVisibles($empresaId, $request->input('empresa'));
-
-
-        $columns = [
-            1 => 'id_solicitud',
-            2 => 'folio',
-            3 => 'num_servicio',
-            4 => 'razon_social',
-            5 => 'created_at',
-            6 => 'tipo',
-            7 => 'direccion_completa',
-            8 => 'fecha_visita',
-            9 => 'inspector',
-            10 => 'fecha_servicio',
-            12 => 'estatus'
-        ];
-
-    //Consulta
-    $query = solicitudesModel::query()
-        ->where('habilitado', 1)
-        ->where('id_tipo', '!=', 12);
-
-    // Filtrar por empresas visibles
-    if (count($idsEmpresas)) {
-        $query->whereIn('id_empresa', $idsEmpresas);
-    }
-
-    // Filtrar por instalaciones si usuario tipo 3
-    if (!empty($instalacionAuth)) {
-        $query->whereIn('id_instalacion', $instalacionAuth);
-    }
-
-    //Solo mostrar Exportacion(11) a usuario ISABEL INZUNZA(49)
-    if ($userId == 49) {
-        $query->where('id_tipo', 11);
-    }
-
-
-    $columnsInput = $request->input('columns');
-    if ($columnsInput && isset($columnsInput[6]) && !empty($columnsInput[6]['search']['value'])) {
-        $tipoFilter = $columnsInput[6]['search']['value'];
-        $query->whereHas('tipo_solicitud', function($q) use ($tipoFilter) {
-            $q->where('tipo', 'LIKE', "%{$tipoFilter}%");
-        });
-    }
-
-    $totalData = $query->count();
-    $totalFiltered = $totalData;
+    // Configuración general
+    DB::statement("SET lc_time_names = 'es_ES'"); // Forzar idioma español
+    // Mapear columnas DataTables
+    $columns = [
+        1 => 'id_solicitud',
+        2 => 'folio',
+        3 => 'num_servicio',
+        4 => 'razon_social',
+        5 => 'created_at',
+        6 => 'tipo',
+        7 => 'direccion_completa',
+        8 => 'fecha_visita',
+        9 => 'inspector',
+        10 => 'fecha_servicio',
+        12 => 'estatus'
+    ];
 
     $limit = $request->input('length');
     $start = $request->input('start');
-    $order = $columns[$request->input('order.0.column')] ?? 'id_solicitud';
-    $dir = $request->input('order.0.dir') ?? 'desc';
+    $orderColumnIndex = $request->input('order.0.column');
+    $orderDirection = $request->input('order.0.dir') ?? 'desc';
+    $orderColumn = $columns[$orderColumnIndex] ?? 'id_solicitud';
+    $search = $request->input('search.value');
+
+    // Query base
+    $query = solicitudesModel::with([
+            'tipo_solicitud',
+            'empresa',
+            'instalacion',
+            'inspeccion.inspector',
+            'ultima_validacion_oc',
+            'ultima_validacion_ui'
+        ])->where('habilitado', 1)
+        ->where('id_tipo', '!=', 12);
+
+    // Filtro empresa (propia + maquiladores)
+    if ($empresaId) {
+        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
+        //$query->whereIn('solicitudes.id_empresa', $empresasVisibles);
+        $query->whereIn('id_empresa', $empresasVisibles);
+    }
+    // Filtro por instalaciones (usuario tipo 3)
+    if (!empty($instalacionAuth)) {
+        $query->whereIn('solicitudes.id_instalacion', $instalacionAuth);
+    }
+    // Filtro especial para usuario 49
+    if ($userId == 49) {
+        $query->where('solicitudes.id_tipo', 11);
+    }
+
+    $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
+    $totalData = $baseQuery->count();// totalData (sin búsqueda)
 
 
-    //SIN BUSQUEDA
-    if (empty($request->input('search.value'))) {
-        // Construir la consulta base
-        $query = solicitudesModel::with([
-                'tipo_solicitud',
-                'empresa',
-                'instalacion',
-                'inspeccion.inspector',
-                'ultima_validacion_oc',
-                'ultima_validacion_ui'
-            ])->where('habilitado', 1)
-            ->where('id_tipo', '!=', 12);
-
-        // Filtrar por empresas visibles
-        if (count($idsEmpresas)) {
-            $query->whereIn('id_empresa', $idsEmpresas);
-        }
-        // Filtrar por instalaciones si usuario tipo 3
-        if (!empty($instalacionAuth)) {
-            $query->whereIn('id_instalacion', $instalacionAuth);
-        }
-        // Filtro especial para usuario 49
-        if ($userId == 49) {
-            $query->where('id_tipo', 11);
-        }
-
-        // Ordenamiento
-        if ($order === 'inspector') {
-            $query->orderBy('inspector_name', $dir);
-        } elseif ($order === 'folio') {
-            $query->orderByRaw("CAST(SUBSTRING(folio, 5) AS UNSIGNED) $dir");
-        } else {
-            $query->orderBy($order, $dir);
-        }
-
-        // Paginación
-        $solicitudes = $query->offset($start)
-                    ->limit($limit)
-                    ->get();
-
-
-    } else {  ///BUSCADOR ACTIVO
-        // Búsqueda global
-        $search = $request->input('search.value');
+    // Búsqueda global
+    if (!empty($search)) {
 
         // Preparar IDs de lotes envasado y granel según el search
         $loteIds = DB::table('lotes_envasado')
@@ -284,20 +231,9 @@ public function index(Request $request)
             ->pluck('id_lote_granel')
             ->toArray();
 
-        // Consulta principal del buscador
-        $solicitudes = solicitudesModel::with([
-            'tipo_solicitud',
-            'empresa',
-            'instalacion',
-            'inspeccion.inspector',
-            'ultima_validacion_oc',
-            'ultima_validacion_ui'
-        ])
-        ->where('habilitado', 1)
-        ->where('id_tipo', '!=', 12)
-        ->where(function ($query) use ($search, $loteIds, $loteEnvIds, $loteGranelIds) {
-            $query->where(function ($q) use ($search) {
-                $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
+
+        $query->where(function ($q) use ($search, $loteIds, $loteEnvIds, $loteGranelIds) {
+            $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
                 ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
                 ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
                 ->orWhere('solicitudes.info_adicional', 'LIKE', "%{$search}%")
@@ -307,42 +243,48 @@ public function index(Request $request)
                 ->orWhereHas('instalacion', fn($q) => $q->where('direccion_completa', 'LIKE', "%{$search}%"))
                 ->orWhereHas('inspeccion', fn($q) => $q->where('num_servicio', 'LIKE', "%{$search}%"))
                 ->orWhereHas('inspeccion.inspector', fn($q) => $q->where('name', 'LIKE', "%{$search}%"));
-            });
 
             foreach ($loteIds as $idLote) {
-                $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
+                $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
             }
             foreach ($loteEnvIds as $idLoteEnv) {
-                $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLoteEnv . '"%');
+                $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLoteEnv . '"%');
             }
             foreach ($loteGranelIds as $idLoteGran) {
-                $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
+                $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
             }
         });
 
-        // Aquí aplicamos solo los filtros fijos del usuario
-        if ($empresaId) {
-            $solicitudes->where('id_empresa', $empresaId);
-        }
-
-        if (!empty($instalacionAuth)) {
-            $solicitudes->whereIn('id_instalacion', $instalacionAuth);
-        }
-
-        if ($userId == 49) {
-            $solicitudes->where('id_tipo', 11);
-        }
-
-        // Orden y paginación
-        $solicitudes = $solicitudes->offset($start)
-            ->limit($limit)
-            ->when($order === 'folio', fn($q) => $q->orderByRaw("CAST(SUBSTRING(folio, 5) AS UNSIGNED) $dir"), fn($q) => $q->orderBy($order, $dir))
-            ->get();
-
-        // Conteo total filtrado
-        $totalFiltered = $solicitudes->count();
-
+        $totalFiltered = $query->count();
+    } else {
+        $totalFiltered = $totalData;
     }
+
+    
+    // Ordenamiento
+    if ($orderColumn === 'folio') {
+        $query->orderByRaw("CAST(SUBSTRING(folio, 5) AS UNSIGNED) $orderDirection");
+    } else {
+        $query->orderBy($orderColumn, $orderDirection);
+    }
+
+    // Paginación + relaciones
+    /*$solicitudes = $query
+        ->with([
+            'tipo_solicitud',
+            'empresa',
+            'instalacion',
+            'inspeccion.inspector',
+            'ultima_validacion_oc',
+            'ultima_validacion_ui'
+        ])
+        ->offset($start)
+        ->limit($limit)
+        ->get();*/
+    $solicitudes = $query
+        ->offset($start)
+        ->limit($limit)
+        ->get();
 
 
 
