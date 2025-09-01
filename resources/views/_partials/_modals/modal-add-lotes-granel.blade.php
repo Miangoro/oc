@@ -17,7 +17,7 @@
                         <div class="row">
                             <div class="col-md-12" id="select_empresa">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select onchange="obtenerDatosEmpresa(); obtenerDestinoEmpresa();" id="id_empresa"
+                                    <select onchange="obtenerDatosEmpresa(); /* obtenerDestinoEmpresa(); */" id="id_empresa"
                                         name="id_empresa" class="select2 form-select"
                                         data-error-message="por favor selecciona la empresa">
                                         <option value="" disabled selected>Selecciona el cliente</option>
@@ -454,7 +454,7 @@
 
 
 
-function obtenerDestinoEmpresa() {
+/* function obtenerDestinoEmpresa() {
     var empresa = $("#id_empresa").val();
     if (!empresa) return;
 
@@ -499,12 +499,12 @@ function obtenerDestinoEmpresa() {
             alert('Error al cargar los datos. Por favor, intenta nuevamente.');
         }
     });
-}
+} */
 
 
     // Llamar a obtenerDatosEmpresa cuando se selecciona la empresa
     $('#id_empresa').change(function() {
         obtenerDatosEmpresa();
-        obtenerDestinoEmpresa();
+        /* obtenerDestinoEmpresa(); */
     });
 </script>
