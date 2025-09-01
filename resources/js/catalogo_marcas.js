@@ -107,7 +107,7 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-          let acciones = '';
+            let acciones = '';
             if (window.puedeEditarElUsuario) {
               acciones += `<a data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#editMarca" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar marca</a>`;
             }
@@ -132,17 +132,17 @@ $(function () {
             `;
             return dropdown;
 
-/*
-              `<a data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#editMarca" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar marca</a>` +
-              //  `<a data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#etiquetas" href="javascript:;" class="dropdown-item edit-etiquetas"><i class="ri-price-tag-2-line ri-20px text-success"></i> Subir/Ver etiquetas</a>` +
-              `<a data-id="${full['id_marca']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar marca</a>` +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="' +
-              userView +
-              '" class="dropdown-item">View</a>' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-              '</div>' +
-              '</div>' */
+            /*
+                          `<a data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#editMarca" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar marca</a>` +
+                          //  `<a data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#etiquetas" href="javascript:;" class="dropdown-item edit-etiquetas"><i class="ri-price-tag-2-line ri-20px text-success"></i> Subir/Ver etiquetas</a>` +
+                          `<a data-id="${full['id_marca']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar marca</a>` +
+                          '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                          '<a href="' +
+                          userView +
+                          '" class="dropdown-item">View</a>' +
+                          '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+                          '</div>' +
+                          '</div>' */
           }
         }
       ],
@@ -183,18 +183,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -225,39 +225,45 @@ $(function () {
       language: 'es'
     });
   });
-
   $(function () {
     $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
+      headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
     });
 
     const addNewMarca = document.getElementById('addNewMarca');
-    let fv = null; // Inicializamos la variable del validador afuera para reutilizar
+    let fv = null;
 
-    // Función para inicializar el validador
     function initializeFormValidation() {
       fv = FormValidation.formValidation(addNewMarca, {
         fields: {
           cliente: {
-            validators: {
-              notEmpty: {
-                message: 'Por favor seleccione el cliente'
-              }
-            }
+            validators: { notEmpty: { message: 'Por favor seleccione el cliente' } }
           },
           id_norma: {
-            validators: {
-              notEmpty: {
-                message: 'Por favor seleccione una norma'
-              }
-            }
+            validators: { notEmpty: { message: 'Por favor seleccione una norma' } }
           },
           marca: {
             validators: {
-              notEmpty: {
-                message: 'Por favor introduzca el nombre de la marca'
+              notEmpty: { message: 'La marca es obligatoria' },
+              remote: {
+                url: '/validar-marca',
+                method: 'POST',
+                dataType: 'json',
+                data: function () {
+                  return {
+                    marca: document.getElementById('marca').value,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                  };
+                },
+                validKey: 'valid', // FormValidation interpreta este campo como verdadero/falso
+                message: 'Esta marca ya está registrada', // mensaje fallback
+                dataFilter: function (response) {
+                  // Si la marca ya existe, personaliza el mensaje
+                  if (response.valid === false && response.empresa) {
+                    response.message = `Esta marca ya está registrada por ${response.empresa}`;
+                  }
+                  return response;
+                }
               }
             }
           }
@@ -266,15 +272,28 @@ $(function () {
           trigger: new FormValidation.plugins.Trigger(),
           bootstrap5: new FormValidation.plugins.Bootstrap5({
             eleValidClass: '',
-            rowSelector: function (field, ele) {
-              return '.mb-5';
-            }
+            rowSelector: function (field, ele) { return '.mb-5'; }
           }),
           submitButton: new FormValidation.plugins.SubmitButton(),
           autoFocus: new FormValidation.plugins.AutoFocus()
         }
-      }).on('core.form.valid', function (e) {
-        var formData = new FormData(addNewMarca);
+      });
+
+      // Modificar dinámicamente el mensaje cuando la marca existe en otra empresa
+       fv.on('core.validator.invalid', function (e) {
+            if (e.field === 'marca' && e.validator === 'remote') {
+                const response = e.result;
+                if (response.empresa) {
+                    e.message = `Esta marca ya está registrada por ${response.empresa}`;
+                }
+            }
+        });
+
+
+      // Enviar formulario si todo es válido
+      fv.on('core.form.valid', function (e) {
+        console.log('valid', e);
+        const formData = new FormData(addNewMarca);
         $.ajax({
           url: '/catalago-list',
           type: 'POST',
@@ -289,40 +308,37 @@ $(function () {
               icon: 'success',
               title: '¡Éxito!',
               text: response.success,
-              customClass: {
-                confirmButton: 'btn btn-success'
-              }
+              customClass: { confirmButton: 'btn btn-success' }
             });
           },
-          error: function (xhr) {
+          error: function () {
             Swal.fire({
               icon: 'error',
               title: '¡Error!',
               text: 'Error al agregar la marca',
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
+              customClass: { confirmButton: 'btn btn-danger' }
             });
           }
         });
       });
     }
 
-    initializeFormValidation(); // Inicializamos la validación al cargar
+    initializeFormValidation();
 
-    // Revalidaciones
-    $('#cliente, #id_norma, #marca').on('change', function () {
+    // Revalidaciones de selects
+    $('#cliente, #id_norma').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
 
-    // Limpiar campos y destruir el validador al cerrar el modal
+    // Limpiar formulario y reinicializar validador al cerrar modal
     $('#addMarca').on('hidden.bs.modal', function () {
-      addNewMarca.reset(); // Resetea el formulario
-      $('#cliente, #id_norma, #marca').val(null).trigger('change'); // Limpiar selects
-      fv.destroy(); // Destruye la validación actual
-      initializeFormValidation(); // Reinicia la validación para el próximo uso
+      addNewMarca.reset();
+      $('#cliente, #id_norma').val(null).trigger('change');
+      fv.destroy();
+      initializeFormValidation();
     });
   });
+
 
   initializeSelect2(select2Elements);
 
@@ -564,13 +580,12 @@ $(function () {
     <td>
         <div style="display: flex; align-items: center;">
             <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
-            ${
-              documento_etiquetas
-                ? `<a href="/files/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 5px;">
+            ${documento_etiquetas
+            ? `<a href="/files/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 5px;">
                     <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i>
                 </a>`
-                : ''
-            }
+            : ''
+          }
         </div>
         <input value="60" class="form-control" type="hidden" name="id_documento[]">
         <input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]">
@@ -578,13 +593,12 @@ $(function () {
     <td>
         <div style="display: flex; align-items: center;">
             <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
-            ${
-              documento_corrugado
-                ? `<a href="/files/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 5px;">
+            ${documento_corrugado
+            ? `<a href="/files/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 5px;">
                     <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i>
                 </a>`
-                : ''
-            }
+            : ''
+          }
         </div>
         <input value="75" class="form-control" type="hidden" name="id_documento[]">
         <input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]">

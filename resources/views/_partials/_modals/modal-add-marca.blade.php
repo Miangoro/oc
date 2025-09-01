@@ -9,6 +9,7 @@
                 </div>
                 <form method="POST" enctype="multipart/form-data" id="addNewMarca" class="row g-5"
                     onsubmit="return false">
+                    @csrf
                     <div class="col-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <select id="cliente" name="cliente" class="select2 form-select" required>

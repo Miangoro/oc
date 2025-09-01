@@ -75,6 +75,8 @@ use App\Http\Controllers\pages\Faq;
 use App\Http\Controllers\pages\Pricing as PagesPricing;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\pages\HologramasValidacion;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\pages\MiscUnderMaintenance;
 use App\Http\Controllers\pages\MiscComingSoon;
@@ -604,6 +606,41 @@ Route::post('/marcas-list/update', [marcasCatalogoController::class, 'update'])-
 Route::post('/marcas-list/update', [marcasCatalogoController::class, 'update'])->name('marcas.update')->middleware(['auth']);
 Route::post('/etiquetado/updateEtiquetas', [marcasCatalogoController::class, 'updateEtiquetas'])->middleware(['auth']);
 Route::get('/marcas-list/{id}/editEtiquetas', [marcasCatalogoController::class, 'editEtiquetas'])->name('marcas.edit')->middleware(['auth']);
+/* Route::post('/validar-marca', function (Request $request) {
+    $existe = DB::table('marcas')->where('marca', $request->marca)->exists();
+    return response()->json(!$existe);
+}); */
+/* Route::post('/validar-marca', function (Request $request) {
+    $existe = \App\Models\marcas::where('marca', $request->marca)->exists();
+
+    // Devuelve en la forma que FormValidation espera
+    return response()->json(['valid' => !$existe]);
+}); */
+Route::post('/validar-marca', function (Request $request) {
+    // Buscar la marca existente
+    $marcaExistente = \App\Models\marcas::with('empresa')
+        ->where('marca', $request->marca)
+        ->first();
+
+    if ($marcaExistente) {
+        // La marca ya existe: valid=false y devolvemos la empresa
+        return response()->json([
+            'valid' => false,
+            'empresa' => $marcaExistente->empresa->razon_social ?? 'Desconocida'
+        ]);
+    }
+
+    // Marca libre
+    return response()->json(['valid' => true]);
+});
+
+
+
+
+
+
+
+
 
 //Etiquetas
 Route::get('/catalogo/etiquetas', [EtiquetasController::class, 'UserManagement'])->name('catalogo-etiquetas')->middleware(['auth']);
