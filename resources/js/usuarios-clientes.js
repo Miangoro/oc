@@ -6,18 +6,18 @@
 // Datatable (jquery)
 $(function () {
 
-    // Declaras el arreglo de botones
+  // Declaras el arreglo de botones
   let buttons = [];
 
   // Si tiene permiso, agregas el botón
   if (puedeAgregarUsuario) {
     buttons.push({
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo usuario</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'offcanvas',
-            'data-bs-target': '#offcanvasAddUser'
-          }
+      text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo usuario</span>',
+      className: 'add-new btn btn-primary waves-effect waves-light',
+      attr: {
+        'data-bs-toggle': 'offcanvas',
+        'data-bs-target': '#offcanvasAddUser'
+      }
     });
   }
 
@@ -29,7 +29,7 @@ $(function () {
     userView = baseUrl + 'app/user/view/account',
     offCanvasForm = $('#offcanvasAddUser');
 
-//SELECT UNICO
+  //SELECT UNICO
   /*if (select2.length) {
     var $this = select2;
     select2Focus($this);
@@ -38,17 +38,17 @@ $(function () {
       dropdownParent: $this.parent()
     });
   }*/
-//FUNSION PARA INICIALIZAR VARIOS SELECT2
+  //FUNSION PARA INICIALIZAR VARIOS SELECT2
   var select2Elements = $('.select2');
-    function initializeSelect2($elements) {
-      $elements.each(function () {
-        var $this = $(this);
-        select2Focus($this);
-        $this.wrap('<div class="position-relative"></div>').select2({
-          dropdownParent: $this.parent()
-        });
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
       });
-    }
+    });
+  }
   initializeSelect2(select2Elements);
 
 
@@ -72,7 +72,7 @@ $(function () {
         { data: '' },
         { data: 'id' },
         { data: 'name' },
-        {data: 'instalacionesTexto'},
+        { data: 'instalacionesTexto' },
         { data: 'email' },
         { data: 'telefono' },
         { data: 'password_original' },
@@ -89,8 +89,9 @@ $(function () {
             `;
           }
         },
-         { data: 'rol' },
-         { data: 'id' },
+        { data: 'contacto' },
+        { data: 'rol' },
+        { data: 'id' },
 
         { data: 'action' }
       ],
@@ -153,7 +154,7 @@ $(function () {
         {
           targets: 3,
           render: function (data, type, full, meta) {
-            return '<span>' + (full['instalacionesTexto'] ?? '(Not Found)') + '</span>';
+            return '<span style="font-size:14px;">' + (full['instalacionesTexto'] ?? '(Not Found)') + '</span>';
           }
         },
         {
@@ -182,31 +183,37 @@ $(function () {
           }
         },
         {
-            // Razón social
-            targets: 7,
-            className: 'text-center',
-            render: function (data, type, full, meta) {
-              var $cliente = full['razon_social'];
-              return '<span class="user-email">' + $cliente + '</span>';
-            }
-          },
-          {
-            //PDF carta asignacion
-            targets: 9,
-            className: 'text-center',
-            render: function (data, type, full, meta) {
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdfCartAsignacion cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id']}" data-nombre="${full['name']}"></i>`;
-            }
-          },
+          // Razón social
+          targets: 7,
+          className: 'text-center',
+          render: function (data, type, full, meta) {
+            var $cliente = full['razon_social'];
+            return '<span class="user-email">' + $cliente + '</span>';
+          }
+        },
+        {
+          targets: 8,
+          render: function (data, type, full, meta) {
+            return '<span>' + (full['contacto'] ?? 'sin persona de contacto') + '</span>';
+          }
+        },
+        {
+          //PDF carta asignacion
+          targets: 10,
+          className: 'text-center',
+          render: function (data, type, full, meta) {
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdfCartAsignacion cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id']}" data-nombre="${full['name']}"></i>`;
+          }
+        },
         {
           // Actions
-          targets: 10,
+          targets: 11,
           title: 'Acciones',
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
 
-          let acciones = '';
+            let acciones = '';
 
             if (window.puedeEditarUsuario) {
               acciones += `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar clientes</a>`;
@@ -245,7 +252,7 @@ $(function () {
         '<"col-sm-12 col-md-6"i>' +
         '<"col-sm-12 col-md-6"p>' +
         '>',
-      lengthMenu: [ 10, 20, 50, 70, 100], //for length of menu
+      lengthMenu: [10, 20, 50, 70, 100], //for length of menu
       language: {
         sLengthMenu: '_MENU_',
         search: '',
@@ -268,18 +275,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -351,35 +358,35 @@ $(function () {
 
 
 
-//RECIBE LOS DATOS DEL PDF
+  //RECIBE LOS DATOS DEL PDF
   $(document).on('click', '.pdfCartAsignacion', function () {
     var id = $(this).data('id');
     var nombre = $(this).data('nombre');
-      var iframe = $('#pdfViewer');//contenido
-      var spinner = $('#cargando');
+    var iframe = $('#pdfViewer');//contenido
+    var spinner = $('#cargando');
 
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-      spinner.show();
-      iframe.hide();
+    spinner.show();
+    iframe.hide();
     //Cargar el PDF con el ID
-      iframe.attr('src', '../pdf_asignacion_usuario/'+id);
+    iframe.attr('src', '../pdf_asignacion_usuario/' + id);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-      $("#NewPestana").attr('href', '../pdf_asignacion_usuario/'+id).show();
+    $("#NewPestana").attr('href', '../pdf_asignacion_usuario/' + id).show();
     //Titulos
-      $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
-      $("#subtitulo_modal").text(nombre);
+    $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
+    $("#subtitulo_modal").text(nombre);
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-      iframe.on('load', function () {
+    iframe.on('load', function () {
       spinner.hide();
       iframe.show();
-      });
-});
+    });
+  });
 
 
 
 
-//EDIT record
-$(document).on('click', '.edit-record', function () {
+  //EDIT record
+  $(document).on('click', '.edit-record', function () {
     var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
 
@@ -403,15 +410,15 @@ $(document).on('click', '.edit-record', function () {
       $('#id_contacto').val(data.id_contacto).trigger('change');
       $('#rol_id').val(data.roles[0].name).prop('selected', true).change();
 
-        // esperar a que AJAX termine y entonces setear instalaciones
-        $(document).one('ajaxStop', function () {
-          if (data.id_instalacion && data.id_instalacion.length > 0) {
-            $('#id_instalacion').val(data.id_instalacion).trigger('change');
-          }
-        });
+      // esperar a que AJAX termine y entonces setear instalaciones
+      $(document).one('ajaxStop', function () {
+        if (data.id_instalacion && data.id_instalacion.length > 0) {
+          $('#id_instalacion').val(data.id_instalacion).trigger('change');
+        }
+      });
 
     });
-});
+  });
 
 
 
@@ -450,14 +457,14 @@ $(document).on('click', '.edit-record', function () {
           notEmpty: {
             message: 'Por favor introduce un número de teléfono'
           },
-        stringLength: {
-          min: 10,
-          max: 15,
-          message: 'El teléfono debe tener entre 10 y 15 caracteres (incluidos espacios y otros caracteres)'
+          stringLength: {
+            min: 10,
+            max: 15,
+            message: 'El teléfono debe tener entre 10 y 15 caracteres (incluidos espacios y otros caracteres)'
           },
-        regexp: {
-          regexp: /^[0-9\s\-\(\)]+$/,
-          message: 'El teléfono debe contener solo números, espacios, guiones y paréntesis'
+          regexp: {
+            regexp: /^[0-9\s\-\(\)]+$/,
+            message: 'El teléfono debe contener solo números, espacios, guiones y paréntesis'
           }
         }
       },

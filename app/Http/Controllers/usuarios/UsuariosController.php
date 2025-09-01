@@ -183,6 +183,7 @@ class UsuariosController extends Controller
         $nestedData['id'] = $user->id;
         $nestedData['fake_id'] = ++$ids;
         $nestedData['name'] = $user->name;
+        $nestedData['contacto'] = optional(User::find($user->id_contacto))->name ?? '';
         $nestedData['email'] = $user->email ;
         $nestedData['telefono'] = $user->telefono;
         $nestedData['password_original'] = $user->password_original ;
