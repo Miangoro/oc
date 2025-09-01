@@ -1048,9 +1048,9 @@
                                                 @endif
                                             @else
                                                 {{-- Mostramos los old_hologramas --}}
-                                              @foreach ($old as $key => $folio)
-    <div>{!! str_replace(['inicio', 'fin'], ['<br>inicio', '<br>fin'], $folio) !!}</div>
-@endforeach
+                                                @foreach ($old as $key => $folio)
+                                                    <div>{!! str_replace(['INICIO', 'FIN'], ['<br>INICIO', '<br>FIN'], $folio) !!}</div>
+                                                @endforeach
                                             @endif
                                         </td>
                                         @elseif($pregunta->filtro == 'etiqueta')
