@@ -1043,13 +1043,13 @@
                                                 {{-- Mostramos rangoFolios solo si old no contiene folio1 --}}
                                                 @if (empty($rangoFolios))
                                                     @foreach ($rangoFolios as $rango)
-                                                       
+                                                        <div>{!! $rango !!}</div>
                                                     @endforeach
                                                 @endif
                                             @else
                                                 {{-- Mostramos los old_hologramas --}}
                                                 @foreach ($old as $key => $folio)
-                                                    <div>{!! str_replace(['INICIO', 'FIN'], ['<br>INICIO', '<br>FIN'], $folio) !!}</div>
+                                                    <div>{!! str_replace([',', ], ['<br>'], $folio) !!}</div>
                                                 @endforeach
                                             @endif
                                         </td>
