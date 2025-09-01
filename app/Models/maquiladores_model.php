@@ -14,5 +14,11 @@ class maquiladores_model extends Model
         'id_maquilador',
         'id_maquiladora'
     ];
+
+    
+    public function maquiladores()
+    {
+        return $this->hasMany(empresa::class, 'id_empresa', 'id_maquilador');
+    }
     
 }

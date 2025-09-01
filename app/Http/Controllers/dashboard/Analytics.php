@@ -13,6 +13,7 @@ use App\Models\Dictamen_Granel;
 use App\Models\Dictamen_instalaciones;
 use App\Models\inspecciones;
 use App\Models\LotesGranel;
+use App\Models\maquiladores_model;
 use App\Models\marcas;
 use App\Models\Revisor;
 use App\Models\solicitudesModel;
@@ -227,9 +228,9 @@ $pendientesRevisarCertificadosConsejo = Revisor::where('decision', 'Pendiente')
     ->get();
 
 
+    $maquiladores = maquiladores_model::with('maquiladores')->where('id_maquiladora',$empresaId)->get();
 
-
-    return view('content.dashboard.dashboards-analytics', compact('certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+    return view('content.dashboard.dashboards-analytics', compact('maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
 public function revisionesPorMes(Request $request)
