@@ -99,8 +99,8 @@
 
     // Insertar salto de línea antes de "inicio" y "fin"
     $observacionesConSaltos = str_replace(
-        ['inicio', 'fin'],
-        ['<br>inicio', '<br>fin'],
+        ['INICIO', 'FIN'],
+        ['<br>INICIO', '<br>FIN'],
         $observacionesEscapadas
     );
 
