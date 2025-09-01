@@ -58,7 +58,6 @@ class DictamenGranelController extends Controller  {
 private function obtenerEmpresasVisibles($empresaId)
 {
     $idsEmpresas = [];
-
     if ($empresaId) {
         $idsEmpresas[] = $empresaId;
         $idsEmpresas = array_merge(
@@ -72,7 +71,7 @@ private function obtenerEmpresasVisibles($empresaId)
 
 public function index(Request $request)
 {
-    //Permiso de empresa
+    ///Permisos de empresa
     $empresaId = null;
     $instalacionAuth = [];
     if (Auth::check() && Auth::user()->tipo == 3) {
@@ -92,6 +91,7 @@ public function index(Request $request)
         } 
     }
 
+
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
@@ -105,7 +105,6 @@ public function index(Request $request)
 
     $limit = $request->input('length');
     $start = $request->input('start');
-    // Columnas ordenadas desde DataTables
     $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
     $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
     $orderColumn = $columns[$orderColumnIndex] ?? 'num_dictamen'; // Por defecto
@@ -119,12 +118,12 @@ public function index(Request $request)
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
     ->select('dictamenes_granel.*', 'empresa.razon_social');
 
-    // Filtro por empresa
+    // Filtro por empresa (propia + maquiladores)
     if ($empresaId) {
         $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
         $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
     }
-    // Filtro por instalaciones del usuario
+    // Filtro por instalaciones asignadas al usuario tipo 3
     if (!empty($instalacionAuth)) {
         $query->whereIn('solicitudes.id_instalacion', $instalacionAuth);
     }
@@ -158,7 +157,8 @@ public function index(Request $request)
             CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) $orderDirection, -- Año
             CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '/', 1), '-', -1) AS UNSIGNED) $orderDirection -- Número
         ");
-    } elseif (!empty($orderColumn)) {
+
+    } else {
         $query->orderBy($orderColumn, $orderDirection);
     }
 

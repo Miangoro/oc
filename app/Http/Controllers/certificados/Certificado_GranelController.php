@@ -64,10 +64,9 @@ class Certificado_GranelController extends Controller
     }
 
 
- private function obtenerEmpresasVisibles($empresaId)
+private function obtenerEmpresasVisibles($empresaId)
 {
       $idsEmpresas = [];
-
       if ($empresaId) {
           $idsEmpresas[] = $empresaId;
           $idsEmpresas = array_merge(
@@ -88,7 +87,19 @@ public function index(Request $request)
         $empresaId = Auth::user()->empresa?->id_empresa;
         $instalacionAuth = (array) Auth::user()->id_instalacion;
         $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
+
+        // Si no tiene instalaciones, no ve nada
+        if (empty($instalacionAuth)) {
+            return response()->json([
+                'draw' => intval($request->input('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'code' => 200,
+                'data' => []
+            ]);
+        }
     }
+
 
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
@@ -118,7 +129,6 @@ public function index(Request $request)
         ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'certificados_granel.id_lote_granel')
         ->select('certificados_granel.*', 'empresa.razon_social');
 
-        
     // Filtro por empresa
     if ($empresaId) {
         $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
@@ -130,7 +140,6 @@ public function index(Request $request)
     }
 
     $baseQuery = clone $query;
-    // totalData (sin búsqueda)
     $totalData = $baseQuery->count();
 
 
@@ -152,6 +161,7 @@ public function index(Request $request)
         $totalFiltered = $totalData;
     }
 
+
     // Ordenamiento especial para num_certificado con formato 'CIDAM C-GRA25-###'
     if ($orderColumn === 'num_certificado') {
         $query->orderByRaw("
@@ -166,7 +176,7 @@ public function index(Request $request)
                 ) AS UNSIGNED
             ) $orderDirection
         ");
-    } elseif (!empty($orderColumn)) {
+    } else {
         $query->orderBy($orderColumn, $orderDirection);
     }
 
@@ -185,6 +195,7 @@ public function index(Request $request)
 
 
 
+    //MANDA LOS DATOS AL JS
     $data = [];
     if (!empty($certificados)) {
         foreach ($certificados as $certificado) {

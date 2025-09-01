@@ -55,17 +55,16 @@ class Certificado_InstalacionesController extends Controller
 
 private function obtenerEmpresasVisibles($empresaId)
 {
-      $idsEmpresas = [];
+    $idsEmpresas = [];
+    if ($empresaId) {
+        $idsEmpresas[] = $empresaId;
+        $idsEmpresas = array_merge(
+            $idsEmpresas,
+            maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+        );
+    }
 
-      if ($empresaId) {
-          $idsEmpresas[] = $empresaId;
-          $idsEmpresas = array_merge(
-              $idsEmpresas,
-              maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
-          );
-      }
-
-      return array_unique($idsEmpresas);
+    return array_unique($idsEmpresas);
 }
 
 public function index(Request $request)
@@ -77,7 +76,19 @@ public function index(Request $request)
         $empresaId = Auth::user()->empresa?->id_empresa;
         $instalacionAuth = (array) Auth::user()->id_instalacion;
         $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
+
+        // Si no tiene instalaciones, no ve nada
+        if (empty($instalacionAuth)) {
+            return response()->json([
+                'draw' => intval($request->input('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'code' => 200,
+                'data' => []
+            ]);
+        }
     }
+
 
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     // Mapear las columnas según el orden DataTables (índice JS)
@@ -129,6 +140,7 @@ public function index(Request $request)
         'almacén y bodega' => 4,
         'área de maduración' => 5,
     ];
+
     // Búsqueda Global
     if (!empty($search)) {
         // Convertir a minúsculas sin tildes para comparar
@@ -167,9 +179,10 @@ public function index(Request $request)
         });
 
         $totalFiltered = $query->count();
-    }  else {
+    } else {
         $totalFiltered = $totalData;
     }
+
 
     // Ordenamiento especial para num_certificado con formato 'CIDAM C-INS25-###'
     if ($orderColumn === 'num_certificado') {
@@ -185,7 +198,7 @@ public function index(Request $request)
                 ) AS UNSIGNED
             ) $orderDirection
         ");
-    } elseif (!empty($orderColumn)) {
+    } else{
         $query->orderBy($orderColumn, $orderDirection);
     }
 
@@ -203,143 +216,94 @@ public function index(Request $request)
         ])->offset($start)->limit($limit)->get();
 
 
-        // Map data for DataTables
-        /*$data = $certificados->map(function ($certificado, $index) use ($request) {
-            $empresa = $certificado->dictamen->instalaciones->empresa ?? null;
+
+    //MANDA LOS DATOS AL JS
+    $data = [];
+    if (!empty($certificados)) {
+        foreach ($certificados as $certificado) {
+            $nestedData['id_certificado'] = $certificado->id_certificado ?? 'No encontrado';
+            $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
+            $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
+            $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
+            $nestedData['tipo_dictamen'] = $certificado->dictamen->tipo_dictamen ?? 'No encontrado';
+            $nestedData['direccion_completa'] = $certificado->dictamen->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrado';
+            $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
+            $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null;
+            $nestedData['sustituye'] = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
+            $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
+            $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
+            ///Folio y no. servicio
+            $nestedData['num_servicio'] = $certificado->dictamen->inspeccione->num_servicio ?? 'No encontrado';
+            $nestedData['folio_solicitud'] = $certificado->dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
+            //Nombre y Numero empresa
+            $empresa = $certificado->dictamen->inspeccione->solicitud->empresa ?? null;
             $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                ? $empresa->empresaNumClientes
-                    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-                : 'N/A';
-
-                $fechaActual = Carbon::now()->startOfDay(); // Asegúrate de trabajar solo con fechas, sin horas
-                $fechaVigencia = Carbon::parse($certificado->fecha_vencimiento)->startOfDay();
-
+                ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
+                    ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
+            $nestedData['numero_cliente'] = $numero_cliente;
+            $nestedData['razon_social'] = $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
+            //Revisiones
+            $nestedData['revisor_personal'] = $certificado->revisorPersonal->user->name ?? null;
+            $nestedData['numero_revision_personal'] = $certificado->revisorPersonal->numero_revision ?? null;
+            $nestedData['decision_personal'] = $certificado->revisorPersonal->decision?? null;
+            $nestedData['respuestas_personal'] = $certificado->revisorPersonal->respuestas ?? null;
+            $nestedData['revisor_consejo'] = $certificado->revisorConsejo->user->name ?? null;
+            $nestedData['numero_revision_consejo'] = $certificado->revisorConsejo->numero_revision ?? null;
+            $nestedData['decision_consejo'] = $certificado->revisorConsejo->decision ?? null;
+            $nestedData['respuestas_consejo'] = $certificado->revisorConsejo->respuestas ?? null;
+            ///dias vigencia
+            $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
+            $fechaVigencia = Carbon::parse($certificado->fecha_vigencia)->startOfDay();
                 if ($fechaActual->isSameDay($fechaVigencia)) {
-                    $restantes = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
+                    $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este certificado</span>";
                 } else {
                     $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
-
                     if ($diasRestantes > 0) {
-                        if($diasRestantes > 15){
-                            $res = "<span class='badge bg-label-success'>$diasRestantes días de vigencia.</span>";
-                        }else{
-                            $res = "<span class='badge bgl-label-warning'>$diasRestantes días de vigencia.</span>";
-                        }
-                        $restantes = $res;
-                    } else {
-                        $restantes = "<span class='badge bg-label-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
-                    }
-                }
-
-            return [
-                'id_certificado' => $certificado->id_certificado,
-                'id_dictamen' => $certificado->id_dictamen,
-                'fake_id' => $request->input('start') + $index + 1,
-                'num_certificado' => $certificado->num_certificado,
-                'razon_social' => $empresa->razon_social ?? 'N/A',
-                'domicilio_instalacion' => $certificado->dictamen->instalaciones->direccion_completa ?? "N/A",
-                'numero_cliente' => $numero_cliente,
-                'num_autorizacion' => $certificado->num_autorizacion ?? 'N/A',
-                'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-                'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
-                'maestro_mezcalero' => $certificado->maestro_mezcalero ?? 'N/A',
-                'num_dictamen' => $certificado->dictamen->num_dictamen,
-                'num_servicio' => $certificado->dictamen->inspeccione->num_servicio ?? 'Sin definir',
-                'tipo_dictamen' => $certificado->dictamen->tipo_dictamen,
-                'id_revisor' => $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar',
-                'id_revisor2' => $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar',
-                'id_firmante' => $certificado->firmante->name ?? 'Sin asignar',
-                'estatus' => $certificado->estatus,
-                'diasRestantes' => $restantes,
-
-            ];
-        });*/
-        $data = [];
-        if (!empty($certificados)) {
-            foreach ($certificados as $certificado) {
-                $nestedData['id_certificado'] = $certificado->id_certificado ?? 'No encontrado';
-                $nestedData['num_certificado'] = $certificado->num_certificado ?? 'No encontrado';
-                $nestedData['id_dictamen'] = $certificado->dictamen->id_dictamen ?? 'No encontrado';
-                $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No encontrado';
-                $nestedData['tipo_dictamen'] = $certificado->dictamen->tipo_dictamen ?? 'No encontrado';
-                $nestedData['direccion_completa'] = $certificado->dictamen->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrado';
-                $nestedData['estatus'] = $certificado->estatus ?? 'No encontrado';
-                $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null;
-                $nestedData['sustituye'] = $id_sustituye ? Certificados::find($id_sustituye)->num_certificado ?? 'No encontrado' : null;
-                $nestedData['fecha_emision'] = Helpers::formatearFecha($certificado->fecha_emision);
-                $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
-                ///Folio y no. servicio
-                $nestedData['num_servicio'] = $certificado->dictamen->inspeccione->num_servicio ?? 'No encontrado';
-                $nestedData['folio_solicitud'] = $certificado->dictamen->inspeccione->solicitud->folio ?? 'No encontrado';
-                //Nombre y Numero empresa
-                $empresa = $certificado->dictamen->inspeccione->solicitud->empresa ?? null;
-                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                    ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
-                        ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
-                $nestedData['numero_cliente'] = $numero_cliente;
-                $nestedData['razon_social'] = $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
-                //Revisiones
-                $nestedData['revisor_personal'] = $certificado->revisorPersonal->user->name ?? null;
-                $nestedData['numero_revision_personal'] = $certificado->revisorPersonal->numero_revision ?? null;
-                $nestedData['decision_personal'] = $certificado->revisorPersonal->decision?? null;
-                $nestedData['respuestas_personal'] = $certificado->revisorPersonal->respuestas ?? null;
-                $nestedData['revisor_consejo'] = $certificado->revisorConsejo->user->name ?? null;
-                $nestedData['numero_revision_consejo'] = $certificado->revisorConsejo->numero_revision ?? null;
-                $nestedData['decision_consejo'] = $certificado->revisorConsejo->decision ?? null;
-                $nestedData['respuestas_consejo'] = $certificado->revisorConsejo->respuestas ?? null;
-                ///dias vigencia
-                $fechaActual = Carbon::now()->startOfDay(); //Asegúrate de trabajar solo con fechas, sin horas
-                $fechaVigencia = Carbon::parse($certificado->fecha_vigencia)->startOfDay();
-                    if ($fechaActual->isSameDay($fechaVigencia)) {
-                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este certificado</span>";
-                    } else {
-                        $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
-                        if ($diasRestantes > 0) {
-                            if ($diasRestantes > 15) {
-                                $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
-                            } else {
-                                $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
-                            }
-                            $nestedData['diasRestantes'] = $res;
+                        if ($diasRestantes > 15) {
+                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
                         } else {
-                            $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
                         }
+                        $nestedData['diasRestantes'] = $res;
+                    } else {
+                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
                     }
-                ///solicitud y acta
-                $nestedData['id_solicitud'] = $certificado->dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
-                $urls = $certificado->dictamen?->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
-                $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
-                //Certificado Firmado
-                switch ($certificado?->dictamen?->tipo_dictamen) {// Determinar el tipo de dictamen
-                    case 1:
-                        $id_documento = 127; // Productor
-                        break;
-                    case 2:
-                        $id_documento = 128; // Envasador
-                        break;
-                    case 3:
-                        $id_documento = 129; // Comercializador
-                        break;
-                    default:
-                        $id_documento = null;
                 }
-                $documentacion = Documentacion_url::where('id_relacion', $certificado?->dictamen?->id_instalacion)
-                    ->where('id_documento', $id_documento)->where('id_doc', $certificado->id_certificado) ->first();
-                $nestedData['pdf_firmado'] = $documentacion?->url
-                    ? asset("files/{$numero_cliente}/certificados_instalaciones/{$documentacion->url}") : null;
-
-
-                $data[] = $nestedData;
+            ///solicitud y acta
+            $nestedData['id_solicitud'] = $certificado->dictamen->inspeccione->solicitud->id_solicitud ?? 'No encontrado';
+            $urls = $certificado->dictamen?->inspeccione?->solicitud?->documentacion(69)?->pluck('url')?->toArray();
+            $nestedData['url_acta'] = (!empty($urls)) ? $urls : 'Sin subir';
+            //Certificado Firmado
+            switch ($certificado?->dictamen?->tipo_dictamen) {// Determinar el tipo de dictamen
+                case 1:
+                    $id_documento = 127; // Productor
+                    break;
+                case 2:
+                    $id_documento = 128; // Envasador
+                    break;
+                case 3:
+                    $id_documento = 129; // Comercializador
+                    break;
+                default:
+                    $id_documento = null;
             }
-        }
+            $documentacion = Documentacion_url::where('id_relacion', $certificado?->dictamen?->id_instalacion)
+                ->where('id_documento', $id_documento)->where('id_doc', $certificado->id_certificado) ->first();
+            $nestedData['pdf_firmado'] = $documentacion?->url
+                ? asset("files/{$numero_cliente}/certificados_instalaciones/{$documentacion->url}") : null;
 
-        return response()->json([
-            'draw' => intval($request->input('draw')),
-            'recordsTotal' => intval($totalData),
-            'recordsFiltered' => intval($totalFiltered),
-            'code' => 200,
-            'data' => $data,
-        ]);
+
+            $data[] = $nestedData;
+        }
+    }
+
+    return response()->json([
+        'draw' => intval($request->input('draw')),
+        'recordsTotal' => intval($totalData),
+        'recordsFiltered' => intval($totalFiltered),
+        'code' => 200,
+        'data' => $data,
+    ]);
 }
 
 

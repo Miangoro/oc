@@ -72,21 +72,6 @@ class Certificado_ExportacionController extends Controller
     }
 
 
-private function obtenerEmpresasVisibles($empresaId)
-{
-    $idsEmpresas = [];
-
-    if ($empresaId) {
-        $idsEmpresas[] = $empresaId;
-        $idsEmpresas = array_merge(
-            $idsEmpresas,
-            maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
-        );
-    }
-
-    return array_unique($idsEmpresas);
-}
-
 ///FUNCION PARA OBTENER N° DE LOTES PARA HOLOGRAMAS
 public function contarLotes($id)
 {
@@ -104,6 +89,20 @@ public function contarLotes($id)
     return response()->json(['count' => $count]);
 }
 
+
+private function obtenerEmpresasVisibles($empresaId)
+{
+    $idsEmpresas = [];
+    if ($empresaId) {
+        $idsEmpresas[] = $empresaId;
+        $idsEmpresas = array_merge(
+            $idsEmpresas,
+            maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+        );
+    }
+
+    return array_unique($idsEmpresas);
+}
 
 public function index(Request $request)
 {
@@ -151,7 +150,7 @@ public function index(Request $request)
     $totalFiltered = $totalData; */
     $limit = $request->input('length');
     $start = $request->input('start');
-
+    
     // Columnas ordenadas desde DataTables
     $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
     $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
@@ -298,8 +297,8 @@ public function index(Request $request)
                 ELSE 999999
             END $orderDirection
         ");
-    } elseif (!empty($orderColumn)) {
-        $query->orderBy($orderColumn, $orderDirection);
+    } else {
+        $query->orderBy($orderColumn, $orderDirection); // orden por cualquier otra columna o por defecto
     }
 
 

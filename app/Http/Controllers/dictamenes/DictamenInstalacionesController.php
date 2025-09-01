@@ -56,7 +56,6 @@ class DictamenInstalacionesController extends Controller
 private function obtenerEmpresasVisibles($empresaId)
 {
     $idsEmpresas = [];
-
     if ($empresaId) {
         $idsEmpresas[] = $empresaId;
         $idsEmpresas = array_merge(
@@ -142,8 +141,6 @@ public function index(Request $request)
         'área de maduración' => 5,
     ];
 
-
-///BUSCADOR ACTIVO
     // Búsqueda Global
     if (!empty($search)) {
         // Convertir a minúsculas sin tildes para comparar
@@ -177,17 +174,12 @@ public function index(Request $request)
             if (!is_null($tipoDictamenValor)) {
                 $q->orWhere('dictamenes_instalaciones.tipo_dictamen', $tipoDictamenValor);
             }
-
         });
 
         $totalFiltered = $query->count();
-
-
-
-    } else { ///SIN BUSQUEDA
+    } else {
         $totalFiltered = $totalData;
     }
-
 
     // Ordenamiento especial para num_dictamen con formato 'UMC-###'
     if ($orderColumn === 'num_dictamen') {
@@ -199,7 +191,7 @@ public function index(Request $request)
             CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) $orderDirection, -- Año
             CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '/', 1), '-', -1) AS UNSIGNED) $orderDirection -- Número
         ");
-    } elseif (!empty($orderColumn)) {
+    } else {
         $query->orderBy($orderColumn, $orderDirection);
     }
 
@@ -303,7 +295,6 @@ public function index(Request $request)
                     $data[] = $nestedData;
                 }
         }
-
 
         return response()->json([
             'draw' => intval($request->input('draw')),

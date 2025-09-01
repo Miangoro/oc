@@ -76,6 +76,7 @@ public function index(Request $request)
         $instalacionAuth = (array) Auth::user()->id_instalacion;
         $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
 
+        // Si no tiene instalaciones, no ve nada
         if (empty($instalacionAuth)) {
             return response()->json([
                 'draw' => intval($request->input('draw')),
@@ -109,7 +110,7 @@ public function index(Request $request)
     $orderColumnIndex = $request->input('order.0.column');// Indice de columna en DataTables
     $orderDirection = $request->input('order.0.dir') ?? 'asc';// Dirección de ordenamiento
     $orderColumn = $columns[$orderColumnIndex] ?? 'num_dictamen'; // Por defecto
-    
+
     $search = $request->input('search.value');//Define la búsqueda global.
 
 
@@ -141,7 +142,7 @@ public function index(Request $request)
 
 
     /// Búsqueda Global
-    if (!empty($search)) { 
+    if (!empty($search)) {
         $query->where(function ($q) use ($search) {
             $q->where('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
@@ -166,6 +167,9 @@ public function index(Request $request)
             CAST(SUBSTRING_INDEX(SUBSTRING(num_dictamen, 9), '-', 1) AS UNSIGNED) DESC,
             CHAR_LENGTH(SUBSTRING_INDEX(SUBSTRING(num_dictamen, 9), '-', -1)) ASC
         ");
+
+    } else {
+        $query->orderBy($orderColumn, $orderDirection); // orden por cualquier otra columna o por defecto
     }
 
 
@@ -177,7 +181,10 @@ public function index(Request $request)
             'inspeccione.solicitud',// Relación anidada: inspeccione > solicitud
             'inspeccione.solicitud.empresa',
             'inspeccione.solicitud.empresa.empresaNumClientes',
-        ])->offset($start)->limit($limit)->get();
+            ])
+        ->offset($start)
+        ->limit($limit)
+        ->get();
 
 
 
@@ -242,7 +249,7 @@ public function index(Request $request)
         }
     }
 
-    return response()->json([
+    return response()->json([ //Devuelve los datos y el total de registros filtrados
         'draw' => intval($request->input('draw')),
         'recordsTotal' => intval($totalData),
         'recordsFiltered' => intval($totalFiltered),
