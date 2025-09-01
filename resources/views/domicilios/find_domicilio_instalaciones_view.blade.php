@@ -77,5 +77,6 @@
 
 <!-- Modal -->
 @include('_partials._modals.modal-pdfs-frames')
+@include('_partials._modals.modal-pdfs-foliofqs')
 @include('_partials/_modals/modal-add-instalaciones')
 @endsection

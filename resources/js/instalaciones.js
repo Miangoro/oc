@@ -1163,7 +1163,9 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
   $(document).on('click', '.verDocumentosBtn', function () {
     var idInstalacion = $(this).data('id');
     console.log('ID de Instalación:', idInstalacion);
+    $('#name').remove();
 
+    $('.modal-title').html('Certificado de instalaciones');
     $('#modalEditInstalacion').modal('hide');
     $('#modalVerDocumento').modal('hide');
     $('#documentosTableBody').html('<tr><td colspan="2" class="text-center">Cargando documentos...</td></tr>');
@@ -1214,35 +1216,43 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
     });
   });
 
-  // Al hacer clic en el botón "Ver Documento"
-  $(document).on('click', '.verDocumentoBtn', function () {
+$(document).on('click', '.verDocumentoBtn', function () {
     var nombreDocumento = $(this).data('nombre');
     var url = $(this).data('url');
 
-    $('#loading-spinner').show();
+    // Primero cerramos el modal actual
     $('#modalVerDocumento').modal('hide');
-    $('#PdfDictamenIntalaciones').modal('show');
 
-    $('#pdfViewerDictamen').attr('src', url);
-    $('#titulo_modal_Dictamen').text('Certificado Instalaciones');
-    $('#subtitulo_modal_Dictamen').text(nombreDocumento);
+    // Cuando ya esté completamente oculto, abrimos el modal de PDF
+    $('#modalVerDocumento').on('hidden.bs.modal', function handler() {
+        // Nos quitamos el listener para que no se dispare más de una vez
+        $('#modalVerDocumento').off('hidden.bs.modal', handler);
 
-    var openPdfBtn = $('#openPdfBtnDictamen');
-    openPdfBtn.attr('href', url);
-    openPdfBtn.show();
-  });
+        $('#cargando').show();
+        $('#pdfViewer').hide();
+        $('#mostrarPdf').modal('show');
 
-  // Evento para ocultar el spinner y mostrar el iframe cuando el PDF haya cargado
-  $('#pdfViewerDictamen').on('load', function () {
-    $('#loading-spinner').hide();
-    $('#pdfViewerDictamen').show();
-  });
+        $('#pdfViewer').attr('src', url);
+        $('#titulo_modal').text('Certificado Instalaciones');
+        $('#subtitulo_modal').text(nombreDocumento);
 
-  $('#PdfDictamenIntalaciones').on('hidden.bs.modal', function () {
-    $('#pdfViewerDictamen').attr('src', '');
-    console.log('Modal de PDF cerrado y iframe limpiado');
-    $('#modalVerDocumento').modal('show');
-  });
+        var openPdfBtn = $('#NewPestana');
+        openPdfBtn.attr('href', url);
+        openPdfBtn.show();
+    });
+});
+
+$('#pdfViewer').on('load', function () {
+    $('#cargando').hide();
+    $(this).show();
+});
+
+$('#mostrarPdf').on('hidden.bs.modal', function () {
+    $('#pdfViewer').hide().attr('src', '');
+    $('#cargando').show();
+    $('#NewPestana').hide().attr('href', '#');
+    $('#titulo_modal, #subtitulo_modal').text('');
+});
 
 
 
@@ -1253,7 +1263,7 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
 }); ///end function
 
 
-  
+
 'use strict';
   $(function () {
     // Configuración de AJAX para enviar el token CSRF

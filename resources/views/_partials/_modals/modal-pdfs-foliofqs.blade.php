@@ -12,7 +12,7 @@
                     <thead>
                         <tr>
                             <th><b>Tipo de Certificado</b></th>
-                            <th><b>Nombre</b></th>
+                            <th id="name"><b>Nombre</b></th>
                             <th><b>Certificado</b></th>
                         </tr>
                     </thead>
@@ -57,5 +57,5 @@
     </div>
   </div>
 </div>
-  
-  
+
+
