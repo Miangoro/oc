@@ -76,6 +76,7 @@ function limpiarTipoPHP($tipo) {
                         <th>Entradas</th>
                         <th>Salidas</th>
                         <th>Inventario Final</th>
+                        <th>Observaciones</th>
                         <th>Estatus</th>
                         <th>Acciones</th>
                     </tr>

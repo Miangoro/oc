@@ -182,8 +182,19 @@ $(function () {
             );
           }
         },
+                {
+          targets: 8, // Asegúrate que sigue siendo la columna correcta
+          responsivePriority: 1,
+          render: function (data, type, full, meta) {
+            var $obs = full['observaciones'] ?? 'N/A';
+
+            return (
+              '<span>'+$obs+'</span>'
+            );
+          }
+        },
         {
-          targets: 8,
+          targets: 9,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var $estatus = full['id_firmante'] ?? null;
@@ -201,7 +212,7 @@ $(function () {
         },
         {
           // Actions
-          targets: 9,
+          targets: 10,
           title: 'Acciones',
           searchable: false,
           orderable: false,
