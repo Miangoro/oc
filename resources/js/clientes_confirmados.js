@@ -639,7 +639,12 @@ $(function () {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese el código postal'
-            }
+            },
+            stringLength: {
+              min: 5,
+              max: 5,
+              message: 'El CP debe tener 5 caracteres (incluidos espacios y otros caracteres)'
+            },
           }
         },
         domicilio_fiscal: {
@@ -784,6 +789,21 @@ $(function () {
     // Inicializar el comportamiento por defecto para el campo "representante"
     $('#regimen').trigger('change');
     fv.on('core.form.valid', function () {
+
+      // Validación dinámica de maquiladoras al enviar formulario
+      var esMaquilador = $('#add_es_maquilador').val();
+      var maquiladoras = $('#add_id_maquiladora').val();
+
+      if (esMaquilador === 'Si' && (!maquiladoras || maquiladoras.length === 0)) {
+          Swal.fire({
+              icon: 'warning',
+              title: 'Campo obligatorio',
+              text: 'Debe seleccionar al menos una empresa maquiladora',
+              customClass: { confirmButton: 'btn btn-warning' }
+          });
+          return; // Detener envío
+      }
+
       var formData = new FormData(form);
       $.ajax({
         url: '/registrar-clientes',
@@ -844,61 +864,27 @@ $('#AddClientesConfirmados').on('hidden.bs.modal', function () {
 
 
 
+
+
+// Función para mostrar/ocultar campo maquilador
+function maquilador(resp){ 
+    if(resp == "Si"){
+        $(".maquiladora").show();
+        $("#id_maquiladora").prop("required", true); // obligatorio si es maquilador
+    } else {
+        $(".maquiladora").hide();
+        $("#id_maquiladora").prop("required", false); // quitar required si no
+        $("#id_maquiladora").val([]).trigger("change"); // limpiar selección
+    }
+}
+
 $(document).ready(function() {
-  /* este es para editar contratos
-  window.abrirModal = function(id_empresa) {
-    $.ajax({
-        url: '/empresa_contrato/' + id_empresa,
-        method: 'GET',
-        success: function(response) {
-            if (response.length > 0) {
-                const contrato = response[0];
 
-                $('#empresaID').val(contrato.id_empresa);
-                $('#modalAddressAddress1').val(contrato.fecha_cedula);
-                $('#modalAddressAddress2').val(contrato.idcif);
-                $('#modalAddressLandmark').val(contrato.clave_ine);
-                $('#modalAddressCountry').val(contrato.sociedad_mercantil).trigger('change');
-                $('#modalAddressCity').val(contrato.num_instrumento);
-                $('#modalAddressState').val(contrato.vol_instrumento);
-                $('input[name="fecha_instrumento"]').val(contrato.fecha_instrumento);
-                $('input[name="nombre_notario"]').val(contrato.nombre_notario);
-                $('input[name="num_notario"]').val(contrato.num_notario);
-                $('input[name="estado_notario"]').val(contrato.estado_notario);
-                $('input[name="num_permiso"]').val(contrato.num_permiso);
-
-                $.ajax({
-                    url: '/empresa_num_cliente/' + id_empresa,
-                    method: 'GET',
-                    success: function(clienteResponse) {
-                        if (clienteResponse.numero_cliente) {
-                            $('#numero_cliente').val(clienteResponse.numero_cliente);
-                        } else {
-                            $('#numero_cliente').val('');
-                        }
-
-                        // Abre el modal
-                        $('#EditClientesConfirmados').modal('show');
-                    },
-                    error: function(clienteXhr) {
-                        console.log(clienteXhr.responseText);
-                        alert('Error al cargar el número de cliente.');
-                    }
-                });
-            } else {
-                alert('No se encontraron contratos para esta empresa.');
-            }
-        },
-        error: function(xhr) {
-            console.log(xhr.responseText);
-            var errorMsg = 'Error al cargar los detalles de la empresa.';
-            if (xhr.responseJSON && xhr.responseJSON.error) {
-                errorMsg = xhr.responseJSON.error;
-            }
-            alert(errorMsg);
-        }
+  // Escuchar cambio de "es_maquilador"
+    $('#es_maquilador').on('change', function() {
+        maquilador($(this).val());
     });
-};*/
+
 ///OBTENER REGISTRO DE CLIENTES CONFIRMADOS
 window.abrirModal = function(id_empresa) {
       $.ajax({
@@ -930,6 +916,8 @@ window.abrirModal = function(id_empresa) {
                   $('#id_contacto_edit').val(dato.id_contacto).trigger('change');
                   $('#registro_productor_edit').val(dato.registro_productor);
                   $('#convenio_corresp_edit').val(dato.convenio_corresp);
+                  $('#estatus').val(dato.estatus).trigger('change');
+
                   $('#es_maquilador').val(dato.es_maquilador);
 
                   maquilador(dato.es_maquilador);
@@ -945,10 +933,6 @@ window.abrirModal = function(id_empresa) {
                   } else {
                       $('#id_maquiladora').val([]).trigger('change');
                   }
-
-
-
-                  $('#estatus').val(dato.estatus).trigger('change');
 
 
                   $('#EditClientesConfirmados').modal('show');
@@ -969,6 +953,18 @@ window.abrirModal = function(id_empresa) {
 ///EDITAR CLIENTES CONFIRMADOS
 $('#ClientesConfirmadosEditForm').on('submit', function(event) {
       event.preventDefault();
+
+      // Validación extra para maquiladora
+      if($('#es_maquilador').val() === "Si" && (!$('#id_maquiladora').val() || $('#id_maquiladora').val().length === 0)) {
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Debes seleccionar al menos una empresa maquiladora',
+              customClass: { confirmButton: 'btn btn-danger' }
+          });
+          return false; // Detener envío
+      }
+
       var formData = $(this).serialize();
 
       $.ajax({
@@ -1002,10 +998,18 @@ $('#ClientesConfirmadosEditForm').on('submit', function(event) {
           }
       });
 });
-   // Limpiar campos al cerrar el modal
-  $('#EditClientesConfirmados').on('hidden.bs.modal', function() {
+
+  // Limpiar campos al cerrar el modal
+  /* $('#EditClientesConfirmados').on('hidden.bs.modal', function() {
     $('#ClientesConfirmadosEditForm')[0].reset();
-  });
+  }); */
+    // Limpiar al cerrar modal
+    $('#EditClientesConfirmados').on('hidden.bs.modal', function() {
+        $('#ClientesConfirmadosEditForm')[0].reset();
+        $('#id_maquiladora').val([]).trigger('change');
+        maquilador("No"); // asegurar estado por defecto
+    });
+
 });
 
 

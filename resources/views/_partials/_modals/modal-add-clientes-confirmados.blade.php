@@ -160,7 +160,8 @@
                       <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="maquilador(this.value)"  name="es_maquilador" class="form-select" required>
+                                <select onchange="maquilador(this.value)"  name="es_maquilador"
+                                id="add_es_maquilador" class="form-select" required>
                                         <option value="No">No</option>
                                         <option value="Si">Si</option>
                                 </select>
@@ -169,9 +170,12 @@
                         </div>
                         <div style="display: none" class="col-md-6 maquiladora">
                             <div class="form-floating form-floating-outline mb-4 select2-primary">
-                                <select name="id_maquiladora[]" multiple class="select2 form-select" required>
+                                <select id="add_id_maquiladora" name="id_maquiladora[]" multiple class="select2 form-select" required>
                                     @foreach ($empresas_confirmadas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
+                                        {{-- <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option> --}}
+                                <option value="{{ $empresa->id_empresa }}">
+                                    {{ optional($empresa->empresaNumClientes->first())->numero_cliente ?? 'SIN ASIGNAR' }} | {{ $empresa->razon_social }}
+                                </option>
                                     @endforeach
                                 </select>
                                 <label for="id_maquiladora">Empresa maquiladora</label>

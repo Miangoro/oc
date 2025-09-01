@@ -45,11 +45,15 @@ class clientesConfirmadosController extends Controller
         $normas = normas_catalo::where('id_norma', '!=', 3)->get();
         $actividadesClientes = catalogo_actividad_cliente::all();
         $empresas_inactivas = empresa::where('tipo', 2)->where('estatus',2)->count();
-        $empresas_confirmadas = Empresa::with('empresaNumClientes')
-    ->withCount('empresaNumClientes') // Cuenta los clientes por empresa
-    ->where('tipo', 2)
-    ->orderByDesc('empresa_num_clientes_count') // Ordena por la cantidad de clientes
-    ->get();
+
+        /* $empresas_confirmadas = Empresa::with('empresaNumClientes')
+            ->withCount('empresaNumClientes') // Cuenta los clientes por empresa
+            ->where('tipo', 2)
+            ->orderByDesc('empresa_num_clientes_count') // Ordena por la cantidad de clientes
+            ->get(); */
+        $empresas_confirmadas = empresa::with('empresaNumClientes')
+            ->where('tipo', 2)
+            ->get();
 
 
 
@@ -508,9 +512,12 @@ public function editar_cliente_confirmado(Request $request)
                     'id_maquiladora' => $id_maquiladora,
                 ]);
             }
+        } else if ($validatedData['es_maquilador'] == 'No') {
+            // Si cambió a No, eliminamos cualquier registro previo
+            maquiladores_model::where('id_maquilador', $id_empresa)->delete();
         }
 
-      
+
       return response()->json([
           'success' => true,
           'message' => 'Cliente registrado exitosamente',
