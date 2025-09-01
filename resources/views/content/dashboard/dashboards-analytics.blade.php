@@ -141,6 +141,17 @@
                                         Miembro del consejo
                                     @endif
                                 </p>
+
+                                @if($maquiladora)
+                                   
+                                    @foreach($maquiladora AS $maquiladoras)
+
+                                    @foreach($maquiladoras->maquiladora AS $soymaquilador)
+                                         Soy maquilador de {{ $soymaquilador->razon_social }}
+                                     @endforeach
+                                        
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
 
