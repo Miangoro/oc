@@ -269,7 +269,7 @@ public function index(Request $request)
     }
 
     // Paginación + relaciones
-    $solicitudes = $query
+    /*$solicitudes = $query
         ->with([
             'tipo_solicitud',
             'empresa',
@@ -278,6 +278,10 @@ public function index(Request $request)
             'ultima_validacion_oc',
             'ultima_validacion_ui'
         ])
+        ->offset($start)
+        ->limit($limit)
+        ->get();*/
+    $solicitudes = $query
         ->offset($start)
         ->limit($limit)
         ->get();
