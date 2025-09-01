@@ -29,7 +29,7 @@ class HologramasValidacion extends Controller
 
      $tipo_holograma = substr($folio, 13, 1);
 
-
+dd($tipo_holograma);
 
     $folio_numerico = (int) substr($folio, -6); // Suponiendo que los últimos 6 dígitos son el número del folio
     $ya_activado = false;
