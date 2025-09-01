@@ -9,6 +9,7 @@ use App\Models\Documentacion_url;
 use App\Models\marcas;
 use App\Models\empresa;
 use App\Models\catalogo_norma_certificar;
+use App\Models\maquiladores_model;
 use App\Models\tipos;
 use App\Models\clases;
 use App\Models\categorias;
@@ -28,7 +29,23 @@ class marcasCatalogoController extends Controller
     public function UserManagement()
     {
         // Obtener listado de clientes (empresas)
-        $clientes = Empresa::with('empresaNumClientes')->where('tipo', 2)->get();
+        /* $clientes = Empresa::with('empresaNumClientes')->where('tipo', 2)->get(); */
+       $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
+        ? Auth::user()->empresa?->id_empresa
+        : null;
+          if ($empresaIdAut) {
+                  // 👇 Usa la función que ya tienes
+                  $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, null);
+
+                  $clientes = empresa::with('empresaNumClientes')
+                      ->whereIn('id_empresa', $idsEmpresas)
+                      ->get();
+              } else {
+                  $clientes = empresa::with('empresaNumClientes')
+                      ->where('tipo', 2)
+                      ->get();
+              }
+
         $documentos = Documentacion::where('id_documento', '=', '82')
             ->orWhere('id_documento', '=', '80')
             ->orWhere('id_documento', '=', '121')
@@ -69,6 +86,23 @@ class marcasCatalogoController extends Controller
         ]);
     }
 
+     private function obtenerEmpresasVisibles($empresaIdAut, $empresaId)
+    {
+          $idsEmpresas = [];
+          if ($empresaIdAut) {
+              $idsEmpresas[] = $empresaIdAut;
+              $idsEmpresas = array_merge($idsEmpresas,
+                  maquiladores_model::where('id_maquiladora', $empresaIdAut)->pluck('id_maquilador')->toArray()
+              );
+          }
+          if ($empresaId) {
+              $idsEmpresas[] = $empresaId;
+              $idsEmpresas = array_merge($idsEmpresas,
+                  maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+              );
+          }
+          return array_unique($idsEmpresas);
+    }
     public function index(Request $request)
     {
         $columns = [
