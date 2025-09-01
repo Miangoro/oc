@@ -32,8 +32,7 @@ class HologramasValidacion extends Controller
 
 
     $folio_numerico = (int) substr($folio, -6); // Suponiendo que los últimos 6 dígitos son el número del folio
-    $ya_activado = false;
-    $datosHolograma = null;
+  
 
     $activaciones = activarHologramasModelo::with('solicitudHolograma')
       ->whereHas('solicitudHolograma', function ($query) use ($marca) {
@@ -44,6 +43,8 @@ class HologramasValidacion extends Controller
 
 
     foreach ($activaciones as $activacion) {
+        $ya_activado = false;
+    $datosHolograma = null;
       $folios_activados = json_decode($activacion->folios, true);
 
       for ($i = 0; $i < count($folios_activados['folio_inicial']); $i++) {
