@@ -147,7 +147,7 @@
                                     @foreach($maquiladora AS $maquiladoras)
 
                                     @foreach($maquiladoras->maquiladora AS $soymaquilador)
-                                         Soy maquilador de {{ $soymaquilador->razon_social }} <br>
+                                         Maquilador de {{ $soymaquilador->razon_social }} <br>
                                      @endforeach
                                         
                                     @endforeach
