@@ -22,7 +22,8 @@
 
     @media only screen and (max-width: 900px) {
         .panel-footer {
-            background: url('{{ asset('img_pdf/organismo_certificador_cidam2.png') }}')no-repeat 50% !important;
+            background: url('{{ asset('img_pdf/organismo_certificador_cidam2.png') }}') no-repeat 50% !important;
+            background-size: 100% !important;
            
         }
     }
