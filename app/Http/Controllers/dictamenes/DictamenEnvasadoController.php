@@ -69,6 +69,7 @@ private function obtenerEmpresasVisibles($empresaId)
 
 public function index(Request $request)
 {
+    ///Permisos de empresa
     $empresaId = null;
     $instalacionAuth = [];
     if (Auth::check() && Auth::user()->tipo == 3) {
@@ -76,6 +77,7 @@ public function index(Request $request)
         $instalacionAuth = (array) Auth::user()->id_instalacion;
         $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
 
+        // Si no tiene instalaciones, no ve nada
         if (empty($instalacionAuth)) {
             return response()->json([
                 'draw' => intval($request->input('draw')),
@@ -118,12 +120,12 @@ public function index(Request $request)
         ->leftJoin('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'lotes_envasado_granel.id_lote_granel')
         ->select('dictamenes_envasado.*', 'empresa.razon_social');
 
-    // Filtro por empresa
+    // Filtro por empresa (propia + maquiladores)
     if ($empresaId) {
         $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
         $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
     }
-    // Filtro por instalaciones del usuario
+    // Filtro por instalaciones asignadas al usuario tipo 3
     if (!empty($instalacionAuth)) {
         $query->whereIn('solicitudes.id_instalacion', $instalacionAuth);
     }
@@ -159,7 +161,8 @@ public function index(Request $request)
             CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) $orderDirection, -- Año
             CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '/', 1), '-', -1) AS UNSIGNED) $orderDirection -- Número
         ");
-    } elseif (!empty($orderColumn)) {
+
+    } else {
         $query->orderBy($orderColumn, $orderDirection);
     }
 
@@ -270,7 +273,7 @@ public function index(Request $request)
         }
     }
 
-    return response()->json([//Devuelve los datos y el total de registros filtrados
+    return response()->json([
         'draw' => intval($request->input('draw')),
         'recordsTotal' => intval($totalData),
         'recordsFiltered' => intval($totalFiltered),

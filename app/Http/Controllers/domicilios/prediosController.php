@@ -31,60 +31,59 @@ use Illuminate\Support\Facades\Auth;//Permiso empresa
 class PrediosController extends Controller
 {
 
-public function UserManagement() {
-    //Permiso de empresa
-    $empresaId = null;
-    if (Auth::check() && Auth::user()->tipo == 3) {
-        $empresaId = Auth::user()->empresa?->id_empresa;
-    }
-
-    // Filtrar predios si el usuario es tipo 3
-    $prediosQuery = Predios::with('empresa');
-
-    if ($empresaId) {
-        $prediosQuery->where('id_empresa', $empresaId);
-    }
-
-    $predios = $prediosQuery->get();
-
-    // Filtrar empresas
-    $empresasQuery = empresa::where('tipo', 2);
-
-    if ($empresaId) {
-        $empresasQuery->where('id_empresa', $empresaId);
-    }
-
-    $empresas = $empresasQuery->get();
-
-    $tipos = tipos::all();
-    $estados = estados::all();
-
-    return view('domicilios.find_domicilio_predios_view', [
-        'predios' => $predios,
-        'empresas' => $empresas,
-        'tipos' => $tipos,
-        'estados' => $estados,
-    ]);
-}
-
-
-
-
-
-    public function index(Request $request)
+    public function UserManagement() 
     {
-        $columns = [
-            1 => 'id_predio',
-            2 => 'id_empresa',
-            3 => 'num_predio',
-            4 => 'nombre_predio',
-            5 => 'ubicacion_predio',
-            6 => 'tipo_predio',
-            7 => 'puntos_referencia',
-            8 => 'cuenta_con_coordenadas',
-            9 => 'superficie',
-            10 => 'estatus'
-        ];
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
+        }
+
+        // Filtrar predios si el usuario es tipo 3
+        $prediosQuery = Predios::with('empresa');
+
+        if ($empresaId) {
+            $prediosQuery->where('id_empresa', $empresaId);
+        }
+
+        $predios = $prediosQuery->get();
+
+        // Filtrar empresas
+        $empresasQuery = empresa::where('tipo', 2);
+
+        if ($empresaId) {
+            $empresasQuery->where('id_empresa', $empresaId);
+        }
+
+        $empresas = $empresasQuery->get();
+
+        $tipos = tipos::all();
+        $estados = estados::all();
+
+        return view('domicilios.find_domicilio_predios_view', [
+            'predios' => $predios,
+            'empresas' => $empresas,
+            'tipos' => $tipos,
+            'estados' => $estados,
+        ]);
+    }
+
+
+
+public function index(Request $request)
+{
+    $columns = [
+        1 => 'id_predio',
+        2 => 'id_empresa',
+        3 => 'num_predio',
+        4 => 'nombre_predio',
+        5 => 'ubicacion_predio',
+        6 => 'tipo_predio',
+        7 => 'puntos_referencia',
+        8 => 'cuenta_con_coordenadas',
+        9 => 'superficie',
+        10 => 'estatus'
+    ];
 
         // Permiso de empresa
          $empresaId = null;
@@ -124,9 +123,8 @@ public function UserManagement() {
 
 
 
-
 //SIN BUSQUEDA
-        if (empty($request->input('search.value'))) {
+    if (empty($request->input('search.value'))) {
             $predios = Predios::with('empresa') // Carga la relación
             ->whereHas('empresa', function ($query) use ($empresaId) {
                 $query->where('tipo', 2);
@@ -141,16 +139,16 @@ public function UserManagement() {
             ->get();
 
 
-        } else {///BUSCADOR ACTIVO
-            $search = $request->input('search.value');
+    } else {///BUSCADOR ACTIVO
+        $search = $request->input('search.value');
 
-    $predios = Predios::with('empresa')
-        ->whereHas('empresa', function ($query) use ($empresaId) {
-            $query->where('tipo', 2);
-            if ($empresaId) {
-                $query->where('id_empresa', $empresaId);
-            }
-        })
+        $predios = Predios::with('empresa')
+            ->whereHas('empresa', function ($query) use ($empresaId) {
+                $query->where('tipo', 2);
+                if ($empresaId) {
+                    $query->where('id_empresa', $empresaId);
+                }
+            })
         ->where(function ($query) use ($search) {
             $query->whereHas('empresa', function ($q) use ($search) {
                 $q->where('razon_social', 'LIKE', "%{$search}%");
@@ -176,13 +174,13 @@ public function UserManagement() {
         ->orderBy($order ?? 'id_predio', $dir ?? 'desc')
         ->get();
 
-    $totalFiltered = Predios::with('empresa')
-        ->whereHas('empresa', function ($query) use ($empresaId) {
-            $query->where('tipo', 2);
-            if ($empresaId) {
-                $query->where('id_empresa', $empresaId);
-            }
-        })
+        $totalFiltered = Predios::with('empresa')
+            ->whereHas('empresa', function ($query) use ($empresaId) {
+                $query->where('tipo', 2);
+                if ($empresaId) {
+                    $query->where('id_empresa', $empresaId);
+                }
+            })
         ->where(function ($query) use ($search) {
             $query->whereHas('empresa', function ($q) use ($search) {
                 $q->where('razon_social', 'LIKE', "%{$search}%");
@@ -206,8 +204,9 @@ public function UserManagement() {
         ->count();
         }
 
-        $data = [];
 
+
+        $data = [];
         if (!empty($predios)) {
             $ids = $start;
 
@@ -287,6 +286,7 @@ public function UserManagement() {
             }
         }
 
+        
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
@@ -294,7 +294,7 @@ public function UserManagement() {
             'code' => 200,
             'data' => $data,
         ]);
-    }
+}
 
 
         // Función para eliminar un predio

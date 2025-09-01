@@ -49,7 +49,6 @@ class Certificado_NacionalController extends Controller
 private function obtenerEmpresasVisibles($empresaId)
 {
       $idsEmpresas = [];
-
       if ($empresaId) {
           $idsEmpresas[] = $empresaId;
           $idsEmpresas = array_merge(
@@ -70,11 +69,21 @@ public function index(Request $request)
         $empresaId = Auth::user()->empresa?->id_empresa;
         $instalacionAuth = (array) Auth::user()->id_instalacion;
         $instalacionAuth = array_filter(array_map('intval', $instalacionAuth), fn($id) => $id > 0);
+
+        // Si no tiene instalaciones, no ve nada
+        if (empty($instalacionAuth)) {
+            return response()->json([
+                'draw' => intval($request->input('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'code' => 200,
+                'data' => []
+            ]);
+        }
     }
 
 
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para nombres meses
-
     // Mapear las columnas según el orden DataTables (índice JS)
     $columns = [
         0 => '',
@@ -152,8 +161,8 @@ public function index(Request $request)
                 ) AS UNSIGNED
             ) $orderDirection
         ");
-    } elseif (!empty($orderColumn)) {
-        $query->orderBy($orderColumn, $orderDirection);
+    } else {
+        $query->orderBy($orderColumn, $orderDirection); // orden por cualquier otra columna o por defecto
     }
 
 

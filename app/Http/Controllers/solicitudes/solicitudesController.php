@@ -91,9 +91,8 @@ class solicitudesController extends Controller
 
 
 
-    public function index(Request $request)
-    {
-
+public function index(Request $request)
+{
     $userId = Auth::id();
     
     //Permiso de empresa
@@ -102,7 +101,6 @@ class solicitudesController extends Controller
         $empresaId = Auth::user()->empresa?->id_empresa;
     }
 
-    
     // Obtener instalaciones del usuario tipo 3
     $instalacionAuth = [];
     if (Auth::check() && Auth::user()->tipo == 3) {
@@ -157,9 +155,8 @@ class solicitudesController extends Controller
             12 => 'estatus'
         ];
 
-        $search = [];
-
-        $query = solicitudesModel::query()
+    //Consulta
+    $query = solicitudesModel::query()
         ->where('habilitado', 1)
         ->where('id_tipo', '!=', 12);
 
@@ -173,12 +170,10 @@ class solicitudesController extends Controller
         $query->whereIn('id_instalacion', $instalacionAuth);
     }
 
-    // Otros filtros existentes
+    //Solo mostrar Exportacion(11) a usuario ISABEL INZUNZA(49)
     if ($userId == 49) {
         $query->where('id_tipo', 11);
     }
-
-
 
 
     $columnsInput = $request->input('columns');
@@ -198,12 +193,10 @@ class solicitudesController extends Controller
     $dir = $request->input('order.0.dir') ?? 'desc';
 
 
-
-
-
-        if (empty($request->input('search.value'))) {
-            // Construir la consulta base
-            $query = solicitudesModel::with([
+    //SIN BUSQUEDA
+    if (empty($request->input('search.value'))) {
+        // Construir la consulta base
+        $query = solicitudesModel::with([
                 'tipo_solicitud',
                 'empresa',
                 'instalacion',
@@ -211,154 +204,150 @@ class solicitudesController extends Controller
                 'ultima_validacion_oc',
                 'ultima_validacion_ui'
             ])->where('habilitado', 1)
-                ->where('id_tipo', '!=', 12);
+            ->where('id_tipo', '!=', 12);
 
-            // Filtrar por empresas visibles
-    if (count($idsEmpresas)) {
-        $query->whereIn('id_empresa', $idsEmpresas);
-    }
+        // Filtrar por empresas visibles
+        if (count($idsEmpresas)) {
+            $query->whereIn('id_empresa', $idsEmpresas);
+        }
+        // Filtrar por instalaciones si usuario tipo 3
+        if (!empty($instalacionAuth)) {
+            $query->whereIn('id_instalacion', $instalacionAuth);
+        }
+        // Filtro especial para usuario 49
+        if ($userId == 49) {
+            $query->where('id_tipo', 11);
+        }
 
-    // Filtrar por instalaciones si usuario tipo 3
-    if (!empty($instalacionAuth)) {
-        $query->whereIn('id_instalacion', $instalacionAuth);
-    }
+        // Ordenamiento
+        if ($order === 'inspector') {
+            $query->orderBy('inspector_name', $dir);
+        } elseif ($order === 'folio') {
+            $query->orderByRaw("CAST(SUBSTRING(folio, 5) AS UNSIGNED) $dir");
+        } else {
+            $query->orderBy($order, $dir);
+        }
 
-    // Filtro especial para usuario 49
-    if ($userId == 49) {
-        $query->where('id_tipo', 11);
-    }
-
-    // Ordenamiento
-    if ($order === 'inspector') {
-        $query->orderBy('inspector_name', $dir);
-    } elseif ($order === 'folio') {
-        $query->orderByRaw("CAST(SUBSTRING(folio, 5) AS UNSIGNED) $dir");
-    } else {
-        $query->orderBy($order, $dir);
-    }
-
-    // Paginación
-    $solicitudes = $query->offset($start)
-                        ->limit($limit)
-                        ->get();
+        // Paginación
+        $solicitudes = $query->offset($start)
+                    ->limit($limit)
+                    ->get();
 
 
+    } else {  ///BUSCADOR ACTIVO
+        // Búsqueda global
+        $search = $request->input('search.value');
 
-     } else {
-//COLSULTA EL BUSCADOR
-// Búsqueda global
-    $search = $request->input('search.value');
+        // Preparar IDs de lotes envasado y granel según el search
+        $loteIds = DB::table('lotes_envasado')
+            ->join('marcas', 'lotes_envasado.id_marca', '=', 'marcas.id_marca')
+            ->select('lotes_envasado.id_lote_envasado')
+            ->where(function ($query) use ($search) {
+                $query->where('lotes_envasado.nombre', 'LIKE', "%{$search}%")
+                    ->orWhere('marcas.marca', 'LIKE', "%{$search}%");
+            })
+            ->union(
+                DB::table('lotes_envasado_granel')
+                    ->join('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'lotes_envasado_granel.id_lote_granel')
+                    ->select('lotes_envasado_granel.id_lote_envasado')
+                    ->where('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
+            )
+            ->get()
+            ->pluck('id_lote_envasado')
+            ->toArray();
 
-    // Preparar IDs de lotes envasado y granel según el search
-    $loteIds = DB::table('lotes_envasado')
-        ->join('marcas', 'lotes_envasado.id_marca', '=', 'marcas.id_marca')
-        ->select('lotes_envasado.id_lote_envasado')
-        ->where(function ($query) use ($search) {
-            $query->where('lotes_envasado.nombre', 'LIKE', "%{$search}%")
-                  ->orWhere('marcas.marca', 'LIKE', "%{$search}%");
-        })
-        ->union(
-            DB::table('lotes_envasado_granel')
-                ->join('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'lotes_envasado_granel.id_lote_granel')
-                ->select('lotes_envasado_granel.id_lote_envasado')
-                ->where('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
-        )
-        ->get()
-        ->pluck('id_lote_envasado')
-        ->toArray();
+        // Lotes envasado
+        $loteEnvIds = DB::table('lotes_envasado')
+            ->select('id_lote_envasado')
+            ->where('nombre', 'LIKE', "%{$search}%")
+            ->pluck('id_lote_envasado')
+            ->toArray();
 
-    // Lotes envasado
-    $loteEnvIds = DB::table('lotes_envasado')
-        ->select('id_lote_envasado')
-        ->where('nombre', 'LIKE', "%{$search}%")
-        ->pluck('id_lote_envasado')
-        ->toArray();
+        // Lotes granel por tipo de agave
+        $tipoAgaveIds = DB::table('catalogo_tipo_agave')
+            ->where('nombre', 'LIKE', "%{$search}%")
+            ->orWhere('cientifico', 'LIKE', "%{$search}%")
+            ->pluck('id_tipo')
+            ->toArray();
 
-    // Lotes granel por tipo de agave
-    $tipoAgaveIds = DB::table('catalogo_tipo_agave')
-        ->where('nombre', 'LIKE', "%{$search}%")
-        ->orWhere('cientifico', 'LIKE', "%{$search}%")
-        ->pluck('id_tipo')
-        ->toArray();
+        $loteGranelIds = DB::table('lotes_granel')
+            ->where(function ($query) use ($search, $tipoAgaveIds) {
+                $query->where('nombre_lote', 'LIKE', "%{$search}%")
+                    ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+                    ->orWhere('cont_alc', 'LIKE', "%{$search}%")
+                    ->orWhere('volumen', 'LIKE', "%{$search}%")
+                    ->orWhere('volumen_restante', 'LIKE', "%{$search}%");
+                foreach ($tipoAgaveIds as $idTipo) {
+                    $query->orWhere('id_tipo', 'LIKE', '%"'.$idTipo.'"%');
+                }
+            })
+            ->pluck('id_lote_granel')
+            ->toArray();
 
-    $loteGranelIds = DB::table('lotes_granel')
-        ->where(function ($query) use ($search, $tipoAgaveIds) {
-            $query->where('nombre_lote', 'LIKE', "%{$search}%")
-                  ->orWhere('folio_fq', 'LIKE', "%{$search}%")
-                  ->orWhere('cont_alc', 'LIKE', "%{$search}%")
-                  ->orWhere('volumen', 'LIKE', "%{$search}%")
-                  ->orWhere('volumen_restante', 'LIKE', "%{$search}%");
-            foreach ($tipoAgaveIds as $idTipo) {
-                $query->orWhere('id_tipo', 'LIKE', '%"'.$idTipo.'"%');
+        // Consulta principal del buscador
+        $solicitudes = solicitudesModel::with([
+            'tipo_solicitud',
+            'empresa',
+            'instalacion',
+            'inspeccion.inspector',
+            'ultima_validacion_oc',
+            'ultima_validacion_ui'
+        ])
+        ->where('habilitado', 1)
+        ->where('id_tipo', '!=', 12)
+        ->where(function ($query) use ($search, $loteIds, $loteEnvIds, $loteGranelIds) {
+            $query->where(function ($q) use ($search) {
+                $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
+                ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+                ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
+                ->orWhere('solicitudes.info_adicional', 'LIKE', "%{$search}%")
+                ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
+                ->orWhereHas('empresa', fn($q) => $q->where('razon_social', 'LIKE', "%{$search}%"))
+                ->orWhereHas('tipo_solicitud', fn($q) => $q->where('tipo', 'LIKE', "%{$search}%"))
+                ->orWhereHas('instalacion', fn($q) => $q->where('direccion_completa', 'LIKE', "%{$search}%"))
+                ->orWhereHas('inspeccion', fn($q) => $q->where('num_servicio', 'LIKE', "%{$search}%"))
+                ->orWhereHas('inspeccion.inspector', fn($q) => $q->where('name', 'LIKE', "%{$search}%"));
+            });
+
+            foreach ($loteIds as $idLote) {
+                $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
             }
-        })
-        ->pluck('id_lote_granel')
-        ->toArray();
-
-    // Consulta principal del buscador
-    $solicitudes = solicitudesModel::with([
-        'tipo_solicitud',
-        'empresa',
-        'instalacion',
-        'inspeccion.inspector',
-        'ultima_validacion_oc',
-        'ultima_validacion_ui'
-    ])
-    ->where('habilitado', 1)
-    ->where('id_tipo', '!=', 12)
-    ->where(function ($query) use ($search, $loteIds, $loteEnvIds, $loteGranelIds) {
-        $query->where(function ($q) use ($search) {
-            $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
-              ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
-              ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
-              ->orWhere('solicitudes.info_adicional', 'LIKE', "%{$search}%")
-              ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
-              ->orWhereHas('empresa', fn($q) => $q->where('razon_social', 'LIKE', "%{$search}%"))
-              ->orWhereHas('tipo_solicitud', fn($q) => $q->where('tipo', 'LIKE', "%{$search}%"))
-              ->orWhereHas('instalacion', fn($q) => $q->where('direccion_completa', 'LIKE', "%{$search}%"))
-              ->orWhereHas('inspeccion', fn($q) => $q->where('num_servicio', 'LIKE', "%{$search}%"))
-              ->orWhereHas('inspeccion.inspector', fn($q) => $q->where('name', 'LIKE', "%{$search}%"));
+            foreach ($loteEnvIds as $idLoteEnv) {
+                $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLoteEnv . '"%');
+            }
+            foreach ($loteGranelIds as $idLoteGran) {
+                $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
+            }
         });
 
-        foreach ($loteIds as $idLote) {
-            $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
+        // Aquí aplicamos solo los filtros fijos del usuario
+        if ($empresaId) {
+            $solicitudes->where('id_empresa', $empresaId);
         }
-        foreach ($loteEnvIds as $idLoteEnv) {
-            $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLoteEnv . '"%');
-        }
-        foreach ($loteGranelIds as $idLoteGran) {
-            $query->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
-        }
-    });
 
-    // Aquí aplicamos solo los filtros fijos del usuario
-    if ($empresaId) {
-        $solicitudes->where('id_empresa', $empresaId);
+        if (!empty($instalacionAuth)) {
+            $solicitudes->whereIn('id_instalacion', $instalacionAuth);
+        }
+
+        if ($userId == 49) {
+            $solicitudes->where('id_tipo', 11);
+        }
+
+        // Orden y paginación
+        $solicitudes = $solicitudes->offset($start)
+            ->limit($limit)
+            ->when($order === 'folio', fn($q) => $q->orderByRaw("CAST(SUBSTRING(folio, 5) AS UNSIGNED) $dir"), fn($q) => $q->orderBy($order, $dir))
+            ->get();
+
+        // Conteo total filtrado
+        $totalFiltered = $solicitudes->count();
+
     }
 
-    if (!empty($instalacionAuth)) {
-        $solicitudes->whereIn('id_instalacion', $instalacionAuth);
-    }
-
-    if ($userId == 49) {
-        $solicitudes->where('id_tipo', 11);
-    }
-
-    // Orden y paginación
-    $solicitudes = $solicitudes->offset($start)
-                               ->limit($limit)
-                               ->when($order === 'folio', fn($q) => $q->orderByRaw("CAST(SUBSTRING(folio, 5) AS UNSIGNED) $dir"),
-                                      fn($q) => $q->orderBy($order, $dir))
-                               ->get();
-
-    // Conteo total filtrado
-    $totalFiltered = $solicitudes->count();
-
-        }
 
 
+    //MANDA LOS DATOS AL JS
         $data = [];
-
         if (!empty($solicitudes)) {
             $ids = $start;
             $cajas = '';
@@ -508,11 +497,10 @@ class solicitudesController extends Controller
                 $nestedData['certificado_exportacion'] = $solicitud->certificadoExportacion()?->num_certificado ?? '';
 
 
-
-
                 $data[] = $nestedData;
             }
         }
+
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
@@ -520,20 +508,14 @@ class solicitudesController extends Controller
             'code' => 200,
             'data' => $data ?? [],
         ]);
-    }
+}
 
 
 
 
 
-
-
-
-
-
-
-    public function obtenerDatosSolicitud($id_solicitud)
-    {
+public function obtenerDatosSolicitud($id_solicitud)
+{
         // Buscar los datos necesarios en la tabla "solicitudes"
         $solicitud = solicitudesModel::find($id_solicitud);
 
@@ -593,11 +575,12 @@ class solicitudesController extends Controller
             'documentos' => $documentos,
             'numero_cliente' => $numero_cliente,
         ]);
-    }
+}
 
 
-  public function storeVigilanciaProduccion(Request $request)
-  {
+
+public function storeVigilanciaProduccion(Request $request)
+{
       $validated = $request->validate([
           'id_empresa' => 'required|integer',
           'fecha_solicitud' => 'nullable|date',
@@ -701,15 +684,14 @@ class solicitudesController extends Controller
       } catch (\Throwable $e) {
           DB::rollBack();
 
-          return response()->json([
-              'message' =>  $e->getMessage()
-          ], 500);
+        return response()->json(['message' =>  $e->getMessage()], 500);
       }
-  }
+}
 
 
-        public function storeEmisionCertificadoVentaNacional(Request $request)
-    {
+
+public function storeEmisionCertificadoVentaNacional(Request $request)
+{
         $emisionCertificado = new solicitudesModel();
         $emisionCertificado->folio = Helpers::generarFolioSolicitud();
         $emisionCertificado->id_empresa = $request->id_empresa;
@@ -743,12 +725,14 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Emision de certificado venta nacional registrada exitosamente']);
-    }
+        
+    return response()->json(['message' => 'Emision de certificado venta nacional registrada exitosamente']);
+}
 
 
-    public function storeMuestreoLote(Request $request)
-    {
+
+public function storeMuestreoLote(Request $request)
+{
         $MuestreoLote = new solicitudesModel();
         $MuestreoLote->folio = Helpers::generarFolioSolicitud();
         $MuestreoLote->id_empresa = $request->id_empresa;
@@ -793,12 +777,14 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Solcitud de Muestreo registrado exitosamente']);
-    }
+
+    return response()->json(['message' => 'Solcitud de Muestreo registrado exitosamente']);
+}
 
 
-    public function storeVigilanciaTraslado(Request $request)
-    {
+
+public function storeVigilanciaTraslado(Request $request)
+{
         $VigilanciaTras = new solicitudesModel();
         $VigilanciaTras->folio = Helpers::generarFolioSolicitud();
         $VigilanciaTras->id_empresa = $request->id_empresa;
@@ -885,11 +871,14 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
-    }
 
-    public function storeInspeccionEnvasado(Request $request)
-    {
+    return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
+}
+
+
+
+public function storeInspeccionEnvasado(Request $request)
+{
         $InspeccionEnva = new solicitudesModel();
         $InspeccionEnva->folio = Helpers::generarFolioSolicitud();
         $InspeccionEnva->id_empresa = $request->id_empresa;
@@ -922,8 +911,10 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Inpeccion de envasado de lote registrada exitosamente']);
-    }
+
+    return response()->json(['message' => 'Inpeccion de envasado de lote registrada exitosamente']);
+}
+
 
     public function storeInspeccionBarricada(Request $request)
     {
