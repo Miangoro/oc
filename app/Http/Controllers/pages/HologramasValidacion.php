@@ -72,7 +72,7 @@ class HologramasValidacion extends Controller
     }
 }
 
-dd($folio_numerico);
+
 
 
 
