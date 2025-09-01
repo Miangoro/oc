@@ -24,6 +24,8 @@
         .panel-footer {
             background: url('{{ asset('img_pdf/organismo_certificador_cidam2.png') }}') no-repeat 50% !important;
             background-size: 100% !important;
+            background-color: #e9e9e9 !important;
+    
            
         }
     }
