@@ -16,7 +16,7 @@
     }
 
     .panel-footer {
-        background: url('{{ asset('img_pdf/illustrations/logo_oc_3d.png') }}')no-repeat 50% !important;
+        background: url('{{ asset('img_pdf/logo_oc_3d.png') }}')no-repeat 50% !important;
        
     }
 
