@@ -152,7 +152,7 @@ public function index(Request $request)
     $orderColumn = $columns[$orderColumnIndex] ?? 'id_solicitud';
     $search = $request->input('search.value');
 
-    // Query base
+    ///CONSULTA QUERY BASE
     $query = solicitudesModel::with([
             'tipo_solicitud',
             'empresa',
@@ -244,13 +244,13 @@ public function index(Request $request)
                 ->orWhereHas('inspeccion', fn($q) => $q->where('num_servicio', 'LIKE', "%{$search}%"))
                 ->orWhereHas('inspeccion.inspector', fn($q) => $q->where('name', 'LIKE', "%{$search}%"));
 
-            foreach ($loteIds as $idLote) {
+            foreach ($loteIds as $idLote) {//Buscar lote envasado -> granel
                 $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
             }
-            foreach ($loteEnvIds as $idLoteEnv) {
+            foreach ($loteEnvIds as $idLoteEnv) {//Buscar lote envasado
                 $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLoteEnv . '"%');
             }
-            foreach ($loteGranelIds as $idLoteGran) {
+            foreach ($loteGranelIds as $idLoteGran) {//Buscar lote granel
                 $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
             }
         });

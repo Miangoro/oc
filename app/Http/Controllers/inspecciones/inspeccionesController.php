@@ -74,49 +74,52 @@ class inspeccionesController extends Controller
         return view('inspecciones.find_inspecciones_view', compact('solicitudesTipos','instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos', 'equipos','todasSolicitudes', 'solcitudesSinInspeccion'));
     }
 
-    public function index(Request $request)
-    {
-        $columns = [
-            1 => 'id_solicitud',
-            2 => 'folio',
-            3 => 'num_servicio',
-            4 => 'razon_social',
-            5 => '',//fecha_solicitud
-            6 => 'tipo',
-            7 => 'direccion_completa',
-            8 => 'inspector',
-            9 => 'fecha_servicio',
-            10 => 'fecha_visita',
-            11 => 'name',
-            12 => 'id_inspeccion',
-            13 => 'id_empresa',
-            14 => 'ubicacion_predio'
-        ];
 
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $orderIndex = $request->input('order.0.column');
-        $orderColumn = $columns[$orderIndex] ?? 'id_solicitud';
-        $dir = $request->input('order.0.dir', 'asc');
-        $search = $request->input('search.value');
+public function index(Request $request)
+{
+    $columns = [
+        1 => 'id_solicitud',
+        2 => 'folio',
+        3 => 'num_servicio',
+        4 => 'razon_social',
+        5 => '',//fecha_solicitud
+        6 => 'tipo',
+        7 => 'direccion_completa',
+        8 => 'inspector',
+        9 => 'fecha_servicio',
+        10 => 'fecha_visita',
+        11 => 'name',
+        12 => 'id_inspeccion',
+        13 => 'id_empresa',
+        14 => 'ubicacion_predio'
+    ];
 
-        $query = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion','predios')
-            ->where('habilitado', 1)
-            ->where('id_tipo', '!=', 12);
-             // Filtros específicos por columna
+    $limit = $request->input('length');
+    $start = $request->input('start');
+    $orderIndex = $request->input('order.0.column');
+    $orderColumn = $columns[$orderIndex] ?? 'id_solicitud';
+    $dir = $request->input('order.0.dir', 'asc');
+    $search = $request->input('search.value');
 
-        $columnsInput = $request->input('columns');
+    ///CONSULTA QUERY BASE
+    $query = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion','predios')
+        ->where('habilitado', 1)
+        ->where('id_tipo', '!=', 12);
+ 
 
-        if ($columnsInput && isset($columnsInput[6]) && !empty($columnsInput[6]['search']['value'])) {
-            $tipoFilter = $columnsInput[6]['search']['value'];
-            // Filtro exacto o LIKE según necesites
-            $query->whereHas('tipo_solicitud', function($q) use ($tipoFilter) {
-                $q->where('tipo', 'LIKE', "%{$tipoFilter}%");
-            });
-        }
+    $columnsInput = $request->input('columns');
+
+    if ($columnsInput && isset($columnsInput[6]) && !empty($columnsInput[6]['search']['value'])) {
+        $tipoFilter = $columnsInput[6]['search']['value'];
+        // Filtro exacto o LIKE según necesites
+        $query->whereHas('tipo_solicitud', function($q) use ($tipoFilter) {
+            $q->where('tipo', 'LIKE', "%{$tipoFilter}%");
+        });
+    }
 
 
-        if (!empty($search)) {
+    // Búsqueda global
+    if (!empty($search)) {
 
         //Buscar lote envasado -> granel
         $loteIds = DB::table('lotes_envasado')
@@ -132,93 +135,93 @@ class inspeccionesController extends Controller
                     ->select('lotes_envasado_granel.id_lote_envasado')
                     ->where('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
             )
-          ->get()
-          ->pluck('id_lote_envasado')
-          ->toArray();
+            ->get()
+            ->pluck('id_lote_envasado')
+            ->toArray();
 
-          //Buscar lote envasado
-          $loteEnvIds = DB::table('lotes_envasado')
+        //Buscar lote envasado
+        $loteEnvIds = DB::table('lotes_envasado')
           ->select('id_lote_envasado')
           ->where('nombre', 'LIKE', "%{$search}%")
           ->pluck('id_lote_envasado')
           ->toArray();
 
-          // Buscar por lote granel
-          // Paso 1: obtener IDs del catálogo que coincidan con el search
-          $tipoAgaveIds = DB::table('catalogo_tipo_agave')
-              ->where('nombre', 'LIKE', "%{$search}%")
-              ->orWhere('cientifico', 'LIKE', "%{$search}%")
-              ->pluck('id_tipo')
-              ->toArray();
-          // Paso 2: buscar lotes_granel que contengan esos tipos
-          $loteGranelIds = DB::table('lotes_granel')
-              ->select('id_lote_granel')
-              ->where(function ($query) use ($search, $tipoAgaveIds) {
-                  $query->where('nombre_lote', 'LIKE', "%{$search}%")
-                        ->orWhere('folio_fq', 'LIKE', "%{$search}%")
-                        ->orWhere('cont_alc', 'LIKE', "%{$search}%")
-                        ->orWhere('volumen', 'LIKE', "%{$search}%")
-                        ->orWhere('volumen_restante', 'LIKE', "%{$search}%");
-                  // buscar por coincidencias en el array JSON
-                  foreach ($tipoAgaveIds as $idTipo) {
-                      $query->orWhere('id_tipo', 'LIKE', '%"'.$idTipo.'"%');
-                  }
-              })
-          ->pluck('id_lote_granel')
-          ->toArray();
+        // Buscar por lote granel
+        // Paso 1: obtener IDs del catálogo que coincidan con el search
+        $tipoAgaveIds = DB::table('catalogo_tipo_agave')
+            ->where('nombre', 'LIKE', "%{$search}%")
+            ->orWhere('cientifico', 'LIKE', "%{$search}%")
+            ->pluck('id_tipo')
+            ->toArray();
+        // Paso 2: buscar lotes_granel que contengan esos tipos
+        $loteGranelIds = DB::table('lotes_granel')
+            ->select('id_lote_granel')
+            ->where(function ($query) use ($search, $tipoAgaveIds) {
+                $query->where('nombre_lote', 'LIKE', "%{$search}%")
+                    ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+                    ->orWhere('cont_alc', 'LIKE', "%{$search}%")
+                    ->orWhere('volumen', 'LIKE', "%{$search}%")
+                    ->orWhere('volumen_restante', 'LIKE', "%{$search}%");
+                // buscar por coincidencias en el array JSON
+                foreach ($tipoAgaveIds as $idTipo) {
+                    $query->orWhere('id_tipo', 'LIKE', '%"'.$idTipo.'"%');
+                }
+            })
+            ->pluck('id_lote_granel')
+            ->toArray();
 
-            $query->where(function ($q) use ($search, $loteIds, $loteEnvIds, $loteGranelIds) {
-                $q->where('id_solicitud', 'LIKE', "%{$search}%")
-                    ->orWhere('folio', 'LIKE', "%{$search}%")
-                    ->orWhere('info_adicional', 'LIKE', "%{$search}%")
-                    ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
-                    ->orWhereHas('empresa', function ($q) use ($search) {
-                        $q->where('razon_social', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('instalacion', function ($q) use ($search) {
-                        $q->where('direccion_completa', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('predios', function ($q) use ($search) {
-                        $q->where('ubicacion_predio', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('predios', function ($q) use ($search) {
-                        $q->where('nombre_predio', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('inspeccion', function ($q) use ($search) {
-                        $q->where('num_servicio', 'LIKE', "%{$search}%");
-                    })
+        $query->where(function ($q) use ($search, $loteIds, $loteEnvIds, $loteGranelIds) {
+            $q->where('id_solicitud', 'LIKE', "%{$search}%")
+                ->orWhere('folio', 'LIKE', "%{$search}%")
+                ->orWhere('info_adicional', 'LIKE', "%{$search}%")
+                ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
+                ->orWhereHas('empresa', function ($q) use ($search) {
+                    $q->where('razon_social', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('instalacion', function ($q) use ($search) {
+                    $q->where('direccion_completa', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('predios', function ($q) use ($search) {
+                    $q->where('ubicacion_predio', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('predios', function ($q) use ($search) {
+                    $q->where('nombre_predio', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('inspeccion', function ($q) use ($search) {
+                    $q->where('num_servicio', 'LIKE', "%{$search}%");
+                })
 
-                    ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
-                        $q->where('tipo', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('inspector', function ($q) use ($search) {
-                        $q->where('name', 'LIKE', "%{$search}%");
-                    });
+                ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
+                    $q->where('tipo', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('inspector', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%");
+                });
 
-                    //Buscar lote envasado -> granel
-                    foreach ($loteIds as $idLote) {
-                        $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
-                    }
+                //Buscar lote envasado -> granel
+                foreach ($loteIds as $idLote) {
+                    $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
+                }
+                //Buscar lote envasado
+                foreach ($loteEnvIds as $idLoteEnv) {
+                    $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLoteEnv . '"%');
+                }
+                //Buscar lote granel
+                foreach ($loteGranelIds as $idLoteGran) {
+                    $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
+                }
+        });
+    }
 
-                    //Buscar lote envasado
-                    foreach ($loteEnvIds as $idLoteEnv) {
-                        $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLoteEnv . '"%');
-                    }
 
-                    //Buscar lote granel
-                    foreach ($loteGranelIds as $idLoteGran) {
-                        $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
-                    }
-            });
-        }
+    $totalData = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion', 'predios')
+        ->where('id_tipo', '!=', 12)
+        ->where('habilitado', 1)->count();
+    $totalFiltered = $query->count();
 
-       $totalData = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion', 'predios')
-            ->where('id_tipo', '!=', 12)
-            ->where('habilitado', 1)->count();
-        $totalFiltered = $query->count();
 
-        // Obtener datos paginados sin orden
-        $solicitudes = $query->get();
+    // Obtener datos paginados sin orden
+    $solicitudes = $query->get();
 
         // Ordenar manualmente si es un campo de relación
         if ($orderColumn === 'folio') {
@@ -247,18 +250,16 @@ class inspeccionesController extends Controller
             $solicitudes = $solicitudes->sortBy($orderColumn, SORT_REGULAR, $dir === 'desc');
         }
 
+
         // Paginar manualmente
         $solicitudes = $solicitudes->slice($start, $limit)->values();
 
 
 
-
-
+        //MANDA LOS DATOS AL JS
         $data = [];
-
         if (!empty($solicitudes)) {
             $ids = $start;
-
             foreach ($solicitudes as $solicitud) {
                 $empresa = $solicitud->empresa;
                 $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
@@ -451,7 +452,9 @@ class inspeccionesController extends Controller
             'code' => 200,
             'data' => $data,
         ]);
-    }
+}
+
+
 
     public function destroy($id_instalacion)
     {
