@@ -95,7 +95,7 @@
                         $observaciones = $datos->observaciones ?? '';
                         $observacionesConEnlaces = preg_replace(
                             '~(https?://[^\s]+)~',
-                            '<a href="$1" target="_blank">$1</a><br>',
+                            '<a href="$1" target="_blank">$1</a><hr>',
                             e($observaciones)
                         );
                         $contieneEnlace = preg_match('~https?://[^\s]+~', $observaciones);
