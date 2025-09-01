@@ -31,7 +31,7 @@ class HologramasValidacion extends Controller
 
 
 
-    $folio_numerico = (int) substr($folio, -6); // Suponiendo que los últimos 6 dígitos son el número del folio
+    $folio_numerico = (int) substr($folio, -7); // Suponiendo que los últimos 7 dígitos son el número del folio
     $ya_activado = false;
     $datosHolograma = null;
 
