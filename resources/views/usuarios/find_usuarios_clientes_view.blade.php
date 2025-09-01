@@ -136,6 +136,7 @@
                         <th></th>
                         <th>Id</th>
                         <th>Usuario</th>
+                        <th>Instalaciones</th>
                         <th>Correo</th>
                         <th>Teléfono</th>
                         <th>Contraseña</th>
@@ -197,7 +198,7 @@
                     </div>
 
                     <div class="form-floating form-floating-outline mb-5 select2-primary">
-                        <select id="id_instalacion" name="id_instalacion[]" multiple 
+                        <select id="id_instalacion" name="id_instalacion[]" multiple
                         class="select2 form-select" data-placeholder="Seleccione la instalacion">
                             {{-- <option value="0">No asignar instalacion</option> --}}
                         </select>
@@ -267,7 +268,7 @@ function instalaciones() {
 
             $select.html(contenido);
             $select.trigger('change'); // actualizar select2
-            
+
         },
         error: function() {
             console.error('Error al obtener instalaciones');

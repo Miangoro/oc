@@ -72,6 +72,7 @@ $(function () {
         { data: '' },
         { data: 'id' },
         { data: 'name' },
+        {data: 'instalacionesTexto'},
         { data: 'email' },
         { data: 'telefono' },
         { data: 'password_original' },
@@ -90,7 +91,7 @@ $(function () {
         },
          { data: 'rol' },
          { data: 'id' },
-        
+
         { data: 'action' }
       ],
       columnDefs: [
@@ -150,8 +151,14 @@ $(function () {
           }
         },
         {
-          // User email
           targets: 3,
+          render: function (data, type, full, meta) {
+            return '<span>' + (full['instalacionesTexto'] ?? '(Not Found)') + '</span>';
+          }
+        },
+        {
+          // User email
+          targets: 4,
           render: function (data, type, full, meta) {
             var $email = full['email'];
             return '<span class="user-email">' + $email + '</span>';
@@ -159,7 +166,7 @@ $(function () {
         },
         {
           // User telefono
-          targets: 4,
+          targets: 5,
           render: function (data, type, full, meta) {
             var $tel = full['telefono'];
             return '<span class="user-email">' + $tel + '</span>';
@@ -167,7 +174,7 @@ $(function () {
         },
         {
           // contraseña
-          targets: 5,
+          targets: 6,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $pass = full['password_original'];
@@ -176,7 +183,7 @@ $(function () {
         },
         {
             // Razón social
-            targets: 6,
+            targets: 7,
             className: 'text-center',
             render: function (data, type, full, meta) {
               var $cliente = full['razon_social'];
@@ -185,7 +192,7 @@ $(function () {
           },
           {
             //PDF carta asignacion
-            targets: 8,
+            targets: 9,
             className: 'text-center',
             render: function (data, type, full, meta) {
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdfCartAsignacion cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id']}" data-nombre="${full['name']}"></i>`;
@@ -193,14 +200,14 @@ $(function () {
           },
         {
           // Actions
-          targets: -1,
+          targets: 10,
           title: 'Acciones',
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
 
           let acciones = '';
-     
+
             if (window.puedeEditarUsuario) {
               acciones += `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar clientes</a>`;
             }
