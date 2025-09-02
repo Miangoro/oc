@@ -545,7 +545,13 @@ class RevisionPersonalController extends Controller
     {
 
         $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
-        $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->get();
+       $preguntasQuery = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1);
+
+        if ($datos->certificado->certificadoReexpedido()) {
+            $preguntasQuery->whereBetween('id_pregunta', [854, 860]);
+        }else{
+             $preguntasQuery->where('id_pregunta', '<',851);
+        }
 
         $respuestas_json = json_decode($datos->respuestas, true); // Convierte el campo JSON a array PHP
         $respuestas_revision = $respuestas_json['Revision '.$datos->numero_revision] ?? []; // O la clave correspondiente
