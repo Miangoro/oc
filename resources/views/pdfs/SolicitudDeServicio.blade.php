@@ -588,7 +588,7 @@
                {{--  @if($muestreo_granel == 'X') {{ $datos->lote_granel->certificadoGranel->num_certificado ?? '---------------' }} @else --------------- @endif --}}
                @if($muestreo_granel != 'X')
                     {{ $datos->lote_granel->certificadoGranel->num_certificado ?? '---------------' }}
-                     {{ $datos->lote_granel ?? '---------------' }}
+                     {{ $datos->lote_granel->certificadoGranel ?? '---------------' }}
                 @else --------------- @endif
             </td>
         </tr>
