@@ -351,6 +351,21 @@
             </td>
             <td class="column2">No. de Análisis</td>
             <td>
+                 @php
+                    $lotesProcedencia = collect();
+                    if (!empty($lotesGranel->first()->lote_original_id)) {
+                        $json = json_decode($lotesGranel->first()->lote_original_id, true);
+
+                        if (isset($json['lotes']) && is_array($json['lotes'])) {
+                            $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
+                                ->whereIn('id_lote_granel', $json['lotes'])
+                                ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
+                        }
+                    }
+                @endphp
+
+                {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
+
                 @if ($lotesGranel->isNotEmpty())
                     @foreach ($lotesGranel as $loteGranel)
                         {{ $loteGranel->folio_fq ?? 'N/A' }}

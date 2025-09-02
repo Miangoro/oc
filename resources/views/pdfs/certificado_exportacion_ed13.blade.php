@@ -435,7 +435,7 @@
             
         @endphp
 
-        @php
+            @php
                     $lotesProcedencia = collect();
                     if (!empty($lote->lotesGranel->first()->lote_original_id)) {
                         $json = json_decode($lote->lotesGranel->first()->lote_original_id, true);
