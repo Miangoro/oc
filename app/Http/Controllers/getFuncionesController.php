@@ -372,19 +372,25 @@ class getFuncionesController extends Controller
 
 
 
-        // Obtener número de cliente para LOTE GRANEL
-        $numero_cliente_granel = 'N/A';
-        foreach ($certificados as $certificado) {
-            $empresa = $certificado->loteGranel?->empresa;
+    // Obtener número de cliente para LOTE GRANEL
+$numero_cliente_granel = 'N/A';
 
-            if ($empresa && $empresa->empresaNumClientes->isNotEmpty()) {
-                $cliente = $empresa->empresaNumClientes
-                    ->first(fn($item) => !empty($item->numero_cliente));
+foreach ($certificados as $certificado) {
+    $empresa = $certificado->loteGranel?->empresa;
 
-                $numero_cliente_granel = $cliente ?? 'N/dfsdfsdfA';
-                break; // si solo quieres el primero válido, salimos
-            }
+    if ($empresa && $empresa->empresaNumClientes->isNotEmpty()) {
+        // Buscar el primer número de cliente no vacío
+        $cliente = $empresa->empresaNumClientes
+            ->first(function ($item) {
+                return !empty($item->numero_cliente);
+            });
+
+        if ($cliente) {
+            $numero_cliente_granel = $cliente->numero_cliente;
+            break; // salimos porque ya encontramos uno válido
         }
+    }
+}
 
         //CERTIFICADO GRANEL URL
         $urls_certificados = collect();
