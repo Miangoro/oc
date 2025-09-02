@@ -451,10 +451,11 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 No. de análisis:</td>
             <td style="text-align: left; padding-left: 4px;">
-                {{ $folio1 }}
+                
                   {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
+                  {{ $folio1 }}
 
-                  {{ $lote->lotesGranel->first()->lote_original_id }}
+                
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 No. lote granel:</td>
