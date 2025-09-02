@@ -464,7 +464,7 @@ $foliosLimpios = $lotesProcedencia->pluck('folio_fq')
     });
 @endphp
 
-{{ $foliosLimpios->join(', ') }}
+{{ $foliosLimpios->isNotEmpty() ? $foliosLimpios->join(', ') . ',' : '' }}
 
                   {{ $folio1 }}
 
