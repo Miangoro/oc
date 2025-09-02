@@ -373,7 +373,7 @@ class getFuncionesController extends Controller
 
 
     // Obtener número de cliente para LOTE GRANEL
-$numero_cliente_granel = 'N/A';
+$numero_cliente_granel = 'N/A1111111';
 
 foreach ($certificados as $certificado) {
     $empresa = $certificado->loteGranel?->empresa;
