@@ -689,9 +689,23 @@ $(function () {
         url: '/dictamenes/envasado/' + id_dictamen + '/edit',
         method: 'GET',
         success: function (datos) {
+
+          //obtener la inspeccion ya asignada
+          const $select = $('#edit_id_inspeccion');
+          // Eliminar opciones anteriores agregadas dinámicamente, pero dejar los disponibles
+          $select.find('option[data-dinamico="true"]').remove();
+
+          // Si la inspeccion guardada no está en los disponibles, agregarlo temporalmente
+          if (!$select.find(`option[value="${datos.id_inspeccion}"]`).length) {
+            const texto = `${datos.num_servicio} | ${datos.folio ?? 'Sin folio'} | ${datos.direccion_completa}`;
+            $select.append(`<option value="${datos.id_inspeccion}" selected data-dinamico="true">${texto}</option>`);
+          } else {
+            $select.val(datos.id_inspeccion).trigger('change');
+          }
+
           // Asignar valores a los campos del formulario
-          $('#edit_num_dictamen').val(datos.num_dictamen);
           $('#edit_id_inspeccion').val(datos.id_inspeccion).trigger('change');
+          $('#edit_num_dictamen').val(datos.num_dictamen);
           $('#edit_fecha_emision').val(datos.fecha_emision);
           $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
           $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();

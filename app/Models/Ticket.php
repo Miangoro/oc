@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ticket extends Model
 {
- protected $fillable = [
+  protected $table = 'tickets';
+  protected $primaryKey = 'id_ticket';
+  protected $fillable = [
     'nombre',
     'email',
     'folio',
@@ -22,7 +24,7 @@ public function evidencias()
 }
 public function mensajes()
 {
-    return $this->hasMany(TicketMensaje::class, 'ticket_id');
+    return $this->hasMany(TicketMensaje::class, 'ticket_id', 'id_ticket');
 }
 
 
