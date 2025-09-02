@@ -92,7 +92,7 @@ $(function () {
             const esAdminBitacoras = window.adminBitacoras === true;
 
             if (!estaFirmado || esAdminBitacoras) {
-              if (window.puedeEliminarElUsuario) {
+              if (window.puedeFirmarElUsuario) {
                 acciones += `<a href="/tickets/${full['id_ticket']}/ver" class="dropdown-item waves-effect text-warning">
                  <i class="ri-ball-pen-line ri-20px text-warning"></i> Ver Ticket
              </a>`;
