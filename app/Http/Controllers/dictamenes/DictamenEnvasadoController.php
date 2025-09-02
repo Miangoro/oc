@@ -39,11 +39,18 @@ class DictamenEnvasadoController extends Controller
 
     public function UserManagement()
     {
-        $inspecciones = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
-            $query->where('id_tipo', 5)->orwhere('id_tipo',8);
-            })->orderBy('id_inspeccion', 'desc')->get();
+        $inspecciones = inspecciones::whereHas('solicitud', function ($query) {
+                $query->whereIn('id_tipo', [5, 8, ]);
+            })
+            ->whereDoesntHave('dictamenEnvasado')
+            ->where('fecha_servicio', '>', '2024-12-31')
+            ->with('solicitud')
+            ->get()
+            ->sortByDesc('solicitud.id_solicitud');
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
-        $inspectores = User::where('tipo', 2)->get(); // Obtener solo los usuarios con tipo '2' (inspectores)
+        $inspectores = User::where('tipo',2)
+            ->where('estatus', '!=', 'Inactivo')
+            ->get();
         $marcas = marcas::all(); // Obtener todas las marcas
         $lotes_granel = LotesGranel::all();
         $envasado = lotes_envasado::all(); // Usa la clase correcta
@@ -365,7 +372,7 @@ public function destroy($id_dictamen_envasado)
 public function edit($id_dictamen_envasado)
 {
     try {
-        $editar = Dictamen_Envasado::findOrFail($id_dictamen_envasado);
+        $editar = Dictamen_Envasado::with('inspeccion.solicitud')->findOrFail($id_dictamen_envasado);
 
         return response()->json([
             'id_dictamen' => $editar->id_dictamen_envasado,
@@ -374,6 +381,11 @@ public function edit($id_dictamen_envasado)
             'fecha_emision' => $editar->fecha_emision,
             'fecha_vigencia' => $editar->fecha_vigencia,
             'id_firmante' => $editar->id_firmante,
+
+            // Datos relacionados sin tener que guardarlos en base de datos
+            'folio' => $editar->inspeccion->solicitud->folio ?? '',
+            'num_servicio' => $editar->inspeccion->num_servicio ?? '',
+            'direccion_completa' => $editar->inspeccion->solicitud->instalacion->direccion_completa ?? ''
         ]);
     } catch (\Exception $e) {
         Log::error('Error al obtener', [

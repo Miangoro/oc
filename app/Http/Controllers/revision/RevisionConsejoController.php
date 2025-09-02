@@ -410,7 +410,17 @@ class RevisionConsejoController extends Controller
     public function add_revision_consejo($id_revision)
     {
         $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
-        $preguntas = preguntas_revision::where('tipo_revisor', 2)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->get();
+        $preguntasQuery = preguntas_revision::where('tipo_revisor', 2)
+        ->where('tipo_certificado', $datos->tipo_certificado)
+        ->where('orden', $datos->numero_revision == 1 ? 0 : 1);
+
+        if ($datos->certificado->certificadoReexpedido()) {
+            $preguntasQuery->where('id_pregunta', '>=', 860);
+        }else{
+             $preguntasQuery->where('id_pregunta', '<',851);
+        }
+        $preguntas = $preguntasQuery->get();
+
 
         $revisor_personal = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where('id_certificado',$datos->id_certificado)->where('tipo_revision',1)->where('tipo_certificado', $datos->tipo_certificado)->first();
 
@@ -523,7 +533,15 @@ class RevisionConsejoController extends Controller
     {
 
         $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
-        $preguntas = preguntas_revision::where('tipo_revisor', 2)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->get();
+        $preguntasQuery = preguntas_revision::where('tipo_revisor', 2)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1);
+
+        if ($datos->certificado->certificadoReexpedido()) {
+            $preguntasQuery->where('id_pregunta', '>=', 860);
+        }else{
+            $preguntasQuery->where('id_pregunta', '<',851);
+        }
+        $preguntas = $preguntasQuery->get();
+
 
         $respuestas_json = json_decode($datos->respuestas, true); // Convierte el campo JSON a array PHP
         $respuestas_revision = $respuestas_json['Revision '.$datos->numero_revision] ?? []; // O la clave correspondiente
