@@ -430,7 +430,6 @@
         @php
             $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
             $folio1 = trim($folios[0] ?? '');
-            $folio1 = rtrim($folio1, " ,");
             $folio2 = isset($folios[1]) && trim($folios[1]) !== '' ? trim($folios[1]) : 'NA';
 
             
@@ -453,7 +452,8 @@
                 No. de análisis:</td>
             <td style="text-align: left; padding-left: 4px;">
                 
-                  {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
+                 {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->filter()->join(', ') : '' }}
+
                   {{ $folio1 }}
 
                 
