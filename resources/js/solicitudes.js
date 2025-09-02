@@ -1,7 +1,7 @@
 $(function () {
   // Definir la URL base
   var baseUrl = window.location.origin + '/';
-
+const ahora = new Date();
   // 1. Declarar primero los filtros
   const filtros = [
     'Muestreo de agave (ART)',
@@ -428,7 +428,23 @@ $(function () {
                   </a>`;
           }
 
-          if (puedeEditarSolicitud) {
+      const fechaString = full['fecha_inspeccion']; // "2025-07-24 10:00:00"
+
+      // Separar fecha y hora
+      const [fecha, hora] = fechaString.split(" ");
+      const [anio, mes, dia] = fecha.split("-").map(Number);
+
+      // Creamos la fecha en local (los meses van de 0-11)
+      const fechaInspeccion = new Date(anio, mes - 1, dia);
+
+      // Normalizamos al inicio del día
+      fechaInspeccion.setHours(0, 0, 0, 0);
+      ahora.setHours(0, 0, 0, 0);
+      // Diferencia en días
+      const diffDias = (ahora - fechaInspeccion) / (1000 * 60 * 60 * 24);
+
+
+if (puedeEditarSolicitud && diffDias <= 1) {
             dropdown += `
                   <a
                     data-id="${full['id']}"
