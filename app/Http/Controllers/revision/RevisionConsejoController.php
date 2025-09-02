@@ -416,6 +416,8 @@ class RevisionConsejoController extends Controller
 
      if ($datos->certificado->certificadoReexpedido()) {
             $preguntasQuery->where('id_pregunta', '>=', 860);
+        }else{
+             $preguntasQuery->where('id_pregunta', '<',854);
         }
 
 
