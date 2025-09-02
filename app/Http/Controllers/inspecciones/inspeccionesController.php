@@ -583,11 +583,10 @@ public function asignarInspector(Request $request)
             ? Helpers::formatearFecha($datos->fecha_servicio)
             : null;
 
-        if (Str::endsWith($datos?->solicitud?->folio, '-O')) {
-            $id_inspector = User::find(6);
-        } else {
-            $id_inspector = User::find(9);
-        }
+    $id_inspector = in_array($datos->inspector->id, [9, 15, 16, 17, 18]) 
+    ? User::find(6) 
+    : User::find(9);
+
 
         $pdf = Pdf::loadView('pdfs.oficioDeComision', [
                 'datos' => $datos,
