@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <div class="container py-4">
+    <div class="container-fluid py-4">
 
         {{-- Detalles del ticket --}}
         <div class="card mb-4 shadow-sm">
