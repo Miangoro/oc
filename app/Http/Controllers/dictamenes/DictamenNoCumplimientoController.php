@@ -32,24 +32,22 @@ class DictamenNoCumplimientoController extends Controller
 
     public function UserManagement()
     {
-        /*$inspecciones = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {//filtrar por campos dentro de la relación.
-            $query->whereIn('id_tipo', [5, 8, 11, 3, 14]);
-        })->orderBy('id_inspeccion', 'desc')->get();// filtra sobre la tabla principal*/
         $inspecciones = inspecciones::whereHas('solicitud', function ($q) {
-                $q->whereDate('created_at', '>', '2024-12-01')
-                ->whereHas('tipo_solicitud', function ($query) {
-                    $query->whereIn('id_tipo', [5, 8, 3, 14]);//11,
-                });
+                $q->whereIn('id_tipo', [3, 5, 8, 11, 14]);
             })
-            //->whereDoesntHave('dictamenExportacion')//SIN DICTAMENES
             ->whereDoesntHave('dictamenGranel')
             ->whereDoesntHave('dictamenEnvasado')
-            ->whereDoesntHave('dictamen')
-            ->orderBy('id_inspeccion', 'desc')
-            ->get();
-        $inspectores = User::where('tipo',2)->get(); 
+            ->whereDoesntHave('dictamen')//instalaciones
+            ->whereDoesntHave('dictamenExportacion')
+            ->where('fecha_servicio', '>', '2024-12-31')
+            ->with('solicitud') // trae la relación
+            ->get()
+            ->sortByDesc('solicitud.id_solicitud'); // ordenar en la colección
 
-        
+        $inspectores = User::where('tipo',2)
+            ->where('estatus', '!=', 'Inactivo')
+            ->get(); 
+
         // Pasar los datos a la vista
         return view('dictamenes.find_dictamen_no_cumplimiento', compact('inspecciones', 'inspectores'));
     }
