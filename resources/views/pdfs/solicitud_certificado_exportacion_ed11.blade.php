@@ -262,7 +262,6 @@
                 &nbsp;&nbsp;3) No. de análisis:
             </td>
             <td style="font-weight: bold; width: 30%;"> 
-                 {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
                 {{ $folio1 }} 
             </td>
             <td style="text-align: left;  width: 20%;" colspan="3">
@@ -276,6 +275,7 @@
                 &nbsp;&nbsp;4) No. de análisis de ajuste:
             </td>
             <td style="font-weight: bold; width: 30%;"> 
+                  {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
                {{ $folio2 }}
             </td>
             <td style="text-align: left;  width: 20%;" colspan="3">
