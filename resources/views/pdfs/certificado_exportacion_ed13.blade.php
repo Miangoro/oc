@@ -452,7 +452,19 @@
                 No. de análisis:</td>
             <td style="text-align: left; padding-left: 4px;">
                 
-                 {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->filter()->join(', ') : '' }}
+                 @php
+$foliosLimpios = $lotesProcedencia->pluck('folio_fq')
+    ->map(function ($v) {            // quita espacios alrededor si es string
+        return is_string($v) ? trim($v) : $v;
+    })
+    ->filter(function ($v) {         // elimina solo null y '' (conserva 0/"0")
+        if (is_null($v)) return false;
+        if (is_string($v)) return $v !== '';
+        return true;
+    });
+@endphp
+
+{{ $foliosLimpios->join(', ') }}
 
                   {{ $folio1 }}
 
