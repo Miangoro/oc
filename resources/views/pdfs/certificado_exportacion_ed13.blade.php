@@ -437,8 +437,8 @@
 
         @php
                     $lotesProcedencia = collect();
-                    if (!empty($lote->lotesGranel->lote_original_id)) {
-                        $json = json_decode($lote->lotesGranel->lote_original_id, true);
+                    if (!empty($lote->lotesGranel->first()->lote_original_id)) {
+                        $json = json_decode($lote->lotesGranel->first()->lote_original_id, true);
 
                         if (isset($json['lotes']) && is_array($json['lotes'])) {
                             $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
