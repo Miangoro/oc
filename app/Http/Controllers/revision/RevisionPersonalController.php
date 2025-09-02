@@ -417,8 +417,8 @@ class RevisionPersonalController extends Controller
          $preguntasQuery = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1);
 
         if ($datos->certificado->certificadoReexpedido()) {
-    $preguntasQuery->whereBetween('id_pregunta', [854, 860]);
-}
+            $preguntasQuery->whereBetween('id_pregunta', [854, 859]);
+        }
 
         $preguntas = $preguntasQuery->get();
 
