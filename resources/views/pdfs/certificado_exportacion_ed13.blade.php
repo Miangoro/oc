@@ -431,12 +431,30 @@
             $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
             $folio1 = trim($folios[0] ?? '');
             $folio2 = isset($folios[1]) && trim($folios[1]) !== '' ? trim($folios[1]) : 'NA';
+
+            
         @endphp
+
+        @php
+                    $lotesProcedencia = collect();
+                    if (!empty($lote->lotesGranel->first()->lote_original_id)) {
+                        $json = json_decode($lote->lotesGranel->first()->lote_original_id, true);
+
+                        if (isset($json['lotes']) && is_array($json['lotes'])) {
+                            $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
+                                ->whereIn('id_lote_granel', $json['lotes'])
+                                ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
+                        }
+                    }
+                @endphp
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 No. de análisis:</td>
             <td style="text-align: left; padding-left: 4px;">
                 {{ $folio1 }}
+                  {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
+
+                  {{ $lote->lotesGranel->first()->lote_original_id }}
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 No. lote granel:</td>
@@ -522,21 +540,21 @@
         <td class="td-margins" style="text-align: right; font-weight: bold; font-size: 12px; border-top: none; width: 12%;">
             Nombre:</td>
         <td class="td-margins" style="text-align: left; border-top: none; padding-left: 6px;">
-            {{ $nombre_destinatario }}
+            {{ mb_strtoupper($nombre_destinatario) }}
         </td>
     </tr>
     <tr>
         <td class=" td-margins" style="text-align: right; font-weight: bold; font-size: 12px; padding-top: 8px; padding-bottom: 8px;">
             Domicilio:</td>
         <td class="td-margins" style="text-align: left; padding-left: 6px;">
-            {{ $dom_destino }}
+            {{ mb_strtoupper($dom_destino) }}
         </td>
     </tr>
     <tr>
         <td class="td-margins" style="text-align: right; font-weight: bold; font-size: 12px;">
             País destino:</td>
         <td class="td-margins" style="text-align: left; padding-left: 6px;">
-            {{ $pais }}
+            {{ mb_strtoupper($pais) }}
         </td>
     </tr>
     </table>
