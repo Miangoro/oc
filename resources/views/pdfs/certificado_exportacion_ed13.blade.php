@@ -522,21 +522,21 @@
         <td class="td-margins" style="text-align: right; font-weight: bold; font-size: 12px; border-top: none; width: 12%;">
             Nombre:</td>
         <td class="td-margins" style="text-align: left; border-top: none; padding-left: 6px;">
-            {{ $nombre_destinatario }}
+            {{ mb_strtoupper($nombre_destinatario) }}
         </td>
     </tr>
     <tr>
         <td class=" td-margins" style="text-align: right; font-weight: bold; font-size: 12px; padding-top: 8px; padding-bottom: 8px;">
             Domicilio:</td>
         <td class="td-margins" style="text-align: left; padding-left: 6px;">
-            {{ $dom_destino }}
+            {{ mb_strtoupper($dom_destino) }}
         </td>
     </tr>
     <tr>
         <td class="td-margins" style="text-align: right; font-weight: bold; font-size: 12px;">
             País destino:</td>
         <td class="td-margins" style="text-align: left; padding-left: 6px;">
-            {{ $pais }}
+            {{ mb_strtoupper($pais) }}
         </td>
     </tr>
     </table>
