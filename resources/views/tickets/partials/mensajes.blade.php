@@ -36,37 +36,40 @@
         <div class="app-chat card overflow-hidden p-2">
             <div class="chat-history-wrapper">
                 {{-- Chat messages --}}
-                <div class="chat-history-body" id="chatContainer" style="height: 400px; overflow-y: auto;">
+                <div class="chat-history-body" id="chatContainer" style="height: 700px; overflow-y: auto;">
                     <ul class="list-unstyled chat-history p-3 m-0">
                         @foreach ($ticket->mensajes as $mensaje)
                             @php $isMine = $mensaje->id_usuario == auth()->id(); @endphp
                             <li class="chat-message {{ $isMine ? 'chat-message-right' : '' }}">
                                 <div class="d-flex {{ $isMine ? 'justify-content-end' : '' }} overflow-hidden">
+                                    {{-- Avatar del otro usuario --}}
                                     @if (!$isMine)
                                         <div class="user-avatar flex-shrink-0 me-4">
                                             <div class="avatar avatar-sm">
-                                                <img src="{{ asset('assets/img/avatars/4.png') }}" alt="Avatar"
-                                                    class="rounded-circle">
+                                                <img src="{{ $mensaje->usuario?->profile_photo_url ?? asset('assets/img/avatars/4.png') }}"
+                                                    alt="Avatar" class="rounded-circle">
                                             </div>
                                         </div>
                                     @endif
+
+                                    {{-- Mensaje --}}
                                     <div class="chat-message-wrapper flex-grow-1" style="max-width: 30%;">
                                         <div
                                             class="chat-message-text p-2 rounded {{ $isMine ? 'bg-primary text-white' : 'bg-light text-dark' }}">
-                                            <strong>{{ $mensaje->usuario->name ?? 'Desconocido' }}
-                                                ({{ $mensaje->rol_emisor }})
-                                                :</strong>
+                                            <strong>{{ $mensaje->usuario->name ?? 'Desconocido' }}</strong>
                                             <p class="mb-0">{{ $mensaje->mensaje }}</p>
                                         </div>
                                         <div class="text-muted mt-1 text-end {{ $isMine ? '' : 'text-start' }}">
                                             <small>{{ $mensaje->created_at->format('d/m/Y H:i') }}</small>
                                         </div>
                                     </div>
+
+                                    {{-- Mi avatar --}}
                                     @if ($isMine)
                                         <div class="user-avatar flex-shrink-0 ms-4">
                                             <div class="avatar avatar-sm">
-                                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt="Avatar"
-                                                    class="rounded-circle">
+                                                <img src="{{ $mensaje->usuario?->profile_photo_url ?? asset('assets/img/avatars/1.png') }}"
+                                                    alt="Avatar" class="rounded-circle">
                                             </div>
                                         </div>
                                     @endif
@@ -82,8 +85,6 @@
                         <input type="text" class="form-control message-input me-4 shadow-none"
                             placeholder="Type your message here..." name="mensaje" id="nuevoMensaje">
                         <div class="message-actions d-flex align-items-center">
-                            {{-- <i
-                                class="btn btn-sm btn-text-secondary btn-icon rounded-pill speech-to-text ri-mic-line ri-20px cursor-pointer text-heading"></i> --}}
                             <label for="attach-doc" class="form-label mb-0">
                                 <i
                                     class="ri-attachment-2 ri-20px cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill me-2 ms-1 text-heading"></i>
@@ -98,6 +99,7 @@
                 </div>
             </div>
         </div>
+
 
 
     </div>

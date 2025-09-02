@@ -100,7 +100,7 @@ $(function () {
                 /* acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Ver Ticket</a>`; */
               }
               if (window.puedeEliminarElUsuario) {
-                acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
+                acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar Ticket </a>`;
               }
             }
 
