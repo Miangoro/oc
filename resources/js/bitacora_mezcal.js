@@ -91,33 +91,49 @@ $(function () {
             var $id_tanque = full['id_tanque'] ?? 'N/A';
             var $certificado = full['folio_certificado'] ?? 'N/A';
             var $obs = (full['observaciones'] || '').trim();
+            var $operacion = (full['operacion_adicional'] || '').trim();
 
             let html =
               '<span class="fw-bold small">Fecha: </span>' +
-              '<span class="small">' + $fecha + '</span>' +
-
+              '<span class="small">' +
+              $fecha +
+              '</span>' +
               '<br><span class="fw-bold small">Lote a Granel: </span>' +
-              '<span class="small">' + $id_lote_granel + '</span>' +
-
+              '<span class="small">' +
+              $id_lote_granel +
+              '</span>' +
               '<br><span class="fw-bold small">Folio FQ: </span>' +
-              '<span class="small">' + $folio_fq + '</span>' +
-
+              '<span class="small">' +
+              $folio_fq +
+              '</span>' +
               '<br><span class="fw-bold small">Inventario Inicial:</span>' +
               '<br>&nbsp;&nbsp;<span class="fw-bold small">Volumen:</span> ' +
-              '<span class="small">' + $volumen_inicial + ' L</span>' +
+              '<span class="small">' +
+              $volumen_inicial +
+              ' L</span>' +
               '<br>&nbsp;&nbsp;<span class="fw-bold small">%Alc. Vol:</span> ' +
-              '<span class="small">' + $alcohol_inicial + '% Alc.</span>' +
-
-
+              '<span class="small">' +
+              $alcohol_inicial +
+              '% Alc.</span>' +
               '<br><span class="fw-bold small">ID Tanque: </span>' +
-              '<span class="small">' + $id_tanque + '</span>' +
-
+              '<span class="small">' +
+              $id_tanque +
+              '</span>' +
               '<br><span class="fw-bold small">Certificado: </span>' +
-              '<span class="small">' + $certificado + '</span>';
+              '<span class="small">' +
+              $certificado +
+              '</span>';
+            if ($operacion && $operacion.toUpperCase() !== 'N/A') {
+              html +=
+                '<br><span class="fw-bold small">Operación adicional: </span>' +
+                '<span class="small">' +
+                $operacion +
+                '</span>';
+            }
 
             if ($obs && $obs.toUpperCase() !== 'N/A') {
-              html += '<br><span class="fw-bold small">Observaciones: </span>' +
-                '<span class="small">' + $obs + '</span>';
+              html +=
+                '<br><span class="fw-bold small">Observaciones: </span>' + '<span class="small">' + $obs + '</span>';
             }
 
             return html;
@@ -368,9 +384,10 @@ $(function () {
             $(node).removeClass('btn btn-secondary');
 
             // Si usuario tipo 3 y tiene instalaciones, usar las precargadas
-            let htmlOpciones = window.tipoUsuario === 3
-              ? window.opcionesInstalacionesAutenticadas
-              : '<option value="">-- Todas las Instalaciones --</option>';
+            let htmlOpciones =
+              window.tipoUsuario === 3
+                ? window.opcionesInstalacionesAutenticadas
+                : '<option value="">-- Todas las Instalaciones --</option>';
 
             $(node).html(`
               <select id="filtroInstalacion" class="form-select select2" style="min-width: 280px;">
@@ -382,7 +399,7 @@ $(function () {
           }
         },
 
-       /*  {
+        /*  {
           className: 'dt-custom-select p-0 me-2 btn-outline-dark form-select-sm',
           text: '',
           init: function (api, node) {
@@ -418,18 +435,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== ''
                 ? '<tr data-dt-row="' +
-                col.rowIndex +
-                '" data-dt-column="' +
-                col.columnIndex +
-                '">' +
-                '<td>' +
-                col.title +
-                ':' +
-                '</td> ' +
-                '<td>' +
-                col.data +
-                '</td>' +
-                '</tr>'
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
                 : '';
             }).join('');
 
@@ -481,44 +498,44 @@ $(function () {
     $('.datatables-users').DataTable().ajax.reload();
   });
 
-$(document).ready(function () {
-  function cargarInstalaciones() {
-    // Si es usuario tipo 3, usar instalaciones precargadas
-    if (window.tipoUsuario === 3) {
-      $('#filtroInstalacion').html(window.opcionesInstalacionesAutenticadas).trigger('change');
-      return;
-    }
-
-    let empresaId = $('#filtroEmpresa').val();
-    if (!empresaId) {
-      $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
-      return;
-    }
-
-    $.ajax({
-      url: '/getDatos/' + empresaId,
-      method: 'GET',
-      success: function (response) {
-        let opciones = '<option value="">-- Todas las Instalaciones --</option>';
-        if (response.instalaciones.length > 0) {
-          response.instalaciones.forEach(function (inst) {
-            let tipoLimpio = limpiarTipo(inst.tipo);
-            opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
-          });
-        } else {
-          opciones += '<option value="">Sin instalaciones registradas</option>';
-        }
-        $('#filtroInstalacion').html(opciones).trigger('change');
-      },
-      error: function () {
-        $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+  $(document).ready(function () {
+    function cargarInstalaciones() {
+      // Si es usuario tipo 3, usar instalaciones precargadas
+      if (window.tipoUsuario === 3) {
+        $('#filtroInstalacion').html(window.opcionesInstalacionesAutenticadas).trigger('change');
+        return;
       }
-    });
-  }
 
-  cargarInstalaciones();
-  $('#filtroEmpresa').on('change', cargarInstalaciones);
-});
+      let empresaId = $('#filtroEmpresa').val();
+      if (!empresaId) {
+        $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
+        return;
+      }
+
+      $.ajax({
+        url: '/getDatos/' + empresaId,
+        method: 'GET',
+        success: function (response) {
+          let opciones = '<option value="">-- Todas las Instalaciones --</option>';
+          if (response.instalaciones.length > 0) {
+            response.instalaciones.forEach(function (inst) {
+              let tipoLimpio = limpiarTipo(inst.tipo);
+              opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
+            });
+          } else {
+            opciones += '<option value="">Sin instalaciones registradas</option>';
+          }
+          $('#filtroInstalacion').html(opciones).trigger('change');
+        },
+        error: function () {
+          $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+        }
+      });
+    }
+
+    cargarInstalaciones();
+    $('#filtroEmpresa').on('change', cargarInstalaciones);
+  });
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   $(document).on('click', '#verBitacoraBtn', function () {

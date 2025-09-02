@@ -92,38 +92,58 @@ $(function () {
             var lotes_procedencia = full['folios_procedencia']; // ya es string
             var $certificado = full['folio_certificado'] ?? 'N/A';
             var $obs = (full['observaciones'] || '').trim();
+             var $operacion = (full['operacion_adicional'] || '').trim();
 
             let html =
               '<span class="fw-bold small">Fecha: </span>' +
-              '<span class="small">' + $fecha + '</span>' +
-
+              '<span class="small">' +
+              $fecha +
+              '</span>' +
               '<br><span class="fw-bold small">Lote a Granel: </span>' +
-              '<span class="small">' + $id_lote_granel + '</span>' +
-
+              '<span class="small">' +
+              $id_lote_granel +
+              '</span>' +
               '<br><span class="fw-bold small">Folio FQ: </span>' +
-              '<span class="small">' + $folio_fq + '</span>' ;
+              '<span class="small">' +
+              $folio_fq +
+              '</span>';
 
-               if (lotes_procedencia && lotes_procedencia.trim() !== '' && lotes_procedencia !== 'Sin FQ') {
-                  html += '<br><span class="fw-bold small">Folios Procedencia: </span>' +
-                          '<span class="small">' + lotes_procedencia + '</span>';
-              }
+            if (lotes_procedencia && lotes_procedencia.trim() !== '' && lotes_procedencia !== 'Sin FQ') {
+              html +=
+                '<br><span class="fw-bold small">Folios Procedencia: </span>' +
+                '<span class="small">' +
+                lotes_procedencia +
+                '</span>';
+            }
             html +=
               '<br><span class="fw-bold small">Inventario Inicial:</span>' +
               '<br>&nbsp;&nbsp;<span class="fw-bold small">Volumen:</span> ' +
-              '<span class="small">' + $volumen_inicial + ' L</span>' +
+              '<span class="small">' +
+              $volumen_inicial +
+              ' L</span>' +
               '<br>&nbsp;&nbsp;<span class="fw-bold small">%Alc. Vol:</span> ' +
-              '<span class="small">' + $alcohol_inicial + '% Alc.</span>' +
-
-
+              '<span class="small">' +
+              $alcohol_inicial +
+              '% Alc.</span>' +
               '<br><span class="fw-bold small">ID Tanque: </span>' +
-              '<span class="small">' + $id_tanque + '</span>' +
-
+              '<span class="small">' +
+              $id_tanque +
+              '</span>' +
               '<br><span class="fw-bold small">Certificado: </span>' +
-              '<span class="small">' + $certificado + '</span>';
+              '<span class="small">' +
+              $certificado +
+              '</span>';
+            if ($operacion && $operacion.toUpperCase() !== 'N/A') {
+              html +=
+                '<br><span class="fw-bold small">Operación adicional: </span>' +
+                '<span class="small">' +
+                $operacion +
+                '</span>';
+            }
 
             if ($obs && $obs.toUpperCase() !== 'N/A') {
-              html += '<br><span class="fw-bold small">Observaciones: </span>' +
-                '<span class="small">' + $obs + '</span>';
+              html +=
+                '<br><span class="fw-bold small">Observaciones: </span>' + '<span class="small">' + $obs + '</span>';
             }
 
             return html;
@@ -344,9 +364,10 @@ $(function () {
             $(node).removeClass('btn btn-secondary');
 
             // Si usuario tipo 3 y tiene instalaciones, usar las precargadas
-            let htmlOpciones = window.tipoUsuario === 3
-              ? window.opcionesInstalacionesAutenticadas
-              : '<option value="">-- Todas las Instalaciones --</option>';
+            let htmlOpciones =
+              window.tipoUsuario === 3
+                ? window.opcionesInstalacionesAutenticadas
+                : '<option value="">-- Todas las Instalaciones --</option>';
 
             $(node).html(`
               <select id="filtroInstalacion" class="form-select select2" style="min-width: 280px;">
@@ -380,18 +401,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== ''
                 ? '<tr data-dt-row="' +
-                col.rowIndex +
-                '" data-dt-column="' +
-                col.columnIndex +
-                '">' +
-                '<td>' +
-                col.title +
-                ':' +
-                '</td> ' +
-                '<td>' +
-                col.data +
-                '</td>' +
-                '</tr>'
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
                 : '';
             }).join('');
 
@@ -481,7 +502,6 @@ $(function () {
     cargarInstalaciones();
     $('#filtroEmpresa').on('change', cargarInstalaciones);
   });
-
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   $(document).on('click', '#verBitacoraBtn', function () {
