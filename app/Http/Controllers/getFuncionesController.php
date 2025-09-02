@@ -381,7 +381,7 @@ class getFuncionesController extends Controller
                 $cliente = $empresa->empresaNumClientes
                     ->first(fn($item) => !empty($item->numero_cliente));
 
-                $numero_cliente_granel = $cliente ?? 'N/A';
+                $numero_cliente_granel = $cliente ?? 'N/dfsdfsdfA';
                 break; // si solo quieres el primero válido, salimos
             }
         }
