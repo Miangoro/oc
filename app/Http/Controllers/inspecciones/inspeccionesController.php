@@ -583,7 +583,7 @@ public function asignarInspector(Request $request)
             ? Helpers::formatearFecha($datos->fecha_servicio)
             : null;
 
-    $id_inspector = in_array($datos->inspector->id, [9, 15, 16, 17, 18]) 
+    $id_inspector = in_array($datos->id_inspector, [9, 15, 16, 17, 18]) 
     ? User::find(6) 
     : User::find(9);
 
