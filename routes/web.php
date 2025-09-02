@@ -240,6 +240,7 @@ use App\Http\Controllers\permisos\permisosController;
 use App\Http\Controllers\permisos\rolesController;
 //Tickets
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\ticketsController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -1423,10 +1424,43 @@ Route::prefix('tickets')->group(function () {
     Route::get('/tickets/{id}/detalle', [TicketController::class, 'detalle'])->name('tickets.detalle');
    Route::get('/tickets/filtrar', [TicketController::class, 'filtrar'])->name('tickets.filtrar');
    Route::put('/tickets/{id}/actualizar', [TicketController::class, 'actualizar'])->name('tickets.actualizar');
-
-
-
-
-
 });
 
+
+//------------------Tickets------------------
+
+Route::controller(ticketsController::class)->middleware(['auth'])->group(function () {
+    // Listado de tickets (DataTables)
+/*     Route::get('/', [ticketsController::class, 'index'])->name('tickets.index'); */
+     Route::get('/tickets', 'UserManagement')->name('tickets-servicio');
+    // Mostrar tickets del usuario autenticado
+    Route::get('/UserManagement', [ticketsController::class, 'UserManagement'])->name('tickets.user');
+    // Crear nuevo ticket
+    Route::post('/storeTicket', [ticketsController::class, 'store'])->name('tickets.store');
+    // Obtener ticket para edición
+    Route::get('/{id}/editar', [ticketsController::class, 'edit'])->name('tickets.edit');
+    // Actualizar ticket
+    Route::put('/{id}', [ticketsController::class, 'update'])->name('tickets.update');
+    // Eliminar ticket
+    Route::delete('/{id}', [ticketsController::class, 'destroy'])->name('tickets.destroy');
+});
+Route::resource('/tickets-list', ticketsController::class)->middleware(['auth']);
+
+Route::get('/tickets/{ticket}/ver', [ticketsController::class, 'mensajes'])->name('tickets.ver');
+
+Route::post('/tickets/{ticket}/mensajes', [ticketsController::class, 'storeMensaje'])
+    ->name('tickets.mensajes.store');
+
+/* Route::controller(BitacoraMezcalController::class)->middleware(['auth'])->group(function () {
+    Route::get('/bitacoraMezcalProductor', 'UserManagement')->name('bitacora-productor-granel');
+
+    Route::get('/bitacora_mezcal', 'PDFBitacoraMezcal');
+    Route::get('bitacora_mezcal/{id_bitacora}/edit', 'edit');
+    Route::get('bitacoraMezcal-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::post('/bitacoraMezcalStore', 'store')->name('bitacora.store');
+    Route::post('/bitacorasUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
+    Route::post('/FirmaBitacoraMezcal/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
+});
+
+Route::resource('/bitacoraMezcal-list', BitacoraMezcalController::class)->middleware(['auth']);
+ */
