@@ -421,6 +421,7 @@ class RevisionPersonalController extends Controller
         }
 
         $preguntas = $preguntasQuery->get();
+        dd($preguntas);
 
         $revisor_consejo = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where('id_certificado',$datos->id_certificado)->where('tipo_revision',2)->where('tipo_certificado', $datos->tipo_certificado)->first();
         $id_dictamen = $datos->certificado->dictamen->tipo_dictamen ?? '';
