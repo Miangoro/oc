@@ -430,6 +430,7 @@
         @php
             $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
             $folio1 = trim($folios[0] ?? '');
+            $folio1 = rtrim($folio1, " ,");
             $folio2 = isset($folios[1]) && trim($folios[1]) !== '' ? trim($folios[1]) : 'NA';
 
             
