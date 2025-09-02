@@ -414,7 +414,11 @@ class RevisionPersonalController extends Controller
     public function add_revision($id_revision)
     {
         $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
-        $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->get();
+         if ($datos->certificado->certificadoReexpedido()){
+            $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->where('id_pregunta', '>=', 854)->get();
+         }else{
+             $preguntas = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1)->get();
+         }
         $revisor_consejo = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where('id_certificado',$datos->id_certificado)->where('tipo_revision',2)->where('tipo_certificado', $datos->tipo_certificado)->first();
         $id_dictamen = $datos->certificado->dictamen->tipo_dictamen ?? '';
 

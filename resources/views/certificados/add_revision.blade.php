@@ -208,7 +208,7 @@
                                     <th>Respuesta</th>
                                     <th>Observaciones</th>
                                 </tr>
-                            </thead>
+                            </thead> 
                             <tbody>
                                 @foreach ($preguntas as $index => $pregunta)
                                     <tr>
