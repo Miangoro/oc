@@ -23,12 +23,9 @@
 
 @section('page-script')
     <script>
-        window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar bitácoras'));
-        window.puedeEditarElUsuario = @json(auth()->user()->can('Editar bitácoras'));
-        window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar bitácoras'));
-        window.puedeFirmarElUsuario = @json(auth()->user()->can('Firmar bitácoras'));
-        window.adminBitacoras = @json(auth()->user()->can('Admin bitácoras'));
-
+        window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar tickets'));
+        window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar tickets'));
+        window.puedeVerElUsuario = @json(auth()->user()->can('Ver tickets'));
     </script>
     @vite(['resources/js/tickets.js'])
 @endsection

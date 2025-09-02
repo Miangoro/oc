@@ -87,22 +87,15 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             let acciones = '';
-
-            const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
-            const esAdminBitacoras = window.adminBitacoras === true;
-
-            if (!estaFirmado || esAdminBitacoras) {
-              if (window.puedeEliminarElUsuario) {
-                acciones += `<a href="/tickets/${full['id_ticket']}/ver" class="dropdown-item waves-effect text-warning">
-                 <i class="ri-eye-line ri-20px text-warning"></i> Ver Ticket
+              if (window.puedeVerElUsuario) {
+                acciones += `<a href="/tickets/${full['id_ticket']}/ver" class="dropdown-item waves-effect text-info">
+                 <i class="ri-eye-line ri-20px text-info"></i> Ver Ticket
              </a>`;
-
                 /* acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Ver Ticket</a>`; */
               }
               if (window.puedeEliminarElUsuario) {
                 acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar Ticket </a>`;
               }
-            }
 
             // Si hay acciones (bitácora NO firmada)
             if (acciones.trim()) {

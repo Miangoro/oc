@@ -415,7 +415,7 @@
       "url": "tickets",
       "icon": "menu-icon ri-customer-service-2-fill",
       "slug": "tickets-servicio",
-      "can": "Visualizar lotes a granel"
+      "can": "Visualizar tickets"
     }
 
 
