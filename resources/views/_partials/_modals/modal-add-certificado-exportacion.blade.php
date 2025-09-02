@@ -39,7 +39,7 @@
                                 <select class="select2 form-select" name="id_firmante">
                                     <option value="" disabled selected>Selecciona un firmante</option>
                                     @foreach ($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        <option value="{{ $user->id }}" {{ $user->id == 4 ? 'selected' : '' }}>
                                     @endforeach
                                 </select>
                                 <label for="">Selecciona un firmante</label>
