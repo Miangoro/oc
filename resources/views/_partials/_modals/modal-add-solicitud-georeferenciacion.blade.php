@@ -1,4 +1,4 @@
-<!-- Add New Lote Envasado Modal -->
+<!-- Add New Solicitud Georreferenciacion Modal -->
 <div class="modal fade" id="addSolicitudGeoreferenciacion" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -11,7 +11,8 @@
             <div class="modal-body p-8">
                 <form id="addRegistrarSolicitudGeoreferenciacion">
                     <div class="row">
-                        <div class="col-md-6">
+
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange="obtenerPredios2(this.value);" name="id_empresa"
                                     class="select2 form-select id_empresa" required id="id_empresa_georefere">
@@ -25,6 +26,19 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
+
+{{-- 
+obtenerDestinoEmpresa();
+<div class="col-md-4">
+    <div class="form-floating form-floating-outline mb-6">
+        <select id="id_empresa_destino" name="id_empresa_destino" class="select2 form-select" data-error-message="por favor selecciona la empresa">
+            <option value="" disabled selected>Selecciona la empresa destino</option>
+        </select>
+        <label for="id_empresa_destino" class="form-label">Empresa destino</label>
+    </div>
+</div> --}}
+
+
                         <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
@@ -140,4 +154,64 @@
             });
         }
     }
+
+
+
+
+
+///NUEVA FUNCION
+/*
+function obtenerDestinoEmpresa() {
+    var empresa = $("#id_empresa_georefere").val();
+    if (!empresa) return;
+
+    $.ajax({
+        url: '/getDatosMaquila/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            var $selectDestino = $('#id_empresa_destino');
+             var $selectDestinoContainer = $('#select_destino');
+            var $selectEmpresaContainer = $('#select_empresa');
+            $selectDestino.empty();
+
+            var opciones = [];
+
+            if (response.empresasDestino.length > 0) {
+                response.empresasDestino.forEach(function(emp) {
+                    var numeroCliente = (emp.empresa_num_clientes[0]?.numero_cliente ??
+                                         emp.empresa_num_clientes[1]?.numero_cliente ?? '');
+                    opciones.push(`<option value="${emp.id_empresa}">${numeroCliente} | ${emp.razon_social}</option>`);
+                });
+            } else {
+                opciones.push(`<option value="${empresa}" selected>Propia empresa</option>`);
+            }
+
+            $selectDestino.append(opciones.join(''));
+
+            // Deshabilitar si solo hay una opción
+            if ($selectDestino.find('option').length === 1) {
+                $selectDestino.prop('disabled', true);
+                 $selectDestinoContainer.addClass('d-none'); // Oculta el select destino si solo hay uno
+                $selectEmpresaContainer.removeClass('col-md-12').addClass('col-md-12'); // Mantiene la empresa principal full width
+            } else {
+                $selectDestino.prop('disabled', false);
+                $selectDestinoContainer.removeClass('d-none');
+                $selectEmpresaContainer.removeClass('col-md-12').addClass('col-md-6'); // Ajusta ancho
+            }
+
+            $(document).trigger('empresaDestinoCargada', [$selectDestino]);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al cargar los datos de la empresa:', error);
+            alert('Error al cargar los datos. Por favor, intenta nuevamente.');
+        }
+    });
+} 
+
+    // Llamar a obtenerDatosEmpresa cuando se selecciona la empresa
+    $('#id_empresa').change(function() {
+        obtenerDestinoEmpresa();
+    }); 
+*/
+
 </script>

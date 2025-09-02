@@ -454,8 +454,6 @@ public function index(Request $request)
 
 
 
-
-
 public function obtenerDatosSolicitud($id_solicitud)
 {
         // Buscar los datos necesarios en la tabla "solicitudes"
@@ -631,7 +629,6 @@ public function storeVigilanciaProduccion(Request $request)
 }
 
 
-
 public function storeEmisionCertificadoVentaNacional(Request $request)
 {
         $emisionCertificado = new solicitudesModel();
@@ -670,7 +667,6 @@ public function storeEmisionCertificadoVentaNacional(Request $request)
         
     return response()->json(['message' => 'Emision de certificado venta nacional registrada exitosamente']);
 }
-
 
 
 public function storeMuestreoLote(Request $request)
@@ -724,7 +720,6 @@ public function storeMuestreoLote(Request $request)
 }
 
 
-
 public function storeVigilanciaTraslado(Request $request)
 {
         $VigilanciaTras = new solicitudesModel();
@@ -736,7 +731,6 @@ public function storeVigilanciaTraslado(Request $request)
         $VigilanciaTras->fecha_visita = $request->fecha_visita;
         $VigilanciaTras->id_instalacion = $request->id_instalacion;
         $VigilanciaTras->info_adicional = $request->info_adicional;
-
 
         $VigilanciaTras->caracteristicas = json_encode([
             'instalacion_vigilancia' => $request->instalacion_vigilancia,
@@ -753,11 +747,10 @@ public function storeVigilanciaTraslado(Request $request)
             'analisis_traslado' => $request->analisis_traslado,
             'volumen_traslado' => $request->volumen_traslado,
             'id_certificado_traslado' => $request->id_certificado_traslado,
-
-
         ]);
 
         $VigilanciaTras->save();
+
         // Crear nuevo registro en la Bitácora de Mezcal
       /*  $bitacora = new BitacoraMezcal();
         $bitacora->fecha = now(); // o $request->fecha_visita si aplica
@@ -795,9 +788,7 @@ public function storeVigilanciaTraslado(Request $request)
         $bitacora->num_certificado = $request->id_certificado_traslado ?? null;
         $bitacora->observaciones = "Registro automático desde vigilancia en traslado.";
 
-
         $bitacora->save();*/
-
 
 
         $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
@@ -816,7 +807,6 @@ public function storeVigilanciaTraslado(Request $request)
 
     return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
 }
-
 
 
 public function storeInspeccionEnvasado(Request $request)
@@ -858,8 +848,8 @@ public function storeInspeccionEnvasado(Request $request)
 }
 
 
-    public function storeInspeccionBarricada(Request $request)
-    {
+public function storeInspeccionBarricada(Request $request)
+{
         $InspeccionBarri = new solicitudesModel();
         $InspeccionBarri->folio = Helpers::generarFolioSolicitud();
         $InspeccionBarri->id_empresa = $request->id_empresa;
@@ -904,11 +894,13 @@ public function storeInspeccionEnvasado(Request $request)
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Inspeccion ingreso a barrica de lote registrada exitosamente']);
-    }
 
-    public function storeInspeccionBarricadaLiberacion(Request $request)
-    {
+    return response()->json(['message' => 'Inspeccion ingreso a barrica de lote registrada exitosamente']);
+}
+
+
+public function storeInspeccionBarricadaLiberacion(Request $request)
+{
         $BarricadaLib = new solicitudesModel();
         $BarricadaLib->folio = Helpers::generarFolioSolicitud();
         $BarricadaLib->id_empresa = $request->id_empresa;
@@ -952,13 +944,13 @@ public function storeInspeccionEnvasado(Request $request)
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Inspeccion liberacion a barrica de lote registrada exitosamente']);
-    }
+
+    return response()->json(['message' => 'Inspeccion liberacion a barrica de lote registrada exitosamente']);
+}
 
 
-    public function registrarSolicitudGeoreferenciacion(Request $request)
-    {
-
+public function registrarSolicitudGeoreferenciacion(Request $request)
+{
         $solicitud = new solicitudesModel();
         $solicitud->folio = Helpers::generarFolioSolicitud();
         $solicitud->id_empresa = $request->id_empresa;
@@ -968,6 +960,10 @@ public function storeInspeccionEnvasado(Request $request)
         $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
         $solicitud->id_predio = $request->id_predio;
         $solicitud->info_adicional = $request->info_adicional;
+
+        // Guardar empresa destino (si viene del formulario)
+        //$solicitud->id_empresa_destino = $request->id_empresa_destino ?? $request->id_empresa;
+
         // Preparar el JSON para la columna `caracteristicas`
         $caracteristicas = [
             'punto_reunion' => $request->punto_reunion,
@@ -987,12 +983,13 @@ public function storeInspeccionEnvasado(Request $request)
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['success' => 'Solicitud registrada correctamente']);
-    }
 
-    public function registrarSolicitudMuestreoAgave(Request $request)
-    {
+    return response()->json(['success' => 'Solicitud registrada correctamente']);
+}
 
+
+public function registrarSolicitudMuestreoAgave(Request $request)
+{
         $solicitud = new solicitudesModel();
         $solicitud->folio = Helpers::generarFolioSolicitud();
         $solicitud->id_empresa = $request->id_empresa;
@@ -1015,10 +1012,8 @@ public function storeInspeccionEnvasado(Request $request)
             ]);
         }
 
-
-
-
         $solicitud->save();
+
 
         $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
         $data1 = [
@@ -1029,11 +1024,13 @@ public function storeInspeccionEnvasado(Request $request)
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['success' => 'Solicitud registrada correctamente']);
-    }
 
-    public function store(Request $request)
-    {
+    return response()->json(['success' => 'Solicitud registrada correctamente']);
+}
+
+
+public function store(Request $request)
+{
         $solicitud = new solicitudesModel();
         $solicitud->folio = Helpers::generarFolioSolicitud();
         $solicitud->id_empresa = $request->id_empresa;
@@ -1077,14 +1074,15 @@ public function storeInspeccionEnvasado(Request $request)
             $user->notify(new GeneralNotification($data1));
         }
 
-
         // Retornar una respuesta JSON indicando éxito
-        return response()->json(['success' => 'Solicitud registrada correctamente']);
-    }
+    return response()->json(['success' => 'Solicitud registrada correctamente']);
+}
 
 
-    public function pdf_solicitud_servicios_070($id_solicitud)
-    {
+
+///PDF SOLICITUD DE SERVICIOS
+public function pdf_solicitud_servicios_070($id_solicitud)
+{
         $datos = solicitudesModel::find($id_solicitud);
 
         // Inicializa las variables con un valor vacío
@@ -1214,10 +1212,11 @@ public function storeInspeccionEnvasado(Request $request)
             'productor',
             'envasador',
             'comercializador'
-        ))
-            ->setPaper([0, 0, 640, 910]);;
-        return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
-    }
+        ))->setPaper([0, 0, 640, 910]);;
+
+    return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
+}
+
 
 
     public function verificarSolicitud(Request $request)
@@ -1907,8 +1906,11 @@ public function storeInspeccionEnvasado(Request $request)
         return response()->json($marcas);
     }
 
-    public function storePedidoExportacion(Request $request)
-    {
+
+
+
+public function storePedidoExportacion(Request $request)
+{
       /* dd($request->all()); */
         // Validación de datos del formulario
         $validated = $request->validate([
@@ -2110,11 +2112,12 @@ public function storeInspeccionEnvasado(Request $request)
             $user->notify(new GeneralNotification($data1));
         }
 
-        return response()->json(['success' => true, 'message' => 'Pedido registrado.']);
-    }
+    return response()->json(['success' => true, 'message' => 'Pedido registrado.']);
+}
 
-    public function storeSolicitudLibProdTerm(Request $request)
-    {
+
+public function storeSolicitudLibProdTerm(Request $request)
+{
         // Validación de datos del formulario
         $solicitud = new solicitudesModel();
         $solicitud->folio = Helpers::generarFolioSolicitud();
@@ -2158,10 +2161,12 @@ public function storeInspeccionEnvasado(Request $request)
             $user->notify(new GeneralNotification($data1));
         }
 
+    // Retornar una respuesta JSON indicando éxito
+    return response()->json(['success' => 'Solicitud registrada correctamente']);
+}
 
-        // Retornar una respuesta JSON indicando éxito
-        return response()->json(['success' => 'Solicitud registrada correctamente']);
-    }
+
+
     public function getDetalleLoteEnvasado($id_lote_envasado)
     {
         $lote = lotes_envasado::with('lotesGranel.categoria', 'lotesGranel.clase', 'lotesGranel.certificadoGranel')->find($id_lote_envasado); // Cargar relación
@@ -2180,7 +2185,6 @@ public function storeInspeccionEnvasado(Request $request)
         ], 200);
     }
 
-
     public function getDetalleLoteTipo($id_lote_granel)
     {
         $lote = LotesGranel::find($id_lote_granel);
@@ -2198,6 +2202,8 @@ public function storeInspeccionEnvasado(Request $request)
             'detalle' => $lotesGranel->pluck('nombre_lote') // Puedes cambiar 'nombre_lote' por cualquier campo relevante de LotesGranel
         ]);
     }
+
+
     public function exportar(Request $request)
     {
         $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes', 'id_soli']);
@@ -2210,25 +2216,25 @@ public function storeInspeccionEnvasado(Request $request)
 
     public function destroy(Request $request, $id_solicitud)
     {
-    try {
-        $solicitud = solicitudesModel::findOrFail($id_solicitud);
-        // Guardar motivo recibido del request
-        $motivo = $request->input('reason', 'Sin motivo especificado');
-        // Registrar en tabla solicitudes_eliminadas
-        solicitudes_eliminadas::create([
-            'id_solicitud' => $id_solicitud,
-            'motivo' => $motivo,
-            'responsable'       => Auth::id(),
-            'fecha_eliminacion' => Carbon::now(), // Laravel te da la fecha/hora actual
-        ]);
-        // Deshabilitar la solicitud
-        $solicitud->habilitado = 0;
-        $solicitud->save();
-        return response()->json(['success' => 'Solicitud eliminada correctamente']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
+        try {
+            $solicitud = solicitudesModel::findOrFail($id_solicitud);
+            // Guardar motivo recibido del request
+            $motivo = $request->input('reason', 'Sin motivo especificado');
+            // Registrar en tabla solicitudes_eliminadas
+            solicitudes_eliminadas::create([
+                'id_solicitud' => $id_solicitud,
+                'motivo' => $motivo,
+                'responsable'       => Auth::id(),
+                'fecha_eliminacion' => Carbon::now(), // Laravel te da la fecha/hora actual
+            ]);
+            // Deshabilitar la solicitud
+            $solicitud->habilitado = 0;
+            $solicitud->save();
+            return response()->json(['success' => 'Solicitud eliminada correctamente']);
+        } catch (\Exception $e) {
 
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     public function Etiqueta_240($id_solicitud)
@@ -2236,6 +2242,7 @@ public function storeInspeccionEnvasado(Request $request)
         $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
+
 
     public function registrarValidarSolicitud(Request $request)
     {
@@ -2280,6 +2287,7 @@ public function storeInspeccionEnvasado(Request $request)
         return response()->json(['message' => 'Validado exitosamente']);
     }
 
+
     public function pdf_validar_solicitud($id_validacion)
     {
         $datos = solicitudesValidacionesModel::find($id_validacion);
@@ -2292,7 +2300,7 @@ public function storeInspeccionEnvasado(Request $request)
 
 
 
-///ESTATUS ACTUVAR HOLOGRAMAS
+///ESTATUS ACTIVAR HOLOGRAMAS
 public function cambiarEstatus(Request $request, $id)
 {
     $solicitud = solicitudesModel::findOrFail($id);
@@ -2326,6 +2334,8 @@ public function cambiarEstatus(Request $request, $id)
         ], 500);
     }
 }
+
+
 
 
 }
