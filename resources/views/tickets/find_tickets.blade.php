@@ -25,7 +25,7 @@
     <script>
         window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar tickets'));
         window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar tickets'));
-        window.puedeVerElUsuario = @json(auth()->user()->can('Ver tickets'));
+        window.puedeVerElUsuario = @json(auth()->user()->can('Seguir ticket'));
     </script>
     @vite(['resources/js/tickets.js'])
 @endsection

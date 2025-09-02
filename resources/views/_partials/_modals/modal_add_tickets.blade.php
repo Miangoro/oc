@@ -5,7 +5,7 @@
         <div class="modal-content">
             {{-- Header --}}
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="RegistrarTicketLabel">Crear nuevo ticket</h5>
+                <h5 class="modal-title mb-2 text-white" id="RegistrarTicketLabel">Crear nuevo ticket</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
@@ -22,7 +22,7 @@
                                 value="{{ $usuario->name }}" readonly>
                         </div>
                         <div class="col-md-6">
-                            <label for="email" class="form-label">Correo institucional</label>
+                            <label for="email" class="form-label">Correo</label>
                             <input type="email" name="email" id="email" class="form-control"
                                 value="{{ $usuario->email }}" readonly>
                         </div>

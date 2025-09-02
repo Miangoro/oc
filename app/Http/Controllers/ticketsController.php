@@ -20,6 +20,7 @@ use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Validation\ValidationException;
 
 class ticketsController extends Controller
 {
@@ -144,7 +145,8 @@ public function store(Request $request)
             'asunto' => 'required|string|max:255',
             'prioridad' => 'required|string',
             'descripcion' => 'required|string',
-            'evidencias.*' => 'file|mimes:pdf,jpg,jpeg,png|max:2048',
+           'evidencias.*' => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+
         ]);
 
         // Generar folio
@@ -190,10 +192,16 @@ public function store(Request $request)
         // Respuesta JSON de éxito
         return response()->json(['success' => 'Ticket creado correctamente con folio ' . $folio]);
 
-    } catch (\Exception $e) {
-        // Respuesta JSON de error
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
+    } catch (\Illuminate\Validation\ValidationException $e) {
+            // Retorna todos los mensajes de validación
+            return response()->json([
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
 }
 
 
@@ -228,6 +236,18 @@ public function storeMensaje(Request $request, $ticketId)
 }
 
 
+
+  public function updateEstatus(Request $request, Ticket $ticket)
+  {
+      $request->validate([
+          'estatus' => 'required|in:pendiente,abierto,cerrado'
+      ]);
+
+      $ticket->estatus = $request->estatus;
+      $ticket->save();
+
+      return response()->json(['success' => true]);
+  }
 
 
 

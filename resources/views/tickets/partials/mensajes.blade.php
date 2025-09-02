@@ -9,7 +9,7 @@
     <div class="container-fluid py-4">
 
         {{-- Detalles del ticket --}}
-        <div class="card mb-4 shadow-sm">
+        {{--         <div class="card mb-4 shadow-sm">
             <div class="card-header bg-primary text-white mb-2">
                 <h4 class="mb-0 text-white">Ticket: {{ $ticket->folio }} — {{ $ticket->asunto }}</h4>
             </div>
@@ -29,9 +29,81 @@
                     </ul>
                 @endif
             </div>
+        </div> --}}
+        {{-- Detalles del ticket --}}
+        @php
+            $estatusActual = strtolower($ticket->estatus ?? 'pendiente');
+            $colores = [
+                'pendiente' => 'warning',
+                'abierto' => 'success',
+                'cerrado' => 'danger',
+            ];
+        @endphp
+
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white mb-2">
+                <h4 class="mb-0 text-white">Ticket: {{ $ticket->folio }} — {{ $ticket->asunto }}</h4>
+            </div>
+
+            <div class="card-body">
+                <p><strong>Solicitante:</strong> {{ $ticket->nombre }}</p>
+                <p><strong>Correo:</strong> {{ $ticket->email }}</p>
+                <p><strong>Prioridad:</strong> {{ ucfirst($ticket->prioridad) }}</p>
+                <p><strong>Descripción:</strong> {{ $ticket->descripcion }}</p>
+                <p><strong>Estatus:</strong>
+                    <select id="selectEstatus" class="form-select form-select-sm d-inline-block ms-2 text-white"
+                        style="width:auto; background-color: {{ $estatusActual === 'pendiente' ? '#f0ad4e' : ($estatusActual === 'abierto' ? '#28a745' : '#dc3545') }};">
+                        <option value="pendiente" {{ $estatusActual === 'pendiente' ? 'selected' : '' }}>Pendiente</option>
+                        <option value="abierto" {{ $estatusActual === 'abierto' ? 'selected' : '' }}>Abierto</option>
+                        <option value="cerrado" {{ $estatusActual === 'cerrado' ? 'selected' : '' }}>Cerrado</option>
+                    </select>
+                    <button id="btnActualizarEstatus" class="btn btn-sm btn-primary ms-1">Actualizar</button>
+                </p>
+
+
+                @if ($ticket->evidencias->count())
+                    <p><strong>Evidencias:</strong></p>
+                    <div class="d-flex flex-wrap gap-3">
+                        @foreach ($ticket->evidencias as $archivo)
+                            @php
+                                $ext = pathinfo($archivo->evidencia_url, PATHINFO_EXTENSION);
+                                $url = asset('storage/' . $archivo->evidencia_url);
+                            @endphp
+
+                            @if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                                {{-- Mostrar imagen --}}
+                                <div class="card shadow-sm" style="width: 120px;">
+                                    <a href="{{ $url }}" target="_blank">
+                                        <img src="{{ $url }}" class="card-img-top"
+                                            style="height: 100px; object-fit: cover;">
+                                    </a>
+                                    <div class="card-body p-2 text-center">
+                                        <small>{{-- {{ basename($archivo->evidencia_url) }} --}}</small>
+                                    </div>
+                                </div>
+                            @elseif(strtolower($ext) === 'pdf')
+                                {{-- Mostrar icono PDF --}}
+                                <div class="card shadow-sm text-center p-2" style="width: 120px;">
+                                    <a href="{{ $url }}" target="_blank" class="d-block my-2">
+                                        <i class="ri-file-pdf-line" style="font-size: 2rem; color: #E74C3C;"></i>
+                                    </a>
+                                    <small>{{-- {{ basename($archivo->evidencia_url) }} --}}</small>
+                                </div>
+                            @else
+                                {{-- Otros archivos --}}
+                                <div class="card shadow-sm text-center p-2" style="width: 120px;">
+                                    <a href="{{ $url }}" target="_blank" class="d-block my-2">
+                                        <i class="ri-file-line" style="font-size: 2rem;"></i>
+                                    </a>
+                                    <small>{{-- {{ basename($archivo->evidencia_url) }} --}}</small>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
+            </div>
         </div>
 
-        {{-- Chat --}}
         {{-- Chat --}}
         <div class="app-chat card overflow-hidden p-2">
             <div class="chat-history-wrapper">
@@ -125,29 +197,77 @@
                 }, function(res) {
                     if (res.success) {
                         const html = `
-                <li class="chat-message chat-message-right">
-                    <div class="d-flex justify-content-end overflow-hidden">
-                        <div class="chat-message-wrapper flex-grow-1" style="max-width: 70%;">
-                            <div class="chat-message-text p-2 rounded bg-primary text-white">
-                                <strong>${res.mensaje.usuario.name} (${res.mensaje.rol_emisor}):</strong>
-                                <p class="mb-0">${res.mensaje.mensaje}</p>
+                        <li class="chat-message chat-message-right">
+                            <div class="d-flex justify-content-end overflow-hidden">
+                                <div class="chat-message-wrapper flex-grow-1" style="max-width: 70%;">
+                                    <div class="chat-message-text p-2 rounded bg-primary text-white">
+                                        <strong>${res.mensaje.usuario.name}</strong>
+                                        <p class="mb-0">${res.mensaje.mensaje}</p>
+                                    </div>
+                                    <div class="text-end text-muted mt-1">
+                                        <small>${new Date(res.mensaje.created_at).toLocaleString()}</small>
+                                    </div>
+                                </div>
+                                <div class="user-avatar flex-shrink-0 ms-4">
+                                    <div class="avatar avatar-sm">
+                                        <img src="${res.mensaje.usuario.profile_photo_url || '/assets/img/avatars/1.png'}" class="rounded-circle">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="text-end text-muted mt-1">
-                                <small>${new Date(res.mensaje.created_at).toLocaleString()}</small>
-                            </div>
-                        </div>
-                        <div class="user-avatar flex-shrink-0 ms-4">
-                            <div class="avatar avatar-sm">
-                                <img src="{{ asset('assets/img/avatars/1.png') }}" class="rounded-circle">
-                            </div>
-                        </div>
-                    </div>
-                </li>`;
+                        </li>`;
                         chatContainer.find('ul').append(html);
                         $('#nuevoMensaje').val('');
                         chatContainer.scrollTop(chatContainer[0].scrollHeight);
                     }
                 });
+            });
+        });
+
+
+function actualizarColorSelect() {
+    const select = document.getElementById('selectEstatus');
+    const valor = select.value;
+    let color = '#6c757d'; // secondary por defecto
+
+    if(valor === 'pendiente') color = '#f0ad4e';
+    if(valor === 'abierto') color = '#28a745';
+    if(valor === 'cerrado') color = '#dc3545';
+
+    select.style.backgroundColor = color;
+    select.style.color = '#fff';
+}
+
+document.getElementById('selectEstatus').addEventListener('change', actualizarColorSelect);
+actualizarColorSelect(); // Inicializa con el color correcto
+
+        $('#btnActualizarEstatus').on('click', function() {
+            let nuevoEstatus = $('#selectEstatus').val();
+            $.ajax({
+                url: "{{ route('tickets.updateEstatus', $ticket->id_ticket) }}",
+                type: "PATCH",
+                data: {
+                    estatus: nuevoEstatus
+                },
+                success: function(res) {
+                    if (res.success) {
+                        // Actualiza el badge de estatus
+                        let color = 'secondary';
+                        if (nuevoEstatus === 'pendiente') color = 'warning';
+                        if (nuevoEstatus === 'abierto') color = 'success';
+                        if (nuevoEstatus === 'cerrado') color = 'danger';
+
+                        $('#estatusBadge')
+                            .text(nuevoEstatus.charAt(0).toUpperCase() + nuevoEstatus.slice(1))
+                            .removeClass('bg-warning bg-success bg-danger bg-secondary')
+                            .addClass('bg-' + color);
+
+                        Swal.fire('¡Éxito!', 'Estatus actualizado correctamente', 'success');
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire('¡Error!', xhr.responseJSON?.error || 'No se pudo actualizar el estatus',
+                        'error');
+                }
             });
         });
     </script>

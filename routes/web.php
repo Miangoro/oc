@@ -1451,16 +1451,6 @@ Route::get('/tickets/{ticket}/ver', [ticketsController::class, 'mensajes'])->nam
 Route::post('/tickets/{ticket}/mensajes', [ticketsController::class, 'storeMensaje'])
     ->name('tickets.mensajes.store');
 
-/* Route::controller(BitacoraMezcalController::class)->middleware(['auth'])->group(function () {
-    Route::get('/bitacoraMezcalProductor', 'UserManagement')->name('bitacora-productor-granel');
+Route::patch('/tickets/{ticket}/estatus', [ticketsController::class, 'updateEstatus'])
+     ->name('tickets.updateEstatus');
 
-    Route::get('/bitacora_mezcal', 'PDFBitacoraMezcal');
-    Route::get('bitacora_mezcal/{id_bitacora}/edit', 'edit');
-    Route::get('bitacoraMezcal-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
-    Route::post('/bitacoraMezcalStore', 'store')->name('bitacora.store');
-    Route::post('/bitacorasUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
-    Route::post('/FirmaBitacoraMezcal/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
-});
-
-Route::resource('/bitacoraMezcal-list', BitacoraMezcalController::class)->middleware(['auth']);
- */

@@ -71,14 +71,20 @@ $(function () {
             return `<span>${full.fake_id}</span>`;
           }
         },
-        /*         {
-          targets: 2,
-          responsivePriority: 1,
-          render: function (data, type, full) {
-            var $empresa = full['cliente'] ?? 'N/A';
-            return `<span>${$empresa}</span>`;
+        {
+          targets: 4, // columna 'estatus'
+          render: function (data, type, full, meta) {
+            let status = (data || '').toLowerCase();
+            let colorClass = 'secondary'; // color por defecto
+
+            if (status === 'pendiente') colorClass = 'warning';
+            else if (status === 'abierto') colorClass = 'success';
+            else if (status === 'cerrado') colorClass = 'danger';
+
+            return `<span class="badge rounded-pill bg-${colorClass} text-white">${data}</span>`;
           }
-        }, */
+        },
+
         {
           // Actions
           targets: 6,
@@ -87,15 +93,15 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             let acciones = '';
-              if (window.puedeVerElUsuario) {
-                acciones += `<a href="/tickets/${full['id_ticket']}/ver" class="dropdown-item waves-effect text-info">
+            if (window.puedeVerElUsuario) {
+              acciones += `<a href="/tickets/${full['id_ticket']}/ver" class="dropdown-item waves-effect text-info">
                  <i class="ri-eye-line ri-20px text-info"></i> Ver Ticket
              </a>`;
-                /* acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Ver Ticket</a>`; */
-              }
-              if (window.puedeEliminarElUsuario) {
-                acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar Ticket </a>`;
-              }
+              /* acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Ver Ticket</a>`; */
+            }
+            if (window.puedeEliminarElUsuario) {
+              acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar Ticket </a>`;
+            }
 
             // Si hay acciones (bitácora NO firmada)
             if (acciones.trim()) {
@@ -152,9 +158,7 @@ $(function () {
       },
 
       // Opciones Exportar Documentos
-      buttons: [
-        buttonss
-      ],
+      buttons: [buttonss],
 
       responsive: {
         details: {
@@ -408,82 +412,97 @@ $(function () {
     });
   });
 
-
-$(function () {
+  $(function () {
     // Configuración de CSRF para Laravel
     $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
     });
 
     // Inicializar FormValidation
     const form = document.getElementById('ticketForm');
     const fv = FormValidation.formValidation(form, {
-        fields: {
-            asunto: {
-                validators: {
-                    notEmpty: { message: 'Por favor ingrese el asunto del ticket' }
-                }
-            },
-            descripcion: {
-                validators: {
-                    notEmpty: { message: 'Por favor ingrese la descripción' }
-                }
-            },
-            prioridad: {
-                validators: {
-                    notEmpty: { message: 'Por favor seleccione la prioridad' }
-                }
-            }
+      fields: {
+        asunto: {
+          validators: {
+            notEmpty: { message: 'Por favor ingrese el asunto del ticket' }
+          }
         },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: '.mb-3'
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
+        descripcion: {
+          validators: {
+            notEmpty: { message: 'Por favor ingrese la descripción' }
+          }
+        },
+        prioridad: {
+          validators: {
+            notEmpty: { message: 'Por favor seleccione la prioridad' }
+          }
         }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.mb-3'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
     }).on('core.form.valid', function () {
-        $('#btnRegistrar').addClass('d-none');
-        $('#loading').removeClass('d-none');
+      $('#btnRegistrar').addClass('d-none');
+      $('#loading').removeClass('d-none');
 
-        var formData = new FormData(form); // FormData permite enviar archivos
+      var formData = new FormData(form); // FormData permite enviar archivos
 
-        $.ajax({
-            url: '/storeTicket', // Ruta para crear tickets
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                $('#RegistrarTicket').modal('hide');
-                $('#loading').addClass('d-none');
-                $('#btnRegistrar').removeClass('d-none');
-                form.reset();
-                $('.datatables-users').DataTable().ajax.reload();
+      $.ajax({
+        url: '/storeTicket', // Ruta para crear tickets
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#RegistrarTicket').modal('hide');
+          $('#loading').addClass('d-none');
+          $('#btnRegistrar').removeClass('d-none');
+          form.reset();
+          $('.datatables-users').DataTable().ajax.reload();
 
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.success || 'Ticket creado correctamente',
-                    customClass: { confirmButton: 'btn btn-success' }
-                });
-            },
-            error: function (xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: xhr.responseJSON?.message || 'Error al registrar el ticket',
-                    customClass: { confirmButton: 'btn btn-danger' }
-                });
-                $('#loading').addClass('d-none');
-                $('#btnRegistrar').removeClass('d-none');
-            }
-        });
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.success || 'Ticket creado correctamente',
+            customClass: { confirmButton: 'btn btn-success' }
+          });
+        },
+        error: function (xhr) {
+          let msg = 'Error al registrar el ticket';
+          let errors = null;
+
+          try {
+            errors = xhr.responseJSON?.errors ?? JSON.parse(xhr.responseText)?.errors;
+          } catch (e) {
+            errors = null;
+          }
+
+          if (xhr.status === 422 && errors) {
+            msg = Object.values(errors).flat().join('\n');
+          } else if (xhr.responseJSON?.error) {
+            msg = xhr.responseJSON.error;
+          }
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: msg,
+            customClass: { confirmButton: 'btn btn-danger' }
+          });
+
+          $('#loading').addClass('d-none');
+          $('#btnRegistrar').removeClass('d-none');
+        }
+      });
     });
 
     // Manejo dinámico de evidencias
@@ -491,24 +510,21 @@ $(function () {
     const addBtn = document.getElementById('add-evidencia');
 
     addBtn.addEventListener('click', function () {
-        const div = document.createElement('div');
-        div.classList.add('input-group', 'mb-2');
-        div.innerHTML = `
+      const div = document.createElement('div');
+      div.classList.add('input-group', 'mb-2');
+      div.innerHTML = `
             <input type="file" name="evidencias[]" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
             <button type="button" class="btn btn-outline-danger remove-evidencia"><i class="ri-close-circle-fill"></i></button>
         `;
-        container.appendChild(div);
+      container.appendChild(div);
     });
 
-    container.addEventListener('click', function(e) {
-        if (e.target.closest('.remove-evidencia')) {
-            e.target.closest('.input-group').remove();
-        }
+    container.addEventListener('click', function (e) {
+      if (e.target.closest('.remove-evidencia')) {
+        e.target.closest('.input-group').remove();
+      }
     });
-});
-
-
-
+  });
 
   //end
 });
