@@ -245,11 +245,24 @@
         $folio1 = trim($folios[0] ?? '');
         $folio2 = trim($folios[1] ?? 'NA');
     @endphp
+    @php
+                    $lotesProcedencia = collect();
+                    if (!empty($lote->lotesGranel->first()->lote_original_id)) {
+                        $json = json_decode($lote->lotesGranel->first()->lote_original_id, true);
+
+                        if (isset($json['lotes']) && is_array($json['lotes'])) {
+                            $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
+                                ->whereIn('id_lote_granel', $json['lotes'])
+                                ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
+                        }
+                    }
+                @endphp
         <tr>
             <td style="text-align: left; padding-top:16px; padding-bottom:16px; width: 20%;">
                 &nbsp;&nbsp;3) No. de análisis:
             </td>
             <td style="font-weight: bold; width: 30%;"> 
+                 {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
                 {{ $folio1 }} 
             </td>
             <td style="text-align: left;  width: 20%;" colspan="3">
