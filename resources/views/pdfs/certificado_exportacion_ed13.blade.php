@@ -452,7 +452,9 @@
                 No. de análisis:</td>
             <td style="text-align: left; padding-left: 4px;">
                 {{ $folio1 }}
-                  {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : 'nadaaa' }}
+                  {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
+
+                  {{ $lote->lotesGranel }}
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 No. lote granel:</td>
