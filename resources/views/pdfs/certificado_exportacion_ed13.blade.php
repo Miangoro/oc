@@ -454,7 +454,7 @@
                 {{ $folio1 }}
                   {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
 
-                  {{ $lote->lotesGranel->lote_original_id }}
+                  {{ $lote->lotesGranel->first()->lote_original_id }}
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 No. lote granel:</td>
