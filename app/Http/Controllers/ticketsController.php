@@ -205,11 +205,12 @@ public function store(Request $request)
         }
 
         // Notificar a administradores
-        $admins = User::whereIn('id', [1, 3, 4, 7])->get();
+        $admins = User::where('id', [1])->get();
         $data = [
             'title' => 'Nuevo ticket registrado',
             'message' => "Folio: {$ticket->folio} — Asunto: {$ticket->asunto}",
-            'url' => route('tickets.show', $ticket->id_ticket),
+            'url' => route('tickets.ver', $ticket->id_ticket),
+
         ];
         foreach ($admins as $admin) {
             $admin->notify(new GeneralNotification($data));
