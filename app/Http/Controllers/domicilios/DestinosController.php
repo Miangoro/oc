@@ -58,115 +58,28 @@ public function index(Request $request)
             10 => 'celular_recibe',
         ];
 
-
-        /*if (auth()->user()->tipo == 3) {
-            $empresaId = auth()->user()->empresa?->id_empresa;
-        } else {
-            $empresaId = null;
-        }*/
         $empresaId = Auth::user()?->tipo == 3
         ? Auth::user()->empresa?->id_empresa
         : null;
-        
-        // Obtener el total de registros filtrados
-        $totalData = Destinos::whereHas('empresa', function ($query) use ($empresaId) {
-            $query->where('tipo', 2);
-            if ($empresaId) {
-                $query->where('id_empresa', $empresaId);
-            }
-        })->count();
 
-            $totalFiltered = $totalData;
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $orderColumnIndex = $request->input('order.0.column');
+        $orderDirection = $request->input('order.0.dir') ?? 'desc';
+        $orderColumn = $columns[$orderColumnIndex] ?? 'id_direccion';
+        $search = $request->input('search.value');
 
-            $limit = $request->input('length');
-            $start = $request->input('start');
-            $order = $columns[$request->input('order.0.column')];
-            $dir = $request->input('order.0.dir');
-
-            if (empty($request->input('search.value'))) {
-                $destinos = Destinos::with('empresa')
-                    ->whereHas('empresa', function ($query) use ($empresaId) {
-                       $query->where('tipo', 2);
-                        if ($empresaId) {
-                            $query->where('id_empresa', $empresaId);
-                        }
-
-                    })
-                    ->offset($start)
-                    ->limit($limit)
-                    ->orderBy($order, $dir)
-                    ->get();
-            } else {///SI NO ESTA VACIO
-                $search = $request->input('search.value');
-                $destinos = Destinos::with('empresa')
-                    ->whereHas('empresa', function ($query) use ($empresaId) {
-                        $query->where('tipo', 2);
-                        if ($empresaId) {
-                            $query->where('id_empresa', $empresaId);
-                        }
-                    })
-                    ->where(function ($query) use ($search) {
-                        $query->whereHas('empresa', function ($q) use ($search) {
-                            $q->where('razon_social', 'LIKE', "%{$search}%");
-                        })
-                            ->orWhere('direccion', 'LIKE', "%{$search}%")
-                            ->orWhere('destinatario', 'LIKE', "%{$search}%")
-                            //->orWhere('aduana', 'LIKE', "%{$search}%")
-                            ->orWhere('pais_destino', 'LIKE', "%{$search}%")
-                            ->orWhere('nombre_recibe', 'LIKE', "%{$search}%")
-                            ->orWhere('correo_recibe', 'LIKE', "%{$search}%")
-                            ->orWhere('celular_recibe', 'LIKE', "%{$search}%");
-                    })
-                    ->offset($start)
-                    ->limit($limit)
-                    ->orderBy($order, $dir)
-                    ->get();
-
-                $totalFiltered = Destinos::with('empresa')
-                    ->whereHas('empresa', function ($query) use ($empresaId) {
-                        $query->where('tipo', 2);
-                        if ($empresaId) {
-                            $query->where('id_empresa', $empresaId);
-                        }
-                    })
-                    ->where(function ($query) use ($search) {
-                        $query->whereHas('empresa', function ($q) use ($search) {
-                            $q->where('razon_social', 'LIKE', "%{$search}%");
-                        })
-                            ->orWhere('direccion', 'LIKE', "%{$search}%")
-                            ->orWhere('destinatario', 'LIKE', "%{$search}%")
-                            //->orWhere('aduana', 'LIKE', "%{$search}%")
-                            ->orWhere('pais_destino', 'LIKE', "%{$search}%")
-                            ->orWhere('nombre_recibe', 'LIKE', "%{$search}%")
-                            ->orWhere('correo_recibe', 'LIKE', "%{$search}%")
-                            ->orWhere('celular_recibe', 'LIKE', "%{$search}%");
-                    })
-                    ->count();
-            }
-/*
-            $limit = $request->input('length');
-            $start = $request->input('start');
-            $orderColumnIndex = $request->input('order.0.column');
-            $orderDirection = $request->input('order.0.dir') ?? 'desc';
-            $orderColumn = $columns[$orderColumnIndex] ?? 'id_direccion';
-            $search = $request->input('search.value');
-
-            ///CONSULTA QUERY BASE
-            $query = Destinos::with('empresa');
+        ///CONSULTA QUERY BASE
+        $query = Destinos::with('empresa');
 
         // Filtro empresa (propia + maquiladores)
         if ($empresaId) {
             $query->where('id_empresa', $empresaId);
         }
-        // Filtro por instalaciones (usuario tipo 3)
-        if (!empty($instalacionAuth)) {
-            $query->where('solicitudes.id_instalacion', $instalacionAuth);
-        }
         // Filtro especial para usuario 49
-        if (Auth::user() == 49) {
-            $query->where('direcciones.tipo_direccion', 1);
+        if (Auth::user()->id == 49) {
+            $query->where('tipo_direccion', 1);
         }
-
 
         $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
         $totalData = $baseQuery->count();// totalData (sin búsqueda)
@@ -196,53 +109,51 @@ public function index(Request $request)
             ->limit($limit)
             ->orderBy($orderColumn, $orderDirection)
             ->get();
-            */
+            
+
+        $data = [];
+        // Mapea los valores de tipo_direccion a texto
+        $tipoDireccionMap = [
+            1 => 'Exportación',
+            2 => 'Nacional',
+            3 => 'Hologramas'
+        ];
+
+        if (!empty($destinos)) {
+            $ids = $start;
+            foreach ($destinos as $destino) {
+                $nestedData['id_direccion'] = $destino->id_direccion;
+                $nestedData['fake_id'] = ++$ids;
+                $nestedData['tipo_direccion'] = $tipoDireccionMap[$destino->tipo_direccion] ?? 'Desconocido';
+
+                //$nestedData['id_empresa'] = $destino->empresa->razon_social;
+                $numeroCliente =
+                $destino->empresa->empresaNumClientes[0]->numero_cliente ??
+                $destino->empresa->empresaNumClientes[1]->numero_cliente ??
+                $destino->empresa->empresaNumClientes[2]->numero_cliente;
+                $razonSocial = $destino->empresa->razon_social;
+                $nestedData['id_empresa'] = '<b>' . $numeroCliente . '</b><br>' . $razonSocial;
+
+                $nestedData['direccion'] = $destino->direccion;
+                $nestedData['destinatario'] = $destino->destinatario ?? 'N/A';
+                $nestedData['aduana'] = $destino->aduana ?? 'N/A';
+                $nestedData['pais_destino'] = $destino->pais_destino ?? 'N/A';
+                $nestedData['nombre_recibe'] = $destino->nombre_recibe ?? 'N/A';
+                $nestedData['correo_recibe'] = $destino->correo_recibe ?? 'N/A';
+                $nestedData['celular_recibe'] = $destino->celular_recibe ?? 'N/A';
 
 
-
-            $data = [];
-            // Mapea los valores de tipo_direccion a texto
-            $tipoDireccionMap = [
-                1 => 'Exportación',
-                2 => 'Nacional',
-                3 => 'Hologramas'
-            ];
-
-            if (!empty($destinos)) {
-                $ids = $start;
-
-                foreach ($destinos as $destino) {
-                    $nestedData['id_direccion'] = $destino->id_direccion;
-                    $nestedData['fake_id'] = ++$ids;
-                    $nestedData['tipo_direccion'] = $tipoDireccionMap[$destino->tipo_direccion] ?? 'Desconocido';
-
-                    //$nestedData['id_empresa'] = $destino->empresa->razon_social;
-                    $numeroCliente =
-                    $destino->empresa->empresaNumClientes[0]->numero_cliente ??
-                    $destino->empresa->empresaNumClientes[1]->numero_cliente ??
-                    $destino->empresa->empresaNumClientes[2]->numero_cliente;
-                    $razonSocial = $destino->empresa->razon_social;
-                    $nestedData['id_empresa'] = '<b>' . $numeroCliente . '</b><br>' . $razonSocial;
-
-                    $nestedData['direccion'] = $destino->direccion;
-                    $nestedData['destinatario'] = $destino->destinatario ?? 'N/A';
-                    $nestedData['aduana'] = $destino->aduana ?? 'N/A';
-                    $nestedData['pais_destino'] = $destino->pais_destino ?? 'N/A';
-                    $nestedData['nombre_recibe'] = $destino->nombre_recibe ?? 'N/A';
-                    $nestedData['correo_recibe'] = $destino->correo_recibe ?? 'N/A';
-                    $nestedData['celular_recibe'] = $destino->celular_recibe ?? 'N/A';
-
-                    $data[] = $nestedData;
-                }
+                $data[] = $nestedData;
             }
+        }
 
-            return response()->json([
-                'draw' => intval($request->input('draw')),
-                'recordsTotal' => intval($totalData),
-                'recordsFiltered' => intval($totalFiltered),
-                'code' => 200,
-                'data' => $data,
-            ]);
+        return response()->json([
+            'draw' => intval($request->input('draw')),
+            'recordsTotal' => intval($totalData),
+            'recordsFiltered' => intval($totalFiltered),
+            'code' => 200,
+            'data' => $data,
+        ]);
 }
 
 
