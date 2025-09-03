@@ -275,7 +275,9 @@
                 &nbsp;&nbsp;4) No. de análisis de ajuste:
             </td>
             <td style="font-weight: bold; width: 30%;"> 
+                @if( $data->dictamen->inspeccione->solicitud->empresa->id_empresa == 105)
                   {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
+                  @endif
                {{ $folio2 }}
             </td>
             <td style="text-align: left;  width: 20%;" colspan="3">
