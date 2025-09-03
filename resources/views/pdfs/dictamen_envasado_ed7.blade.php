@@ -363,9 +363,9 @@
                         }
                     }
                 @endphp
-
+    @if($data->inspeccion->solicitud->empresa->id_empresa == 105)
                 {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
-
+        @endif
                 @if ($lotesGranel->isNotEmpty())
                     @foreach ($lotesGranel as $loteGranel)
                         {{ $loteGranel->folio_fq ?? 'N/A' }}
