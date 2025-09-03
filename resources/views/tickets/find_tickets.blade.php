@@ -62,13 +62,12 @@
         </div>
 
         <!-- Responsable -->
-        <div class="col-md-4">
+{{--         <div class="col-md-4">
             <label for="responsable" class="form-label">Responsable</label>
             <select id="responsable" class="form-select select2">
                 <option value="">Todos</option>
-                {{-- Itera los responsables aquí --}}
             </select>
-        </div>
+        </div> --}}
     </div>
         </div>
         <div class="card-datatable table-responsive ">
@@ -78,6 +77,7 @@
                         <th>#</th>
                         <th>Folio</th>
                         <th>Asunto</th>
+                        <th>Solicitante</th>
                         <th>Prioridad</th>
                         <th>Estado</th>
                         <th>Fecha</th>

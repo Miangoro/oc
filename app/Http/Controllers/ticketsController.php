@@ -73,6 +73,10 @@ class ticketsController extends Controller
 
    public function index(Request $request)
 {
+    $estado = $request->input('estado');
+    $prioridad = $request->input('prioridad');
+
+
     $search = $request->input('search.value');
     $limit = $request->input('length', 10);
     $start = $request->input('start', 0);
@@ -88,8 +92,21 @@ class ticketsController extends Controller
         5 => 'created_at',
     ];
 
-    $query = Ticket::query();
+    /* $query = Ticket::query(); */
+   /*  $query = Ticket::where('id_usuario', auth()->id()); */
+    if (auth()->id() == 1) {
+        $query = Ticket::query(); // Admin ve todos los tickets
+    } else {
+        $query = Ticket::where('id_usuario', auth()->id()); // Usuario normal solo los suyos
+    }
+        // Filtros adicionales
+        if (!empty($estado)) {
+            $query->where('estatus', $estado);
+        }
 
+        if (!empty($prioridad)) {
+            $query->where('prioridad', $prioridad);
+        }
     $totalData = $query->count();
     $totalFiltered = $totalData;
 
@@ -104,6 +121,14 @@ class ticketsController extends Controller
               ->orWhere('email', 'LIKE', "%{$search}%");
         });
 
+        // Filtros adicionales
+        if (!empty($estado)) {
+            $query->where('estatus', $estado);
+        }
+
+        if (!empty($prioridad)) {
+            $query->where('prioridad', $prioridad);
+        }
         $totalFiltered = $query->count();
     }
 
@@ -121,6 +146,7 @@ class ticketsController extends Controller
             'id_ticket' => $ticket->id_ticket,
             'folio' => $ticket->folio,
             'asunto' => $ticket->asunto,
+            'solicitante' => $ticket->usuario->name,
             'prioridad' => $ticket->prioridad,
             'estatus' => $ticket->estatus,
             'created_at' => $ticket->created_at->format('d/m/Y H:i'),
@@ -221,11 +247,12 @@ public function storeMensaje(Request $request, $ticketId)
     ]);
 
     $ticket = Ticket::findOrFail($ticketId);
-
+    $user = auth()->user();
+    $rol = ($user->puesto === 'Desarrollador') ? 'admin' : 'usuario';
     $mensaje = $ticket->mensajes()->create([
         'mensaje' => $request->mensaje,
-        'id_usuario' => auth()->id(),
-        'rol_emisor' => auth()->user()->role ?? 'usuario', // ajusta según tu sistema
+        'id_usuario' => $user->id,
+        'rol_emisor' => $rol,
     ]);
 
     // Devolver JSON para AJAX
@@ -251,22 +278,35 @@ public function storeMensaje(Request $request, $ticketId)
 
 
 
-    public function destroy($id_bitacora)
-    {
-        $bitacora = BitacoraMezcal::find($id_bitacora);
+public function destroy($id_ticket)
+{
+    $ticket = Ticket::with(['evidencias', 'mensajes'])->find($id_ticket);
 
-        if (!$bitacora) {
-            return response()->json([
-                'error' => 'Bitácora no encontrada.'
-            ], 404);
-        }
-
-        $bitacora->delete();
-
+    if (!$ticket) {
         return response()->json([
-            'success' => 'Bitácora eliminada correctamente.'
-        ]);
+            'error' => 'Ticket no encontrado.'
+        ], 404);
     }
+
+    // Eliminar archivos físicos
+    foreach ($ticket->evidencias as $evidencia) {
+        if ($evidencia->ruta && \Storage::exists($evidencia->ruta)) {
+            \Storage::delete($evidencia->ruta);
+        }
+    }
+
+    // Eliminar relaciones
+    $ticket->evidencias()->delete();
+    $ticket->mensajes()->delete();
+
+    // Eliminar ticket
+    $ticket->delete();
+
+    return response()->json([
+        'success' => 'Ticket eliminado correctamente.'
+    ]);
+}
+
 
 
 }

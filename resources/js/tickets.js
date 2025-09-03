@@ -36,19 +36,17 @@ $(function () {
       ajax: {
         url: baseUrl + 'tickets-list',
         data: function (d) {
-          /*           d.empresa = $('#filtroEmpresa').val();
-          d.instalacion = $('#filtroInstalacion').val(); */
           d.estado = $('#estado').val();
           d.prioridad = $('#prioridad').val();
-          d.responsable = $('#responsable').val();
         }
       },
       columns: [
         { data: 'fake_id' }, // 0 -> #
         { data: 'folio' }, // 1 -> Folio
         { data: 'asunto' }, // 2 -> Asunto
-        { data: 'prioridad' }, // 3 -> Prioridad
-        { data: 'estatus' }, // 4 -> Estado
+        { data: 'Solicitante' },// 3 solciitante
+        { data: 'prioridad' }, // 4 -> Prioridad
+        { data: 'estatus' }, // 5-> Estado
         { data: 'created_at' },
         { data: 'acciones' }
       ],
@@ -72,7 +70,17 @@ $(function () {
           }
         },
         {
-          targets: 4, // columna 'estatus'
+          searchable: false,
+          orderable: false,
+          targets: 3,
+          render: function (data, type, full) {
+            var $soli = full['solicitante'] ?? 'N/A';
+            return `<span>${$soli}</span>`;
+          }
+        },
+
+        {
+          targets: 5, // columna 'estatus'
           render: function (data, type, full, meta) {
             let status = (data || '').toLowerCase();
             let colorClass = 'secondary'; // color por defecto
@@ -87,7 +95,7 @@ $(function () {
 
         {
           // Actions
-          targets: 6,
+          targets: 7,
           title: 'Acciones',
           searchable: false,
           orderable: false,
@@ -100,7 +108,7 @@ $(function () {
               /* acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Ver Ticket</a>`; */
             }
             if (window.puedeEliminarElUsuario) {
-              acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar Ticket </a>`;
+              acciones += `<a data-id="${full['id_ticket']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar Ticket </a>`;
             }
 
             // Si hay acciones (bitácora NO firmada)
@@ -173,18 +181,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== ''
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -207,6 +215,7 @@ $(function () {
         $('#filtroEmpresa, #filtroInstalacion').on('change', function () {
           dt_user.ajax.reload();
         });
+
       }
     });
   }
@@ -273,6 +282,12 @@ $(function () {
 
     cargarInstalaciones();
     $('#filtroEmpresa').on('change', cargarInstalaciones);
+  });
+
+  // Actualizar la tabla al cambiar un filtro
+  $('#estado, #prioridad').on('change', function () {
+    /* $('#ticketsTable').DataTable().ajax.reload(); */
+    dt_user.ajax.reload();
   });
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
@@ -343,15 +358,13 @@ $(function () {
     }); */
   /*  */
   $(document).on('click', '.delete-record', function () {
-    var id_bitacora = $(this).data('id');
-    var dtrModal = $('.dtr-bs-modal.show');
+    var id_ticket = $(this).data('id'); // debe traer un número válido
 
-    // Ocultar modal responsivo en pantalla pequeña si está abierto
-    if (dtrModal.length) {
-      dtrModal.modal('hide');
+    if (!id_ticket) {
+      console.error("ID de ticket no encontrado en data-id");
+      return;
     }
 
-    // SweetAlert para confirmar la eliminación
     Swal.fire({
       title: '¿Está seguro?',
       text: 'No podrá revertir este evento',
@@ -366,10 +379,9 @@ $(function () {
       buttonsStyling: false
     }).then(function (result) {
       if (result.isConfirmed) {
-        // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}bitacoraMezcal-list/${id_bitacora}`,
+          url: `${baseUrl}tickets/${id_ticket}`, // aquí se envía el ID real
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -379,19 +391,19 @@ $(function () {
             Swal.fire({
               icon: 'success',
               title: '¡Eliminado!',
-              text: '¡La bitácora ha sido eliminada correctamente!',
+              text: '¡El ticket ha sido eliminado correctamente!',
               customClass: {
                 confirmButton: 'btn btn-success'
               }
             });
           },
           error: function (error) {
-            console.log(error);
+            console.error(error);
 
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: 'No se pudo eliminar la bitácora. Inténtalo de nuevo más tarde.',
+              text: 'No se pudo eliminar el ticket. Inténtalo de nuevo más tarde.',
               footer: `<pre>${error.responseText}</pre>`,
               customClass: {
                 confirmButton: 'btn btn-danger'
@@ -399,18 +411,11 @@ $(function () {
             });
           }
         });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: 'Cancelado',
-          text: 'La eliminación de la bitácora ha sido cancelada',
-          icon: 'info',
-          customClass: {
-            confirmButton: 'btn btn-primary'
-          }
-        });
       }
     });
   });
+
+
 
   $(function () {
     // Configuración de CSRF para Laravel

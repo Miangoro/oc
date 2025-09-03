@@ -1442,7 +1442,8 @@ Route::controller(ticketsController::class)->middleware(['auth'])->group(functio
     // Actualizar ticket
     Route::put('/{id}', [ticketsController::class, 'update'])->name('tickets.update');
     // Eliminar ticket
-    Route::delete('/{id}', [ticketsController::class, 'destroy'])->name('tickets.destroy');
+    Route::delete('/tickets/{id_ticket}', [ticketsController::class, 'destroy'])->name('tickets.destroy');
+
 });
 Route::resource('/tickets-list', ticketsController::class)->middleware(['auth']);
 

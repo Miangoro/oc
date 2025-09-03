@@ -41,13 +41,26 @@
         @endphp
 
         <div class="card mb-4 shadow-sm">
-            <div class="card-header bg-primary text-white mb-2">
+            {{-- <div class="card-header bg-primary text-white mb-2">
                 <h4 class="mb-0 text-white">Ticket: {{ $ticket->folio }} — {{ $ticket->asunto }}</h4>
+                <a href="{{ route('tickets') }}" class="btn btn-light btn-sm text-primary">
+                    Salir
+                </a>
+            </div> --}}
+
+            <div class="card-header bg-primary text-white mb-2 d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 text-white">Ticket: {{ $ticket->folio }} — {{ $ticket->asunto }}</h4>
+                <a href="{{ route('tickets-servicio') }}" class="btn btn-danger text-white">
+                    <i class="ri-logout-box-r-line me-1"></i> Regresar
+                </a>
+
             </div>
+
 
             <div class="card-body">
                 <p><strong>Solicitante:</strong> {{ $ticket->nombre }}</p>
                 <p><strong>Correo:</strong> {{ $ticket->email }}</p>
+                <p><strong>Asunto:</strong> {{ $ticket->asunto }}</p>
                 <p><strong>Prioridad:</strong> {{ ucfirst($ticket->prioridad) }}</p>
                 <p><strong>Descripción:</strong> {{ $ticket->descripcion }}</p>
                 <p><strong>Estatus:</strong>
@@ -105,10 +118,76 @@
         </div>
 
         {{-- Chat --}}
+        {{-- encabezado siempre mostrara el solicitante del ticket --}}
+        {{--             <div class="chat-history-header border-bottom">
+                <div class="d-flex justify-content-between align-items-center w-100">
+
+
+                    <div class="d-flex overflow-hidden align-items-center">
+                        <div class="flex-shrink-0 avatar avatar-online">
+                            <img src="{{ $ticket->usuario?->profile_photo_url ?? asset('assets/img/avatars/4.png') }}"
+                                alt="Avatar" class="rounded-circle">
+                        </div>
+                        <div class="chat-contact-info flex-grow-1 ms-3">
+                            <h6 class="m-0 fw-bold">{{ $ticket->usuario->name ?? $ticket->nombre }}</h6>
+                            <small class="user-status text-body">
+                                {{ $ticket->usuario?->puesto ?? 'Sin puesto' }}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="text-center flex-grow-1">
+                        <span class="fw-bold">Asunto:</span>
+                        <h5>{{ $ticket->asunto }}</h5>
+                    </div>
+
+                </div>
+              </div> --}}
+        @php
+            $yo = auth()->user();
+            $esAdmin = $yo->puesto === 'Desarrollador'; // o la condición que uses para admin
+
+            if ($esAdmin) {
+                // Soy admin → mostrar al solicitante
+                $destinatario = $ticket->usuario;
+            } else {
+                // Soy usuario → mostrar al admin
+                // Aquí puedes definir quién es el admin que atiende, por ejemplo el primero con puesto=Desarrollador
+                $destinatario = \App\Models\User::where('puesto', 'Desarrollador')->first();
+            }
+        @endphp
+
         <div class="app-chat card overflow-hidden p-2">
+
+            <div class="chat-history-header border-bottom p-3">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 avatar avatar-online">
+                            <img src="{{ $destinatario?->profile_photo_url ?? asset('assets/img/avatars/4.png') }}"
+                                alt="Avatar" class="rounded-circle">
+                        </div>
+                        <div class="chat-contact-info ms-3">
+                            <h6 class="m-0 fw-bold">{{ $destinatario?->name ?? 'Soporte' }}</h6>
+                            <small class="user-status text-body">
+                                {{ $destinatario?->puesto ?? 'Usuario' }}
+                            </small>
+                        </div>
+                    </div>
+
+                    {{-- Asunto --}}
+                    {{-- <div class="text-center flex-grow-1">
+                        <span class="fw-bold">Asunto:</span>
+                        <h5>{{ $ticket->asunto }}</h5>
+                    </div> --}}
+                </div>
+            </div>
+
+
+
+
             <div class="chat-history-wrapper">
                 {{-- Chat messages --}}
-                <div class="chat-history-body" id="chatContainer" style="height: 700px; overflow-y: auto;">
+                <div class="chat-history-body" id="chatContainer" style="height: 680px; overflow-y: auto;">
                     <ul class="list-unstyled chat-history p-3 m-0">
                         @foreach ($ticket->mensajes as $mensaje)
                             @php $isMine = $mensaje->id_usuario == auth()->id(); @endphp
@@ -125,7 +204,7 @@
                                     @endif
 
                                     {{-- Mensaje --}}
-                                    <div class="chat-message-wrapper flex-grow-1" style="max-width: 30%;">
+                                    <div class="chat-message-wrapper flex-grow-1" style="max-width: 20%;">
                                         <div
                                             class="chat-message-text p-2 rounded {{ $isMine ? 'bg-primary text-white' : 'bg-light text-dark' }}">
                                             <strong>{{ $mensaje->usuario->name ?? 'Desconocido' }}</strong>
@@ -157,11 +236,11 @@
                         <input type="text" class="form-control message-input me-4 shadow-none"
                             placeholder="Type your message here..." name="mensaje" id="nuevoMensaje">
                         <div class="message-actions d-flex align-items-center">
-                            <label for="attach-doc" class="form-label mb-0">
+                            {{-- <label for="attach-doc" class="form-label mb-0">
                                 <i
                                     class="ri-attachment-2 ri-20px cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill me-2 ms-1 text-heading"></i>
                                 <input type="file" id="attach-doc" hidden>
-                            </label>
+                            </label> --}}
                             <button type="submit" class="btn btn-primary d-flex send-msg-btn">
                                 <span class="align-middle">Enviar</span>
                                 <i class="ri-send-plane-line ri-16px ms-md-2 ms-0"></i>
@@ -199,7 +278,7 @@
                         const html = `
                         <li class="chat-message chat-message-right">
                             <div class="d-flex justify-content-end overflow-hidden">
-                                <div class="chat-message-wrapper flex-grow-1" style="max-width: 70%;">
+                                <div class="chat-message-wrapper flex-grow-1" style="max-width: 20%;">
                                     <div class="chat-message-text p-2 rounded bg-primary text-white">
                                         <strong>${res.mensaje.usuario.name}</strong>
                                         <p class="mb-0">${res.mensaje.mensaje}</p>
@@ -224,21 +303,21 @@
         });
 
 
-function actualizarColorSelect() {
-    const select = document.getElementById('selectEstatus');
-    const valor = select.value;
-    let color = '#6c757d'; // secondary por defecto
+        function actualizarColorSelect() {
+            const select = document.getElementById('selectEstatus');
+            const valor = select.value;
+            let color = '#6c757d'; // secondary por defecto
 
-    if(valor === 'pendiente') color = '#f0ad4e';
-    if(valor === 'abierto') color = '#28a745';
-    if(valor === 'cerrado') color = '#dc3545';
+            if (valor === 'pendiente') color = '#f0ad4e';
+            if (valor === 'abierto') color = '#28a745';
+            if (valor === 'cerrado') color = '#dc3545';
 
-    select.style.backgroundColor = color;
-    select.style.color = '#fff';
-}
+            select.style.backgroundColor = color;
+            select.style.color = '#fff';
+        }
 
-document.getElementById('selectEstatus').addEventListener('change', actualizarColorSelect);
-actualizarColorSelect(); // Inicializa con el color correcto
+        document.getElementById('selectEstatus').addEventListener('change', actualizarColorSelect);
+        actualizarColorSelect(); // Inicializa con el color correcto
 
         $('#btnActualizarEstatus').on('click', function() {
             let nuevoEstatus = $('#selectEstatus').val();

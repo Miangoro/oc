@@ -28,5 +28,28 @@ public function mensajes()
 }
 
 
+public function usuario()
+{
+    return $this->belongsTo(User::class, 'id_usuario', 'id');
+}
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($ticket) {
+            $ticket->evidencias()->each(function ($evidencia) {
+                if ($evidencia->ruta && \Storage::exists($evidencia->ruta)) {
+                    \Storage::delete($evidencia->ruta); // Borra archivo
+                }
+                $evidencia->delete();
+            });
+
+            $ticket->mensajes()->delete();
+        });
+    }
+
+
 
 }
