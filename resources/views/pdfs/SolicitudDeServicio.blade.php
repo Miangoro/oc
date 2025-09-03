@@ -641,7 +641,7 @@
 
                     
 
-                    @if( $datos->empresa == 105)
+                    @if( $datos->empresa->id_empresa == 105)
                     {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
                     @endif
 
