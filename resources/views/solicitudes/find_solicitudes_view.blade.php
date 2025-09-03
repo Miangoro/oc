@@ -159,6 +159,10 @@
           window.puedeEliminarSolicitud = @json(auth()->user()->can('Eliminar solicitudes'));
           window.puedeValidarSolicitud = @json(auth()->user()->can('Validar solicitudes'));
           window.puedeExportarSolicitud = @json(auth()->user()->can('Exportar solicitudes'));
+
+         // window.tipo_usuario = {{ $tipo_usuario }};
+
+          
     </script>
 
 
