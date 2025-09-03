@@ -1075,7 +1075,7 @@ Route::controller(BitacoraProcesoElaboracionController::class)->middleware(['aut
     Route::get('/bitacoraProcesoElaboracion', 'UserManagement')->name('bitacora-productor-elaboracion');
     Route::get('/bitacoraProcesoElabPDF/{id_bitacora}', 'PDFBitacoraProcesoElab');
     Route::get('bitacoraProcesoElab/{id_bitacora}/edit', 'edit');
-    Route::get('bitacoraProcesoElab-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
+    Route::delete('bitacoraProcesoElab-list/{id_bitacora}', 'destroy')->name('bitacora.delete');
     Route::post('/bitacoraProcesoElabStore', 'store')->name('bitacora.store');
     Route::post('/bitacoraProcesoElabUpdate/{id_bitacora}', 'update')->name('bitacoras.update');
     Route::post('/FirmaProcesoElab/{id_bitacora}', 'firmarBitacora')->name('bitacora.firmar');
