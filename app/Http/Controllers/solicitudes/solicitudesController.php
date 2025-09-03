@@ -962,8 +962,15 @@ public function registrarSolicitudGeoreferenciacion(Request $request)
         $solicitud->id_predio = $request->id_predio;
         $solicitud->info_adicional = $request->info_adicional;
 
-        // Guardar empresa destino (si viene del formulario)
-        //$solicitud->id_empresa_destino = $request->id_empresa_destino ?? $request->id_empresa;
+        //Manejo de empresa_destino de la solicitud
+        /*if ($request->filled('id_empresa_destino')) {
+            // Si viene en el request, se guarda (maquilador con destino)
+            $solicitud->id_empresa_destino = $request->id_empresa_destino;
+        } else {
+            // No maquilador → no aplica
+            $solicitud->id_empresa_destino = null;
+        }
+        */
 
         // Preparar el JSON para la columna `caracteristicas`
         $caracteristicas = [
@@ -975,6 +982,7 @@ public function registrarSolicitudGeoreferenciacion(Request $request)
 
         $solicitud->save();
 
+        ///Notificacion 
         $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
         $data1 = [
             'title' => 'Nuevo registro de solicitud',
