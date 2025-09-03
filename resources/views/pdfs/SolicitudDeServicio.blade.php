@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
+ @php
+                        use Illuminate\Support\Facades\Auth;
+                    @endphp
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -633,9 +635,7 @@
                         }
                     }
                 @endphp
-                @php
-                        use Illuminate\Support\Facades\Auth;
-                    @endphp
+               
                 @if($muestreo_granel != 'X')
                 {{-- {{ $lotesProcedencia->map(function($lote) {
                         return $lote->folio_fq;
