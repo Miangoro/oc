@@ -638,7 +638,7 @@
                         return $lote->folio_fq;
                     })->implode(', ') }}  --}}
 
-                    @if(Auth::user()->empresa?->id_empresa == 105)
+                    @if( \Auth::user()->empresa?->id_empresa == 105)
                     {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
                     @endif
 
