@@ -633,14 +633,15 @@
                         }
                     }
                 @endphp
+                @php
+                        use Illuminate\Support\Facades\Auth;
+                    @endphp
                 @if($muestreo_granel != 'X')
                 {{-- {{ $lotesProcedencia->map(function($lote) {
                         return $lote->folio_fq;
                     })->implode(', ') }}  --}}
 
-                    @php
-                        use Illuminate\Support\Facades\Auth;
-                    @endphp
+                    
 
                     @if( Auth::user()->empresa?->id_empresa == 105)
                     {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
