@@ -474,7 +474,9 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px">No.
                 de análisis ajuste:</td>
             <td style="text-align: left; padding-left: 4px;">
-                 {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
+                @if( $data->dictamen->inspeccione->solicitud->empresa->id_empresa == 105)
+                    {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
+                 @endif
                 {{ $folio2 }} &nbsp;
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
