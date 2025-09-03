@@ -14,7 +14,7 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerPredios2(this.value);" name="id_empresa"
+                                <select onchange="obtenerPredios2(this.value); " name="id_empresa"
                                     class="select2 form-select id_empresa" required id="id_empresa_georefere">
                                     <option selected disabled value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -26,9 +26,7 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-
-{{-- 
-obtenerDestinoEmpresa();
+{{-- obtenerDestinoEmpresa();
 <div class="col-md-4">
     <div class="form-floating form-floating-outline mb-6">
         <select id="id_empresa_destino" name="id_empresa_destino" class="select2 form-select" data-error-message="por favor selecciona la empresa">
@@ -36,10 +34,10 @@ obtenerDestinoEmpresa();
         </select>
         <label for="id_empresa_destino" class="form-label">Empresa destino</label>
     </div>
-</div> --}}
+</div>
+ --}}
 
-
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     name="fecha_solicitud" id="fecha_sol_geo" value="@php
@@ -48,7 +46,7 @@ obtenerDestinoEmpresa();
                                 <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     name="fecha_visita" id="fecha_visita_geo" />
@@ -159,8 +157,8 @@ obtenerDestinoEmpresa();
 
 
 
-///NUEVA FUNCION
 /*
+///NUEVA FUNCION
 function obtenerDestinoEmpresa() {
     var empresa = $("#id_empresa_georefere").val();
     if (!empresa) return;

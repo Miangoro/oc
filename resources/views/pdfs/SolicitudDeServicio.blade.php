@@ -641,9 +641,9 @@
 
                     
 
-                    
+                    @if( $datos->empresa->id_empresa == 105)
                     {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
-                  
+                    @endif
 
                     {{ $datos->lote_granel->folio_fq ?? '---------------' }}
                 @else --------------- @endif

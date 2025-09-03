@@ -3113,6 +3113,8 @@ if (puedeEditarSolicitud && diffDias <= 1) {
     });
   });
 
+
+///REGISTRAR SOLICITUD GEORREFERENCIACION
   $(function () {
     $.ajaxSetup({
       headers: {
@@ -3214,7 +3216,9 @@ if (puedeEditarSolicitud && diffDias <= 1) {
         fv2.revalidateField($(this).attr('name'));
       }
     );
-  });
+});
+
+
 
   //new
   $(document).on('click', '.edit-record', function () {

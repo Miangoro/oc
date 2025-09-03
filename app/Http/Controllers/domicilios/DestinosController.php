@@ -11,6 +11,8 @@ use App\Notifications\GeneralNotification;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Auth;//Permisos de empresa
+
 
 class DestinosController extends Controller
 {
@@ -19,8 +21,10 @@ class DestinosController extends Controller
     {
         $empresaId = null;
 
-        if (auth()->user()->tipo == 3) {
-            $empresaId = auth()->user()->empresa?->id_empresa;
+        //if (auth()->user()->tipo == 3) {
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            //$empresaId = auth()->user()->empresa?->id_empresa;
+            $empresaId = Auth::user()->empresa?->id_empresa;
         }
         $destinosQuery = Destinos::with('empresa');
         if ($empresaId) {
@@ -38,36 +42,39 @@ class DestinosController extends Controller
         ]);
     }
 
-        public function index(Request $request)
-        {
-            $columns = [
-                1 => 'id_direccion',
-                2 => 'tipo_direccion',
-                3 => 'id_empresa',
-                4 => 'direccion',
-                5 => 'destinatario',
-                //6 => 'aduana',
-                7 => 'pais_destino',
-                8 => 'nombre_recibe',
-                9 => 'correo_recibe',
-                10 => 'celular_recibe',
-            ];
 
-            $search = [];
+public function index(Request $request)
+{
+        $columns = [
+            1 => 'id_direccion',
+            2 => 'tipo_direccion',
+            3 => 'id_empresa',
+            4 => 'direccion',
+            5 => 'destinatario',
+            //6 => 'aduana',
+            7 => 'pais_destino',
+            8 => 'nombre_recibe',
+            9 => 'correo_recibe',
+            10 => 'celular_recibe',
+        ];
 
-        if (auth()->user()->tipo == 3) {
+
+        /*if (auth()->user()->tipo == 3) {
             $empresaId = auth()->user()->empresa?->id_empresa;
         } else {
             $empresaId = null;
-        }
-
-            // Obtener el total de registros filtrados
-            $totalData = Destinos::whereHas('empresa', function ($query) use ($empresaId) {
-                $query->where('tipo', 2);
-                if ($empresaId) {
-                    $query->where('id_empresa', $empresaId);
-                }
-            })->count();
+        }*/
+        $empresaId = Auth::user()?->tipo == 3
+        ? Auth::user()->empresa?->id_empresa
+        : null;
+        
+        // Obtener el total de registros filtrados
+        $totalData = Destinos::whereHas('empresa', function ($query) use ($empresaId) {
+            $query->where('tipo', 2);
+            if ($empresaId) {
+                $query->where('id_empresa', $empresaId);
+            }
+        })->count();
 
             $totalFiltered = $totalData;
 
@@ -89,7 +96,7 @@ class DestinosController extends Controller
                     ->limit($limit)
                     ->orderBy($order, $dir)
                     ->get();
-            } else {
+            } else {///SI NO ESTA VACIO
                 $search = $request->input('search.value');
                 $destinos = Destinos::with('empresa')
                     ->whereHas('empresa', function ($query) use ($empresaId) {
@@ -136,9 +143,64 @@ class DestinosController extends Controller
                     })
                     ->count();
             }
+/*
+            $limit = $request->input('length');
+            $start = $request->input('start');
+            $orderColumnIndex = $request->input('order.0.column');
+            $orderDirection = $request->input('order.0.dir') ?? 'desc';
+            $orderColumn = $columns[$orderColumnIndex] ?? 'id_direccion';
+            $search = $request->input('search.value');
+
+            ///CONSULTA QUERY BASE
+            $query = Destinos::with('empresa');
+
+        // Filtro empresa (propia + maquiladores)
+        if ($empresaId) {
+            $query->where('id_empresa', $empresaId);
+        }
+        // Filtro por instalaciones (usuario tipo 3)
+        if (!empty($instalacionAuth)) {
+            $query->where('solicitudes.id_instalacion', $instalacionAuth);
+        }
+        // Filtro especial para usuario 49
+        if (Auth::user() == 49) {
+            $query->where('direcciones.tipo_direccion', 1);
+        }
+
+
+        $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
+        $totalData = $baseQuery->count();// totalData (sin búsqueda)
+
+
+        // Búsqueda global
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('direccion', 'LIKE', "%{$search}%")
+                    ->orWhere('destinatario', 'LIKE', "%{$search}%")
+                    ->orWhere('aduana', 'LIKE', "%{$search}%")
+                    ->orWhere('pais_destino', 'LIKE', "%{$search}%")
+                    ->orWhere('nombre_recibe', 'LIKE', "%{$search}%")
+                    ->orWhere('correo_recibe', 'LIKE', "%{$search}%")
+                    ->orWhere('celular_recibe', 'LIKE', "%{$search}%")
+                    ->orWhereHas('empresa', fn($q) => $q->where('razon_social', 'LIKE', "%{$search}%"));
+            });
+
+            $totalFiltered = $query->count();
+        } else {
+            $totalFiltered = $totalData;
+        }
+
+
+        $destinos = $query
+            ->offset($start)
+            ->limit($limit)
+            ->orderBy($orderColumn, $orderDirection)
+            ->get();
+            */
+
+
 
             $data = [];
-
             // Mapea los valores de tipo_direccion a texto
             $tipoDireccionMap = [
                 1 => 'Exportación',
@@ -181,7 +243,8 @@ class DestinosController extends Controller
                 'code' => 200,
                 'data' => $data,
             ]);
-        }
+}
+
 
 
             // Función para eliminar un predio
