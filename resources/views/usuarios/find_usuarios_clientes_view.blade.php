@@ -144,6 +144,7 @@
                         <th>Persona de contacto</th>
                         <th>Rol</th>
                         <th>Carta de asignación</th>
+                        <th>Estatus</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -175,10 +176,19 @@
                             name="telefono" />
                         <label for="">Teléfono</label>
                     </div>
+                    <div id="statusDnone" class="d-none">
+                        <div class="form-floating form-floating-outline mb-5">
+                            <select id="add-estatus" class="form-select" name="estatus" aria-label="Estatus">
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
+                            </select>
+                            <label for="add-estatus">Estatus</label>
+                        </div>
+                    </div>
 
                     <div class="form-floating form-floating-outline mb-5">
-                        <select name="id_empresa" id="id_empresa" onchange="instalaciones();" class="select2 form-select"
-                            data-placeholder="Seleccione el cliente">
+                        <select name="id_empresa" id="id_empresa" onchange="instalaciones();"
+                            class="select2 form-select" data-placeholder="Seleccione el cliente">
                             <option value="" disabled selected>NULL</option>
                             @foreach ($empresas as $empresa)
                                 <option value="{{ $empresa->id_empresa }}">
@@ -199,8 +209,8 @@
                     </div>
 
                     <div class="form-floating form-floating-outline mb-5 select2-primary">
-                        <select id="id_instalacion" name="id_instalacion[]" multiple
-                        class="select2 form-select" data-placeholder="Seleccione la instalacion">
+                        <select id="id_instalacion" name="id_instalacion[]" multiple class="select2 form-select"
+                            data-placeholder="Seleccione la instalacion">
                             {{-- <option value="0">No asignar instalacion</option> --}}
                         </select>
                         <label>Asignar instalacion especifica</label>
@@ -242,52 +252,51 @@
     </div>
 
 
-<script>
-function instalaciones() {
-    let empresaId = $('#id_empresa').val();
-    if (!empresaId) return;
+    <script>
+        function instalaciones() {
+            let empresaId = $('#id_empresa').val();
+            if (!empresaId) return;
 
-    $.ajax({
-        url: '/getDatos/' + empresaId, // ruta que llama a tu método getDatos
-        method: 'GET',
-        success: function(response) {
-            let $select = $('#id_instalacion');
-            $select.empty(); // limpiar opciones anteriores
+            $.ajax({
+                url: '/getDatos/' + empresaId, // ruta que llama a tu método getDatos
+                method: 'GET',
+                success: function(response) {
+                    let $select = $('#id_instalacion');
+                    $select.empty(); // limpiar opciones anteriores
 
-            let contenido = '';
+                    let contenido = '';
 
-            if (response.instalacionesConMaqui && response.instalacionesConMaqui.length > 0) {
-                response.instalacionesConMaqui.forEach(function(instalacion) {
-                    let tipoLimpio = limpiarTipo(instalacion.tipo); // función para limpiar el tipo
-                    contenido += '<option value="' + instalacion.id_instalacion + '">' +
-                                 tipoLimpio + ' | ' + instalacion.direccion_completa +
-                                 '</option>';
-                });
-            } else {
-                contenido += '<option value="">Sin instalaciones registradas</option>';
-            }
+                    if (response.instalacionesConMaqui && response.instalacionesConMaqui.length > 0) {
+                        response.instalacionesConMaqui.forEach(function(instalacion) {
+                            let tipoLimpio = limpiarTipo(instalacion
+                            .tipo); // función para limpiar el tipo
+                            contenido += '<option value="' + instalacion.id_instalacion + '">' +
+                                tipoLimpio + ' | ' + instalacion.direccion_completa +
+                                '</option>';
+                        });
+                    } else {
+                        contenido += '<option value="">Sin instalaciones registradas</option>';
+                    }
 
-            $select.html(contenido);
-            $select.trigger('change'); // actualizar select2
+                    $select.html(contenido);
+                    $select.trigger('change'); // actualizar select2
 
-        },
-        error: function() {
-            console.error('Error al obtener instalaciones');
+                },
+                error: function() {
+                    console.error('Error al obtener instalaciones');
+                }
+            });
         }
-    });
-}
 
-// Función para limpiar el tipo si es JSON
-function limpiarTipo(tipo) {
-    try {
-        return JSON.parse(tipo).join(', ');
-    } catch (e) {
-        return tipo;
-    }
-}
-
-
-</script>
+        // Función para limpiar el tipo si es JSON
+        function limpiarTipo(tipo) {
+            try {
+                return JSON.parse(tipo).join(', ');
+            } catch (e) {
+                return tipo;
+            }
+        }
+    </script>
     <!-- Modal -->
     @include('_partials/_modals/modal-pdfs-frames')
     <!-- /Modal -->

@@ -92,7 +92,16 @@ $(function () {
         { data: 'contacto' },
         { data: 'rol' },
         { data: 'id' },
-
+        {
+          data: 'estatus',
+          render: function (data, type, row) {
+            if (data === 'Inactivo' || !data) {
+              return `<span class="badge rounded-pill badge text-bg-danger">${data}</span>`;
+            } else {
+              return `<span class="badge rounded-pill badge text-bg-success">${data}</span>`;
+            }
+          }
+        },
         { data: 'action' }
       ],
       columnDefs: [
@@ -207,7 +216,7 @@ $(function () {
         },
         {
           // Actions
-          targets: 11,
+          targets: 12,
           title: 'Acciones',
           searchable: false,
           orderable: false,
@@ -389,7 +398,7 @@ $(function () {
   $(document).on('click', '.edit-record', function () {
     var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
-
+    $('#statusDnone').removeClass('d-none');
     // hide responsive modal in small screen
     if (dtrModal.length) {
       dtrModal.modal('hide');
@@ -407,6 +416,7 @@ $(function () {
       $('#add-user-tel').val(data.telefono);
       //$('#id_empresa').val(data.id_empresa).prop('selected', true).change();
       $('#id_empresa').val(data.id_empresa).trigger('change');
+      $('#add-estatus').val(data.estatus).change();
       $('#id_contacto').val(data.id_contacto).trigger('change');
       $('#rol_id').val(data.roles[0].name).prop('selected', true).change();
 
@@ -427,6 +437,8 @@ $(function () {
     $('#user_id').val(''); //reseting input field
     $('#offcanvasAddUserLabel').html('Agregar usuario');
     $('#registrar-editar').html('Registrar');
+    $('#add-estatus').val('Activo').change();
+    $('#statusDnone').addClass('d-none');
   });
 
   // validating form and updating user's data

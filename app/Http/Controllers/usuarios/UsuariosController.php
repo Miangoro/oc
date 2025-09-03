@@ -170,13 +170,15 @@ class UsuariosController extends Controller
       foreach ($users as $user) {
         $instalacionesTexto = 'Sin instalación';
         if (!empty($user->id_instalacion) && is_array($user->id_instalacion)) {
-            $instalaciones = instalaciones::whereIn('id_instalacion', $user->id_instalacion)
-                ->pluck('direccion_completa')
-                ->toArray();
-            if (count($instalaciones)) {
-                // Separar con salto de línea HTML
-                $instalacionesTexto = implode('<br>', $instalaciones);
-            }
+          $instalaciones = instalaciones::whereIn('id_instalacion', $user->id_instalacion)->get();
+$instalacionesTexto = '<table class="table table-sm mb-0">';
+foreach ($instalaciones as $inst) {
+    $instalacionesTexto .= "<tr>
+        <td>{$inst->direccion_completa}</td>
+    </tr>";
+}
+$instalacionesTexto .= '</table>';
+
         }
 
         $nestedData['instalacionesTexto'] = $instalacionesTexto;
@@ -194,6 +196,7 @@ class UsuariosController extends Controller
               ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
           : 'N/A';
         $nestedData['numero_cliente'] = $numero_cliente;
+         $nestedData['estatus'] = $user->estatus;
         $nestedData['razon_social'] = $user->empresa->razon_social ;
 
         $data[] = $nestedData;
@@ -246,6 +249,7 @@ class UsuariosController extends Controller
           ['name' => $request->name, 'email' => $request->email,
           'telefono' => $request->telefono, 'id_contacto' => $request->id_contacto,
           'id_empresa' => $request->id_empresa,
+          'estatus' => $request->estatus,
           'id_instalacion' => $request->id_instalacion, ]
         );
         $users->syncRoles($request->rol_id);
@@ -262,6 +266,7 @@ class UsuariosController extends Controller
             ['id' => $userID],
             ['name' => $request->name, 'email' => $request->email,
             'telefono' => $request->telefono, 'id_contacto' => $request->id_contacto,
+            'estatus' => $request->estatus,
             'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa,'tipo'=>3,
             'id_instalacion' => $request->id_instalacion, ]
           );
