@@ -477,7 +477,8 @@ if (dt_user_table.length) {
 
 
 ///AGREGAR NUEVO REGISTRO
-const fv = FormValidation.formValidation(FormAgregar, {
+const formAdd = document.getElementById('FormAgregar');
+const fv = FormValidation.formValidation(formAdd, {
     fields: {
       id_solicitud: {
         validators: {
@@ -535,7 +536,8 @@ const fv = FormValidation.formValidation(FormAgregar, {
     }
 }).on('core.form.valid', function (e) {
 
-    var formData = new FormData(FormAgregar);
+  //enviar el formulario cuando pase la validación
+  var formData = new FormData(formAdd);
     $.ajax({
       url: '/crear',
       type: 'POST',
@@ -546,8 +548,10 @@ const fv = FormValidation.formValidation(FormAgregar, {
         console.log('Correcto:', response);
         $('#ModalAgregar').modal('hide');//modal
         $('#FormAgregar')[0].reset();//formulario
+        $('.select2').val(null).trigger('change'); //Reset del select2
 
         // Actualizar la tabla sin reinicializar DataTables
+        //dataTable.ajax.reload();
         dataTable.ajax.reload();
         // Mostrar alerta de éxito
         Swal.fire({
@@ -560,7 +564,7 @@ const fv = FormValidation.formValidation(FormAgregar, {
         });
       },
       error: function (xhr) {
-        console.log('Error:', xhr);
+        console.log('Error:', xhr.responseJSON);
         console.log('Error2:', xhr.responseText);
         // Mostrar alerta de error
         Swal.fire({

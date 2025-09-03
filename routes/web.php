@@ -1369,7 +1369,7 @@ Route::controller(Certificado_InstalacionesController::class)->group(function ()
 Route::middleware(['auth'])->controller(Certificado_NacionalController::class)->group(function () {
     Route::get('certificados/venta_nacional', 'UserManagement')->name('certificados-nacional');
     Route::resource('CerVentaNacional-list', Certificado_NacionalController::class);
-    Route::post('crear', 'store')->name('registrar-cer-nac');
+    Route::post('/crear', 'store')->name('registrar-cer-nac');
     Route::delete('eliminar/{id_certificado}',  'destroy')->name('eliminar-cer-nac');
     Route::get('editar/{id_certificado}/edit', 'edit')->name('obtener-cer-nac');
     Route::put('actualizar/{id_certificado}', 'update')->name('actualizar-cer-nac');

@@ -10,7 +10,7 @@
             <div class="modal-body p-8">
                 <form id="addEmisionCetificadoVentaNacionalForm">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="id_empresa_solicitud_emision_venta" onchange="obtenerDictamenesEnvasados();"
                                     name="id_empresa" class="select2 form-select">
@@ -24,9 +24,16 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
-
-
-                        <div class="col-md-6">
+                        <div class="col-md-3">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    name="fecha_solicitud" id="fecha_sol_geo" value="@php
+                                      echo date('Y-m-d H:i');
+                                    @endphp">
+                                <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="id_dictamen_envasado" name="id_dictamen_envasado" class="select2 form-select"
                                     onchange="obtenerDatosDictamenesEnvasados();">

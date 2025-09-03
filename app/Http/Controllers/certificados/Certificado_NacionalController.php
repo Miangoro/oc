@@ -31,6 +31,7 @@ class Certificado_NacionalController extends Controller
             ->orderBy('id_certificado', 'desc')
             ->get();
         $solicitud = solicitudesModel::where('id_tipo',13)
+            ->where('habilitado',1)
             ->orderBy('id_solicitud', 'desc')
             ->get();
         $users = User::where('tipo', 1)//Solo Personal OC
@@ -262,8 +263,6 @@ public function index(Request $request)
 ///FUNCION REGISTRAR
 public function store(Request $request)
 {
-    try {
-
     $validated = $request->validate([
         'id_solicitud' => 'required|exists:solicitudes,id_solicitud',
         'num_certificado' => 'required|string|max:40',
@@ -273,10 +272,10 @@ public function store(Request $request)
     ]);
 
     // Cargar solicitud con relaciones encadenadas
-    $solicitud = solicitudesModel::with('lote_envasado.dictamenEnvasado')->findOrFail($validated['id_solicitud']);
+    $solicitud = solicitudesModel::findOrFail($validated['id_solicitud']);
 
     // Obtener el dictamen directamente
-    $dictamen = $solicitud->lote_envasado->dictamenEnvasado;
+    $dictamen = $solicitud->lote_envasado->dictamenEnvasado ?? null;
     if (!$dictamen) {
         return response()->json(['error' => 'No se encontró dictamen para el lote envasado.'], 404);
     }
@@ -292,10 +291,7 @@ public function store(Request $request)
     $new->id_firmante = $validated['id_firmante'];
     $new->save();
 
-        return response()->json(['message' => 'Registrado correctamente.']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al registrar.'. $e], 500);
-    }
+    return response()->json(['message' => 'Registrado correctamente.']);
 }
 
 
@@ -356,8 +352,8 @@ public function update(Request $request, $id_certificado)
         $actualizar = Certificado_Nacional::findOrFail($id_certificado);
 
         // Obtener dictamen a partir de id_solicitud
-        $solicitud = solicitudesModel::with('lote_envasado.dictamenEnvasado')->findOrFail($request['id_solicitud']);
-        $dictamen = $solicitud->lote_envasado->dictamenEnvasado;
+        $solicitud = solicitudesModel::findOrFail($request['id_solicitud']);
+        $dictamen = $solicitud->lote_envasado->dictamenEnvasado ?? null;
 
         if (!$dictamen) {
             return response()->json(['error' => 'No se encontró dictamen para el lote envasado.'], 404);

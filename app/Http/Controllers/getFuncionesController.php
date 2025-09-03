@@ -173,6 +173,7 @@ class getFuncionesController extends Controller
             ->whereHas('lote_envasado', function ($query) use ($id_empresa) {
                 $query->where('id_empresa', $id_empresa);
             })
+            ->orderBy('id_dictamen_envasado', 'desc')
             ->get();
 
         $formateados = $dictamenes->map(function ($d) {

@@ -18,7 +18,7 @@
                                     <option value="" disabled selected>NULL</option>
                                     @foreach ($solicitud as $soli)
                                         <option value="{{ $soli->id_solicitud }}">
-                                            {{ $soli->folio }} | {{ $soli->lote_envasado->nombre }}</option>
+                                            {{ $soli->folio }} | {{ $soli->lote_envasado->dictamenEnvasado->num_dictamen }} | Lote: {{ $soli->lote_envasado->nombre }}</option>
                                     @endforeach
                                 </select>
                                 <label for="">Folio de solicitud</label>
