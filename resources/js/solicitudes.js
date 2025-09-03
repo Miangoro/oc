@@ -444,7 +444,8 @@ const ahora = new Date();
       const diffDias = (ahora - fechaInspeccion) / (1000 * 60 * 60 * 24);
 
 
-if (puedeEditarSolicitud && diffDias <= 1) {
+        //if (puedeEditarSolicitud && diffDias <= 1) {
+        if(puedeEditarSolicitud) {
             dropdown += `
                   <a
                     data-id="${full['id']}"
