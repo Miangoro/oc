@@ -64,41 +64,6 @@
                         </div>
                     </div>
 
-                    {{-- <div class="row">
-                        <div class="col-md-12">
-                            <select class="form-select select2" multiple name="id_activacion[]"
-                                data-placeholder="Selecciona un holograma">
-                                @foreach ($hologramas as $hol)
-                                    @php
-                                        // Decodificar el campo JSON
-                                        $folios = is_string($hol->folios)
-                                            ? json_decode($hol->folios, true)
-                                            : $hol->folios;
-
-                                        $iniciales = $folios['folio_inicial'] ?? [];
-                                        $finales = $folios['folio_final'] ?? [];
-                                    @endphp
-
-                                    @for ($i = 0; $i < count($iniciales); $i++)
-                                        @php
-                                            $inicio = $iniciales[$i] ?? null;
-                                            $fin = $finales[$i] ?? null;
-                                        @endphp
-
-                                        @if ($inicio && $fin)
-                                            <option value="{{ $hol->id }}">
-                                                {{ $hol->folio_activacion }} ({{ $inicio }} a {{ $fin }})
-                                            </option>
-                                        @endif
-                                    @endfor
-                                @endforeach
-
-                            </select>
-                        </div>
-                    </div> --}}
-
-
-
 
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
@@ -134,7 +99,7 @@
                                 <select class="form-select select2" name="id_solicitud" id="edit_id_solicitud">
                                     @foreach ($solicitud as $soli)
                                         <option value="{{ $soli->id_solicitud }}">
-                                            {{ $soli->folio }} | {{ $soli->lote_envasado->nombre }}</option>
+                                            {{ $soli->folio }} | {{ $soli->lote_envasado->dictamenEnvasado->num_dictamen }} | Lote: {{ $soli->lote_envasado->nombre }}</option>
                                     @endforeach
                                 </select>
                                 <label for="">Folio de solicitud</label>
