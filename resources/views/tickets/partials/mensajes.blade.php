@@ -252,9 +252,11 @@
 
 
                                                 @if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif']))
-                                                    {{-- Imagen --}}
-                                                    <img src="{{ asset('storage/' . $mensaje->archivo) }}"
-                                                        class="img-fluid rounded mt-1" style="max-width:300px;">
+                                                    {{-- Imagen con enlace --}}
+                                                    <a href="{{ asset('storage/' . $mensaje->archivo) }}" target="_blank">
+                                                        <img src="{{ asset('storage/' . $mensaje->archivo) }}"
+                                                            class="img-fluid rounded mt-1" style="max-width:300px;">
+                                                    </a>
                                                 @else
                                                     {{-- Otros archivos --}}
                                                     <div class="file-attachment mt-1 p-2 {{-- border --}} rounded bg-label-primary{{-- secondary --}} text-center"
@@ -262,7 +264,8 @@
                                                         <a href="{{ asset('storage/' . $mensaje->archivo) }}"
                                                             target="_blank" class="d-flex text-decoration-none">
                                                             <i class="{{ $icon }}" style="font-size:40px;"></i>
-                                                            <div class="small {{-- text-white --}} text-truncate">{{ $fileName }}</div>
+                                                            <div class="small {{-- text-white --}} text-truncate">
+                                                                {{ $fileName }}</div>
                                                             <div class="text-muted small">.{{ $ext }}
                                                                 {{ $fileSize }}</div>
                                                         </a>
@@ -377,12 +380,13 @@
                     success: function(res) {
                         if (res.success) {
                             // Nombre siempre arriba
-                            const nombreHtml = `<strong class="d-block mb-1">${res.mensaje.usuario.name}</strong>`;
+                            const nombreHtml =
+                                `<strong class="d-block mb-1">${res.mensaje.usuario.name}</strong>`;
 
                             // Mensaje de texto (solo si existe)
-                            const mensajeHtml = res.mensaje.mensaje
-                                ? `<p class="mb-1">${res.mensaje.mensaje}</p>`
-                                : '';
+                            const mensajeHtml = res.mensaje.mensaje ?
+                                `<p class="mb-1">${res.mensaje.mensaje}</p>` :
+                                '';
 
                             // Archivo adjunto (imagen o enlace con detalles)
                             let archivoHtml = '';
@@ -399,11 +403,14 @@
                                     // ícono según extensión
                                     let icon = 'ri-file-line text-secondary';
                                     if (ext === 'pdf') icon = 'ri-file-pdf-2-line text-danger';
-                                    else if (['doc','docx'].includes(ext)) icon = 'ri-file-word-line text-primary';
-                                    else if (['xls','xlsx'].includes(ext)) icon = 'ri-file-excel-line text-success';
-                                    else if (['ppt','pptx'].includes(ext)) icon = 'ri-file-ppt-line text-warning';
+                                    else if (['doc', 'docx'].includes(ext)) icon =
+                                        'ri-file-word-line text-primary';
+                                    else if (['xls', 'xlsx'].includes(ext)) icon =
+                                        'ri-file-excel-line text-success';
+                                    else if (['ppt', 'pptx'].includes(ext)) icon =
+                                        'ri-file-ppt-line text-warning';
 
-                                   archivoHtml = `
+                                    archivoHtml = `
                                     <div class="file-attachment mt-1 p-2 rounded bg-label-primary text-center" style="max-width:300px;">
                                       <a href="/storage/${res.mensaje.archivo}" target="_blank"
                                         class="d-flex align-items-center gap-2 text-decoration-none overflow-hidden">
