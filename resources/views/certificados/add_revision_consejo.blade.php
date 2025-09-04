@@ -593,7 +593,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
     @foreach($lotesProcedencia as $lote)
         @php
             $documentos = \App\Models\Documentacion_url::where('id_relacion', $lote->id_lote_granel)
-                ->where('id_documento', 134)
+                ->where('id_documento', [58, 134])
                 ->get();
         @endphp
 
