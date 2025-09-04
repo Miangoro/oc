@@ -527,9 +527,24 @@
                 }
             }
             @endphp
-                @if( $datos->certificado->dictamen->inspeccione->solicitud->id_empresa == 105)
-                    {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
-                @endif
+@if( $datos->certificado->dictamen->inspeccione->solicitud->id_empresa == 105)
+    {{-- Mostramos folios --}}
+    {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
+    {{-- Mostramos documentos asociados --}}
+    @foreach($lotesProcedencia as $lote)
+        @php
+            $documentos = \App\Models\Documentacion_url::where('id_relacion', $lote->id_lote_granel)
+                ->where('id_documento', 134)
+                ->get();
+        @endphp
+
+        @foreach($documentos as $doc)
+            <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc->url }}">
+                <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+            </a>
+        @endforeach
+    @endforeach
+@endif
                                                 {{ $segundoFolio }}
                                             @else
                                                 <i class="text-muted">N/A</i>
