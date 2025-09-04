@@ -111,7 +111,7 @@
         margin-left: auto;
 
     } */
-/*     .segunda {
+    /*     .segunda {
         width: 50%;
         float: left;
         border-collapse: collapse;
@@ -128,7 +128,8 @@
         display: table;
         clear: both;
     }
-   /*  .contenedor-tablas {
+
+    /*  .contenedor-tablas {
         display: flex;
         vertical-align: top;
     }
@@ -245,10 +246,11 @@
         {{-- Logo OC (comentado) --}}
         <div style="width: 25%; float: right; text-align: right;">
             {{-- <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo OC" style="height: 100px; width:auto;"> --}}
-              {{--  <p class="num">NÚM. TAPADA: {{ $bitacora->numero_tapada ?? '____________' }}</p> --}}
-              <p class="num">
+            {{--  <p class="num">NÚM. TAPADA: {{ $bitacora->numero_tapada ?? '____________' }}</p> --}}
+            <p class="num">
                 NÚM. TAPADA:
-                <span style="
+                <span
+                    style="
                     font-family: 'calibri-bold';
                     display: inline-block;
                     font-size: 20px;
@@ -338,7 +340,7 @@
             </tr> --}}
         </tbody>
     </table>
-<p class="inspector" style="font-family: 'calibri';">
+    <p class="inspector" style="font-family: 'calibri';">
         NOMBRE Y FIRMA DEL INSPECTOR&nbsp;&nbsp;
 
         @if ($userEntradaMaguey && $userEntradaMaguey->firma)
@@ -349,7 +351,8 @@
 
             @if (!empty($firma) && file_exists($rutaFirma))
                 <span style="display: inline-block; text-align: center; min-width: 150px;">
-                    <img src="{{ $rutaFirma }}" alt="Firma" style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
+                    <img src="{{ $rutaFirma }}" alt="Firma"
+                        style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
                     <br>
                     <span
                         style="border-bottom: 1.2px solid #000; display: inline-block; min-width: 405px; margin-top:18px;">
@@ -427,7 +430,7 @@
     {{--
     <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR  ____________________________________________________</p>
  --}}
- <p class="inspector" style="font-family: 'calibri';">
+    <p class="inspector" style="font-family: 'calibri';">
         NOMBRE Y FIRMA DEL INSPECTOR&nbsp;&nbsp;
 
         @if ($userCoccion && $userCoccion->firma)
@@ -438,7 +441,8 @@
 
             @if (!empty($firmaC) && file_exists($rutaFirmaC))
                 <span style="display: inline-block; text-align: center; min-width: 150px;">
-                   <img src="{{ $rutaFirmaC }}" alt="Firma" style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
+                    <img src="{{ $rutaFirmaC }}" alt="Firma"
+                        style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
                     <br>
                     <span
                         style="border-bottom: 1.2px solid #000; display: inline-block; min-width: 405px; margin-top:20px;">
@@ -492,6 +496,7 @@
                 /* $total_puntas_porcentaje = 0; */
                 /* $total_mezcal_porcentaje = 0; */
                 /* $total_colas_porcentaje = 0; */
+
             @endphp
 
             @foreach ($bitacora->molienda as $index => $molienda)
@@ -501,8 +506,9 @@
                     $total_colas_volumen += $molienda->colas_volumen ?? 0;
 
                     /* $total_puntas_porcentaje += $molienda->puntas_porcentaje ?? 0; */
-                   /*  $total_mezcal_porcentaje += $molienda->mezcal_porcentaje ?? 0; */
-                   /*  $total_colas_porcentaje += $molienda->colas_porcentaje ?? 0; */
+                    /*  $total_mezcal_porcentaje += $molienda->mezcal_porcentaje ?? 0; */
+                    /*  $total_colas_porcentaje += $molienda->colas_porcentaje ?? 0; */
+
                 @endphp
                 <tr>
                     <td class="no-border">{{ $index + 1 }}</td>
@@ -548,7 +554,7 @@
             </tr>
         </tbody>
     </table>
-<p class="inspector" style="font-family: 'calibri';">
+    <p class="inspector" style="font-family: 'calibri';">
         NOMBRE Y FIRMA DEL INSPECTOR&nbsp;&nbsp;
 
         @if ($userMolienda && $userMolienda->firma)
@@ -559,7 +565,8 @@
 
             @if (!empty($firmaM) && file_exists($rutaFirmaM))
                 <span style="display: inline-block; text-align: center; min-width: 150px;">
-                    <img src="{{ $rutaFirmaM }}" alt="Firma" style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
+                    <img src="{{ $rutaFirmaM }}" alt="Firma"
+                        style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
                     <br>
                     <span
                         style="border-bottom: 1.2px solid #000; display: inline-block; min-width: 405px; margin-top:18px;">
@@ -579,138 +586,152 @@
     </p>
     {{--   <div> --}}
     {{-- <p class="datos"></p> --}}
-   {{--  <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
+    {{--  <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
         ____________________________________________________________________</p> --}}
     {{--   </div> --}}
 
-<table width="100%" style="border: none;">
-    <tr style="border: none;">
-        <td style="vertical-align: top; width: 50%; border: none;">
-            <table class="segunda" style="width: 100%;">
-                <!-- tabla de segunda destilación -->
-                <tbody>
-                <tr>
-                    <td class="text-title-destilacion" {{-- style="vertical-align: bottom; font-weight: bold; font-family: 'calibri-bold'; " --}} colspan="8">SEGUNDA DESTILACIÓN</td>
-                </tr>
+    <table width="100%" style="border: none;">
+        <tr style="border: none;">
+            <td style="vertical-align: top; width: 50%; border: none;">
+                <table class="segunda" style="width: 100%;">
+                    <!-- tabla de segunda destilación -->
+                    <tbody>
+                        <tr>
+                            <td class="text-title-destilacion" {{-- style="vertical-align: bottom; font-weight: bold; font-family: 'calibri-bold'; " --}} colspan="8">SEGUNDA DESTILACIÓN
+                            </td>
+                        </tr>
 
-                <tr class="text-title">
-                    <td class="no-border"></td>
-                    <td rowspan="2">FECHA DE DESTILACIÓN</td>
-                    <td colspan="2">FLOR</td>
-                    <td colspan="2">MEZCAL</td>
-                    <td colspan="2">COLAS</td>
-                </tr>
-                <tr class="text-title">
-                    <td class="no-border"></td>
-                    <td>Volumen</td>
-                    <td>%Alc.Vol.</td>
-                    <td>Volumen</td>
-                    <td>%Alc.Vol.</td>
-                    <td>Volumen</td>
-                    <td>%Alc.Vol.</td>
-                </tr>
-                @foreach ($bitacora->segundaDestilacion as $index => $destilacion)
-                    <tr>
-                        <td class="no-border">{{ $index + 1 }}</td>
-                        <td>{{ $destilacion->fecha_destilacion ? \Carbon\Carbon::parse($destilacion->fecha_destilacion)->translatedFormat('d \d\e F \d\e Y') : '' }}
-                        </td>
-                        <td>{{ $destilacion->puntas_volumen !== null ? number_format($destilacion->puntas_volumen, 2) : '' }}
-                        </td>
-                        <td>{{ $destilacion->puntas_porcentaje !== null ? number_format($destilacion->puntas_porcentaje, 2) . '%' : '' }}
-                        </td>
-                        <td>{{ $destilacion->mezcal_volumen !== null ? number_format($destilacion->mezcal_volumen, 2) : '' }}
-                        </td>
-                        <td>{{ $destilacion->mezcal_porcentaje !== null ? number_format($destilacion->mezcal_porcentaje, 2) . '%' : '' }}
-                        </td>
-                        <td>{{ $destilacion->colas_volumen !== null ? number_format($destilacion->colas_volumen, 2) : '' }}
-                        </td>
-                        <td>{{ $destilacion->colas_porcentaje !== null ? number_format($destilacion->colas_porcentaje, 2) . '%' : '' }}
-                        </td>
-                    </tr>
-                @endforeach
-                <tr>
-                    <td class="no-border"></td>
-                    <td>VOLUMEN TOTAL</td>
-                    <td>{{ $bitacora->total_puntas_volumen ?? '' }}</td>
-                    <td>{{ $bitacora->total_puntas_porcentaje ?? ''}}</td>
+                        <tr class="text-title">
+                            <td class="no-border"></td>
+                            <td rowspan="2">FECHA DE DESTILACIÓN</td>
+                            <td colspan="2">FLOR</td>
+                            <td colspan="2">MEZCAL</td>
+                            <td colspan="2">COLAS</td>
+                        </tr>
+                        <tr class="text-title">
+                            <td class="no-border"></td>
+                            <td>Volumen</td>
+                            <td>%Alc.Vol.</td>
+                            <td>Volumen</td>
+                            <td>%Alc.Vol.</td>
+                            <td>Volumen</td>
+                            <td>%Alc.Vol.</td>
+                        </tr>
+                        @foreach ($bitacora->segundaDestilacion as $index => $destilacion)
+                            <tr>
+                                <td class="no-border">{{ $index + 1 }}</td>
+                                <td>{{ $destilacion->fecha_destilacion ? \Carbon\Carbon::parse($destilacion->fecha_destilacion)->translatedFormat('d \d\e F \d\e Y') : '' }}
+                                </td>
+                                <td>{{ $destilacion->puntas_volumen !== null ? number_format($destilacion->puntas_volumen, 2) : '' }}
+                                </td>
+                                <td>{{ $destilacion->puntas_porcentaje !== null ? number_format($destilacion->puntas_porcentaje, 2) . '%' : '' }}
+                                </td>
+                                <td>{{ $destilacion->mezcal_volumen !== null ? number_format($destilacion->mezcal_volumen, 2) : '' }}
+                                </td>
+                                <td>{{ $destilacion->mezcal_porcentaje !== null ? number_format($destilacion->mezcal_porcentaje, 2) . '%' : '' }}
+                                </td>
+                                <td>{{ $destilacion->colas_volumen !== null ? number_format($destilacion->colas_volumen, 2) : '' }}
+                                </td>
+                                <td>{{ $destilacion->colas_porcentaje !== null ? number_format($destilacion->colas_porcentaje, 2) . '%' : '' }}
+                                </td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td class="no-border"></td>
+                            <td>VOLUMEN TOTAL</td>
+                            <td>{{ $bitacora->total_puntas_volumen ?? '' }}</td>
+                            <td>{{ $bitacora->total_puntas_porcentaje ? $bitacora->total_puntas_porcentaje . '%' : '' }}
+                            </td>
+
+                            <td>{{ $bitacora->total_mezcal_volumen ?? '' }}</td>
+                            <td>{{ $bitacora->total_mezcal_porcentaje ? $bitacora->total_mezcal_porcentaje . '%' : '' }}
+                            </td>
+
+                            <td>{{ $bitacora->total_colas_volumen ?? '' }}</td>
+                            <td>{{ $bitacora->total_colas_porcentaje ? $bitacora->total_colas_porcentaje . '%' : '' }}
+                            </td>
+
+                            {{-- <td>{{ $bitacora->total_puntas_volumen ?? '' }}</td>
+                    <td>{{ $bitacora->total_puntas_porcentaje ?? ''}}</td> '%'
                     <td>{{ $bitacora->total_mezcal_volumen ?? '' }}</td>
-                    <td>{{$bitacora->total_mezcal_porcentaje ?? ''}}</td>
+                    <td>{{$bitacora->total_mezcal_porcentaje ?? ''}}</td> '%'
                     <td>{{ $bitacora->total_colas_volumen ?? '' }}</td>
-                    <td>{{ $bitacora->total_colas_porcentaje ?? ''}}</td>
-                </tr>
-            </tbody>
-            </table>
-        </td>
-        <td style="vertical-align: top; width: 50%; border: none;">
-            <table class="tercera" style="width: 100%;">
-                <!-- tabla de tercera destilación -->
+                    <td>{{ $bitacora->total_colas_porcentaje ?? ''}}</td> '%' --}}
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td style="vertical-align: top; width: 50%; border: none;">
+                <table class="tercera" style="width: 100%;">
+                    <!-- tabla de tercera destilación -->
 
-                 <tbody>
-                <tr>
-                    <td class="text-title-destilacion" {{--  style="vertical-align: bottom; font-weight: bold; font-family: 'calibri-bold'; " --}} colspan="8">TERCERA DESTILACIÓN</td>
-                </tr>
+                    <tbody>
+                        <tr>
+                            <td class="text-title-destilacion" {{--  style="vertical-align: bottom; font-weight: bold; font-family: 'calibri-bold'; " --}} colspan="8">TERCERA DESTILACIÓN
+                            </td>
+                        </tr>
 
-                <tr class="text-title">
-                    <td class="no-border"></td>
-                    <td rowspan="2">FECHA DE DESTILACIÓN</td>
-                    <td colspan="2">FLOR</td>
-                    <td colspan="2">MEZCAL</td>
-                    <td colspan="2">COLAS</td>
-                </tr>
-                <tr class="text-title">
-                    <td class="no-border"></td>
-                    <td>Volumen</td>
-                    <td>%Alc.Vol.</td>
-                    <td>Volumen</td>
-                    <td>%Alc.Vol.</td>
-                    <td>Volumen</td>
-                    <td>%Alc.Vol.</td>
-                </tr>
-                <tr>
-                    <td class="no-border">1</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                 <tr>
-                    <td class="no-border">2</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                 <tr>
-                    <td class="no-border">3</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="no-border"></td>
-                    <td>VOLUMEN TOTAL</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-            </table>
-        </td>
-    </tr>
-</table>
+                        <tr class="text-title">
+                            <td class="no-border"></td>
+                            <td rowspan="2">FECHA DE DESTILACIÓN</td>
+                            <td colspan="2">FLOR</td>
+                            <td colspan="2">MEZCAL</td>
+                            <td colspan="2">COLAS</td>
+                        </tr>
+                        <tr class="text-title">
+                            <td class="no-border"></td>
+                            <td>Volumen</td>
+                            <td>%Alc.Vol.</td>
+                            <td>Volumen</td>
+                            <td>%Alc.Vol.</td>
+                            <td>Volumen</td>
+                            <td>%Alc.Vol.</td>
+                        </tr>
+                        <tr>
+                            <td class="no-border">1</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="no-border">2</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="no-border">3</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="no-border"></td>
+                            <td>VOLUMEN TOTAL</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
 
     <p class="inspector" style="font-family: 'calibri';">
         NOMBRE Y FIRMA DEL INSPECTOR&nbsp;&nbsp;
@@ -723,7 +744,8 @@
 
             @if (!empty($firmaS) && file_exists($rutaFirmaS))
                 <span style="display: inline-block; text-align: center; min-width: 150px;">
-                    <img src="{{ $rutaFirmaS }}" alt="Firma" style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
+                    <img src="{{ $rutaFirmaS }}" alt="Firma"
+                        style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
                     <br>
                     <span
                         style="border-bottom: 1.2px solid #000; display: inline-block; min-width: 405px; margin-top:18px;">
@@ -742,7 +764,7 @@
         @endif
     </p>
 
-        <p class="inspector" style="font-family: 'calibri';">
+    <p class="inspector" style="font-family: 'calibri';">
         NOMBRE Y FIRMA DEL INSPECTOR&nbsp;&nbsp;
 
         @if ($userProductoTerminado && $userProductoTerminado->firma)
@@ -753,7 +775,8 @@
 
             @if (!empty($firmaP) && file_exists($rutaFirmaP))
                 <span style="display: inline-block; text-align: center; min-width: 150px;">
-                    <img src="{{ $rutaFirmaP }}" alt="Firma" style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
+                    <img src="{{ $rutaFirmaP }}" alt="Firma"
+                        style="height: 50px; margin-bottom: -35px; margin-top: 10px;">
                     <br>
                     <span
                         style="border-bottom: 1.2px solid #000; display: inline-block; min-width: 405px; margin-top:18px;">
@@ -773,7 +796,7 @@
     </p>
     {{--   <div> --}}
     {{-- <p class="datos"></p> --}}
-{{--     <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
+    {{--     <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR
         ____________________________________________________________________</p> --}}
     {{--    </div> --}}
 
