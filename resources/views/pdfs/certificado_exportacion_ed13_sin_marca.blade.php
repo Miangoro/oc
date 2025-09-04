@@ -102,7 +102,7 @@
 
         .footer {
             position: fixed;
-            bottom: 35;
+            bottom: 40;
             right: 5;
             width: 100%;
             z-index: 9999;
