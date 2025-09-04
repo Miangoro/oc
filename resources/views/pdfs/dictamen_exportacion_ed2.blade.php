@@ -283,6 +283,21 @@
 
 
 @foreach($lotes as $lote) 
+ @php
+          
+        
+            $lotesProcedencia = collect();
+            if (!empty($lote->lotesGranel->first()->lote_original_id)) {
+                $json = json_decode($lote->lotesGranel->first()->lote_original_id, true);
+
+                if (isset($json['lotes']) && is_array($json['lotes'])) {
+                    $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
+                        ->whereIn('id_lote_granel', $json['lotes'])
+                        ->orderBy('id_lote_granel', 'desc')
+                        ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
+                }
+            }
+        @endphp
     <table>
         <tr>
             <td style="font-size: 15px; padding-bottom: 15px; padding-top: 15px; width: 90px"><b>Identificación</b></td>
