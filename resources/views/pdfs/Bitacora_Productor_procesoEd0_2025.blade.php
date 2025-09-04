@@ -489,9 +489,9 @@
                 $total_mezcal_volumen = 0;
                 $total_colas_volumen = 0;
 
-                $total_puntas_porcentaje = 0;
-                $total_mezcal_porcentaje = 0;
-                $total_colas_porcentaje = 0;
+                /* $total_puntas_porcentaje = 0; */
+                /* $total_mezcal_porcentaje = 0; */
+                /* $total_colas_porcentaje = 0; */
             @endphp
 
             @foreach ($bitacora->molienda as $index => $molienda)
@@ -500,9 +500,9 @@
                     $total_mezcal_volumen += $molienda->mezcal_volumen ?? 0;
                     $total_colas_volumen += $molienda->colas_volumen ?? 0;
 
-                    $total_puntas_porcentaje += $molienda->puntas_porcentaje ?? 0;
-                    $total_mezcal_porcentaje += $molienda->mezcal_porcentaje ?? 0;
-                    $total_colas_porcentaje += $molienda->colas_porcentaje ?? 0;
+                    /* $total_puntas_porcentaje += $molienda->puntas_porcentaje ?? 0; */
+                   /*  $total_mezcal_porcentaje += $molienda->mezcal_porcentaje ?? 0; */
+                   /*  $total_colas_porcentaje += $molienda->colas_porcentaje ?? 0; */
                 @endphp
                 <tr>
                     <td class="no-border">{{ $index + 1 }}</td>
@@ -540,11 +540,11 @@
                 <td>{{ $bitacora->molienda_total_formulado }}</td>
                 <td>VOLUMEN TOTAL</td>
                 <td>{{ number_format($total_puntas_volumen, 2) }}</td>
-                <td>{{ number_format($total_puntas_porcentaje, 2) . '%' }}</td>
+                <td>{{-- {{ number_format($total_puntas_porcentaje, 2) . '%' }} --}}</td> {{-- % total --}}
                 <td>{{ number_format($total_mezcal_volumen, 2) }}</td>
-                <td>{{ number_format($total_mezcal_porcentaje, 2) . '%' }}</td>
+                <td>{{-- {{ number_format($total_mezcal_porcentaje, 2) . '%' }} --}}</td>{{-- % total --}}
                 <td>{{ number_format($total_colas_volumen, 2) }}</td>
-                <td>{{ number_format($total_colas_porcentaje, 2) . '%' }}</td>
+                <td>{{-- {{ number_format($total_colas_porcentaje, 2) . '%' }} --}}</td> {{-- % total --}}
             </tr>
         </tbody>
     </table>
@@ -631,12 +631,12 @@
                 <tr>
                     <td class="no-border"></td>
                     <td>VOLUMEN TOTAL</td>
-                    <td>{{ $bitacora->total_puntas_volumen }}</td>
-                    <td></td>
-                    <td>{{ $bitacora->total_mezcal_volumen }}</td>
-                    <td></td>
-                    <td>{{ $bitacora->total_colas_volumen }}</td>
-                    <td></td>
+                    <td>{{ $bitacora->total_puntas_volumen ?? '' }}</td>
+                    <td>{{ $bitacora->total_puntas_porcentaje ?? ''}}</td>
+                    <td>{{ $bitacora->total_mezcal_volumen ?? '' }}</td>
+                    <td>{{$bitacora->total_mezcal_porcentaje ?? ''}}</td>
+                    <td>{{ $bitacora->total_colas_volumen ?? '' }}</td>
+                    <td>{{ $bitacora->total_colas_porcentaje ?? ''}}</td>
                 </tr>
             </tbody>
             </table>
