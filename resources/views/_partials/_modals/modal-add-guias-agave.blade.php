@@ -127,7 +127,7 @@
                     <div class="col-md-4">
                         <div class="form-floating form-floating-outline mb-6">
                             <input type="date" class="form-control datepicker" id="fecha_corte"
-                                placeholder="fecha_corte" name="fecha_corte" readonly>
+                                placeholder="fecha_corte" name="fecha_corte">
                             <label>Fecha de corte</label>
                         </div>
                     </div>
@@ -336,7 +336,7 @@
                     <div class="col-md-4">
                         <div class="form-floating form-floating-outline mb-6">
                             <input type="date" class="form-control datepicker" id="edit_fecha_corte"
-                                placeholder="fecha_corte" name="fecha_corte" aria-label="fechacorte" readonly>
+                                placeholder="fecha_corte" name="fecha_corte" aria-label="fechacorte">
                             <label for="edit_fecha_corte">Fecha de corte</label>
                         </div>
                     </div>
@@ -371,8 +371,7 @@
                     <div class="col-md-4">
                         <div class="form-floating form-floating-outline mb-6">
                             <input type="date" class="form-control datepicker" id="edit_fecha_ingreso"
-                                placeholder="fecha_ingreso" name="fecha_ingreso" aria-label="fecha_ingreso"
-                                readonly>
+                                placeholder="fecha_ingreso" name="fecha_ingreso" aria-label="fecha_ingreso">
                             <label for="edit_fecha_ingreso">Fecha de ingreso</label>
 
                         </div>
