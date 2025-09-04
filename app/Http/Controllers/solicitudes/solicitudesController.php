@@ -122,7 +122,8 @@ public function index(Request $request)
                 'recordsTotal' => 0,
                 'recordsFiltered' => 0,
                 'code' => 200,
-                'data' => []
+                'data' => [],
+                'message' => 'Asigna una instalación para poder ver solicitudes.',
             ]);
         }
     }
@@ -163,21 +164,31 @@ public function index(Request $request)
         ])->where('habilitado', 1)
         ->where('id_tipo', '!=', 12);
 
-    // Filtro empresa (propia + maquiladores)
+    // Filtro empresa (propia + maquiladores)  SE OCULTO PORQUE YA NO SERA POR MAQUILADOR
     if ($empresaId) {
         $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
         //$query->whereIn('solicitudes.id_empresa', $empresasVisibles);
         $query->whereIn('id_empresa', $empresasVisibles);
     }
+    /*// Filtro empresa (creadora o destino)
+    if ($empresaId) {
+        $query->where(function ($q) use ($empresaId) {
+            $q->where('id_empresa', $empresaId)
+              ->orWhere('id_empresa_destino', $empresaId);
+        });
+    }*/
+
     // Filtro por instalaciones (usuario tipo 3)
     if (!empty($instalacionAuth)) {
         $query->whereIn('solicitudes.id_instalacion', $instalacionAuth);
     }
+    
     // Filtro especial para usuario 49
     if ($userId == 49) {
         $query->where('solicitudes.id_tipo', 11);
     }
 
+    
     $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
     $totalData = $baseQuery->count();// totalData (sin búsqueda)
 
@@ -450,7 +461,10 @@ public function index(Request $request)
             'recordsFiltered' => intval($totalFiltered),
             'code' => 200,
             'data' => $data ?? [],
+            //'message' => 'No tienes solicitudes asignadas.',
+            'message' => empty($data) ? 'No tienes solicitudes asignadas.' : null,
         ]);
+        
 }
 
 

@@ -448,9 +448,9 @@
 
                                       @endphp
                                       <td>
-                      {{-- 📎 Documentos FQ's (si existen) --}}
+                      {{-- Documentos FQ's (si existen) --}}
 
-                                    @if (!empty($certificados) && $combinado === 'Si')
+                            @if (!empty($certificados) && $combinado === 'Si')
 
                                         @forelse ($fqs as $doc)
                                             @if (!empty($doc['url']) && $doc['id_documento']==58)
@@ -462,13 +462,13 @@
                                             <span class="text-muted">Sin documentos FQ encontrados</span>
                                         @endforelse
 
-                                    @elseif (!empty($doc1) && $combinado == 'No')
+                            @elseif (!empty($doc1) && $combinado == 'No')
 
                                         <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc1->url }}">
                                             <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                         </a>
                                     Completo: {{ $primerFolio }}
-                                    @endif
+                            @endif
                                                
 
                                                 @if($tipo_certificado == 'Granel' AND $doc2)
@@ -480,9 +480,9 @@
                                                 @endif
                                             </td>
 
-                                  @elseif($pregunta->filtro == 'nanalisis_ajuste')
+                            @elseif($pregunta->filtro == 'nanalisis_ajuste')
                                             <td>
-                                                @if (!empty($certificados) && $combinado === 'Si')
+                                    @if (!empty($certificados) && $combinado === 'Si')
 
                                         @forelse ($fqs as $doc)
                                             @if (!empty($doc['url']) && $doc['id_documento']==134)
@@ -494,18 +494,51 @@
                                             <span class="text-muted">Sin documentos FQ encontrados</span>
                                         @endforelse
 
+
+
+                                            {{-- @elseif ($doc2 && $combinado == 'No')
+                                                <a target="_blank"
+                                                    href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
+                                                    <i
+                                                        class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>
+                                                    {{ $segundoFolio }}
+                                            @else
+                                                <i class="text-muted">N/A</i>
+                                            @endif --}}
                                             @elseif ($doc2 && $combinado == 'No')
-                                                    <a target="_blank"
-                                                        href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                    </a>
-                                                     {{ $segundoFolio }}
-                                                @else
-                                                    <i class="text-muted">N/A</i>
-                                                @endif
-                                               
+                                                <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>
+
+            <!--PARA LUZMA-->
+            @php
+            //$datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? '';
+            $lotesProcedencia = collect();
+        $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->first() ?? null;
+
+            if (!empty($loteGranel->lote_original_id)) {
+                $json = json_decode($loteGranel->lote_original_id, true);
+
+                if (isset($json['lotes']) && is_array($json['lotes'])) {
+                    $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
+                        ->whereIn('id_lote_granel', $json['lotes'])
+                        ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
+                }
+            }
+            @endphp
+                @if( $datos->certificado->dictamen->inspeccione->solicitud->id_empresa == 105)
+                    {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
+                @endif
+                                                {{ $segundoFolio }}
+                                            @else
+                                                <i class="text-muted">N/A</i>
+                                            @endif
+
                                             </td>
+
+
+
                                         @elseif($pregunta->filtro == 'aduana')
                                             <td>
                                                     {{ json_decode($datos->certificado->dictamen->inspeccione->solicitud->caracteristicas, true)['aduana_salida'] ?? 'N/A' }} <br>
