@@ -530,7 +530,7 @@
                 @if( $datos->certificado->dictamen->inspeccione->solicitud->id_empresa == 105)
                     {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
                 @endif
-                                                {{ $segundoFolio }}
+                                                {{ $segundoFolio }} otro
                                             @else
                                                 <i class="text-muted">N/A</i>
                                             @endif
