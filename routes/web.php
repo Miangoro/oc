@@ -740,7 +740,7 @@ route::get('/destinos-list/{id_direccion}/edit', 'edit')->name('destinos.edit');
 route::post('/destinos-update/{id_direccion}', 'update')->name('destinos.update');
 });
 //Usuarios
-Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes')->middleware(['auth']);
+Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes')->middleware(['auth','permission:Visualizar usuarios']);
 Route::resource('/user-list', UsuariosController::class)->middleware(['auth']);
 Route::get('/pdf_asignacion_usuario/{id}', [UsuariosController::class, 'pdfAsignacionUsuario'])->name('pdf_asignacion_usuario')->middleware(['auth']);
 Route::get('/usuarios/exportar', [UsuariosController::class, 'exportar'])->name('usuarios.exportar')->middleware(['auth']);
