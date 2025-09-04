@@ -5,18 +5,20 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <style>
-/*     .chat-message-wrapper {
+    /*     .chat-message-wrapper {
         max-width: 40%;
         min-width: 30%;
         word-wrap: break-word;
     } */
 
     .chat-message-wrapper {
-    display: inline-block;   /* Se ajusta al contenido */
-    max-width: 50%;          /* No más del 50% del contenedor */
-    word-wrap: break-word;   /* Rompe palabras largas */
-}
-
+        display: inline-block;
+        /* Se ajusta al contenido */
+        max-width: 50%;
+        /* No más del 50% del contenedor */
+        word-wrap: break-word;
+        /* Rompe palabras largas */
+    }
 </style>
 @section('content')
 
@@ -197,8 +199,6 @@
             </div>
 
 
-
-
             <div class="chat-history-wrapper">
                 {{-- Chat messages --}}
                 <div class="chat-history-body" id="chatContainer" style="height: 680px; overflow-y: auto;">
@@ -221,15 +221,65 @@
                                     <div class="chat-message-wrapper">
                                         <div
                                             class="chat-message-text p-2 rounded {{ $isMine ? 'bg-primary text-white' : 'bg-light text-dark' }}">
-                                            <strong>{{ $mensaje->usuario->name ?? 'Desconocido' }}</strong>
-                                            <p class="mb-0">{{ $mensaje->mensaje }}</p>
+
+                                            {{-- Nombre del usuario siempre arriba --}}
+                                            <strong
+                                                class="d-block mb-1">{{ $mensaje->usuario->name ?? 'Desconocido' }}</strong>
+
+                                            {{-- Mensaje de texto --}}
+                                            @if ($mensaje->mensaje)
+                                                <p class="mb-1">{{ $mensaje->mensaje }}</p>
+                                            @endif
+
+                                            {{-- Archivo adjunto debajo del texto --}}
+                                            @if ($mensaje->archivo)
+                                                @php
+                                                    $ext = strtolower(pathinfo($mensaje->archivo, PATHINFO_EXTENSION));
+                                                    $filePath = storage_path('app/public/' . $mensaje->archivo);
+                                                    $fileSize = file_exists($filePath)
+                                                        ? round(filesize($filePath) / 1024, 1) . ' KB'
+                                                        : '';
+                                                    $fileName = basename($mensaje->archivo);
+
+                                                    $icon = match ($ext) {
+                                                        'pdf' => 'ri-file-pdf-2-line text-danger',
+                                                        'doc', 'docx' => 'ri-file-word-line text-primary',
+                                                        'xls', 'xlsx' => 'ri-file-excel-line text-success',
+                                                        'ppt', 'pptx' => 'ri-file-ppt-line text-warning',
+                                                        default => 'ri-file-line text-secondary',
+                                                    };
+                                                @endphp
+
+
+                                                @if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif']))
+                                                    {{-- Imagen --}}
+                                                    <img src="{{ asset('storage/' . $mensaje->archivo) }}"
+                                                        class="img-fluid rounded mt-1" style="max-width:150px;">
+                                                @else
+                                                    {{-- Otros archivos --}}
+                                                    <div class="file-attachment mt-1 p-2 border rounded bg-white text-center"
+                                                        style="max-width:300px;">
+                                                        <a href="{{ asset('storage/' . $mensaje->archivo) }}"
+                                                            target="_blank" class="d-flex text-decoration-none">
+                                                            <i class="{{ $icon }}" style="font-size:40px;"></i>
+                                                            <div class="small text-truncate">{{ $fileName }}</div>
+                                                            <div class="text-muted small">.{{ $ext }}
+                                                                {{ $fileSize }}</div>
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                            @endif
+
                                         </div>
+
+                                        {{-- Fecha --}}
                                         <div class="text-muted mt-1 text-end {{ $isMine ? '' : 'text-start' }}">
                                             <small>{{ $mensaje->created_at->format('d/m/Y H:i') }}</small>
                                         </div>
                                     </div>
 
-                                    {{-- <div class="chat-message-wrapper flex-grow-1" style="max-width: 50%; min-width: 50%;">
+
+                                    {{--  <div class="chat-message-wrapper">
                                         <div
                                             class="chat-message-text p-2 rounded {{ $isMine ? 'bg-primary text-white' : 'bg-light text-dark' }}">
                                             <strong>{{ $mensaje->usuario->name ?? 'Desconocido' }}</strong>
@@ -240,7 +290,6 @@
                                         </div>
                                     </div> --}}
 
-                                    {{-- Mi avatar --}}
                                     @if ($isMine)
                                         <div class="user-avatar flex-shrink-0 ms-4">
                                             <div class="avatar avatar-sm">
@@ -257,16 +306,16 @@
 
                 {{-- Input --}}
                 <div class="chat-history-footer">
-                    <form id="chatForm" class="form-send-message d-flex justify-content-between align-items-center"
+                    <form id="chatForm" class="form-send-message d-flex justify-content-between align-items-center mt-2"
                         enctype="multipart/form-data">
                         <input type="text" class="form-control message-input me-4 shadow-none"
                             placeholder="Escribe tu mensaje aquí..." name="mensaje" id="nuevoMensaje">
                         <div class="message-actions d-flex align-items-center">
-                            {{-- <label for="attach-doc" class="form-label mb-0">
+                            <label for="attach-doc" class="form-label mb-0">
                                 <i
                                     class="ri-attachment-2 ri-20px cursor-pointer btn btn-sm btn-text-secondary btn-icon rounded-pill me-2 ms-1 text-heading"></i>
                                 <input type="file" id="attach-doc" hidden>
-                            </label> --}}
+                            </label>
                             <button type="submit" class="btn btn-primary d-flex send-msg-btn">
                                 <span class="align-middle">Enviar</span>
                                 <i class="ri-send-plane-line ri-16px ms-md-2 ms-0"></i>
@@ -274,6 +323,7 @@
                         </div>
                     </form>
                 </div>
+
             </div>
 
         </div>
@@ -284,6 +334,17 @@
 @endsection
 @section('page-script')
     <script>
+        $('#attach-doc').on('change', function() {
+            const file = this.files[0];
+            if (file) {
+                $('.message-actions').find('.file-name').remove();
+                $('<span class="file-name ms-2 small text-muted"></span>')
+                    .text(file.name)
+                    .appendTo('.message-actions');
+            }
+        });
+
+
         $(function() {
             $.ajaxSetup({
                 headers: {
@@ -295,38 +356,87 @@
 
             $('#chatForm').on('submit', function(e) {
                 e.preventDefault();
-                let mensaje = $('#nuevoMensaje').val().trim();
-                if (!mensaje) return;
 
-                $.post("{{ route('tickets.mensajes.store', $ticket->id_ticket) }}", {
-                    mensaje
-                }, function(res) {
-                    if (res.success) {
-                        const html = `
-                        <li class="chat-message chat-message-right">
-                            <div class="d-flex justify-content-end overflow-hidden">
-                                <div class="chat-message-wrapper">
-                                    <div class="chat-message-text p-2 rounded bg-primary text-white">
-                                        <strong>${res.mensaje.usuario.name}</strong>
-                                        <p class="mb-0">${res.mensaje.mensaje}</p>
-                                    </div>
-                                    <div class="text-end text-muted mt-1">
-                                        <small>${new Date(res.mensaje.created_at).toLocaleString()}</small>
-                                    </div>
+                let mensaje = $('#nuevoMensaje').val().trim();
+                let archivoInput = $('#attach-doc')[0].files[0]; // Obtener el archivo, si existe
+
+                if (!mensaje && !archivoInput) return; // No enviar si está vacío
+
+                let formData = new FormData();
+                formData.append('mensaje', mensaje);
+                if (archivoInput) {
+                    formData.append('archivo', archivoInput);
+                }
+
+                $.ajax({
+                    url: "{{ route('tickets.mensajes.store', $ticket->id_ticket) }}",
+                    type: 'POST',
+                    data: formData,
+                    processData: false, // Muy importante
+                    contentType: false, // Muy importante
+                    success: function(res) {
+                        if (res.success) {
+                            // Nombre siempre arriba
+                            const nombreHtml =
+                                `<strong class="d-block mb-1">${res.mensaje.usuario.name}</strong>`;
+
+                            // Mensaje de texto (solo si existe)
+                            const mensajeHtml = res.mensaje.mensaje ?
+                                `<p class="mb-1">${res.mensaje.mensaje}</p>` :
+                                '';
+
+                            // Archivo adjunto (imagen o enlace)
+                            let archivoHtml = '';
+                            if (res.mensaje.archivo) {
+                                const ext = res.mensaje.archivo.split('.').pop().toLowerCase();
+                                if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+                                    archivoHtml =
+                                        `<img src="/storage/${res.mensaje.archivo}" class="img-fluid rounded mt-1" style="max-width:150px;">`;
+                                } else {
+                                    archivoHtml = `<p class="mt-1 mb-0">
+            <a href="/storage/${res.mensaje.archivo}" target="_blank">
+                <i class="ri-file-pdf-2-line ri-lg"></i>
+            </a>
+        </p>`;
+                                }
+                            }
+
+                            const html = `
+                    <li class="chat-message chat-message-right">
+                        <div class="d-flex justify-content-end overflow-hidden">
+                            <div class="chat-message-wrapper">
+                                <div class="chat-message-text p-2 rounded bg-primary text-white">
+                                    ${nombreHtml}
+                                    ${mensajeHtml}
+                                    ${archivoHtml}
                                 </div>
-                                <div class="user-avatar flex-shrink-0 ms-4">
-                                    <div class="avatar avatar-sm">
-                                        <img src="${res.mensaje.usuario.profile_photo_url || '/assets/img/avatars/1.png'}" class="rounded-circle">
-                                    </div>
+                                <div class="text-end text-muted mt-1">
+                                    <small>${new Date(res.mensaje.created_at).toLocaleString()}</small>
                                 </div>
                             </div>
-                        </li>`;
-                        chatContainer.find('ul').append(html);
-                        $('#nuevoMensaje').val('');
-                        chatContainer.scrollTop(chatContainer[0].scrollHeight);
+                            <div class="user-avatar flex-shrink-0 ms-4">
+                                <div class="avatar avatar-sm">
+                                    <img src="${res.mensaje.usuario.profile_photo_url || '/assets/img/avatars/1.png'}" class="rounded-circle">
+                                </div>
+                            </div>
+                        </div>
+                    </li>`;
+
+                            $('#chatContainer ul').append(html);
+                            $('#nuevoMensaje').val('');
+                            $('#attach-doc').val(''); // Limpiar input
+                            $('.message-actions').find('.file-name').remove();
+                            chatContainer.scrollTop(chatContainer[0].scrollHeight);
+                        }
+                    },
+
+                    error: function(xhr) {
+                        console.error('Error al enviar mensaje:', xhr);
                     }
                 });
             });
+
+
         });
 
 

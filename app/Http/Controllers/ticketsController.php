@@ -240,28 +240,37 @@ public function store(Request $request)
       return view('tickets.partials.mensajes', compact('ticket'));
   }
 
-// Enviar un mensaje
-public function storeMensaje(Request $request, $ticketId)
-{
-    $request->validate([
-        'mensaje' => 'required|string|max:1000'
-    ]);
+  // Enviar un mensaje
+  public function storeMensaje(Request $request, $ticketId)
+  {
+        $request->validate([
+            'mensaje' => 'nullable|string|max:1000',
+            'archivo' => 'nullable|file|max:10240', // 10 MB máximo
+        ]);
 
-    $ticket = Ticket::findOrFail($ticketId);
-    $user = auth()->user();
-    $rol = ($user->puesto === 'Desarrollador') ? 'admin' : 'usuario';
-    $mensaje = $ticket->mensajes()->create([
-        'mensaje' => $request->mensaje,
-        'id_usuario' => $user->id,
-        'rol_emisor' => $rol,
-    ]);
+        $ticket = Ticket::findOrFail($ticketId);
+        $user = auth()->user();
+        $rol = ($user->puesto === 'Desarrollador') ? 'admin' : 'usuario';
 
-    // Devolver JSON para AJAX
-    return response()->json([
-        'success' => true,
-        'mensaje' => $mensaje->load('usuario') // carga relación usuario para mostrar nombre
-    ]);
-}
+        $mensaje = $ticket->mensajes()->create([
+            'mensaje' => $request->mensaje,
+            'id_usuario' => $user->id,
+            'rol_emisor' => $rol,
+        ]);
+
+        // Guardar archivo si existe
+        if ($request->hasFile('archivo')) {
+            $mensaje->archivo = $request->file('archivo')->store('chat_files', 'public');
+            $mensaje->save(); // ⚠ importante
+        }
+
+        // Devolver JSON para AJAX
+        return response()->json([
+            'success' => true,
+            'mensaje' => $mensaje->load('usuario') // carga relación usuario para mostrar nombre
+        ]);
+  }
+
 
 
 
