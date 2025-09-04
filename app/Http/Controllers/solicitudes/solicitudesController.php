@@ -165,18 +165,18 @@ public function index(Request $request)
         ->where('id_tipo', '!=', 12);
 
     // Filtro empresa (propia + maquiladores)  SE OCULTO PORQUE YA NO SERA POR MAQUILADOR
-    /*if ($empresaId) {
+    if ($empresaId) {
         $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
         //$query->whereIn('solicitudes.id_empresa', $empresasVisibles);
         $query->whereIn('id_empresa', $empresasVisibles);
-    }*/
-    // Filtro empresa (creadora o destino)
+    }
+    /*// Filtro empresa (creadora o destino)
     if ($empresaId) {
         $query->where(function ($q) use ($empresaId) {
             $q->where('id_empresa', $empresaId)
               ->orWhere('id_empresa_destino', $empresaId);
         });
-    }
+    }*/
 
         
     // Filtro por instalaciones (usuario tipo 3)
@@ -987,7 +987,7 @@ public function registrarSolicitudGeoreferenciacion(Request $request)
         $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
         $solicitud->id_predio = $request->id_predio;
         $solicitud->info_adicional = $request->info_adicional;
-
+/*
         //Manejo de empresa_destino de la solicitud
         if ($request->filled('id_empresa_destino')) {
             // Si viene en el request, se guarda (maquilador con destino)
@@ -996,7 +996,7 @@ public function registrarSolicitudGeoreferenciacion(Request $request)
             // No maquilador → no aplica
             $solicitud->id_empresa_destino = null;
         }
-        
+        */
 
         // Preparar el JSON para la columna `caracteristicas`
         $caracteristicas = [

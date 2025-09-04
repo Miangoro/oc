@@ -14,7 +14,7 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerPredios2(this.value); obtenerDestinoEmpresa();" name="id_empresa"
+                                <select onchange="obtenerPredios2(this.value); " name="id_empresa"
                                     class="select2 form-select id_empresa" required id="id_empresa_georefere">
                                     <option selected disabled value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -26,6 +26,7 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
+{{-- obtenerDestinoEmpresa();
 <div class="col-md-4">
     <div class="form-floating form-floating-outline mb-6">
         <select id="id_empresa_destino" name="id_empresa_destino" class="select2 form-select" data-error-message="por favor selecciona la empresa">
@@ -33,7 +34,7 @@
         </select>
         <label for="id_empresa_destino" class="form-label">Empresa destino</label>
     </div>
-</div>
+</div> --}}
 
                         <div class="col-md-2">
                             <div class="form-floating form-floating-outline mb-5">
@@ -156,7 +157,7 @@
 
 
 
-///NUEVA FUNCION
+/* ///NUEVA FUNCION
 function obtenerDestinoEmpresa() {
     var empresa = $("#id_empresa_georefere").val();
     if (!empresa) return;
@@ -208,6 +209,6 @@ function obtenerDestinoEmpresa() {
     $('#id_empresa').change(function() {
         obtenerDestinoEmpresa();
     }); 
-
+ */
 
 </script>
