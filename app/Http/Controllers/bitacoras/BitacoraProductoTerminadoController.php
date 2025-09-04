@@ -200,12 +200,16 @@ class BitacoraProductoTerminadoController extends Controller
                        $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
                       ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
                           $sub->where('razon_social', 'LIKE', "%{$search}%");
-                      });
-                     /*  ->orWhereHas('loteBitacora', function ($sub) use ($search) {
+                      })
+                      ->orWhereHas('granel', function ($sub) use ($search) {
                           $sub->where('nombre_lote', 'LIKE', "%{$search}%")
                               ->orWhere('folio_fq', 'LIKE', "%{$search}%")
                               ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
-                      }); */
+                      })->orWhereHas('instalacion', function ($sub) use ($search) {
+                          $sub->where('direccion_completa', 'LIKE', "%{$search}%");
+                              });
+
+
                   }
               });
 
