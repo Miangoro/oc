@@ -318,7 +318,11 @@
         </tr>
         <tr>
             <td style="font-size: 15px;"><b>No. Análisis</b></td>
-            <td>{{ $lote->lotesGranel->first()->folio_fq ?? "No encontrada" }}</td>
+            <td>{{ $lote->lotesGranel->first()->folio_fq ?? "No encontrada" }} 
+                 @if($data->inspeccion->solicitud->empresa->id_empresa == 105)
+                    {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') : '' }}
+                @endif
+            </td>
             <td style="font-size: 15px;"><b>% Alc. Vol. <br>(No. análisis)</b></td>
             <td>{{ $lote->lotesGranel->first()->cont_alc ?? "No encontrada" }}% Alc. Vol.</td>
             <td style="font-size: 15px;" rowspan="2"><b>Especie de agave o maguey</b></td>
