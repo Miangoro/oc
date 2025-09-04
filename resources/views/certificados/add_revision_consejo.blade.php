@@ -574,12 +574,10 @@
 
 
                                     @elseif ($doc2 && $combinado == 'No')
-
-                                    <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
-                                        <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                    </a>
-                                        {{ $segundoFolio }}
-
+                                        <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
+                                            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                        </a>
+                                            {{ $segundoFolio }}
 <!--PARA LUZMA-->
 @php
 $lotesProcedencia = collect();
@@ -602,24 +600,20 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                 ->where('id_documento', [58, 134])
                 ->get();
         @endphp
-
         {{-- Mostramos documento si existe --}}
         @foreach($documentos as $doc)
             <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc->url }}">
                 <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
             </a>
         @endforeach
-
         {{-- Mostramos folio --}}
         {{ $lote->folio_fq }}{{ !$loop->last ? ',' : '' }} &nbsp;
     @endforeach
 @endif
-                                                
                                             @else
                                                 <i class="text-muted">N/A</i>
                                             @endif
-                                               
-                                            </td>
+                                        </td>
 
 
                                             
