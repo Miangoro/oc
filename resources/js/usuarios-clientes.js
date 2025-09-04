@@ -5,13 +5,12 @@
 
 // Datatable (jquery)
 $(function () {
-
   // Declaras el arreglo de botones
-  let buttons = [];
+  let Add = [];
 
   // Si tiene permiso, agregas el botón
   if (puedeAgregarUsuario) {
-    buttons.push({
+    Add.push({
       text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo usuario</span>',
       className: 'add-new btn btn-primary waves-effect waves-light',
       attr: {
@@ -20,8 +19,6 @@ $(function () {
       }
     });
   }
-
-
 
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
@@ -50,7 +47,6 @@ $(function () {
     });
   }
   initializeSelect2(select2Elements);
-
 
   // ajax setup
   $.ajaxSetup({
@@ -90,10 +86,7 @@ $(function () {
           }
         },
         { data: 'contacto' },
-        { data: 'rol',
-          searchable: false,
-          orderable: false,
-         },
+        { data: 'rol', searchable: false, orderable: false },
         { data: 'id' },
         {
           data: 'estatus',
@@ -229,7 +222,6 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-
             let acciones = '';
 
             if (window.puedeEditarUsuario) {
@@ -255,7 +247,6 @@ $(function () {
               </div>
             `;
             return dropdown;
-
           }
         }
       ],
@@ -277,7 +268,18 @@ $(function () {
         info: 'Displaying _START_ to _END_ of _TOTAL_ entries'
       },
       // Buttons with Dropdown
-      buttons: buttons,
+      buttons: [
+        {
+          text: '<i class="ri-file-excel-2-fill ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
+          className: 'btn btn-info waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4 mt-md-0',
+          attr: {
+            'data-bs-toggle': 'modal',
+            'data-bs-dismiss': 'modal',
+            'data-bs-target': '#exportarExcel'
+          }
+        },
+        Add // 👈 Aquí concatenas el array Add
+      ],
       // For responsive popup
       responsive: {
         details: {
@@ -292,18 +294,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                col.rowIndex +
-                '" data-dt-column="' +
-                col.columnIndex +
-                '">' +
-                '<td>' +
-                col.title +
-                ':' +
-                '</td> ' +
-                '<td>' +
-                col.data +
-                '</td>' +
-                '</tr>'
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
                 : '';
             }).join('');
 
@@ -327,7 +329,7 @@ $(function () {
     // sweetalert for confirmation of delete
     Swal.fire({
       title: '¿Está seguro de eliminar este usuario?',
-      text: "¡No podrá revertirlo!",
+      text: '¡No podrá revertirlo!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: '¡Si, eliminarlo!',
@@ -372,14 +374,11 @@ $(function () {
     });
   });
 
-
-
-
   //RECIBE LOS DATOS DEL PDF
   $(document).on('click', '.pdfCartAsignacion', function () {
     var id = $(this).data('id');
     var nombre = $(this).data('nombre');
-    var iframe = $('#pdfViewer');//contenido
+    var iframe = $('#pdfViewer'); //contenido
     var spinner = $('#cargando');
 
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
@@ -388,19 +387,18 @@ $(function () {
     //Cargar el PDF con el ID
     iframe.attr('src', '../pdf_asignacion_usuario/' + id);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', '../pdf_asignacion_usuario/' + id).show();
+    $('#NewPestana')
+      .attr('href', '../pdf_asignacion_usuario/' + id)
+      .show();
     //Titulos
-    $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
-    $("#subtitulo_modal").text(nombre);
+    $('#titulo_modal').text('Carta de asignación de usuario y contraseña para plataforma del OC');
+    $('#subtitulo_modal').text(nombre);
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();
       iframe.show();
     });
   });
-
-
-
 
   //EDIT record
   $(document).on('click', '.edit-record', function () {
@@ -434,11 +432,8 @@ $(function () {
           $('#id_instalacion').val(data.id_instalacion).trigger('change');
         }
       });
-
     });
   });
-
-
 
   // changing the title
   $('.add-new').on('click', function () {
@@ -501,7 +496,7 @@ $(function () {
             message: 'Por favor seleccione un contacto'
           }
         }
-      },
+      }
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -556,7 +551,7 @@ $(function () {
   offCanvasForm.on('hidden.bs.offcanvas', function () {
     fv.resetForm(true);
 
-    $('#addNewUserForm select').val(null).trigger('change');//Limpia selects del formulario
+    $('#addNewUserForm select').val(null).trigger('change'); //Limpia selects del formulario
   });
 
   const phoneMaskList = document.querySelectorAll('.phone-mask');
