@@ -319,7 +319,7 @@
         <tr>
             <td style="font-size: 15px;"><b>No. Análisis</b></td>
             <td>{{ $lote->lotesGranel->first()->folio_fq ?? "No encontrada" }} 
-                 @if($data->inspeccion->solicitud->empresa->id_empresa == 105)
+                 @if($data->inspeccione->solicitud->empresa->id_empresa == 105)
                     {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') : '' }}
                 @endif
             </td>
