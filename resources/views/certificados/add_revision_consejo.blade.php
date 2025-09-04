@@ -571,18 +571,54 @@
                                             <span class="text-muted">Sin documentos FQ encontrados</span>
                                         @endforelse
 
-                                            @elseif ($doc2 && $combinado == 'No')
-                                                    <a target="_blank"
-                                                        href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                    </a>
-                                                     {{ $segundoFolio }}
-                                                @else
-                                                    <i class="text-muted">N/A</i>
-                                                @endif
+
+
+                                    @elseif ($doc2 && $combinado == 'No')
+<!--PARA LUZMA-->
+@php
+$lotesProcedencia = collect();
+$loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel ?? null;
+    if (!empty($loteGranel->lote_original_id)) {
+        $json = json_decode($loteGranel->lote_original_id, true);
+
+        if (isset($json['lotes']) && is_array($json['lotes'])) {
+            $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
+                ->whereIn('id_lote_granel', $json['lotes'])
+                ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
+        }
+    }
+@endphp
+@if($datos->certificado->dictamen->inspeccione->solicitud->id_empresa == 105)
+    @foreach($lotesProcedencia as $lote)
+        @php
+            $documentos = \App\Models\Documentacion_url::where('id_relacion', $lote->id_lote_granel)
+                ->where('id_documento', 134)
+                ->get();
+        @endphp
+
+        {{-- Mostramos documento si existe --}}
+        @foreach($documentos as $doc)
+            <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc->url }}">
+                <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+            </a>
+        @endforeach
+
+        {{-- Mostramos folio --}}
+        {{ $lote->folio_fq }}{{ !$loop->last ? ',' : '' }} &nbsp;
+    @endforeach
+@endif
+                                                <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>
+                                                    {{ $segundoFolio }}
+                                            @else
+                                                <i class="text-muted">N/A</i>
+                                            @endif
                                                
                                             </td>
+
+
+        
                                         @elseif($pregunta->filtro == 'aduana')
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
