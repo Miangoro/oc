@@ -424,19 +424,27 @@
                 }
 
                   $('#id_tipo').trigger('change');
+                     // Categoría
+                if (response.lotes_granel.categoria) {
+                    $('#id_categoria').val(response.lotes_granel.categoria.id_categoria).trigger('change');
+                } else {
+                    $('#id_categoria').val('').trigger('change');
+                }
 
+                // Clase
+                if (response.lotes_granel.clase) {
+                    $('#id_clase').val(response.lotes_granel.clase.id_clase).trigger('change');
+                } else {
+                    $('#id_clase').val('').trigger('change');
+                }
                 },
                 error: function() {
                     console.error('Error al obtener datos de graneles');
                 }
             });
         } else {
-            $('#volumen_inicial').val('');
-            $('#alc_vol').val('');
-            $('#folio_fq').val('');
-            $('#edad').val('');
-            $('#ingredientes').val('');
-            $('#id_tipo').val('');
+            $('#volumen_inicial, #alc_vol, #folio_fq, #edad, #ingredientes').val('');
+             $('#id_tipo, #id_categoria, #id_clase').val('').trigger('change');
         }
     }
 
