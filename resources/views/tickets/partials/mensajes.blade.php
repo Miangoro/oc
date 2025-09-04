@@ -4,6 +4,20 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<style>
+/*     .chat-message-wrapper {
+        max-width: 40%;
+        min-width: 30%;
+        word-wrap: break-word;
+    } */
+
+    .chat-message-wrapper {
+    display: inline-block;   /* Se ajusta al contenido */
+    max-width: 50%;          /* No más del 50% del contenedor */
+    word-wrap: break-word;   /* Rompe palabras largas */
+}
+
+</style>
 @section('content')
 
     <div class="container-fluid py-4">
@@ -204,7 +218,7 @@
                                     @endif
 
                                     {{-- Mensaje --}}
-                                    <div class="chat-message-wrapper flex-grow-1" style="max-width: 50%; min-width: 50%;">
+                                    <div class="chat-message-wrapper">
                                         <div
                                             class="chat-message-text p-2 rounded {{ $isMine ? 'bg-primary text-white' : 'bg-light text-dark' }}">
                                             <strong>{{ $mensaje->usuario->name ?? 'Desconocido' }}</strong>
@@ -214,6 +228,17 @@
                                             <small>{{ $mensaje->created_at->format('d/m/Y H:i') }}</small>
                                         </div>
                                     </div>
+
+                                    {{-- <div class="chat-message-wrapper flex-grow-1" style="max-width: 50%; min-width: 50%;">
+                                        <div
+                                            class="chat-message-text p-2 rounded {{ $isMine ? 'bg-primary text-white' : 'bg-light text-dark' }}">
+                                            <strong>{{ $mensaje->usuario->name ?? 'Desconocido' }}</strong>
+                                            <p class="mb-0">{{ $mensaje->mensaje }}</p>
+                                        </div>
+                                        <div class="text-muted mt-1 text-end {{ $isMine ? '' : 'text-start' }}">
+                                            <small>{{ $mensaje->created_at->format('d/m/Y H:i') }}</small>
+                                        </div>
+                                    </div> --}}
 
                                     {{-- Mi avatar --}}
                                     @if ($isMine)
@@ -232,7 +257,8 @@
 
                 {{-- Input --}}
                 <div class="chat-history-footer">
-                    <form id="chatForm" class="form-send-message d-flex justify-content-between align-items-center" enctype="multipart/form-data">
+                    <form id="chatForm" class="form-send-message d-flex justify-content-between align-items-center"
+                        enctype="multipart/form-data">
                         <input type="text" class="form-control message-input me-4 shadow-none"
                             placeholder="Type your message here..." name="mensaje" id="nuevoMensaje">
                         <div class="message-actions d-flex align-items-center">
