@@ -204,7 +204,7 @@
                                     @endif
 
                                     {{-- Mensaje --}}
-                                    <div class="chat-message-wrapper flex-grow-1" style="max-width: 20%;">
+                                    <div class="chat-message-wrapper flex-grow-1" style="max-width: 50%; min-width: 50%;">
                                         <div
                                             class="chat-message-text p-2 rounded {{ $isMine ? 'bg-primary text-white' : 'bg-light text-dark' }}">
                                             <strong>{{ $mensaje->usuario->name ?? 'Desconocido' }}</strong>
@@ -279,7 +279,7 @@
                         const html = `
                         <li class="chat-message chat-message-right">
                             <div class="d-flex justify-content-end overflow-hidden">
-                                <div class="chat-message-wrapper flex-grow-1" style="max-width: 20%;">
+                                <div class="chat-message-wrapper flex-grow-1"  style="max-width: 50%; min-width: 50%;">
                                     <div class="chat-message-text p-2 rounded bg-primary text-white">
                                         <strong>${res.mensaje.usuario.name}</strong>
                                         <p class="mb-0">${res.mensaje.mensaje}</p>
