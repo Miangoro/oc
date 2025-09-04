@@ -160,7 +160,7 @@ $(function () {
         {
           targets: 3,
           render: function (data, type, full, meta) {
-            return '<span style="font-size:14px;">' + (full['instalacionesTexto'] ?? '(Not Found)') + '</span>';
+            return '<span style="font-size:12px;">' + (full['instalacionesTexto'] ?? '(Not Found)') + '</span>';
           }
         },
         {

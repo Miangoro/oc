@@ -260,7 +260,7 @@
                     <form id="chatForm" class="form-send-message d-flex justify-content-between align-items-center"
                         enctype="multipart/form-data">
                         <input type="text" class="form-control message-input me-4 shadow-none"
-                            placeholder="Type your message here..." name="mensaje" id="nuevoMensaje">
+                            placeholder="Escribe tu mensaje aquí..." name="mensaje" id="nuevoMensaje">
                         <div class="message-actions d-flex align-items-center">
                             {{-- <label for="attach-doc" class="form-label mb-0">
                                 <i
