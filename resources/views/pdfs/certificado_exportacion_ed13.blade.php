@@ -471,9 +471,9 @@
             <td style="text-align: left; padding-left: 4px;">
                 {{ $folio2 }} &nbsp;
 
-                @if( $data->dictamen->inspeccione->solicitud->empresa->id_empresa == 105)
-                    {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
-                 @endif
+                @if($data->dictamen->inspeccione->solicitud->empresa->id_empresa == 105)
+                    {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') : '' }}
+                @endif
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 No. de lote envasado:</td>
