@@ -1449,11 +1449,11 @@ Route::controller(ticketsController::class)->middleware(['auth'])->group(functio
 });
 Route::resource('/tickets-list', ticketsController::class)->middleware(['auth']);
 
-Route::get('/tickets/{ticket}/ver', [ticketsController::class, 'mensajes'])->name('tickets.ver');
+Route::get('/tickets/{ticket}/ver', [ticketsController::class, 'mensajes'])->name('tickets.ver')->middleware(['auth']);
 
 Route::post('/tickets/{ticket}/mensajes', [ticketsController::class, 'storeMensaje'])
-    ->name('tickets.mensajes.store');
+    ->name('tickets.mensajes.store')->middleware(['auth']);
 
 Route::patch('/tickets/{ticket}/estatus', [ticketsController::class, 'updateEstatus'])
-     ->name('tickets.updateEstatus');
+     ->name('tickets.updateEstatus')->middleware(['auth']);
 
