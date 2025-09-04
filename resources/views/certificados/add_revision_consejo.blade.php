@@ -584,6 +584,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
         if (isset($json['lotes']) && is_array($json['lotes'])) {
             $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
                 ->whereIn('id_lote_granel', $json['lotes'])
+                ->orderBy('id_lote_granel', 'asc') // <-- orden ascendente por id
                 ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
         }
     }
@@ -618,7 +619,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                             </td>
 
 
-        
+                                            
                                         @elseif($pregunta->filtro == 'aduana')
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
