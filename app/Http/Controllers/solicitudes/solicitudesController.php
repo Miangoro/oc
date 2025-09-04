@@ -178,14 +178,22 @@ public function index(Request $request)
         });
     }*/
 
+        
     // Filtro por instalaciones (usuario tipo 3)
     /* if (!empty($instalacionAuth)) {
         $query->whereIn('solicitudes.id_instalacion', $instalacionAuth);
     } */
-    if (!empty($instalacionAuth)) {
+    /*if (!empty($instalacionAuth)) {
         $query->whereIn('solicitudes.id_instalacion', $instalacionAuth)
-            ->where('it_tipo', 10);
+            ->orWhere('solicitudes.id_instalacion', 0);
+    }*/
+    if (!empty($instalacionAuth)) {
+        $query->where(function($q) use ($instalacionAuth) {
+            $q->whereIn('solicitudes.id_instalacion', $instalacionAuth)
+            ->orWhere('solicitudes.id_instalacion', 0);
+        });
     }
+    
     
     // Filtro especial para usuario 49
     if ($userId == 49) {
