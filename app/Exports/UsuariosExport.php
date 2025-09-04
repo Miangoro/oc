@@ -39,72 +39,81 @@ class UsuariosExport implements FromCollection, WithHeadings, WithEvents, WithMa
         return $query->get();
     }
 
-    public function headings(): array
-    {
-        $fechaGeneracion = Carbon::now()->translatedFormat('d \d\e F \d\e Y');
+public function headings(): array
+{
+    $fechaGeneracion = Carbon::now()->translatedFormat('d \d\e F \d\e Y');
 
-        return [
-            ['Reporte de Usuarios'],
-            ["Generado el $fechaGeneracion a través de la Plataforma OC CIDAM"],
-            ['Usuario', 'Instalaciones', 'Correo', 'Teléfono', 'Cliente', 'Rol']
-        ];
+    return [
+        ['Reporte de Usuarios'],
+        ["Generado el $fechaGeneracion a través de la Plataforma OC CIDAM"],
+        ['Usuario', 'Instalaciones', 'Correo', 'Teléfono', 'Cliente', 'Rol', 'Estatus', 'Contraseña']
+    ];
+}
+
+public function map($usuario): array
+{
+    if (is_array($usuario->id_instalacion)) {
+        $instalaciones = \App\Models\instalaciones::whereIn('id_instalacion', $usuario->id_instalacion)
+            ->pluck('direccion_completa')
+             ->implode("\n");
+            /* ->implode(', '); */
+    } else {
+        $instalaciones = 'N/A';
     }
 
-    public function map($usuario): array
-    {
-        // Si es array (JSON casteado), concatenamos IDs y opcionalmente buscamos nombres
-        if (is_array($usuario->id_instalacion)) {
-            // Aquí puedes mapear IDs a nombres si tienes la tabla de instalaciones
-            $instalaciones = \App\Models\instalaciones::whereIn('id_instalacion', $usuario->id_instalacion)
-                ->pluck('direccion_completa')
-                ->implode(', ');
-        } else {
-            $instalaciones = 'N/A';
-        }
+    return [
+        $usuario->name ?? 'N/A',
+        $instalaciones,
+        $usuario->email ?? 'N/A',
+        $usuario->telefono ?? 'N/A',
+        $usuario->empresa->razon_social ?? 'N/A',
+        $usuario->roles->pluck('name')->implode(', '),
+        $usuario->estatus ?? 'N/A',
+        $usuario->password_original ?? 'N/A', // mejor mostrar password_original si la guardas en texto
+    ];
+}
 
-        return [
-            $usuario->name ?? 'N/A',
-            $instalaciones,
-            $usuario->email ?? 'N/A',
-            $usuario->telefono ?? 'N/A',
-            $usuario->empresa->razon_social ?? 'N/A',
-            $usuario->roles->pluck('name')->implode(', ')
-        ];
-    }
+public function registerEvents(): array
+{
+    return [
+        AfterSheet::class => function (AfterSheet $event) {
+            $sheet = $event->sheet->getDelegate();
 
+            // Encabezado grande
+            $sheet->mergeCells('A1:H1');
+            $sheet->getStyle('A1:H1')->getFont()->setBold(true)->setSize(14)->getColor()->setARGB('FFFFFF');
+            $sheet->getStyle('A1:H1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('003366');
 
-    public function registerEvents(): array
-    {
-        return [
-            AfterSheet::class => function (AfterSheet $event) {
-                $sheet = $event->sheet->getDelegate();
+            // Subtítulo
+            $sheet->mergeCells('A2:H2');
+            $sheet->getStyle('A2:H2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-                // Encabezado grande
-                $sheet->mergeCells('A1:F1');
-                $sheet->getStyle('A1:F1')->getFont()->setBold(true)->setSize(14)->getColor()->setARGB('FFFFFF');
-                $sheet->getStyle('A1:F1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle('A1:F1')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('003366');
+            // Encabezados
+            $sheet->getStyle('A3:H3')->getFont()->setBold(true);
+            $sheet->getStyle('A3:H3')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A3:H3')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('8eaadc');
 
-                // Subtítulo
-                $sheet->mergeCells('A2:F2');
-                $sheet->getStyle('A2:F2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            // Bordes
+            $sheet->getStyle('A3:H' . $event->sheet->getHighestRow())
+                ->getBorders()
+                ->getAllBorders()
+                ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-                // Encabezados
-                $sheet->getStyle('A3:F3')->getFont()->setBold(true);
-                $sheet->getStyle('A3:F3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle('A3:F3')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('8eaadc');
-
-                // Bordes
-                $sheet->getStyle('A3:F' . $event->sheet->getHighestRow())
-                    ->getBorders()
-                    ->getAllBorders()
-                    ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-                // Auto ancho columnas
-                foreach (range('A', 'F') as $col) {
+            // Auto ancho columnas excepto instalaciones (B)
+            foreach (range('A', 'H') as $col) {
+                if ($col !== 'B') {
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                 }
-            },
-        ];
-    }
+            }
+
+            // Columna de instalaciones: ancho fijo y wrap text
+            $sheet->getColumnDimension('B')->setWidth(40); // ajusta a tu gusto
+            $sheet->getStyle('B')->getAlignment()->setWrapText(true);
+            $sheet->getStyle('B')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
+        },
+    ];
+}
+
+
 }
