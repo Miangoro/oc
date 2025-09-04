@@ -64,7 +64,7 @@
             width: 530px;
             height: 444px;
             z-index: -1;
-            background-image: url('{{ public_path('img_pdf/logo_fondo.png') }}');
+           
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -97,11 +97,12 @@
             display: inline-block;
             margin-top: 7.5%;
             margin-left: -9px;
+            height: 82px;
         }
 
         .footer {
             position: fixed;
-            bottom: 11;
+            bottom: 40;
             right: 5;
             width: 100%;
             z-index: 9999;
@@ -195,13 +196,10 @@
 
 <!--ENCABEZADO-->
 <div class="encabezado">
-    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" style="width: 340px; vertical-align: top; margin-left: -13px" alt="logo de CIDAM 3D">
+    
 
     <div class="cidam">
-        <b style="font-size: 17.5px;">CENTRO DE INNOVACIÓN Y DESARROLLO<br>AGROALIMENTARIO DE MICHOACÁN A.C.</b>
-        <p style="font-size: 11px; margin-top: 0px;">Organismo de Certificación de producto acreditado ante la
-            <br>entidad mexicana de acreditación ema A.C. con <b>No. 144/18</b>
-        </p>
+       
     </div>
 
     <div class="titulos" style="margin-top: -2%;">CERTIFICADO DE AUTENTICIDAD DE EXPORTACIÓN DE MEZCAL</div>
@@ -238,7 +236,7 @@
         <span class="pagenum"></span>
     </p>
     
-    <img class="img-footer" src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina">
+    
 </div>
 
 
@@ -576,7 +574,7 @@
 <div>
     <div class="images-container">
         <img src="{{ $qrCodeBase64 }}" alt="QR" width="75px" class="image-right2">
-        <img src="{{ public_path('img_pdf/Sello oc.png') }}" alt="Sello UI" class="image-right">
+        
     </div>
   
     
@@ -589,24 +587,12 @@
 
       
 
-    <p class="textx" style="margin-top: 5px">
-        <strong>AUTORIZÓ</strong>
-        <span style="margin-left: 54px; display: inline-block; text-align: left; position: relative; margin-top: 10px;">
-            <strong>{{ $data->firmante->puesto ?? '' }}<br><br>{{ mb_strtoupper($data->firmante->name ?? '', 'UTF-8') }}</strong>
+    <p class="textx" style="margin-top: 35px; text-align:center">
+        <span style=" display: inline-block; text-align: center; position: relative; margin-top: 10px;">
+            <strong>{{ mb_strtoupper($data->firmante->name ?? '', 'UTF-8') }}<br><br>{{ $data->firmante->puesto ?? '' }}</strong>
         </span>
     </p>
-    <p class="textx">
-        <strong>CADENA ORIGINAL</strong>
-        <span style="margin-left: 14px;">
-            <strong>{{ $firmaDigital['cadena_original'] ?? '' }}</strong>
-        </span>
-    </p>
-    <p class="textx">
-        <strong>SELLO DIGITAL</strong>
-    </p>
-    <p class="textsello">
-        {{ $firmaDigital['firma'] ?? ''}}
-    </p>
+
 </div>
 
 

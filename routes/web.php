@@ -739,7 +739,7 @@ Route::post('/destinos-register/{id_direccion}',  'store')->name('destinos-regis
 route::get('/destinos-list/{id_direccion}/edit', 'edit')->name('destinos.edit');
 route::post('/destinos-update/{id_direccion}', 'update')->name('destinos.update');
 });
-//Usuarios
+//Usuariosgit 
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes')->middleware(['auth','permission:Visualizar usuarios']);
 Route::resource('/user-list', UsuariosController::class)->middleware(['auth']);
 Route::get('/pdf_asignacion_usuario/{id}', [UsuariosController::class, 'pdfAsignacionUsuario'])->name('pdf_asignacion_usuario')->middleware(['auth']);
@@ -1312,6 +1312,10 @@ Route::middleware(['auth'])->controller(Certificado_GranelController::class)->gr
 
 //-------------------CERTIFICADO EXPORTACION-------------------
 Route::middleware(['auth'])->controller(Certificado_ExportacionController::class)->group(function () {
+
+    Route::get('/certificado-sin-marca-exportacion/{id}', function($id) {
+        return app(Certificado_ExportacionController::class)->MostrarCertificadoExportacion($id, false);
+        })->name('PDF-cer-granel-sin-marca-exportacion');
     //Mostrar
     Route::get('certificados/exportacion', 'UserManagement')->name('certificados-exportacion');
     Route::resource('CerExpo-list', Certificado_ExportacionController::class);
