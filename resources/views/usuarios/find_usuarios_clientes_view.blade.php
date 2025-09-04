@@ -299,5 +299,6 @@
     </script>
     <!-- Modal -->
     @include('_partials/_modals/modal-pdfs-frames')
+    @include('_partials._modals.modal_export_usuarios')
     <!-- /Modal -->
 @endsection

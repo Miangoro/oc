@@ -97,5 +97,12 @@ class User extends Authenticatable
         return $this->hasMany(solicitudHolograma::class, 'id_solicitante', 'id_empresa');
     }
 
+    public function instalaciones()
+    {
+        return $this->hasMany(instalaciones::class, 'id_instalacion', 'id_instalacion');
+    }
+
+
+
 
 }

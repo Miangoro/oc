@@ -294,18 +294,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -434,6 +434,88 @@ $(function () {
       });
     });
   });
+
+
+  $(document).ready(function () {
+    $('#reporteForm').on('submit', function (e) {
+      e.preventDefault();
+      const exportUrl = $(this).attr('action');
+      const formData = $(this).serialize();
+
+      Swal.fire({
+        title: 'Generando Reporte...',
+        text: 'Por favor espera mientras se genera el reporte.',
+        icon: 'info',
+        didOpen: () => {
+          Swal.showLoading();
+        },
+        customClass: {
+          confirmButton: false
+        }
+      });
+
+      $.ajax({
+        url: exportUrl,
+        type: 'GET',
+        data: formData,
+        xhrFields: {
+          responseType: 'blob'
+        },
+        success: function (response, status, xhr) {
+          const disposition = xhr.getResponseHeader('Content-Disposition');
+          let filename = 'reporte.xlsx';
+
+          if (disposition && disposition.indexOf('filename=') !== -1) {
+            const matches = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+            if (matches != null && matches[1]) {
+              filename = matches[1].replace(/['"]/g, '');
+            }
+          }
+
+          // Crear el blob desde la respuesta
+          const blob = new Blob([response], { type: xhr.getResponseHeader('Content-Type') });
+          const url = window.URL.createObjectURL(blob);
+
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          window.URL.revokeObjectURL(url);
+
+          $('#exportarExcel').modal('hide');
+
+          Swal.fire({
+            title: '¡Éxito!',
+            text: `El reporte se generó exitosamente.`,
+            icon: 'success',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error('Error al generar el reporte:', error);
+          $('#exportarExcel').modal('hide');
+          Swal.fire({
+            title: '¡Error!',
+            text: 'Ocurrió un error al generar el reporte.',
+            icon: 'error',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+
+    });
+  });
+
+
+
+
 
   // changing the title
   $('.add-new').on('click', function () {

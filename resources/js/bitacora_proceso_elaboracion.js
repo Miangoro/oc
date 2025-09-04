@@ -445,6 +445,15 @@ $(document).ready(function () {
       $('#cargando').hide();
       $(this).show();
     }); */
+// Cuando abras el modal o al limpiar
+/*   $('#RegistrarBitacora').on('show.bs.modal', function () {
+      console.log('entro vez');
+      // En molienda
+      $("#tablaMolienda tr:not(:first)").remove();
+      // En segunda destilación
+      $("#tablaSegundaDestilacion tr:not(:first)").remove();
+  });
+ */
 
   $(document).on('click', '.firma-record', function () {
     // Cierra todos los modales de Bootstrap que estén abiertos

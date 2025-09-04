@@ -743,6 +743,8 @@ route::post('/destinos-update/{id_direccion}', 'update')->name('destinos.update'
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes')->middleware(['auth']);
 Route::resource('/user-list', UsuariosController::class)->middleware(['auth']);
 Route::get('/pdf_asignacion_usuario/{id}', [UsuariosController::class, 'pdfAsignacionUsuario'])->name('pdf_asignacion_usuario')->middleware(['auth']);
+Route::get('/usuarios/exportar', [UsuariosController::class, 'exportar'])->name('usuarios.exportar')->middleware(['auth']);
+
 
 Route::get('/usuarios/inspectores', [UsuariosInspectoresController::class, 'inspectores'])->name('usuarios-inspectores')->middleware(['auth']);
 Route::resource('/inspectores-list', UsuariosInspectoresController::class)->middleware(['auth']);

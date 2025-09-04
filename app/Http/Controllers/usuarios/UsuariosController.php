@@ -12,7 +12,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Spatie\Permission\Models\Role;
+use App\Exports\UsuariosExport;
 
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -328,4 +330,13 @@ public function edit($id): JsonResponse
   {
     $users = User::where('id', $id)->delete();
   }
+
+
+    public function exportar(Request $request)
+    {
+        $filtros = $request->all();
+        return Excel::download(new UsuariosExport($filtros), 'usuarios.xlsx');
+    }
+
+
 }
