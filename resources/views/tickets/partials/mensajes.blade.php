@@ -257,7 +257,7 @@
                                                         class="img-fluid rounded mt-1" style="max-width:150px;">
                                                 @else
                                                     {{-- Otros archivos --}}
-                                                    <div class="file-attachment mt-1 p-2 border rounded bg-white text-center"
+                                                    <div class="file-attachment mt-1 p-2 border rounded bg-info text-center"
                                                         style="max-width:300px;">
                                                         <a href="{{ asset('storage/' . $mensaje->archivo) }}"
                                                             target="_blank" class="d-flex text-decoration-none">

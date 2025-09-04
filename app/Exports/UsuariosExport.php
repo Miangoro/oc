@@ -55,7 +55,8 @@ public function map($usuario): array
     if (is_array($usuario->id_instalacion)) {
         $instalaciones = \App\Models\instalaciones::whereIn('id_instalacion', $usuario->id_instalacion)
             ->pluck('direccion_completa')
-            ->implode(', ');
+             ->implode("\n");
+            /* ->implode(', '); */
     } else {
         $instalaciones = 'N/A';
     }
@@ -81,17 +82,17 @@ public function registerEvents(): array
             // Encabezado grande
             $sheet->mergeCells('A1:H1');
             $sheet->getStyle('A1:H1')->getFont()->setBold(true)->setSize(14)->getColor()->setARGB('FFFFFF');
-            $sheet->getStyle('A1:H1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle('A1:H1')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('003366');
+            $sheet->getStyle('A1:H1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('003366');
 
             // Subtítulo
             $sheet->mergeCells('A2:H2');
-            $sheet->getStyle('A2:H2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A2:H2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
             // Encabezados
             $sheet->getStyle('A3:H3')->getFont()->setBold(true);
-            $sheet->getStyle('A3:H3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle('A3:H3')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('8eaadc');
+            $sheet->getStyle('A3:H3')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A3:H3')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('8eaadc');
 
             // Bordes
             $sheet->getStyle('A3:H' . $event->sheet->getHighestRow())
@@ -99,12 +100,20 @@ public function registerEvents(): array
                 ->getAllBorders()
                 ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-            // Auto ancho columnas
+            // Auto ancho columnas excepto instalaciones (B)
             foreach (range('A', 'H') as $col) {
-                $sheet->getColumnDimension($col)->setAutoSize(true);
+                if ($col !== 'B') {
+                    $sheet->getColumnDimension($col)->setAutoSize(true);
+                }
             }
+
+            // Columna de instalaciones: ancho fijo y wrap text
+            $sheet->getColumnDimension('B')->setWidth(40); // ajusta a tu gusto
+            $sheet->getStyle('B')->getAlignment()->setWrapText(true);
+            $sheet->getStyle('B')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
         },
     ];
 }
+
 
 }
