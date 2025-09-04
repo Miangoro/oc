@@ -260,7 +260,7 @@ public function store(Request $request)
 
         // Guardar archivo si existe
         if ($request->hasFile('archivo')) {
-            $mensaje->archivo = $request->file('archivo')->store('chat_files', 'public');
+            $mensaje->archivo = $request->file('archivo')->store('evidencias/chat_files', 'public');
             $mensaje->save(); // ⚠ importante
         }
 

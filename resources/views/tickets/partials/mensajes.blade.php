@@ -309,6 +309,7 @@
 
                 {{-- Input --}}
                 <div class="chat-history-footer">
+                    <div id="filePreviewContainer" class="mb-2"></div>
                     <form id="chatForm" class="form-send-message d-flex justify-content-between align-items-center mt-2"
                         enctype="multipart/form-data">
                         <input type="text" class="form-control message-input me-4 shadow-none"
@@ -339,11 +340,38 @@
     <script>
         $('#attach-doc').on('change', function() {
             const file = this.files[0];
+            const previewContainer = $('#filePreviewContainer');
+            previewContainer.empty(); // Limpiar previsualización previa
+
             if (file) {
-                $('.message-actions').find('.file-name').remove();
-                $('<span class="file-name ms-2 small text-muted"></span>')
-                    .text(file.name)
-                    .appendTo('.message-actions');
+                const ext = file.name.split('.').pop().toLowerCase();
+                let previewHtml = '';
+
+                if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+                    // Imagen
+                    previewHtml = `
+                <div class="file-preview mb-2 p-2 rounded bg-light d-flex align-items-center justify-content-between" style="max-width: 300px;">
+                    <img src="${URL.createObjectURL(file)}" class="img-fluid rounded" style="max-width:50px; max-height:50px;">
+                    <span class="ms-2 text-truncate" style="max-width:200px;">${file.name}</span>
+                    <button type="button" class="btn-close btn-sm ms-2" aria-label="Close"></button>
+                </div>`;
+                } else {
+                    // Otros archivos
+                    previewHtml = `
+                <div class="file-preview mb-2 p-2 rounded bg-light d-flex align-items-center justify-content-between" style="max-width: 300px;">
+                    <i class="ri-file-line fs-3"></i>
+                    <span class="ms-2 text-truncate" style="max-width:200px;">${file.name}</span>
+                    <button type="button" class="btn-close btn-sm ms-2" aria-label="Close"></button>
+                </div>`;
+                }
+
+                previewContainer.append(previewHtml);
+
+                // Permitir eliminar archivo antes de enviar
+                previewContainer.find('.btn-close').on('click', function() {
+                    $('#attach-doc').val('');
+                    previewContainer.empty();
+                });
             }
         });
 
@@ -456,6 +484,7 @@
                             $('#nuevoMensaje').val('');
                             $('#attach-doc').val(''); // Limpiar input
                             $('.message-actions').find('.file-name').remove();
+                            $('#filePreviewContainer').empty();
                             chatContainer.scrollTop(chatContainer[0].scrollHeight);
                         }
                     },

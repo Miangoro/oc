@@ -45,8 +45,8 @@
             <label for="estado" class="form-label">Estado</label>
             <select id="estado" class="form-select select2">
                 <option value="">Todos</option>
-                <option value="abierto">Abierto</option>
-                <option value="cerrado">Cerrado</option>
+                <option value="Abierto">Abierto</option>
+                <option value="Cerrado">Cerrado</option>
             </select>
         </div>
 
@@ -55,9 +55,9 @@
             <label for="prioridad" class="form-label">Prioridad</label>
             <select id="prioridad" class="form-select select2">
                 <option value="">Todas</option>
-                <option value="alta">Alta</option>
-                <option value="media">Media</option>
-                <option value="baja">Baja</option>
+                <option value="Alta">Alta</option>
+                <option value="Media">Media</option>
+                <option value="Baja">Baja</option>
             </select>
         </div>
 
