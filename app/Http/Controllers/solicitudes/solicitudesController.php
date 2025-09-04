@@ -184,7 +184,7 @@ public function index(Request $request)
     } */
     if (!empty($instalacionAuth)) {
         $query->whereIn('solicitudes.id_instalacion', $instalacionAuth)
-            ->where('it_tipo', '=', 10);
+            ->where('it_tipo', 10);
     }
     
     // Filtro especial para usuario 49
