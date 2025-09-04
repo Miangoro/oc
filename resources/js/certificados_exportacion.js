@@ -1426,6 +1426,7 @@ $(document).ready(function () {
   $(document).on('click', '.pdfCertificado', function () {
     var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
     var pdfUrl = '/certificado_exportacion/' + id; //Ruta del PDF
+    var sinMarca = '/certificado-sin-marca-exportacion/' + id;
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
 
@@ -1440,6 +1441,20 @@ $(document).ready(function () {
 
     $("#titulo_modal").text("Certificado de Exportación");
     $("#subtitulo_modal").text("PDF del Certificado");
+
+       ///botón de descarga sin marca de agua
+    if ($('#btnDescargarDinamico').length === 0) {
+      var botonDescarga = $(`
+        <a id="btnDescargarDinamico" href="${sinMarca}" class="btn btn-secondary ms-2" download>
+          Certificado sin marca de agua
+        </a>
+      `);
+      // Insertar el botón junto al de Nueva Pestaña
+      $('#NewPestana').after(botonDescarga);
+    } else {
+      // Solo actualizar el href si ya existe
+      $('#btnDescargarDinamico').attr('href', sinMarca).show();
+    }
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();

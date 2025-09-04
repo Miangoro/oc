@@ -955,7 +955,7 @@ public function storeRevisor(Request $request)
 
 
 ///PDF CERTIFICADO
-public function MostrarCertificadoExportacion($id_certificado)
+public function MostrarCertificadoExportacion($id_certificado,$conMarca = true)
 {
     $data = Certificado_Exportacion::find($id_certificado);//Obtener datos del certificado
 
@@ -1082,11 +1082,16 @@ public function MostrarCertificadoExportacion($id_certificado)
         'qrCodeBase64' => $qrCodeBase64
     ];
 
+    
+
 
     if (isset($data->fecha_emision) && $data->fecha_emision < '2025-07-01') {
         $edicion = 'pdfs.certificado_exportacion_ed12';
     } else {
-        $edicion = 'pdfs.certificado_exportacion_ed13';
+      
+          $edicion = $conMarca
+        ? 'pdfs.certificado_exportacion_ed13'
+        : 'pdfs.certificado_exportacion_ed13_sin_marca'; // asegúrate de que el archivo se llame así
     }
     //nombre al descargar
     //return $pdf->stream('F7.1-01-23 Ver 12. Certificado de Autenticidad de Exportación de Mezcal.pdf');
