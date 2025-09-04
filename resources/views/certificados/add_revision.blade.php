@@ -507,26 +507,22 @@
                                                 <i class="text-muted">N/A</i>
                                             @endif --}}
                                             @elseif ($doc2 && $combinado == 'No')
-                                                <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
-                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
-                                                </a>
 
-            <!--PARA LUZMA-->
-            @php
-            //$datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? '';
-            $lotesProcedencia = collect();
-        $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel ?? null;
+<!--PARA LUZMA-->
+@php
+//$datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? '';
+$lotesProcedencia = collect();
+$loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel ?? null;
+    if (!empty($loteGranel->lote_original_id)) {
+        $json = json_decode($loteGranel->lote_original_id, true);
 
-            if (!empty($loteGranel->lote_original_id)) {
-                $json = json_decode($loteGranel->lote_original_id, true);
-
-                if (isset($json['lotes']) && is_array($json['lotes'])) {
-                    $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
-                        ->whereIn('id_lote_granel', $json['lotes'])
-                        ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
-                }
-            }
-            @endphp
+        if (isset($json['lotes']) && is_array($json['lotes'])) {
+            $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
+                ->whereIn('id_lote_granel', $json['lotes'])
+                ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
+        }
+    }
+@endphp
 @if( $datos->certificado->dictamen->inspeccione->solicitud->id_empresa == 105)
     {{-- Mostramos folios --}}
     {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
@@ -545,6 +541,9 @@
         @endforeach
     @endforeach
 @endif
+                                                <a target="_blank" href="/files/{{ $numeroCliente }}/fqs/{{ $doc2->url }}">
+                                                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>
                                                 {{ $segundoFolio }}
                                             @else
                                                 <i class="text-muted">N/A</i>
