@@ -254,15 +254,15 @@
                                                 @if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif']))
                                                     {{-- Imagen --}}
                                                     <img src="{{ asset('storage/' . $mensaje->archivo) }}"
-                                                        class="img-fluid rounded mt-1" style="max-width:150px;">
+                                                        class="img-fluid rounded mt-1" style="max-width:300px;">
                                                 @else
                                                     {{-- Otros archivos --}}
-                                                    <div class="file-attachment mt-1 p-2 border rounded bg-info text-center"
+                                                    <div class="file-attachment mt-1 p-2 {{-- border --}} rounded bg-label-primary{{-- secondary --}} text-center"
                                                         style="max-width:300px;">
                                                         <a href="{{ asset('storage/' . $mensaje->archivo) }}"
                                                             target="_blank" class="d-flex text-decoration-none">
                                                             <i class="{{ $icon }}" style="font-size:40px;"></i>
-                                                            <div class="small text-truncate">{{ $fileName }}</div>
+                                                            <div class="small {{-- text-white --}} text-truncate">{{ $fileName }}</div>
                                                             <div class="text-muted small">.{{ $ext }}
                                                                 {{ $fileSize }}</div>
                                                         </a>
@@ -377,50 +377,73 @@
                     success: function(res) {
                         if (res.success) {
                             // Nombre siempre arriba
-                            const nombreHtml =
-                                `<strong class="d-block mb-1">${res.mensaje.usuario.name}</strong>`;
+                            const nombreHtml = `<strong class="d-block mb-1">${res.mensaje.usuario.name}</strong>`;
 
                             // Mensaje de texto (solo si existe)
-                            const mensajeHtml = res.mensaje.mensaje ?
-                                `<p class="mb-1">${res.mensaje.mensaje}</p>` :
-                                '';
+                            const mensajeHtml = res.mensaje.mensaje
+                                ? `<p class="mb-1">${res.mensaje.mensaje}</p>`
+                                : '';
 
-                            // Archivo adjunto (imagen o enlace)
+                            // Archivo adjunto (imagen o enlace con detalles)
                             let archivoHtml = '';
                             if (res.mensaje.archivo) {
                                 const ext = res.mensaje.archivo.split('.').pop().toLowerCase();
+                                const fileName = res.mensaje.archivo.split('/').pop();
+
                                 if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
-                                    archivoHtml =
-                                        `<img src="/storage/${res.mensaje.archivo}" class="img-fluid rounded mt-1" style="max-width:150px;">`;
+                                    archivoHtml = `
+                                        <img src="/storage/${res.mensaje.archivo}"
+                                            class="img-fluid rounded mt-1"
+                                            style="max-width:300px;">`;
                                 } else {
-                                    archivoHtml = `<p class="mt-1 mb-0">
-            <a href="/storage/${res.mensaje.archivo}" target="_blank">
-                <i class="ri-file-pdf-2-line ri-lg"></i>
-            </a>
-        </p>`;
+                                    // ícono según extensión
+                                    let icon = 'ri-file-line text-secondary';
+                                    if (ext === 'pdf') icon = 'ri-file-pdf-2-line text-danger';
+                                    else if (['doc','docx'].includes(ext)) icon = 'ri-file-word-line text-primary';
+                                    else if (['xls','xlsx'].includes(ext)) icon = 'ri-file-excel-line text-success';
+                                    else if (['ppt','pptx'].includes(ext)) icon = 'ri-file-ppt-line text-warning';
+
+                                   archivoHtml = `
+                                    <div class="file-attachment mt-1 p-2 rounded bg-label-primary text-center" style="max-width:300px;">
+                                      <a href="/storage/${res.mensaje.archivo}" target="_blank"
+                                        class="d-flex align-items-center gap-2 text-decoration-none overflow-hidden">
+                                        <i class="${icon} flex-shrink-0" style="font-size:40px;"></i>
+
+                                        <!-- Contenedor del texto: que pueda encogerse -->
+                                        <div class="flex-grow-1" style="min-width:0;">
+                                          <!-- Limita el ancho y aplica truncado -->
+                                          <div class="small text-truncate" style="max-width: 220px;" title="${fileName}">
+                                            ${fileName}
+                                          </div>
+                                          <div class="text-muted small">.${ext}</div>
+                                        </div>
+                                      </a>
+                                    </div>`;
+
                                 }
                             }
 
+                            // plantilla final
                             const html = `
-                    <li class="chat-message chat-message-right">
-                        <div class="d-flex justify-content-end overflow-hidden">
-                            <div class="chat-message-wrapper">
-                                <div class="chat-message-text p-2 rounded bg-primary text-white">
-                                    ${nombreHtml}
-                                    ${mensajeHtml}
-                                    ${archivoHtml}
-                                </div>
-                                <div class="text-end text-muted mt-1">
-                                    <small>${new Date(res.mensaje.created_at).toLocaleString()}</small>
-                                </div>
-                            </div>
-                            <div class="user-avatar flex-shrink-0 ms-4">
-                                <div class="avatar avatar-sm">
-                                    <img src="${res.mensaje.usuario.profile_photo_url || '/assets/img/avatars/1.png'}" class="rounded-circle">
-                                </div>
-                            </div>
-                        </div>
-                    </li>`;
+                                <li class="chat-message chat-message-right">
+                                    <div class="d-flex justify-content-end overflow-hidden">
+                                        <div class="chat-message-wrapper">
+                                            <div class="chat-message-text p-2 rounded bg-primary text-white">
+                                                ${nombreHtml}
+                                                ${mensajeHtml}
+                                                ${archivoHtml}
+                                            </div>
+                                            <div class="text-end text-muted mt-1">
+                                                <small>${new Date(res.mensaje.created_at).toLocaleString()}</small>
+                                            </div>
+                                        </div>
+                                        <div class="user-avatar flex-shrink-0 ms-4">
+                                            <div class="avatar avatar-sm">
+                                                <img src="${res.mensaje.usuario.profile_photo_url || '/assets/img/avatars/1.png'}" class="rounded-circle">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>`;
 
                             $('#chatContainer ul').append(html);
                             $('#nuevoMensaje').val('');
