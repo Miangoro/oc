@@ -179,8 +179,12 @@ public function index(Request $request)
     }*/
 
     // Filtro por instalaciones (usuario tipo 3)
-    if (!empty($instalacionAuth)) {
+    /* if (!empty($instalacionAuth)) {
         $query->whereIn('solicitudes.id_instalacion', $instalacionAuth);
+    } */
+    if (!empty($instalacionAuth)) {
+        $query->whereIn('solicitudes.id_instalacion', $instalacionAuth)
+            ->where('it_tipo', 10);
     }
     
     // Filtro especial para usuario 49
@@ -188,7 +192,7 @@ public function index(Request $request)
         $query->where('solicitudes.id_tipo', 11);
     }
 
-    
+
     $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
     $totalData = $baseQuery->count();// totalData (sin búsqueda)
 
