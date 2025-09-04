@@ -53,8 +53,10 @@ const ahora = new Date();
               icon: 'warning',
               title: 'Aviso',
               text: json.message,
-              confirmButtonText: 'Aceptar',
-              customClass: { confirmButton: 'btn btn-primary' }
+              //confirmButtonText: 'Aceptar',
+              customClass: { 
+                confirmButton: 'btn btn-primary' 
+              }
             });
           }
         return json.data; //sigue cargando la tabla
