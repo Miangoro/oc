@@ -82,7 +82,11 @@ class BitacoraProcesoElaboracionController extends Controller
                 }
            }
       $search = $request->input('search.value'); // <-- aquí viene el valor del campo de búsqueda de DataTables
-      $totalData = BitacoraProcesoElaboracion::count(); // Cambiado por el modelo correcto
+     /*  $totalData = BitacoraProcesoElaboracion::count();  */// Cambiado por el modelo correcto
+      $totalData = BitacoraProcesoElaboracion::query()->when($empresaIdAut, function ($query) use ($empresaIdAut) {
+                  $query->where('id_empresa', $empresaIdAut);
+              })->count();
+
       $totalFiltered = $totalData;
 
       $limit = $request->input('length');
@@ -94,7 +98,7 @@ class BitacoraProcesoElaboracionController extends Controller
                   $query->where('id_empresa', $empresaIdAut);
               });
 
-if (Auth::check() && Auth::user()->tipo == 3 && !empty($instalacionAuth)) {
+      if (Auth::check() && Auth::user()->tipo == 3 && !empty($instalacionAuth)) {
                 $query->whereIn('id_instalacion', $instalacionAuth);
             }
         /* if ($empresaId) {
@@ -121,6 +125,7 @@ if (Auth::check() && Auth::user()->tipo == 3 && !empty($instalacionAuth)) {
               }
           }
 
+        $filteredQuery = clone $query;
         if (!empty($search)) {
             $lower = strtolower($search);
 
@@ -129,7 +134,7 @@ if (Auth::check() && Auth::user()->tipo == 3 && !empty($instalacionAuth)) {
                 ->pluck('id_tipo')
                 ->toArray();
 
-            $query->where(function ($q) use ($search, $idsCoincidentes, $lower) {
+            $filteredQuery->where(function ($q) use ($search, $idsCoincidentes, $lower) {
                 if ($lower === 'firmado') {
                     $q->where(function ($q2) {
                         $q2->whereRaw("JSON_EXTRACT(id_firmante, '$.entrada_maguey.id_firmante') > 0")
@@ -168,12 +173,14 @@ if (Auth::check() && Auth::user()->tipo == 3 && !empty($instalacionAuth)) {
                 }
             });
 
-            $totalFiltered = $query->count();
+            $totalFiltered = $filteredQuery->count();
+        } else {
+            $totalFiltered = $filteredQuery->count();
         }
 
 
 
-        $users = $query->offset($start)
+        $users = $filteredQuery->offset($start)
         ->limit($limit)
         ->orderBy('id', 'desc')
         ->get();
