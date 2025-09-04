@@ -90,10 +90,14 @@ $(function () {
           }
         },
         { data: 'contacto' },
-        { data: 'rol' },
+        { data: 'rol',
+          searchable: false,
+          orderable: false,
+         },
         { data: 'id' },
         {
           data: 'estatus',
+          orderable: false,
           render: function (data, type, row) {
             if (data === 'Inactivo' || !data) {
               return `<span class="badge rounded-pill badge text-bg-danger">${data}</span>`;
@@ -202,6 +206,8 @@ $(function () {
         },
         {
           targets: 8,
+          searchable: false,
+          orderable: false,
           render: function (data, type, full, meta) {
             return '<span>' + (full['contacto'] ?? 'sin persona de contacto') + '</span>';
           }
@@ -209,6 +215,8 @@ $(function () {
         {
           //PDF carta asignacion
           targets: 10,
+          searchable: false,
+          orderable: false,
           className: 'text-center',
           render: function (data, type, full, meta) {
             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdfCartAsignacion cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id']}" data-nombre="${full['name']}"></i>`;
