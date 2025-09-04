@@ -515,7 +515,7 @@
             @php
             //$datos->certificado->dictamen->inspeccione->solicitud->lote_granel->folio_fq ?? '';
             $lotesProcedencia = collect();
-        $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->first() ?? null;
+        $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel ?? null;
 
             if (!empty($loteGranel->lote_original_id)) {
                 $json = json_decode($loteGranel->lote_original_id, true);
@@ -530,7 +530,7 @@
                 @if( $datos->certificado->dictamen->inspeccione->solicitud->id_empresa == 105)
                     {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
                 @endif
-                                                {{ $segundoFolio }} otro
+                                                {{ $segundoFolio }}
                                             @else
                                                 <i class="text-muted">N/A</i>
                                             @endif
