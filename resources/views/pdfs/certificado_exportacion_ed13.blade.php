@@ -427,35 +427,30 @@
                 {{ $lote->cont_alc_envasado ?? 'No encontrado' }}%
             </td>
         </tr>
+
+<!--FOLIOS FQ's-->
         @php
             $folios = explode(',', $lote->lotesGranel->first()->folio_fq ?? 'No encontrado');
             $folio1 = trim($folios[0] ?? '');
             $folio2 = isset($folios[1]) && trim($folios[1]) !== '' ? trim($folios[1]) : 'NA';
+        
+            $lotesProcedencia = collect();
+            if (!empty($lote->lotesGranel->first()->lote_original_id)) {
+                $json = json_decode($lote->lotesGranel->first()->lote_original_id, true);
 
-            
+                if (isset($json['lotes']) && is_array($json['lotes'])) {
+                    $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
+                        ->whereIn('id_lote_granel', $json['lotes'])
+                        ->orderBy('id_lote_granel', 'desc')
+                        ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
+                }
+            }
         @endphp
-
-            @php
-                    $lotesProcedencia = collect();
-                    if (!empty($lote->lotesGranel->first()->lote_original_id)) {
-                        $json = json_decode($lote->lotesGranel->first()->lote_original_id, true);
-
-                        if (isset($json['lotes']) && is_array($json['lotes'])) {
-                            $lotesProcedencia = \App\Models\LotesGranel::with('certificadoGranel')
-                                ->whereIn('id_lote_granel', $json['lotes'])
-                                ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
-                        }
-                    }
-                @endphp
         <tr>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 No. de análisis:</td>
             <td style="text-align: left; padding-left: 4px;">
-                
-                 
                   {{ $folio1 }}
-
-                
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 No. lote granel:</td>
@@ -474,10 +469,11 @@
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px; height: 30px">No.
                 de análisis ajuste:</td>
             <td style="text-align: left; padding-left: 4px;">
+                {{ $folio2 }} &nbsp;
+
                 @if( $data->dictamen->inspeccione->solicitud->empresa->id_empresa == 105)
                     {{ $lotesProcedencia->isNotEmpty() ? $lotesProcedencia->pluck('folio_fq')->join(', ') . ',' : '' }}
                  @endif
-                {{ $folio2 }} &nbsp;
             </td>
             <td style="text-align: right; font-weight: bold; font-size: 12px; padding-right: 8px;">
                 No. de lote envasado:</td>
