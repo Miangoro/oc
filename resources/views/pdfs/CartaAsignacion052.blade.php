@@ -130,10 +130,24 @@ Mezcal (Bebidas alcohólicas preparadas, Cócteles, Licores o cremas) en los esl
         <p>Atentamente.</p>
 
     </div>
-    <div style="margin-bottom: 50px; text-align: center">
-        <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_mayra.png') }}">
-        <p class="text_al text-center">GERENTE TÉCNICO DEL ORGANISMO</p>
-        <p class="text_al text-center">CERTIFICADOR CIDAM A.C.</p>
+ @php
+        use Illuminate\Support\Facades\Storage;
+        $firma = $contacto->firma ?? null;
+        $firmaPath = $firma ? 'firmas/' . $firma : null;
+    @endphp
+
+    @if ($firma && Storage::disk('public')->exists($firmaPath))
+        <img style="position: absolute; left: 37%; margin-top: 4%; " height="60px"
+        src="{{ public_path('storage/' . $firmaPath) }}">
+        <img style="position: absolute; left: 55%;" height="130px" width="180px" src="{{ public_path('img_pdf/Sello oc.png') }}" alt="sello">
+    @endif
+
+    <div style="font-size: 16px; text-align: center; margin-top: 10px;">
+        <p>Atentamente. <br><br><br>
+
+            <u>{{$contacto->name ?? 'No encontrado'}}</u><br><br>
+            {{$contacto->puesto ?? 'No encontrado'}}
+        </p>
     </div>
     
     <div style="margin-bottom: 20px;">
