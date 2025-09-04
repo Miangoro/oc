@@ -708,7 +708,7 @@ public function MostrarDictamenGranel($id_dictamen)
 
     $pdf = [
         'data' => $data,
-        'estado' => $estado,
+        'estado' => $data->inspeccione->solicitud->lote_granel->estados->nombre ?? 'No encontrado',
         'fecha_servicio' => $fecha_servicio,
         'fecha_emision' => $fecha_emision,
         'fecha_vigencia' => $fecha_vigencia,

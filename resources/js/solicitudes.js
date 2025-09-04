@@ -47,8 +47,17 @@ const ahora = new Date();
       url: baseUrl + 'solicitudes-list',
       type: 'GET',
       dataSrc: function (json) {
-        /*  console.log(json); */ // Ver los datos en la consola
-        return json.data;
+          console.log('Estado:', json.message); // ver en  consola
+          if (json.message) {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Aviso',
+              text: json.message,
+              confirmButtonText: 'Aceptar',
+              customClass: { confirmButton: 'btn btn-primary' }
+            });
+          }
+        return json.data; //sigue cargando la tabla
       },
       error: function (xhr, error, thrown) {
         console.error('Error en la solicitud Ajax:', error);
@@ -483,11 +492,13 @@ const ahora = new Date();
       '<"col-sm-12 col-md-6"p>' +
       '>',
     lengthMenu: [10, 20, 50, 70, 100],
+
     language: {
       sLengthMenu: '_MENU_',
       search: '',
       searchPlaceholder: 'Buscar',
       info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
+      emptyTable: 'No hay solicitudes disponibles', //agregado
       paginate: {
         sFirst: 'Primero',
         sLast: 'Último',
@@ -495,6 +506,7 @@ const ahora = new Date();
         sPrevious: 'Anterior'
       }
     },
+
     buttons: [
       {
         extend: 'collection',
