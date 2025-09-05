@@ -120,7 +120,7 @@
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="row g-0 align-items-center">
                         <!-- Texto de bienvenida -->
-                        <div class="col-md-4 p-4">
+                        <div class="col-md-3 p-4">
                             <div class="card-body">
                                 <h4 class="card-title mb-3">
                                     👋 Bienvenido a la nueva Plataforma
@@ -155,7 +155,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-5 text-center d-none d-md-block">
+                        <div class="col-md-6 text-center d-none d-md-block p-2">
                                 <div class="row">
     @foreach($maquiladores as $maquilador)
         @foreach($maquilador->maquiladores as $m)
