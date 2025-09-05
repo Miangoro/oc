@@ -150,6 +150,8 @@ public function index(Request $request)
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
             ->orWhereRaw("DATE_FORMAT(dictamenes_envasado.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
             ->orWhere('lotes_envasado.nombre', 'LIKE', "%{$search}%")
+            ->orWhere('lotes_envasado.sku', 'LIKE', "%{$search}%")
+            ->orWhere('lotes_granel.folio_fq', 'LIKE', "%{$search}%")
             ->orWhere('lotes_granel.nombre_lote', 'LIKE', "%{$search}%");
         });
 
