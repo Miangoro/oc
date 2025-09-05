@@ -474,7 +474,7 @@ class solicitudHolograma extends Controller
     } */
 
     //Metodo para cargar el pdf
-    public function ModelsSolicitudHolograma($id)
+    public function solicitud_de_holograma($id)
     {
         // Cargar la solicitud de holograma con la relación de la empresa
         $datos = ModelsSolicitudHolograma::with('empresa', 'direcciones', 'user', 'empresanumcliente','marcas')->findOrFail($id);

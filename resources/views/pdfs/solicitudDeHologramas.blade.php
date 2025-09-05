@@ -14,7 +14,7 @@
             margin-left: 43px;
             margin-right: 43px;
             margin-top: 43px;
-            margin-bottom: 43px;
+            margin-bottom: 15px;
 
         }
 
@@ -174,9 +174,9 @@
 
     <table>
         <tr>
-            <td colspan="2" class="td-no-border" style="width: 380px">&nbsp;</td>
+            <td colspan="2" class="td-no-border" style="width: 360px">&nbsp;</td>
             <td class="no-padding"> <p class="negrita" style="margin: 0"> Folio de solicitud:</p> </td>
-            <td class="no-padding">{{ $datos->folio }}</td>
+            <td class="no-padding negrita" style="font-size: 15px; color: #006fc0">{{ $datos->folio }}</td>
         </tr>
     </table>
 
@@ -187,7 +187,7 @@
         </tr>
         <tr>
             <td class="rightLetter negrita" style="width: 250px">Nombre:</td>
-            <td class="letra-up">{{ $datos->direcciones->nombre_recibe }}</td>
+            <td class="letra-up">{{ $datos->direcciones->nombre_recibe }} <br> <span class="negrita">{{ $datos->empresa->razon_social }}</span></td>
         </tr>
         <tr>
             <td class="rightLetter negrita">Puesto: </td>
@@ -235,7 +235,7 @@
 <tr>
     <td class="rightLetter negrita" >Total de hologramas <br>
         enviados:</td>
-        <td colspan="3" class="letra-up">{{ number_format($datos->cantidad_hologramas) }} Hologramas</td>
+        <td colspan="3" class="letra-up negrita" style="font-size:16">{{ number_format($datos->cantidad_hologramas) }} Hologramas</td>
 
 </tr>
 <tr >
