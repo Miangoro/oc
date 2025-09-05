@@ -241,7 +241,7 @@ Instalaciones a:</p>
 	<tbody>
 		<tr>
 			<td><strong>Domicilio Fiscal:</strong></td>
-			<td class="center">{{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal }}</td>
+			<td class="center">{{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal }}  C.P. {{ $datos->inspeccione->solicitud->empresa->cp ?? '' }}</td>
 		</tr>
 		<tr>
 			<td><strong>Domicilio del área de maduración:</strong></td>

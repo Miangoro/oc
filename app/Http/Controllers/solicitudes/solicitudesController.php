@@ -190,9 +190,9 @@ public function index(Request $request)
     }
     
     // Filtro especial para usuario 49
-    /*if ($userId == 49) {
+    if ($userId == 49) {
         $query->where('solicitudes.id_tipo', 11);
-    }*/
+    }
 
 
     $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento

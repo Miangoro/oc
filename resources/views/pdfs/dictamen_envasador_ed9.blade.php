@@ -310,7 +310,7 @@
 
         <p class="datos-comercio">
             <span class="resaltado2">Domicilio Fiscal:</span>
-            {{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal ?? '' }}<br>
+            {{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal ?? '' }}  C.P. {{ $datos->inspeccione->solicitud->empresa->cp ?? '' }}<br>
             <span class="resaltado2">Domicilio de la unidad de comercialización: </span>
             {{ $datos->instalaciones->direccion_completa ?? '' }}<br>
             <span class="resaltado2">Categorías de mezcal:</span> Mezcal, Mezcal Artesanal, Mezcal Ancestral<br>

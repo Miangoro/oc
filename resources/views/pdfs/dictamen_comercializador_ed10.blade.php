@@ -281,7 +281,7 @@
                         <span class="font-lucida-sans-seminegrita">Domicilio Fiscal:</span><br>
                     </td>
                     <td style="text-align: center; vertical-align: middle;">
-                        {{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal ?? '' }}</td>
+                        {{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal ?? '' }}  C.P. {{ $datos->inspeccione->solicitud->empresa->cp ?? '' }}</td>
                 </tr>
                 <tr>
                     <td>
