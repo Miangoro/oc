@@ -205,7 +205,30 @@ public function pdfCartaAsignacion($id)
         JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa) JOIN catalogo_actividad_cliente ac
         ON (a.id_actividad = ac.id_actividad) JOIN empresa_num_cliente nc ON (nc.id_empresa = e.id_empresa)
         WHERE nc.numero_cliente="' . $id . '" GROUP BY nc.numero_cliente');
-        $pdf = Pdf::loadView('pdfs.CartaAsignacion052', ['datos' => $res]);
+
+        $fecha_registro = Carbon::parse($res[0]->created_at)->translatedFormat('j \d\e F \d\e\l Y');
+    // Obtener ID de la empresa
+    $empresa_id = DB::table('empresa_num_cliente')->where('numero_cliente', $id)->value('id_empresa');
+    // Contar cuántas empresas se registraron antes (puedes ajustar la lógica si lo deseas más estricto)
+    $consecutivo = DB::table('empresa')->where('id_empresa', '<=', $empresa_id)->count();
+    // Año de registro
+    $anio_registro = Carbon::parse($res[0]->created_at)->format('Y');
+    // Formatear el número con ceros
+    $codigo_oficio = 'CIDAM052/OC/' . str_pad($consecutivo, 3, '0', STR_PAD_LEFT) . '/' . $anio_registro;
+
+    /*$empresa2 = empresa::where('id_empresa', '=', $empresa_id)->get();
+    $contacto = User::find($empresa2->id_contacto);*/
+    $empresa2 = empresa::where('id_empresa', $empresa_id)->first(); // o empresa::find($empresa_id)
+    $contacto = $empresa2 ? User::find($empresa2->id_contacto) : null;
+
+        $pdf = Pdf::loadView('pdfs.CartaAsignacion052', [
+             'datos' => $res,
+            'fecha_registro' => $fecha_registro ?? 'No encontrado',
+            'codigo_oficio' => $codigo_oficio,
+            'contacto'=>$contacto,
+        ]);
+
+        
         return $pdf->stream('Carta de asignación de número de cliente.pdf');
     }
 

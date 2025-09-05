@@ -88,8 +88,8 @@
     </div>
 
     <div class="section content">
-        <p class="text_al left">Oficio:<strong>CIDAM052/OC/____/20__</strong></p>
-        <p class="text_al left">Morelia, Michoacán. a __ de _____ del 20__</p>
+        <p class="text_al left">Oficio:<strong>{{ $codigo_oficio }}</strong></p>
+        <p class="text_al left">Morelia, Michoacán. a {{$fecha_registro}}</p>
         <p class="text_al left">ASUNTO: Asignación del número de cliente.</p>
     </div>
 
