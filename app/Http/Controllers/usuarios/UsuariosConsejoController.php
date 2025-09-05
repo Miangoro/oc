@@ -84,24 +84,27 @@ class UsuariosConsejoController extends Controller
     } else {
       $search = $request->input('search.value');
 
-      $users = User::where('id', 'LIKE', "%{$search}%")
-        ->where("tipo",3)
-        ->orWhere('name', 'LIKE', "%{$search}%")
-        ->orWhere('email', 'LIKE', "%{$search}%")
-        ->orWhere('puesto', 'LIKE', "%{$search}%")
+      $users = User::where("tipo", 4)
+          ->where(function ($q) use ($search) {
+              $q->where('id', 'LIKE', "%{$search}%")
+                ->orWhere('name', 'LIKE', "%{$search}%")
+                ->orWhere('email', 'LIKE', "%{$search}%")
+                ->orWhere('puesto', 'LIKE', "%{$search}%");
+          })
+          ->offset($start)
+          ->limit($limit)
+          ->orderBy($order, $dir)
+          ->get();
 
-        ->offset($start)
-        ->limit($limit)
-        ->orderBy($order, $dir)
-        ->get();
+      $totalFiltered = User::where("tipo", 4)
+          ->where(function ($q) use ($search) {
+              $q->where('id', 'LIKE', "%{$search}%")
+                ->orWhere('name', 'LIKE', "%{$search}%")
+                ->orWhere('email', 'LIKE', "%{$search}%")
+                ->orWhere('puesto', 'LIKE', "%{$search}%");
+          })
+          ->count();
 
-      $totalFiltered = User::where('id', 'LIKE', "%{$search}%")
-        ->where("tipo",2)
-        ->orWhere('name', 'LIKE', "%{$search}%")
-        ->orWhere('email', 'LIKE', "%{$search}%")
-        ->orWhere('puesto', 'LIKE', "%{$search}%")
-
-        ->count();
     }
 
     $data = [];
@@ -211,7 +214,7 @@ class UsuariosConsejoController extends Controller
                   'firma' => $firmaPath, // Guardar la firma nueva o existente
               ]
           );
-          $users->syncRoles($request->rol_id); 
+          $users->syncRoles($request->rol_id);
           return response()->json('Modificado');
       } else {
           // Crear nuevo usuario si el correo no existe
@@ -230,7 +233,7 @@ class UsuariosConsejoController extends Controller
                   'tipo' => 4, // Tipo de usuario
                   'firma' => $firmaPath, // Guardar la firma si existe
               ]);
-              $users->syncRoles($request->rol_id); 
+              $users->syncRoles($request->rol_id);
               return response()->json('Registrado');
           } else {
               return response()->json(['message' => 'Ya existe'], 422);
