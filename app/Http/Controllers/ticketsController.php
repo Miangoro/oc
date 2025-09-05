@@ -243,33 +243,61 @@ public function store(Request $request)
   // Enviar un mensaje
   public function storeMensaje(Request $request, $ticketId)
   {
-        $request->validate([
-            'mensaje' => 'nullable|string|max:1000',
-            'archivo' => 'nullable|file|max:10240', // 10 MB máximo
-        ]);
+      $request->validate([
+          'mensaje' => 'nullable|string|max:1000',
+          'archivo' => 'nullable|file|max:10240', // 10 MB máximo
+      ]);
 
-        $ticket = Ticket::findOrFail($ticketId);
-        $user = auth()->user();
-        $rol = ($user->puesto === 'Desarrollador') ? 'admin' : 'usuario';
+      $ticket = Ticket::findOrFail($ticketId);
+      $user = auth()->user();
+      $rol = ($user->puesto === 'Desarrollador') ? 'admin' : 'usuario';
 
-        $mensaje = $ticket->mensajes()->create([
-            'mensaje' => $request->mensaje,
-            'id_usuario' => $user->id,
-            'rol_emisor' => $rol,
-        ]);
+      // Guardar mensaje
+      $mensaje = $ticket->mensajes()->create([
+          'mensaje'    => $request->mensaje,
+          'id_usuario' => $user->id,
+          'rol_emisor' => $rol,
+      ]);
 
-        // Guardar archivo si existe
-        if ($request->hasFile('archivo')) {
-            $mensaje->archivo = $request->file('archivo')->store('evidencias/chat_files', 'public');
-            $mensaje->save(); // ⚠ importante
-        }
+      // Guardar archivo si existe
+      if ($request->hasFile('archivo')) {
+          $mensaje->archivo = $request->file('archivo')->store('evidencias/chat_files', 'public');
+          $mensaje->save();
+      }
+      // Si el mensaje lo envía el admin, cambiar estatus a "abierto"
+      if ($rol === 'admin' && $ticket->estatus !== 'abierto') {
+          $ticket->estatus = 'abierto';
+          $ticket->save();
+      }
 
-        // Devolver JSON para AJAX
-        return response()->json([
-            'success' => true,
-            'mensaje' => $mensaje->load('usuario') // carga relación usuario para mostrar nombre
-        ]);
+      // 🔔 Preparar datos para notificación
+      $data = [
+          'title'   => 'Nuevo mensaje en ticket',
+          'message' => "Folio: {$ticket->folio} — {$user->name} te escribió un mensaje",
+          'url'     => route('tickets.ver', $ticket->id_ticket),
+      ];
+
+      if ($rol === 'usuario') {
+          // Si escribe el usuario → notificar a admins
+          $admins = User::where('puesto', 'Desarrollador')->get();
+          foreach ($admins as $admin) {
+              $admin->notify(new GeneralNotification($data));
+          }
+      } else {
+          // Si escribe admin → notificar al usuario creador del ticket
+          $destinatario = User::find($ticket->id_usuario);
+          if ($destinatario) {
+              $destinatario->notify(new GeneralNotification($data));
+          }
+      }
+
+      // Devolver JSON para AJAX
+      return response()->json([
+          'success' => true,
+          'mensaje' => $mensaje->load('usuario')
+      ]);
   }
+
 
 
 

@@ -88,6 +88,9 @@
                     </select>
                     <button id="btnActualizarEstatus" class="btn btn-sm btn-primary ms-1">Actualizar</button>
                 </p>
+                <div id="alertEstatus" class="alert alert-success d-none" role="alert">
+                    ¡El estatus ha sido actualizado!
+                </div>
 
 
                 @if ($ticket->evidencias->count())
@@ -536,7 +539,18 @@
                             .removeClass('bg-warning bg-success bg-danger bg-secondary')
                             .addClass('bg-' + color);
 
-                        Swal.fire('¡Éxito!', 'Estatus actualizado correctamente', 'success');
+                        /* Swal.fire('¡Éxito!', 'Estatus actualizado correctamente', 'success'); */
+                        // Mostrar alert Bootstrap
+                        $('#alertEstatus')
+                            .removeClass('d-none')
+                            .text('¡Estatus actualizado correctamente!')
+                            .fadeIn();
+
+                        // Ocultarlo después de 3 segundos
+                        setTimeout(() => {
+                            $('#alertEstatus').fadeOut();
+                        }, 3000);
+
                     }
                 },
                 error: function(xhr) {
