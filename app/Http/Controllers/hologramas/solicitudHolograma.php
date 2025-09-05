@@ -306,8 +306,8 @@ class solicitudHolograma extends Controller
                 // Si existe un registro previo, usar su folio_final + 1 como el nuevo folio_inicial
 
                 $folioInicial = $ultimoFolio ? $ultimoFolio + 1 : 1;
-                $holograma->folio_inicial = $folioInicial;
-                $holograma->folio_final = $folioInicial + $request->input('edit_cantidad_hologramas') - 1;
+               // $holograma->folio_inicial = $folioInicial;
+                //$holograma->folio_final = $folioInicial + $request->input('edit_cantidad_hologramas') - 1;
 
             // Guarda los cambios en la base de datos
             $holograma->save();
