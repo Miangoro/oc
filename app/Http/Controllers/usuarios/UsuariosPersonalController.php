@@ -66,24 +66,29 @@ class UsuariosPersonalController extends Controller
     } else {
       $search = $request->input('search.value');
 
-      $users = User::where('id', 'LIKE', "%{$search}%")
-        ->where("tipo", 1)
-        ->orWhere('name', 'LIKE', "%{$search}%")
-        ->orWhere('email', 'LIKE', "%{$search}%")
-        ->orWhere('puesto', 'LIKE', "%{$search}%")
-        ->orWhere('estatus', 'LIKE', "%{$search}%")
+    $users = User::where("tipo", 1)
+        ->where(function ($q) use ($search) {
+            $q->where('id', 'LIKE', "%{$search}%")
+              ->orWhere('name', 'LIKE', "%{$search}%")
+              ->orWhere('email', 'LIKE', "%{$search}%")
+              ->orWhere('puesto', 'LIKE', "%{$search}%")
+              ->orWhere('estatus', 'LIKE', "%{$search}%");
+        })
         ->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
         ->get();
 
-      $totalFiltered = User::where('id', 'LIKE', "%{$search}%")
-        ->where("tipo", 1)
-        ->orWhere('name', 'LIKE', "%{$search}%")
-        ->orWhere('email', 'LIKE', "%{$search}%")
-        ->orWhere('puesto', 'LIKE', "%{$search}%")
-        ->orWhere('estatus', 'LIKE', "%{$search}%")
+    $totalFiltered = User::where("tipo", 1)
+        ->where(function ($q) use ($search) {
+            $q->where('id', 'LIKE', "%{$search}%")
+              ->orWhere('name', 'LIKE', "%{$search}%")
+              ->orWhere('email', 'LIKE', "%{$search}%")
+              ->orWhere('puesto', 'LIKE', "%{$search}%")
+              ->orWhere('estatus', 'LIKE', "%{$search}%");
+        })
         ->count();
+
     }
 
     $data = [];
@@ -187,7 +192,7 @@ class UsuariosPersonalController extends Controller
                   'firma' => $firmaPath, // Guardar la ruta de la firma
               ]
           );
-          $users->syncRoles($request->rol_id); 
+          $users->syncRoles($request->rol_id);
           return response()->json('Modificado');
       } else {
           // Crear un nuevo usuario si el email no existe
@@ -206,7 +211,7 @@ class UsuariosPersonalController extends Controller
                   'tipo' => 1,
                   'firma' => $firmaPath, // Guardar la ruta de la firma si existe
               ]);
-              $users->syncRoles($request->rol_id); 
+              $users->syncRoles($request->rol_id);
               return response()->json('Registrado');
           } else {
               return response()->json(['message' => "ya existe"], 422);
