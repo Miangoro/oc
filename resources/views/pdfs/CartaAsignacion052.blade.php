@@ -88,7 +88,7 @@
     </div>
 
     <div class="section content">
-        <p class="text_al left">Oficio:<strong>{{ $codigo_oficio }}</strong></p>
+        <p class="text_al left">Oficio: <strong>{{ $codigo_oficio }}</strong></p>
         <p class="text_al left">Morelia, Michoacán. a {{$fecha_registro}}</p>
         <p class="text_al left">ASUNTO: Asignación del número de cliente.</p>
     </div>
@@ -106,12 +106,12 @@ Mezcal (Bebidas alcohólicas preparadas, Cócteles, Licores o cremas) en los esl
                 $total = count($datos);
                 $i = 0;
             @endphp
+
             @foreach ($datos as $eslabon)
-            
-            <strong>{{$eslabon->actividad}}</strong>@if ($i > 0),@endif
+            <strong>{{$eslabon->actividad}}</strong>{{ !$loop->last ? ',' : '' }}
             @php
-            $i++;
-        @endphp
+                $i++;
+            @endphp
             @endforeach
             
             por consiguiente se le designa el número:</p>
