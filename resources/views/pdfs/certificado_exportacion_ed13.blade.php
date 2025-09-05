@@ -304,25 +304,9 @@
 
 
 <!--PARA HOLOGRAMAS-->
-
-@php
-    $oldHologramas1 = json_decode($data->old_hologramas, true); // ahora es un array real
-    $oldHologramas = '';
-
-    foreach ($oldHologramas1 as $holograma) {
-        $codigo = str_replace('-', '', $holograma);
-        $url = "https://oc.erpcidam.com/holograma.php?c=NOM-070-{$codigo}";
-        $oldHologramas .= "<a href='{$url}' target='_blank' class='badge bg-primary text-decoration-none p-2'>{$holograma}</a> ";
-    }
-@endphp
-
-
 @php
     $idHologramas = json_decode($data->id_hologramas, true);
-    
-
-    
-
+    $oldHologramas = json_decode($data->old_hologramas, true);
     $contador = 0;
 
     ///SOLICITUD Y ACTIVACION HOLOGRAMAS
