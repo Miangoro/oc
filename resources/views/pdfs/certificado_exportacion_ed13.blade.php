@@ -304,9 +304,28 @@
 
 
 <!--PARA HOLOGRAMAS-->
+
+@php
+    $oldHologramas1 = json_decode($data->old_hologramas, true);
+    $hologramasArray = array_map('trim', explode('-', $hologramas));
+
+    $hologramasArray = array_map('trim', explode('-', $oldHologramas1));
+    $oldHologramas = '';
+
+    foreach ($hologramasArray as $holograma) {
+        $codigo = str_replace('-', '', $holograma);
+        $url = "https://oc.erpcidam.com/holograma.php?c=NOM-070-{$codigo}";
+        $oldHologramas .= "<a href='{$url}' target='_blank' class='badge bg-primary text-decoration-none p-2'>{$holograma}</a> ";
+    }
+@endphp
+
+
 @php
     $idHologramas = json_decode($data->id_hologramas, true);
-    $oldHologramas = json_decode($data->old_hologramas, true);
+    
+
+    
+
     $contador = 0;
 
     ///SOLICITUD Y ACTIVACION HOLOGRAMAS
@@ -371,7 +390,7 @@
         // old_hologramas
         if (!empty($oldHologramas[$clave])) {
             $lineaConSaltos = str_replace(',', '<br>', $oldHologramas[$clave]);
-            $contenido .= ($contenido ? '<br>dsdfdsf' : '') . $lineaConSaltos;
+            $contenido .= ($contenido ? '<br>' : '') . $lineaConSaltos;
         }
 
         if (empty($contenido)) {
