@@ -370,7 +370,7 @@
 
         // old_hologramas
         if (!empty($oldHologramas[$clave])) {
-            $lineaConSaltos = str_replace(',', '<br>', $oldHologramas[$clave]);
+            $lineaConSaltos = str_replace(',', '<br>dfsdfsdf', $oldHologramas[$clave]);
             $contenido .= ($contenido ? '<br>' : '') . $lineaConSaltos;
         }
 
