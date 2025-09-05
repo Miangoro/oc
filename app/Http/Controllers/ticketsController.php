@@ -84,13 +84,17 @@ class ticketsController extends Controller
     $orderDir = $request->input('order.0.dir', 'desc');
 
     $columns = [
-        0 => 'id_ticket',
-        1 => 'folio',
-        2 => 'asunto',
-        3 => 'prioridad',
-        4 => 'estatus',
-        5 => 'created_at',
+        0 => 'id_ticket',   // control (no se ordena, pero hay que poner algo)
+        1 => 'id_ticket',   // fake_id -> usamos id_ticket para orden real
+        2 => 'folio',
+        3 => 'asunto',
+        4 => 'id_usuario',      // solicitante (relación con usuario)
+        5 => 'prioridad',
+        6 => 'estatus',
+        7 => 'created_at',
+        8 => 'id_ticket',   // acciones (no ordena, pero placeholder)
     ];
+
 
     /* $query = Ticket::query(); */
    /*  $query = Ticket::where('id_usuario', auth()->id()); */
@@ -149,7 +153,7 @@ class ticketsController extends Controller
             'solicitante' => $ticket->usuario->name,
             'prioridad' => $ticket->prioridad,
             'estatus' => $ticket->estatus,
-            'created_at' => $ticket->created_at->format('d/m/Y H:i'),
+            'created_at' => $ticket->created_at->translatedFormat('j \d\e F \d\e\l Y'),
         ];
     }
 

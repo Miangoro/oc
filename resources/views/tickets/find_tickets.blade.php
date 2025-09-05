@@ -75,6 +75,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
+                        <th>Id</th>
                         <th>Folio</th>
                         <th>Asunto</th>
                         <th>Solicitante</th>

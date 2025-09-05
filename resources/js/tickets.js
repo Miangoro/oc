@@ -41,15 +41,17 @@ $(function () {
         }
       },
       columns: [
-        { data: 'fake_id' }, // 0 -> #
-        { data: 'folio' }, // 1 -> Folio
-        { data: 'asunto' }, // 2 -> Asunto
-        { data: 'Solicitante' },// 3 solciitante
-        { data: 'prioridad' }, // 4 -> Prioridad
-        { data: 'estatus' }, // 5-> Estado
-        { data: 'created_at' },
-        { data: 'acciones' }
+        { data: '' },             // 0 -> control
+        { data: 'fake_id' },      // 1 -> #
+        { data: 'folio' },        // 2 -> Folio
+        { data: 'asunto' },       // 3 -> Asunto
+        { data: 'solicitante' },  // 4 -> Solicitante
+        { data: 'prioridad' },    // 5 -> Prioridad
+        { data: 'estatus' },      // 6 -> Estatus
+        { data: 'created_at' },   // 7 -> Fecha
+        { data: 'acciones' }      // 8 -> Acciones
       ],
+
       columnDefs: [
         {
           className: 'control',
@@ -70,17 +72,28 @@ $(function () {
           }
         },
         {
-          searchable: false,
-          orderable: false,
-          targets: 3,
+          targets: 2,
+          render: function (data, type, full) {
+            var $folio = full['folio'] ?? 'N/A';
+            return `<span>${$folio}</span>`;
+          }
+        },
+        {
+          targets: 4,
           render: function (data, type, full) {
             var $soli = full['solicitante'] ?? 'N/A';
             return `<span>${$soli}</span>`;
           }
         },
-
         {
-          targets: 5, // columna 'estatus'
+          targets: 5,
+          render: function (data, type, full) {
+            var $prioridad = full['prioridad'] ?? 'N/A';
+            return `<span>${$prioridad}</span>`;
+          }
+        },
+        {
+          targets: 6, // columna 'estatus'
           render: function (data, type, full, meta) {
             let status = (data || '').toLowerCase();
             let colorClass = 'secondary'; // color por defecto
@@ -92,10 +105,19 @@ $(function () {
             return `<span class="badge rounded-pill bg-${colorClass} text-white">${data}</span>`;
           }
         },
+        {
+          // Razón social
+          targets: 7,
+          className: 'text-center',
+          render: function (data, type, full, meta) {
+            var $created_at = full['created_at'];
+            return '<span class="user-email">' + $created_at + '</span>';
+          }
+        },
 
         {
           // Actions
-          targets: 7,
+          targets: 8,
           title: 'Acciones',
           searchable: false,
           orderable: false,

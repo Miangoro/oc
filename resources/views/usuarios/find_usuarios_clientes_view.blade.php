@@ -63,7 +63,7 @@
                         <div class="me-1">
                             <p class="text-heading mb-1">Verified Users</p>
                             <div class="d-flex align-items-center">
-                                <h4 class="mb-1 me-1">{{ $verified }}</h4>
+                                <h4 class="mb-1 me-1">{{ $verified }}</h4> {{-- este no --}}
                                 <p class="text-success mb-1">(+95%)</p>
                             </div>
                             <small class="mb-0">Recent analytics</small>
@@ -105,7 +105,7 @@
                         <div class="me-1">
                             <p class="text-heading mb-1">Verification Pending</p>
                             <div class="d-flex align-items-center">
-                                <h4 class="mb-1 me-1">{{ $notVerified }}</h4>
+                                <h4 class="mb-1 me-1">{{ $notVerified }}</h4> {{-- este tampoco --}}
                                 <p class="text-success mb-1">(+6%)</p>
                             </div>
                             <small class="mb-0">Recent analytics</small>
