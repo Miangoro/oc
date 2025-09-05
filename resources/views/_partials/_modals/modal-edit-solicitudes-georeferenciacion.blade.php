@@ -12,7 +12,8 @@
                 <p class="solicitud badge bg-primary"></p>
                 <form id="editFormTipo10">
                     <div class="row">
-                        <div class="col-md-6">
+
+                        <div class="col-md-4">
                             <input type="hidden" name="id_solicitud" id="id_solicitud_geo">
                             <input type="hidden" name="form_type" value="georreferenciacion">
 
@@ -29,6 +30,7 @@
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
+
                         <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
@@ -116,4 +118,5 @@
             });
         }
     }
+
 </script>

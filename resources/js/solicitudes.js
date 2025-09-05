@@ -803,6 +803,10 @@ const ahora = new Date();
     abrirModal(id_solicitud, tipo, razon_social);
   });
 
+
+
+
+///OBTENER DATOS SOLICITUDES
   $(document).ready(function () {
     $(document).on('click', '.edit-record-tipo', function () {
       // Obtenemos los datos del botón
@@ -1223,7 +1227,10 @@ const ahora = new Date();
               });
 
               modal.find('#edit_info_adicional').val(response.data.info_adicional || '');
-            } else if (id_tipo === 10) {
+
+
+
+            } else if (id_tipo === 10) {///OBTENER SOLICITUD GEORREFERENCIACION
               modal.find('#id_solicitud_geo').val(id_solicitud);
               modal.find('#edit_id_empresa_geo').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_sol_geo').val(response.data.fecha_solicitud);
@@ -1236,7 +1243,8 @@ const ahora = new Date();
                 modal.find('#edit_punto_reunion_geo').val(''); // Si no existe, deja vacío
               }
               modal.find('#edit_info_adicional_geo').val(response.data.info_adicional);
-              // Otros campos específicos para tipo 10
+
+
             } else if (id_tipo === 11) {
               modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
               modal.find('.id_solicitud').val(id_solicitud);
@@ -1421,6 +1429,9 @@ const ahora = new Date();
     });
   });
 
+
+
+
   $(document).on('click', '.btn-eliminar-doc', function () {
     const idDoc = $(this).data('id');
 
@@ -1497,6 +1508,9 @@ const ahora = new Date();
   });
 
 
+
+
+///EDITAR SOLICITUD GEORREFERENCIACION
   /* formulario para enviar los datos y actualizar */
   $(function () {
     // Configuración CSRF para Laravel
@@ -1596,6 +1610,9 @@ const ahora = new Date();
       });
     });
   });
+
+
+  
   /*funcion para solicitud de dictaminacion  */
   $(function () {
     // Configuración CSRF para Laravel
