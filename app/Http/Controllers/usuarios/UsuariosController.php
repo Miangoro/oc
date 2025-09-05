@@ -123,6 +123,7 @@ class UsuariosController extends Controller
       ->whereHas('empresa.empresaNumClientes', function ($query) {
           $query->orderByRaw("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(numero_cliente, '-', -2), 'C', 1) AS UNSIGNED) DESC");
       })
+      ->orderByRaw("CASE WHEN estatus = 'Activo' THEN 0 ELSE 1 END") // Activos primero
       ->offset($start)
       ->limit($limit)
 
