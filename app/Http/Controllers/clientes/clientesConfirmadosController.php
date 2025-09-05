@@ -198,7 +198,7 @@ public function pdfCartaAsignacion($id)
 
     public function pdfCartaAsignacion052($id)
     {
-        $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro,
+        $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, e.created_at, info_procesos, s.fecha_registro,
         e.correo, e.telefono, p.id_producto, nc.id_norma, a.id_actividad, e.estado
         FROM empresa e LEFT JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
         LEFT JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
