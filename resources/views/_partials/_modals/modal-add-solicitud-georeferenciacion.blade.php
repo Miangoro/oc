@@ -35,8 +35,7 @@
         <label for="id_empresa_destino" class="form-label">Empresa destino</label>
     </div>
 </div> --}}
-
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     name="fecha_solicitud" id="fecha_sol_geo" value="@php
@@ -45,7 +44,7 @@
                                 <label for="fecha_solicitud">Fecha y hora de la solicitud</label>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     name="fecha_visita" id="fecha_visita_geo" />

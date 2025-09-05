@@ -178,15 +178,10 @@ public function index(Request $request)
         });
     }*/
 
-        
     // Filtro por instalaciones (usuario tipo 3)
     /* if (!empty($instalacionAuth)) {
         $query->whereIn('solicitudes.id_instalacion', $instalacionAuth);
     } */
-    /*if (!empty($instalacionAuth)) {
-        $query->whereIn('solicitudes.id_instalacion', $instalacionAuth)
-            ->orWhere('solicitudes.id_instalacion', 0);
-    }*/
     if (!empty($instalacionAuth)) {
         $query->where(function($q) use ($instalacionAuth) {
             $q->whereIn('solicitudes.id_instalacion', $instalacionAuth)
@@ -194,11 +189,10 @@ public function index(Request $request)
         });
     }
     
-    
     // Filtro especial para usuario 49
-    if ($userId == 49) {
+    /*if ($userId == 49) {
         $query->where('solicitudes.id_tipo', 11);
-    }
+    }*/
 
 
     $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
@@ -481,71 +475,7 @@ public function index(Request $request)
 
 
 
-public function obtenerDatosSolicitud($id_solicitud)
-{
-        // Buscar los datos necesarios en la tabla "solicitudes"
-        $solicitud = solicitudesModel::find($id_solicitud);
-
-        if (!$solicitud) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Solicitud no encontrada.',
-            ], 404);
-        }
-        // Obtener solo la factura proforma
-        $facturaProforma = $solicitud->documentacion(55)->first();
-
-        // Obtener todos los documentos
-        $documentos = $solicitud->documentacion_completa;
-        // Obtener instalaciones relacionadas con la empresa de la solicitud
-        $instalaciones = Instalaciones::where('id_empresa', $solicitud->id_empresa)->get();
-        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $solicitud->id_empresa)->first();
-        $numero_cliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
-            return !empty($numero);
-        });
-        // Obtener las características decodificadas (si existen)
-        $caracteristicas = $solicitud->caracteristicas
-            ? json_decode($solicitud->caracteristicas, true)
-            : null;
-
-        // Verificar si hay características para procesar
-        if ($caracteristicas) {
-            $categoria = isset($caracteristicas['id_categoria'])
-                ? categorias::find($caracteristicas['id_categoria'])
-                : null;
-            $marcas = isset($caracteristicas['id_marca'])
-                ? marcas::find($caracteristicas['id_marca'])
-                : null;
-            $clase = isset($caracteristicas['id_clase'])
-                ? clases::find($caracteristicas['id_clase'])
-                : null;
-            $tipoMagueyIds = isset($caracteristicas['id_tipo_maguey'][0])
-                ? explode(',', $caracteristicas['id_tipo_maguey'][0])
-                : [];
-            $tiposMaguey = tipos::whereIn('id_tipo', $tipoMagueyIds)->get();
-            $tipoMagueyConcatenados = $tiposMaguey->map(function ($tipo) {
-                return $tipo->nombre . ' (' . $tipo->cientifico . ')';
-            })->toArray();
-            $caracteristicas['categoria'] = $categoria->categoria ?? 'N/A';
-            $caracteristicas['clase'] = $clase->clase ?? 'N/A';
-            $caracteristicas['marca'] = $marcas->marca ?? 'N/A';
-            $caracteristicas['nombre'] = $tipoMagueyConcatenados;
-        }
-
-
-        return response()->json([
-            'success' => true,
-            'data' => $solicitud,
-            'caracteristicas' => $caracteristicas,
-            'instalaciones' => $instalaciones,
-            'factura_proforma' => $facturaProforma,
-            'documentos' => $documentos,
-            'numero_cliente' => $numero_cliente,
-        ]);
-}
-
-
-
+///REGISTRAR SOLICITUDES
 public function storeVigilanciaProduccion(Request $request)
 {
       $validated = $request->validate([
@@ -987,7 +917,7 @@ public function registrarSolicitudGeoreferenciacion(Request $request)
         $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
         $solicitud->id_predio = $request->id_predio;
         $solicitud->info_adicional = $request->info_adicional;
-/*
+        /*
         //Manejo de empresa_destino de la solicitud
         if ($request->filled('id_empresa_destino')) {
             // Si viene en el request, se guarda (maquilador con destino)
@@ -1265,8 +1195,76 @@ public function pdf_solicitud_servicios_070($id_solicitud)
         return response()->json(['hasSolicitud' => $exists]);
     }
 
-    public function actualizarSolicitudes(Request $request, $id_solicitud)
-    {
+
+
+///OBTENER SOLICITUDES
+public function obtenerDatosSolicitud($id_solicitud)
+{
+        // Buscar los datos necesarios en la tabla "solicitudes"
+        $solicitud = solicitudesModel::find($id_solicitud);
+
+        if (!$solicitud) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Solicitud no encontrada.',
+            ], 404);
+        }
+        // Obtener solo la factura proforma
+        $facturaProforma = $solicitud->documentacion(55)->first();
+
+        // Obtener todos los documentos
+        $documentos = $solicitud->documentacion_completa;
+        // Obtener instalaciones relacionadas con la empresa de la solicitud
+        $instalaciones = Instalaciones::where('id_empresa', $solicitud->id_empresa)->get();
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $solicitud->id_empresa)->first();
+        $numero_cliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
+        // Obtener las características decodificadas (si existen)
+        $caracteristicas = $solicitud->caracteristicas
+            ? json_decode($solicitud->caracteristicas, true)
+            : null;
+
+        // Verificar si hay características para procesar
+        if ($caracteristicas) {
+            $categoria = isset($caracteristicas['id_categoria'])
+                ? categorias::find($caracteristicas['id_categoria'])
+                : null;
+            $marcas = isset($caracteristicas['id_marca'])
+                ? marcas::find($caracteristicas['id_marca'])
+                : null;
+            $clase = isset($caracteristicas['id_clase'])
+                ? clases::find($caracteristicas['id_clase'])
+                : null;
+            $tipoMagueyIds = isset($caracteristicas['id_tipo_maguey'][0])
+                ? explode(',', $caracteristicas['id_tipo_maguey'][0])
+                : [];
+            $tiposMaguey = tipos::whereIn('id_tipo', $tipoMagueyIds)->get();
+            $tipoMagueyConcatenados = $tiposMaguey->map(function ($tipo) {
+                return $tipo->nombre . ' (' . $tipo->cientifico . ')';
+            })->toArray();
+            $caracteristicas['categoria'] = $categoria->categoria ?? 'N/A';
+            $caracteristicas['clase'] = $clase->clase ?? 'N/A';
+            $caracteristicas['marca'] = $marcas->marca ?? 'N/A';
+            $caracteristicas['nombre'] = $tipoMagueyConcatenados;
+        }
+
+
+        return response()->json([
+            'success' => true,
+            'data' => $solicitud,
+            'caracteristicas' => $caracteristicas,
+            'instalaciones' => $instalaciones,
+            'factura_proforma' => $facturaProforma,
+            'documentos' => $documentos,
+            'numero_cliente' => $numero_cliente,
+
+            //'id_empresa_destino' => $solicitud->id_empresa_destino,
+        ]);
+}
+///ACTUALIZAR SOLICITUDES
+public function actualizarSolicitudes(Request $request, $id_solicitud)
+{
         // Encuentra la solicitud por ID
         $solicitud = solicitudesModel::find($id_solicitud);
 
@@ -1363,7 +1361,7 @@ public function pdf_solicitud_servicios_070($id_solicitud)
                 break;
 
             case 'muestreoloteagranel':
-                // Validar datos para georreferenciación
+                // Validar datos 
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
                     'fecha_solicitud' => 'nullable|date',
@@ -1386,7 +1384,7 @@ public function pdf_solicitud_servicios_070($id_solicitud)
                 // Convertir el array a JSON
                 $jsonContent = json_encode($caracteristicasJson);
 
-                // Actualizar datos específicos para georreferenciación
+                // Actualizar datos específicos
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
                     'fecha_solicitud' => $request->fecha_solicitud,
@@ -1566,7 +1564,7 @@ public function pdf_solicitud_servicios_070($id_solicitud)
                 break;
 
 
-            case 'georreferenciacion':
+            case 'georreferenciacion': ///OBTENER SOLICITUD GEORREFERENCIACION
                 // Validar datos para georreferenciación
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
@@ -1593,6 +1591,7 @@ public function pdf_solicitud_servicios_070($id_solicitud)
                     'punto_reunion' => $request->punto_reunion,
                     'info_adicional' => $request->info_adicional,
                     'caracteristicas' => $jsonContent,
+                    //'id_empresa_destino' => $request->id_empresa_destino,
                 ]);
 
                 break;
@@ -1853,8 +1852,10 @@ public function pdf_solicitud_servicios_070($id_solicitud)
                 return response()->json(['success' => false, 'message' => 'Tipo de solicitud no reconocido'], 400);
         }
 
-        return response()->json(['success' => true, 'message' => 'Solicitud actualizada correctamente']);
-    }
+    return response()->json(['success' => true, 'message' => 'Solicitud actualizada correctamente']);
+}
+
+
 
     public function obtenerMarcasPorEmpresa($id_marca, $id_direccion)
     {

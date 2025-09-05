@@ -946,7 +946,7 @@ public function storeRevisor(Request $request)
                 : (trim($datos->maestro_mezcalero) === ''
                 ? '---------------------------------------------------------------------------------------------------------------------'
                 : $datos->maestro_mezcalero),
-            'num_autorizacion' => $empresa->registro_productor ?? 'No encontrado',
+            'num_autorizacion' => $empresa->registro_productor ?? 'N/A',
             'numero_cliente' => $numero_cliente,
             'representante_legal' => $empresa->representante ?? 'No encontrado',
             'nombre_firmante' => $datos->firmante->name ?? 'No encontrado',
