@@ -307,7 +307,7 @@
 
 @php
     $oldHologramas1 = json_decode($data->old_hologramas, true);
-    $hologramasArray = array_map('trim', explode('-', $hologramas));
+    $hologramasArray = array_map('trim', explode('-', $oldHologramas1));
 
     $hologramasArray = array_map('trim', explode('-', $oldHologramas1));
     $oldHologramas = '';
