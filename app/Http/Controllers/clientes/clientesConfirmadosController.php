@@ -228,15 +228,7 @@ public function pdfCartaAsignacion($id)
             'contacto'=>$contacto,
         ]);
 
-        $dompdf = $pdf->getDomPDF();
-$canvas = $dompdf->get_canvas();
-$canvas->get_cpdf()->setInfo([
-    'Title' => 'Carta de Asignación',
-    'Author' => 'Miguel Ángel Gómez',
-    'Subject' => 'Asignación de Oficio',
-    'Keywords' => 'oficio, asignación, pdf',
-    'Creator' => 'Sistema Interno',
-]);
+        
 
         
         return $pdf->stream('Carta de asignación de número de cliente.pdf');
