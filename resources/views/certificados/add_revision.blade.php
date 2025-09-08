@@ -288,7 +288,7 @@
                                                     {{-- Mostrar documento solo si es la constancia fiscal --}}
 
                                                     @if ($cliente && $documento)
-                                                        <a target="_blank"
+                                                        <br>Autorización del uso de la Denominación de Origen Mezcal (DOM)<a target="_blank"
                                                             href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
                                                             <i
                                                                 class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
