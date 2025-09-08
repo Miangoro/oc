@@ -133,7 +133,9 @@
         <td rowspan="2">{{ $datos->solicitud->lote_granel->ingredientes ?? '' }}</td>
 
         <td rowspan="2" class="verde">VOLUMEN DE LOTE:</td>
-        <td rowspan="2">{{ $datos->solicitud->lote_granel->volumen_restante ?? ''}} L</td>
+        <td rowspan="2">
+            {{-- {{ $datos->solicitud->lote_granel->volumen_restante ?? ''}} --}}
+            {{ json_decode($datos->solicitud->caracteristicas, true)['id_vol_traslado'] ?? '' }} L</td>
     </tr>
     <tr>
         <td class="verde">EDAD:</td>

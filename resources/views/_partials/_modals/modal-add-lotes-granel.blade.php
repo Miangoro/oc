@@ -15,9 +15,10 @@
                     <div class="form-section mb-4 p-3 border rounded">
                         <h6 class="mb-3">Información del Lote</h6>
                         <div class="row">
-                            <div class="col-md-12" id="select_empresa">
+
+                            <div class="col-md-7" id="select_empresa">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select onchange="obtenerDatosEmpresa(); /* obtenerDestinoEmpresa(); */" id="id_empresa"
+                                    <select onchange="obtenerDatosEmpresa();" id="id_empresa"
                                         name="id_empresa" class="select2 form-select"
                                         data-error-message="por favor selecciona la empresa">
                                         <option value="" disabled selected>Selecciona el cliente</option>
@@ -31,20 +32,28 @@
                                     <label for="id_empresa" class="form-label">Cliente</label>
                                 </div>
                             </div>
-
-                            <div class="col-md-6 d-none" id="select_destino">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <select id="id_empresa_destino" name="id_empresa_destino"
-                                        class="select2 form-select"
-                                        data-error-message="por favor selecciona la empresa">
-                                        <option value="" disabled selected>Selecciona la empresa destino</option>
-
-                                    </select>
-                                    <label for="id_empresa_destino" class="form-label">Empresa destino</label>
-                                </div>
-                            </div>
-
+<div class="col-md-5">
+    <div class="form-floating form-floating-outline mb-4">
+        <select id="id_empresa_destino" name="id_empresa_destino" class="select2 form-select">
+            <option value="" disabled selected>Selecciona la empresa destino</option>
+        </select>
+        <label>Empresa destino</label>
+    </div>
+</div>
+{{--  obtenerDestinoEmpresa();
+<div class="col-md-5" id="select_destino">
+    <div class="form-floating form-floating-outline mb-4">
+        <select id="id_empresa_destino" name="id_empresa_destino"
+            class="select2 form-select"
+            data-error-message="por favor selecciona la empresa">
+            <option value="" disabled selected>Selecciona la empresa destino</option>
+        </select>
+        <label>Empresa destino</label>
+    </div>
+</div> --}}
                         </div>
+
+
                         <!-- Campo para seleccionar lote original -->
                         <div class="row">
                             <div class="col-md-6">
@@ -66,9 +75,8 @@
                                     <label for="tipo_lote">Tipo de Lote</label>
                                 </div>
                             </div>
-
-
                         </div>
+                        
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
@@ -454,7 +462,10 @@
 
 
 
-/* function obtenerDestinoEmpresa() {
+
+///NUEVA FUNCION
+/*
+function obtenerDestinoEmpresa() {
     var empresa = $("#id_empresa").val();
     if (!empresa) return;
 
@@ -499,12 +510,13 @@
             alert('Error al cargar los datos. Por favor, intenta nuevamente.');
         }
     });
-} */
-
+} 
+*/
 
     // Llamar a obtenerDatosEmpresa cuando se selecciona la empresa
     $('#id_empresa').change(function() {
         obtenerDatosEmpresa();
         /* obtenerDestinoEmpresa(); */
     });
+
 </script>

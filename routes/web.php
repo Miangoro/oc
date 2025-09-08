@@ -667,17 +667,21 @@ Route::post('/categorias', [categoriasController::class, 'store'])->name('catego
 Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit')->middleware(['auth']);
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update')->middleware(['auth']);
 
-Route::get('/catalogo/lotes_granel', [lotesGranelController::class, 'UserManagement'])->name('catalogo-lotes-granel')->middleware(['auth']);
-Route::resource('/lotes-granel-list', lotesGranelController::class)->middleware(['auth']);
-Route::delete('/lotes-granel-list/{id_lote_granel}', [lotesGranelController::class, 'destroy'])->middleware(['auth']);
-Route::post('/lotes-register/store', [lotesGranelController::class, 'store'])->name('lotes-register.store')->middleware(['auth']);
-Route::get('/lotes-a-granel/{id_lote_granel}/edit', [lotesGranelController::class, 'edit'])->name('lotes-a-granel.edit')->middleware(['auth']);
-Route::post('/lotes-a-granel/{id_lote_granel}', [lotesGranelController::class, 'update'])->middleware(['auth']);
-Route::get('/lotes-a-granel/{id_lote_granel}/volumen', [lotesGranelController::class, 'getVolumen'])->name('lotes-a-granel.volumen')->middleware(['auth']);
-Route::post('/eliminar_documento', [lotesGranelController::class, 'eliminar_documento'])->name('documento.eliminar')->middleware(['auth']);
 
 
-//Lotes de envasado
+//------------------- LOTES GRANEL -------------------
+Route::middleware('auth')->controller(lotesGranelController::class)->group(function () {
+    Route::get('/catalogo/lotes_granel', [lotesGranelController::class, 'UserManagement'])->name('catalogo-lotes-granel')->middleware(['auth']);
+    Route::resource('/lotes-granel-list', lotesGranelController::class)->middleware(['auth']);
+    Route::delete('/lotes-granel-list/{id_lote_granel}', [lotesGranelController::class, 'destroy'])->middleware(['auth']);
+    Route::post('/lotes-register/store', [lotesGranelController::class, 'store'])->name('lotes-register.store')->middleware(['auth']);
+    Route::get('/lotes-a-granel/{id_lote_granel}/edit', [lotesGranelController::class, 'edit'])->name('lotes-a-granel.edit')->middleware(['auth']);
+    Route::post('/lotes-a-granel/{id_lote_granel}', [lotesGranelController::class, 'update'])->middleware(['auth']);
+    Route::get('/lotes-a-granel/{id_lote_granel}/volumen', [lotesGranelController::class, 'getVolumen'])->name('lotes-a-granel.volumen')->middleware(['auth']);
+    Route::post('/eliminar_documento', [lotesGranelController::class, 'eliminar_documento'])->name('documento.eliminar')->middleware(['auth']);
+});
+
+//------------------- LOTES ENVASADOS -------------------
 Route::middleware('auth')->controller(LotesEnvasadoController::class)->group(function () {
     Route::get('/catalogo/lotes', 'UserManagement')->name('catalogo-lotes');
     Route::resource('/lotes-list', LotesEnvasadoController::class);

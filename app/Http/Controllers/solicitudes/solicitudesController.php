@@ -91,7 +91,7 @@ private function obtenerEmpresasVisibles($empresaId)
 {
     $idsEmpresas = [];
     if ($empresaId) {
-        $idsEmpresas[] = $empresaId;
+        $idsEmpresas[] = $empresaId; // Siempre incluye la empresa del usuario
         $idsEmpresas = array_merge(
             $idsEmpresas,
             maquiladores_model::where('id_maquiladora', $empresaId)

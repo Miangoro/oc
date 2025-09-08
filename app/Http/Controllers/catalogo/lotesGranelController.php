@@ -28,13 +28,12 @@ use Illuminate\Support\Facades\Auth;//Permiso empresa
 class lotesGranelController extends Controller
 {
     public function UserManagement(Request $request)
-    {// Encuentra el lote a granel por ID
-        /* $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); */
-              $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
+    {   // Encuentra el lote a granel por ID
+        $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
         ? Auth::user()->empresa?->id_empresa
         : null;
           if ($empresaIdAut) {
-                  // 👇 Usa la función que ya tienes
+                  //Usa la función que ya tienes
                   $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, null);
 
                   $empresas = empresa::with('empresaNumClientes')
@@ -56,97 +55,145 @@ class lotesGranelController extends Controller
         return view('catalogo.lotes_granel', compact('lotes', 'empresas', 'categorias', 'clases', 'tipos', 'organismos', 'estados', 'guias', 'documentos'));
     }
 
-     private function obtenerEmpresasVisibles($empresaId)
-  {
-      $idsEmpresas = [];
 
-      if ($empresaId) {
-          $idsEmpresas[] = $empresaId;
-          $idsEmpresas = array_merge(
-              $idsEmpresas,
-              maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
-          );/* id_maquiladora  id_maquilador */
-      }
+private function obtenerEmpresasVisibles($empresaId)
+{
+    $idsEmpresas = [];
+    if ($empresaId) {
+        $idsEmpresas[] = $empresaId; // Siempre incluye la empresa del usuario
+        $idsEmpresas = array_merge(
+            $idsEmpresas,
+            maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+        );/* id_maquiladora  id_maquilador */
+    }
 
-      return array_unique($idsEmpresas);
-  }
+    return array_unique($idsEmpresas);
+}
 
-    public function index(Request $request)
-    {
-        try {
-            $columns = [
-                1 => 'id_lote_granel',
-                2 => 'nombre_lote',
-                3 => 'tipo_lote',
-                4 => 'folio_fq',
-                5 => 'volumen',
-                6 => 'cont_alc',
-                7 => 'id_categoria',
-                8 => 'id_clase',
-                9 => 'id_tipo',
-                10 => 'ingredientes',
-                11 => 'edad',
-                12 => 'folio_certificado',
-                13 => 'id_organismo',
-                14 => 'fecha_emision',
-                15 => 'fecha_vigencia',
-                16 => 'estatus',
-            ];
+public function index(Request $request)
+{
+        $columns = [
+            1 => 'id_lote_granel',
+            2 => 'nombre_lote',
+            3 => 'tipo_lote',
+            4 => 'folio_fq',
+            5 => 'volumen',
+            6 => 'cont_alc',
+            7 => 'id_categoria',
+            8 => 'id_clase',
+            9 => 'id_tipo',
+            10 => 'ingredientes',
+            11 => 'edad',
+            12 => 'folio_certificado',
+            13 => 'id_organismo',
+            14 => 'fecha_emision',
+            15 => 'fecha_vigencia',
+            16 => 'estatus',
+        ];
 
-            //Permiso de empresa
-            $empresaId = null;
-            if (Auth::check() && Auth::user()->tipo == 3) {
-                $empresaId = Auth::user()->empresa?->id_empresa;
-            }
+        //Permiso de empresa
+        $empresaId = null;
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $empresaId = Auth::user()->empresa?->id_empresa;
+        }
 
-            $search = $request->input('search.value');
-            $totalData = LotesGranel::count();
-            $totalFiltered = $totalData;
-            $limit = $request->input('length');
-            $start = $request->input('start');
-            $order = $columns[$request->input('order.0.column')];
-            $dir = $request->input('order.0.dir');
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $dir = $request->input('order.0.dir') ?? 'desc';
+        $order = $columns[$request->input('order.0.column')] ?? 'id_lote_granel';
+        /*$totalData = LotesGranel::count();
+        $totalFiltered = $totalData;*/
+        $search = $request->input('search.value');
 
+
+        /*$empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
+        $esMaquilador = maquiladores_model::where('id_maquilador', $empresaId)->exists();*/
+
+        $query = LotesGranel::with([
+                'empresa',
+                'categoria',
+                'clase',
+                'tipos',
+                'organismo',
+                //'certificadoGranel',
+                'fqs'
+            ]);
+
+        // Filtro empresa (propia + maquiladores)  SE OCULTO PORQUE YA NO SERA POR MAQUILADOR
+        /*if ($empresaId) {
             $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
-            $esMaquilador = maquiladores_model::where('id_maquilador', $empresaId)->exists();
+            $query->whereIn('id_empresa', $empresasVisibles);
+        }*/
+        // Filtro empresa (creadora y destino)
+        if ($empresaId) {
+            $query->where(function ($q) use ($empresaId) {
+                $q->where('id_empresa', $empresaId)
+                ->orWhere('id_empresa_destino', $empresaId);
+            });
+        }
 
-            $LotesGranel = LotesGranel::with([
-                'empresa', 'categoria', 'clase', 'tipos', 'Organismo', 'certificadoGranel', 'fqs'
-            ])
-            ->when($empresaId, function ($query) use ($empresaId, $empresasVisibles, $esMaquilador) {
+        $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
+        $totalData = $baseQuery->count();// totalData (sin búsqueda)
+
+
+    // Búsqueda global
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('id_lote_granel', 'LIKE', "%{$search}%")
+            ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
+            ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+            ->orWhere('volumen', 'LIKE', "%{$search}%")
+            ->orWhere('cont_alc', 'LIKE', "%{$search}%")
+            ->orWhere('folio_certificado', 'LIKE', "%{$search}%")
+            ->orWhereHas('empresa', fn($q) => $q->where('razon_social', 'LIKE', "%{$search}%"));
+        });
+
+        $totalFiltered = $query->count();
+    } else {
+        $totalFiltered = $totalData;
+    }
+
+
+    $LotesGranel = $query
+        ->offset($start)
+        ->limit($limit)
+        ->orderBy($order, $dir)
+        ->get();
+
+
+        /* ->when($empresaId, function ($query) use ($empresaId, $empresasVisibles, $esMaquilador) {
 
                 if ($esMaquilador) {
                     // Maquilador: sus propios registros y donde es destino
                     $query->where(function($q) use ($empresaId) {
                         $q->where('id_empresa', $empresaId)
-                          ->orWhere('id_empresa_destino', $empresaId);
+                            ->orWhere('id_empresa_destino', $empresaId);
                     });
 
                 } else {
                     // Empresa principal
                     $hayDestino = LotesGranel::whereIn('id_empresa', $empresasVisibles)
-                                              ->where('id_empresa_destino', $empresaId)
-                                              ->exists();
+                                                ->where('id_empresa_destino', $empresaId)
+                                                ->exists();
 
                     $query->where(function($q) use ($empresaId, $empresasVisibles, $hayDestino) {
                         if ($hayDestino) {
                             // Solo mostrar registros donde id_empresa = su id o id_empresa_destino = su id
                             $q->whereIn('id_empresa', $empresasVisibles)
-                              ->where(function($cond) use ($empresaId) {
-                                  $cond->where('id_empresa', $empresaId)
-                                      ->orWhere('id_empresa_destino', $empresaId);
-                              });
+                                ->where(function($cond) use ($empresaId) {
+                                    $cond->where('id_empresa', $empresaId)
+                                        ->orWhere('id_empresa_destino', $empresaId);
+                                });
                         } else {
                             // Mostrar registros propios y de maquiladores sin destino
                             $q->where('id_empresa', $empresaId)
-                              ->orWhere(function($q2) use ($empresasVisibles) {
-                                  $q2->whereIn('id_empresa', $empresasVisibles)
+                                ->orWhere(function($q2) use ($empresasVisibles) {
+                                    $q2->whereIn('id_empresa', $empresasVisibles)
                                     ->whereNull('id_empresa_destino');
-                              });
+                                });
                         }
                     });
                 }
-
             })
 
 
@@ -191,7 +238,7 @@ class lotesGranelController extends Controller
 
            /*  $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId) {
         return $query->where('id_empresa', $empresaId);
-    }) */
+    }) *
 $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId) {
     $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
     $esMaquilador = maquiladores_model::where('id_maquilador', $empresaId)->exists();
@@ -251,222 +298,216 @@ $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId
                     WHEN tipo_lote = 2 THEN 'Certificado por otro organismo'
                 END LIKE ?", ["%{$search}%"]);
 
-            })->count();
+            })->count();*/
 
 
 
-            $data = [];
-            if (!empty($LotesGranel)) {
-                $ids = $start;
-                $tipos = tipos::all();
-                $tiposNombres = $tipos->pluck('nombre', 'id_tipo')->toArray();
+        //MANDA LOS DATOS AL JS
+        $data = [];
+        if (!empty($LotesGranel)) {
+            $ids = $start;
+            $tipos = tipos::all();
+            $tiposNombres = $tipos->pluck('nombre', 'id_tipo')->toArray();
 
-                foreach ($LotesGranel as $lote) {
-                    $nestedData['id_lote_granel'] = $lote->id_lote_granel ?? 'N/A';
-                    $nestedData['fake_id'] = ++$ids ?? 'N/A'; // Incremental ID
+            foreach ($LotesGranel as $lote) {
+                $nestedData['id_lote_granel'] = $lote->id_lote_granel ?? 'N/A';
+                $nestedData['fake_id'] = ++$ids ?? 'N/A'; // Incremental ID
 
-                    $razonSocial = $lote->empresa ? $lote->empresa->razon_social : '';
-                    $numeroCliente =
-                    $lote->empresa->empresaNumClientes[0]->numero_cliente ??
-                    $lote->empresa->empresaNumClientes[1]->numero_cliente ??
-                    $lote->empresa->empresaNumClientes[2]->numero_cliente;
+                $razonSocial = $lote->empresa ? $lote->empresa->razon_social : '';
+                $numeroCliente =
+                $lote->empresa->empresaNumClientes[0]->numero_cliente ??
+                $lote->empresa->empresaNumClientes[1]->numero_cliente ??
+                $lote->empresa->empresaNumClientes[2]->numero_cliente;
 
-                    $nestedData['id_empresa'] = '<b>'.$numeroCliente . '</b><br>' . $razonSocial;
-                    $nestedData['nombre_lote'] = '<span class="fw-bold text-dark h5">'.$lote->nombre_lote.'</span>' ?? 'N/A';
-                    $nestedData['tipo_lote'] = $lote->tipo_lote ?? 'N/A';
-                    $nestedData['folio_fq'] = $lote->folio_fq ?? 'N/A';
-                    $nestedData['volumen'] = $lote->volumen ?? 'N/A';
-                    $nestedData['id_tanque'] = $lote->id_tanque ?? 'N/A';
-                    $nestedData['volumen_restante'] = $lote->volumen_restante ?? 'N/A';
-                    $nestedData['cont_alc'] = $lote->cont_alc.'% Alc. Vol.' ?? 'N/A';
-                    $nestedData['id_categoria'] = $lote->categoria->categoria ?? 'N/A';
-                    $nestedData['id_clase'] = $lote->clase->clase ?? 'N/A';
+                $nestedData['id_empresa'] = '<b>'.$numeroCliente . '</b><br>' . $razonSocial;
+                $nestedData['nombre_lote'] = '<span class="fw-bold text-dark h5">'.$lote->nombre_lote.'</span>' ?? 'N/A';
+                $nestedData['tipo_lote'] = $lote->tipo_lote ?? 'N/A';
+                $nestedData['folio_fq'] = $lote->folio_fq ?? 'N/A';
+                $nestedData['volumen'] = $lote->volumen ?? 'N/A';
+                $nestedData['id_tanque'] = $lote->id_tanque ?? 'N/A';
+                $nestedData['volumen_restante'] = $lote->volumen_restante ?? 'N/A';
+                $nestedData['cont_alc'] = $lote->cont_alc.'% Alc. Vol.' ?? 'N/A';
+                $nestedData['id_categoria'] = $lote->categoria->categoria ?? 'N/A';
+                $nestedData['id_clase'] = $lote->clase->clase ?? 'N/A';
 
-                    if ($lote->id_tipo && $lote->id_tipo !== 'N/A') {
-                      $idTipo = json_decode($lote->id_tipo, true);
-                      if (is_array($idTipo)) {
-                          $nombresTipos = array_map(function($tipoId) use ($tiposNombres) {
-                              return $tiposNombres[$tipoId] ?? 'Desconocido';
-                          }, $idTipo);
-                          $nestedData['id_tipo'] = implode(', ', $nombresTipos);
-                      } else {
-                          $nestedData['id_tipo'] = 'Desconocido';
-                      }
-                  } else {
-                      $nestedData['id_tipo'] = 'N/A';
-                  }
-                    $nestedData['ingredientes'] = $lote->ingredientes ?? 'N/A';
-                    $nestedData['edad'] = $lote->edad ?? 'N/A';
-                    $nestedData['folio_certificado'] = $lote->folio_certificado ?? 'N/A';
-                    $nestedData['id_organismo'] = $lote->organismo->organismo ?? '';
-                    $nestedData['fecha_emision'] = Helpers::formatearFecha($lote->fecha_emision) ?? 'N/A';
-                    $nestedData['fecha_vigencia'] = Helpers::formatearFecha($lote->fecha_vigencia) ?? 'N/A';
-                    $nestedData['estatus'] = $lote->estatus;
-                    $nestedData['folio_certificado_oc'] = $lote->certificadoGranel->num_certificado ?? 'N/A';
-                    $folios = explode(',', $lote->folio_fq); // Divide los folios en un array
-                    $documentoCompleto = $lote->fqs->firstWhere('id_documento', 58);
-                    $documentoAjuste = $lote->fqs->firstWhere('id_documento', 134);
-                    $nestedData['folio_fq_completo'] = $folios[0] ?? 'N/A';
-                    $nestedData['folio_fq_ajuste'] = $folios[1] ?? 'N/A';
+                if ($lote->id_tipo && $lote->id_tipo !== 'N/A') {
+                    $idTipo = json_decode($lote->id_tipo, true);
+                    if (is_array($idTipo)) {
+                        $nombresTipos = array_map(function($tipoId) use ($tiposNombres) {
+                            return $tiposNombres[$tipoId] ?? 'Desconocido';
+                        }, $idTipo);
+                        $nestedData['id_tipo'] = implode(', ', $nombresTipos);
+                    } else {
+                        $nestedData['id_tipo'] = 'Desconocido';
+                    }
+                } else {
+                    $nestedData['id_tipo'] = 'N/A';
+                }
+                $nestedData['ingredientes'] = $lote->ingredientes ?? 'N/A';
+                $nestedData['edad'] = $lote->edad ?? 'N/A';
+                $nestedData['folio_certificado'] = $lote->folio_certificado ?? 'N/A';
+                $nestedData['id_organismo'] = $lote->organismo->organismo ?? '';
+                $nestedData['fecha_emision'] = Helpers::formatearFecha($lote->fecha_emision) ?? 'N/A';
+                $nestedData['fecha_vigencia'] = Helpers::formatearFecha($lote->fecha_vigencia) ?? 'N/A';
+                $nestedData['estatus'] = $lote->estatus;
+                $nestedData['folio_certificado_oc'] = $lote->certificadoGranel->num_certificado ?? 'N/A';
+                $folios = explode(',', $lote->folio_fq); // Divide los folios en un array
+                $documentoCompleto = $lote->fqs->firstWhere('id_documento', 58);
+                $documentoAjuste = $lote->fqs->firstWhere('id_documento', 134);
+                $nestedData['folio_fq_completo'] = $folios[0] ?? 'N/A';
+                $nestedData['folio_fq_ajuste'] = $folios[1] ?? 'N/A';
 
-                    $nestedData['url_fq_completo'] = $documentoCompleto
-                        ? '/files/' . $numeroCliente . '/fqs/' . $documentoCompleto->url
-                        : '';
+                $nestedData['url_fq_completo'] = $documentoCompleto
+                    ? '/files/' . $numeroCliente . '/fqs/' . $documentoCompleto->url
+                    : '';
 
-                    $nestedData['url_fq_ajuste'] = $documentoAjuste
-                        ? '/files/' . $numeroCliente . '/fqs/' . $documentoAjuste->url
-                        : '';
+                $nestedData['url_fq_ajuste'] = $documentoAjuste
+                    ? '/files/' . $numeroCliente . '/fqs/' . $documentoAjuste->url
+                    : '';
 
 
 
-              if ($lote->lote_original_id) {
-                  $lotesOriginales = json_decode($lote->lote_original_id, true);
+            if ($lote->lote_original_id) {
+                $lotesOriginales = json_decode($lote->lote_original_id, true);
 
-                  if (isset($lotesOriginales['lotes'])) {
-                      $idsLotes = $lotesOriginales['lotes'];
+                if (isset($lotesOriginales['lotes'])) {
+                    $idsLotes = $lotesOriginales['lotes'];
 
-                      // Obtener todos los lotes involucrados
-                      $lotes = LotesGranel::whereIn('id_lote_granel', $idsLotes)->get();
+                    // Obtener todos los lotes involucrados
+                    $lotes = LotesGranel::whereIn('id_lote_granel', $idsLotes)->get();
 
-                      // Obtener todos los documentos (completo o ajuste) en un solo query
-                      $documentos = Documentacion_url::whereIn('id_relacion', $idsLotes)
-                          ->whereIn('id_documento', [58, 134])
-                          ->get()
-                          ->groupBy(function ($doc) {
-                              return "{$doc->id_relacion}_{$doc->id_documento}";
-                          });
-
-                      // Obtener el número de cliente para la ruta
-                      $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
-                      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($n) {
-                          return !empty($n);
-                      });
-                        $detallesLotes = $lotes->map(function ($loteItem) use ($documentos) {
-                            $folioFq = $loteItem->folio_fq;
-                            $folioPartes = explode(',', $folioFq);
-
-                            // Obtener empresa y número de cliente del lote de procedencia
-                            $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $loteItem->id_empresa)->first();
-                            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($n) {
-                                return !empty($n);
-                            });
-
-                            $urlCompleto = $documentos->get("{$loteItem->id_lote_granel}_58")?->first()?->url;
-                            $urlAjuste = $documentos->get("{$loteItem->id_lote_granel}_134")?->first()?->url;
-
-                            $folioCompleto = '';
-                            $folioAjuste = '';
-
-                            if (count($folioPartes) === 1) {
-                                $folio = trim($folioPartes[0]);
-                                $folioCompleto = $urlCompleto
-                                    ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlCompleto) . "' class='text-info text-decoration-underline' target='_blank' title='Ver documento'>{$folio}</a>"
-                                    : $folio;
-                            } elseif (count($folioPartes) === 2) {
-                                $parte1 = trim($folioPartes[0]);
-                                $parte2 = trim($folioPartes[1]);
-
-                                if (!empty($parte1)) {
-                                    $folioCompleto = $urlCompleto
-                                        ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlCompleto) . "' class='text-info text-decoration-underline' target='_blank' title='Ver documento'>{$parte1}</a>"
-                                        : $parte1;
-                                }
-
-                                if (!empty($parte2)) {
-                                    $folioAjuste = $urlAjuste
-                                        ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlAjuste) . "' class='text-info text-decoration-underline' target='_blank' title='Ver documento'>{$parte2}</a>"
-                                        : $parte2;
-                                }
-                            }
-
-                            $foliosTexto = trim(implode(', ', array_filter([$folioCompleto, $folioAjuste])));
-
-                            return "{$loteItem->nombre_lote} ({$loteItem->cont_alc} %) {$foliosTexto}";
+                    // Obtener todos los documentos (completo o ajuste) en un solo query
+                    $documentos = Documentacion_url::whereIn('id_relacion', $idsLotes)
+                        ->whereIn('id_documento', [58, 134])
+                        ->get()
+                        ->groupBy(function ($doc) {
+                            return "{$doc->id_relacion}_{$doc->id_documento}";
                         });
 
+                    // Obtener el número de cliente para la ruta
+                    $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
+                    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($n) {
+                        return !empty($n);
+                    });
+                    $detallesLotes = $lotes->map(function ($loteItem) use ($documentos) {
+                        $folioFq = $loteItem->folio_fq;
+                        $folioPartes = explode(',', $folioFq);
 
+                        // Obtener empresa y número de cliente del lote de procedencia
+                        $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $loteItem->id_empresa)->first();
+                        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($n) {
+                            return !empty($n);
+                        });
 
-                      $nestedData['lote_procedencia'] = implode('<br>', $detallesLotes->toArray());
+                        $urlCompleto = $documentos->get("{$loteItem->id_lote_granel}_58")?->first()?->url;
+                        $urlAjuste = $documentos->get("{$loteItem->id_lote_granel}_134")?->first()?->url;
 
-                  } else {
-                      $nestedData['lote_procedencia'] = 'Lote de procedencia: No tiene lotes disponibles en el JSON.';
-                  }
-              } else {
-                  $nestedData['lote_procedencia'] = 'No tiene procedencia de otros lotes.';
-              }
+                        $folioCompleto = '';
+                        $folioAjuste = '';
 
+                        if (count($folioPartes) === 1) {
+                            $folio = trim($folioPartes[0]);
+                            $folioCompleto = $urlCompleto
+                                ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlCompleto) . "' class='text-info text-decoration-underline' target='_blank' title='Ver documento'>{$folio}</a>"
+                                : $folio;
+                        } elseif (count($folioPartes) === 2) {
+                            $parte1 = trim($folioPartes[0]);
+                            $parte2 = trim($folioPartes[1]);
 
-                    // Obtén la URL del certificado desde la tabla Documentacion_url
-                    $documentacion = Documentacion_url::where('id_relacion', $lote->id_lote_granel)->where('id_documento',59)->first();
-                      // Obtener el número de cliente
-                      $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
+                            if (!empty($parte1)) {
+                                $folioCompleto = $urlCompleto
+                                    ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlCompleto) . "' class='text-info text-decoration-underline' target='_blank' title='Ver documento'>{$parte1}</a>"
+                                    : $parte1;
+                            }
 
-                      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
-                        return !empty($numero);
+                            if (!empty($parte2)) {
+                                $folioAjuste = $urlAjuste
+                                    ? "<a href='/files/{$numeroCliente}/fqs/" . rawurlencode($urlAjuste) . "' class='text-info text-decoration-underline' target='_blank' title='Ver documento'>{$parte2}</a>"
+                                    : $parte2;
+                            }
+                        }
+
+                        $foliosTexto = trim(implode(', ', array_filter([$folioCompleto, $folioAjuste])));
+
+                        return "{$loteItem->nombre_lote} ({$loteItem->cont_alc} %) {$foliosTexto}";
                     });
 
-                    // Ahora puedes usar el número de cliente en la URL
-                    if ($documentacion) {
-                        $nestedData['url_certificado'] = '/files/' . $numeroCliente . '/certificados_granel/' . rawurlencode($documentacion->url);
-                    } else {
-                        $nestedData['url_certificado'] = null;
-                    }
 
 
+                    $nestedData['lote_procedencia'] = implode('<br>', $detallesLotes->toArray());
 
-                    //certificado
-                    $nestedData['num_certificado'] = $lote->certificadoGranel?->num_certificado
-                        ?? $lote?->folio_certificado
-                        ?? 'Sin certificado';
-
-                    $certificado = CertificadosGranel::where('id_lote_granel', $lote->id_lote_granel)->first();
-
-                    $documento = null;
-                    if ($lote && $certificado) {
-                        $documento = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
-                            ->where('id_documento', 59)
-                            ->where('id_doc', $certificado->id_certificado)
-
-                            ->first();
-                    } elseif (!$certificado) {
-                        $documento = Documentacion_url::where('id_relacion', $lote->id_lote_granel)
-                            ->where('id_documento', 59)
-                            ->whereNull('id_doc')
-                            ->first();
-                    }
-
-                    $nestedData['certificado'] = $documento?->url
-                        ? asset("files/{$numeroCliente}/certificados_granel/{$documento->url}")
-                        : null;
-
-
-
-                    $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $lote->id_lote_granel . '">Eliminar</button>';
-
-                    $data[] = $nestedData;
+                } else {
+                    $nestedData['lote_procedencia'] = 'Lote de procedencia: No tiene lotes disponibles en el JSON.';
                 }
-
+            } else {
+                $nestedData['lote_procedencia'] = 'No tiene procedencia de otros lotes.';
             }
 
-            return response()->json([
-                'draw' => intval($request->input('draw')),
-                'recordsTotal' => intval($totalData),
-                'recordsFiltered' => intval($totalFiltered),
-                'code' => 200,
-                'data' => $data,
-            ]);
 
-        } catch (\Exception $e) {
-            return response()->json([
-                'draw' => intval($request->input('draw')),
-                'recordsTotal' => 0,
-                'recordsFiltered' => 0,
-                'data' => [],
-                'error' => 'Error al procesar la solicitud.'
-            ]);
+                // Obtén la URL del certificado desde la tabla Documentacion_url
+                $documentacion = Documentacion_url::where('id_relacion', $lote->id_lote_granel)->where('id_documento',59)->first();
+                    // Obtener el número de cliente
+                    $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
+
+                    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                    return !empty($numero);
+                });
+
+                // Ahora puedes usar el número de cliente en la URL
+                if ($documentacion) {
+                    $nestedData['url_certificado'] = '/files/' . $numeroCliente . '/certificados_granel/' . rawurlencode($documentacion->url);
+                } else {
+                    $nestedData['url_certificado'] = null;
+                }
+
+
+                //certificado
+                $nestedData['num_certificado'] = $lote->certificadoGranel?->num_certificado
+                    ?? $lote?->folio_certificado
+                    ?? 'Sin certificado';
+
+                $certificado = CertificadosGranel::where('id_lote_granel', $lote->id_lote_granel)->first();
+
+                $documento = null;
+                if ($lote && $certificado) {
+                    $documento = Documentacion_url::where('id_relacion', $certificado->id_lote_granel)
+                        ->where('id_documento', 59)
+                        ->where('id_doc', $certificado->id_certificado)
+
+                        ->first();
+                } elseif (!$certificado) {
+                    $documento = Documentacion_url::where('id_relacion', $lote->id_lote_granel)
+                        ->where('id_documento', 59)
+                        ->whereNull('id_doc')
+                        ->first();
+                }
+
+                $nestedData['certificado'] = $documento?->url
+                    ? asset("files/{$numeroCliente}/certificados_granel/{$documento->url}")
+                    : null;
+
+
+                $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $lote->id_lote_granel . '">Eliminar</button>';
+
+
+
+                $data[] = $nestedData;
+            }
+
         }
-    }
 
+        return response()->json([
+            'draw' => intval($request->input('draw')),
+            'recordsTotal' => intval($totalData),
+            'recordsFiltered' => intval($totalFiltered),
+            'code' => 200,
+            'data' => $data,
+        ]);
+}
+
+
+
+/* NO EXISTE LA FUNCION EN WEB
     public function getLotesList(Request $request)
     {
         $columns = ['id_lote', 'num_clientes', 'nombre_cliente', 'tipo', 'no_lote', 'categoria', 'clase', 'no_analisis', 'tipo_maguey', 'volumen', 'cont_alc'];
@@ -499,7 +540,7 @@ $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId
             'data' => $data
         ]);
     }
-
+*/
 
 
 
@@ -517,48 +558,58 @@ $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId
 
 
 
-    public function store(Request $request)
-    {
-      /* dd($request->all(), $request->file('documentos')); */
-
-        $validatedData = $request->validate([
-            'id_empresa' => 'required|exists:empresa,id_empresa',
-            'nombre_lote' => 'required|string|max:70',
-            'id_tanque' => 'nullable|string|max:100',
-            'tipo_lote' => 'required|integer',
-            'volumen' => 'required|numeric',
-            'cont_alc' => 'required|numeric',
-            'id_categoria' => 'required|integer|exists:catalogo_categorias,id_categoria',
-            'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
-            'agua_entrada' => 'nullable|numeric',
-            'id_tipo' => 'required|array',
-            'id_tipo.*' => 'integer|exists:catalogo_tipo_agave,id_tipo',
-            'ingredientes' => 'nullable|string|max:100',
-            'edad' => 'nullable|string|max:30',
-            'id_estado' => 'required|integer',
-            'folio_certificado' => 'nullable|string|max:50',
-            'id_organismo' => 'nullable|integer|exists:catalogo_organismos,id_organismo',
-            'fecha_emision' => 'nullable|date',
-            'fecha_vigencia' => 'nullable|date',
-            'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
-            'folio_fq_completo' => 'nullable|string|max:50',
-            'folio_fq_ajuste' => 'nullable|string|max:50',
-            'folio_fq' => 'nullable|string|max:70',
-            'es_creado_a_partir' => 'required|string',
-            'lote_original_id' => 'nullable',
-            'id_lote_granel.*' => 'nullable|integer',
-            'volumen_parcial.*' => 'nullable|numeric',
-            ] + ($request->input('tipo_lote') == 1 ? [
-              'id_guia' => 'nullable|array',
-              'id_guia.*' => 'integer|exists:guias,id_guia',
-          ] : [
-              'id_guia' => 'nullable|array',
-              'id_guia.*' => 'integer|exists:guias,id_guia',
-          ]));
+///REGISTRAR NUEVO LOTE
+public function store(Request $request)
+{
+    /* dd($request->all(), $request->file('documentos')); */
+    $validatedData = $request->validate([
+        'id_empresa' => 'required|exists:empresa,id_empresa',
+        'nombre_lote' => 'required|string|max:70',
+        'id_tanque' => 'nullable|string|max:100',
+        'tipo_lote' => 'required|integer',
+        'volumen' => 'required|numeric',
+        'cont_alc' => 'required|numeric',
+        'id_categoria' => 'required|integer|exists:catalogo_categorias,id_categoria',
+        'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
+        'agua_entrada' => 'nullable|numeric',
+        'id_tipo' => 'required|array',
+        'id_tipo.*' => 'integer|exists:catalogo_tipo_agave,id_tipo',
+        'ingredientes' => 'nullable|string|max:100',
+        'edad' => 'nullable|string|max:30',
+        'id_estado' => 'required|integer',
+        'folio_certificado' => 'nullable|string|max:50',
+        'id_organismo' => 'nullable|integer|exists:catalogo_organismos,id_organismo',
+        'fecha_emision' => 'nullable|date',
+        'fecha_vigencia' => 'nullable|date',
+        'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+        'folio_fq_completo' => 'nullable|string|max:50',
+        'folio_fq_ajuste' => 'nullable|string|max:50',
+        'folio_fq' => 'nullable|string|max:70',
+        'es_creado_a_partir' => 'required|string',
+        'lote_original_id' => 'nullable',
+        'id_lote_granel.*' => 'nullable|integer',
+        'volumen_parcial.*' => 'nullable|numeric',
+        ] + ($request->input('tipo_lote') == 1 ? [
+            'id_guia' => 'nullable|array',
+            'id_guia.*' => 'integer|exists:guias,id_guia',
+        ] : [
+            'id_guia' => 'nullable|array',
+            'id_guia.*' => 'integer|exists:guias,id_guia',
+        ]));
 
         // Crear una nueva instancia del modelo LotesGranel
         $lote = new LotesGranel();
         $lote->id_empresa = $validatedData['id_empresa'];
+
+        //Manejo de empresa_destino
+        if ($request->filled('id_empresa_destino')) {
+            // Si viene en el request, se guarda (maquilador con destino)
+            $lote->id_empresa_destino = $request->id_empresa_destino;
+        } else {
+            // No maquilador → no aplica
+            $lote->id_empresa_destino = null;
+        }
+
         $lote->id_tanque = $validatedData['id_tanque'];
         $lote->nombre_lote = $validatedData['nombre_lote'];
         $lote->tipo_lote = $validatedData['tipo_lote'];
@@ -580,6 +631,7 @@ $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId
 
         $folio_fq_Completo = $validatedData['folio_fq_completo'] ?? ' ';
         $folio_fq_ajuste = $validatedData['folio_fq_ajuste'] ?? ' ';
+
 
     // Validar si es creado a partir de otro lote
     if ($validatedData['es_creado_a_partir'] === 'si') {
@@ -611,7 +663,7 @@ $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId
           'volumenes' => $volumenesParciales,
       ]);
 
-      $lote->save(); // 👈 Esto asegura que ya tenga id_lote_granel para usarlo después
+      $lote->save(); // Esto asegura que ya tenga id_lote_granel para usarlo después
 
         $bitacoras = [];
       // Procesar cada lote original y restar el volumen parcial
@@ -644,6 +696,7 @@ $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId
               ];
             }
         }/* fin del foreach de volumenes */
+
 
            //Registrar bitácoras de salida
           foreach ($bitacoras as $info) {
@@ -678,10 +731,7 @@ $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId
             ]);
         }
 
-
     }
-
-
 
 
         // Verificar si ambos campos son espacios o vacíos
@@ -695,9 +745,10 @@ $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId
             $lote->folio_fq = $folio_fq_Completo;
         }
 
-
         // Guardar el nuevo lote en la base de datos
         $lote->save();
+
+
             //Bitácora de ENTRADA del nuevo lote (SIEMPRE)
             if ($validatedData['es_creado_a_partir'] === 'si') {
                 $procedencia = 'Creado a partir de: ' . implode(', ', $nombresLotes);
@@ -806,14 +857,12 @@ if ($request->has('documentos')) {
     }
 }
 
-
         // Retornar una respuesta
         return response()->json([
             'success' => true,
             'message' => 'Lote registrado exitosamente',
         ]);
-
-    }
+}
 
 
 
@@ -831,8 +880,11 @@ if ($request->has('documentos')) {
           }
       }
 
-    public function edit($id_lote_granel)
-    {
+
+
+///OBTENER LOTE
+public function edit($id_lote_granel)
+{
         try {
             // Cargar el lote y las guías asociadas
             $lote = LotesGranel::with('lotesGuias.guia')->findOrFail($id_lote_granel);
@@ -925,11 +977,10 @@ if ($request->has('documentos')) {
         } catch (\Exception $e) {
             return response()->json(['success' => false], 404);
         }
-    }
-
-    public function update(Request $request, $id_lote_granel)
-  {
-
+}
+///ACTUALIZAR LOTE
+public function update(Request $request, $id_lote_granel)
+{
     /* dd($request->all()); */
         try {
             // Validar los datos del formulario
@@ -960,7 +1011,8 @@ if ($request->has('documentos')) {
                 'folio_fq_ajuste' => 'nullable|string|max:50',
                 'folio_fq' => 'nullable|string|max:50'
             ]);
-            $lote = LotesGranel::findOrFail($id_lote_granel);
+
+        $lote = LotesGranel::findOrFail($id_lote_granel);
         // Si `lote_original_id` es nulo, inicializar `$lote_original_data` como un arreglo vacío
         $lote_original_data = $lote->lote_original_id ? json_decode($lote->lote_original_id, true) : ['lotes' => [], 'volumenes' => []];
         $lotesPrevios = $lote_original_data['lotes'];
@@ -969,6 +1021,7 @@ if ($request->has('documentos')) {
       // Actualizar el lote principal
           $updateData = [
               'id_empresa' => $validated['id_empresa'],
+    'id_empresa_destino' => $request->filled('id_empresa_destino') ? $request->id_empresa_destino : null,
               'id_tanque' => $validated['id_tanque'],
               'nombre_lote' => $validated['nombre_lote'],
               'tipo_lote' => $validated['tipo_lote'],
@@ -1206,7 +1259,11 @@ if ($request->has('documentos')) {
                 'message' => 'Error al actualizar el lote: ' . $e->getMessage(),
             ], 500);
         }
-  }
+}
+
+
+
+
 private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParcial)
 {
     return BitacoraMezcal::updateOrCreate(

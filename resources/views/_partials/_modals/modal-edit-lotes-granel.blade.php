@@ -14,7 +14,8 @@
                     <div class="section">
                         <h6>Datos Básicos</h6>
                         <div class="row">
-                            <div class="col-md-6">
+
+                            <div class="col-md-7">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select onchange="obtenerGuias1(); obtenerLotesEdit();" id="edit_id_empresa"
                                         name="id_empresa" class="select2 form-select">
@@ -28,6 +29,18 @@
                                     <label for="id_empresa">Cliente</label>
                                 </div>
                             </div>
+<div class="col-md-5">
+    <div class="form-floating form-floating-outline mb-4">
+        <select id="edit_id_empresa_destino" name="id_empresa_destino" class="select2 form-select">
+            <option value="" disabled selected>Selecciona la empresa destino</option>
+        </select>
+        <label>Empresa destino</label>
+    </div>
+</div>
+                        </div>
+
+
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="text" id="edit_nombre_lote" name="nombre_lote" class="form-control"
@@ -35,10 +48,7 @@
                                     <label for="edit_nombre_lote">Nombre del Lote</label>
                                 </div>
                             </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="edit_tipo_lote" name="tipo_lote" class="form-select">
                                         <option value="" disabled selected>Selecciona el tipo de lote</option>
@@ -50,7 +60,7 @@
                             </div>
 
                             <!-- Campo para seleccionar lote original -->
-                            <div class="col-md-4" id="editarLotes">
+                            <div class="col-md-6" id="editarLotes">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="edit_es_creado_a_partir" name="edit_es_creado_a_partir"
                                         class="form-select">
@@ -63,7 +73,7 @@
                                         lote?</label>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-4">
+                            <div class="col-md-6 mb-4">
                                 <div class="form-floating form-floating-outline">
                                     <input type="text" class="form-control" id="edit_id_tanque" name="id_tanque"
                                         placeholder="ID del Tanque(s)" aria-label="ID del Tanque">
