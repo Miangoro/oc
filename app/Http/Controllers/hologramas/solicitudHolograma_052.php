@@ -25,15 +25,19 @@ class solicitudHolograma_052 extends Controller
     public function UserManagement()
     {
         if (Auth::check() && Auth::user()->tipo == 3) {
-            $Empresa = empresa::with('empresaNumClientes')
+            $Empresa = empresa::with('empresaNumClientesNorma2')
                 ->where('tipo', 2)
                 ->where('id_empresa', Auth::user()->empresa?->id_empresa)
                 ->get();
         } else {
-            $Empresa = empresa::with('empresaNumClientes')
+            $Empresa = empresa::whereHas('empresaNumClientesNorma2') // solo las que tengan cliente norma 2
+                ->with('empresaNumClientesNorma2')
                 ->where('tipo', 2)
                 ->get();
+
         }
+
+
 
         $inspeccion = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 5);

@@ -5,7 +5,7 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Registrar nueva Solicitud de Hologramas 052</h4>
-                    <p class="address-subtitle"> <b style="color: red"> (EL FOLIO SE GENERARÁ AUTOMÁTICAMENTE)</b></p>
+                    <p class="address-subtitle"> <b style="color: red"> (EL FOLIO SE GENERARÁ AUTOMÁTICAMENTE) no creo</b></p>
                 </div>
                 <form id="addHologramasForm">
                     @csrf
@@ -14,11 +14,20 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <select id="id_empresa" name="id_empresa" class="select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
-                                    @foreach ($Empresa as $cliente)
+@foreach ($Empresa as $cliente)
+    <option value="{{ $cliente->id_empresa }}">
+        {{ $cliente->empresaNumClientesNorma2->first()->numero_cliente }} | {{ $cliente->razon_social }}
+    </option>
+@endforeach
+
+
+
+
+                                    {{--                                     @foreach ($Empresa as $cliente)
                                         <option value="{{ $cliente->id_empresa }}">
                                             {{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }}
                                             | {{ $cliente->razon_social }}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                                 <label for="id_empresa">Cliente</label>
                             </div>
@@ -43,7 +52,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select class="form-select" name="tipo" >
+                                <select class="form-select" name="tipo">
                                     <option value="A">A - Por imprimir</option>
                                     <option value="J">J - Impresos</option>
 
