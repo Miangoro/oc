@@ -86,12 +86,18 @@ $(function () {
           }
         },
         {
-          targets: 5,
-          render: function (data, type, full) {
-            var $prioridad = full['prioridad'] ?? 'N/A';
-            return `<span>${$prioridad}</span>`;
+          targets: 5, // columna 'estatus'
+          render: function (data, type, full, meta) {
+            let prioridad = (data || '').toLowerCase();
+            let colorClass = 'secondary'; // color por defecto
+            if (prioridad === 'media') colorClass = 'warning';
+            else if (prioridad === 'baja') colorClass = 'info';
+            else if (prioridad === 'alta') colorClass = 'danger';
+
+            return `<span class="badge py-2 rounded-pill bg-${colorClass} text-white">${data}</span>`;
           }
         },
+
         {
           targets: 6, // columna 'estatus'
           render: function (data, type, full, meta) {

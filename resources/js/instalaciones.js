@@ -45,12 +45,12 @@ $(function () {
   // Si tiene permiso, agregas el botón
   if (puedeAgregarUsuario) {
     buttons.push({
-        text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Instalación</span>',
-        className: 'add-new btn btn-primary waves-effect waves-light',
-        attr: {
-          'data-bs-toggle': 'modal',
-          'data-bs-target': '#modalAddInstalacion'
-        }
+      text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Instalación</span>',
+      className: 'add-new btn btn-primary waves-effect waves-light',
+      attr: {
+        'data-bs-toggle': 'modal',
+        'data-bs-target': '#modalAddInstalacion'
+      }
     });
   }
 
@@ -207,27 +207,27 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
           const documentos = Array.isArray(full['documentos']) ? full['documentos'] : [];
 
           let certificado = '';
-            if (!folio) {
-              certificado = `<span class="badge rounded-pill bg-danger">Sin certificado</span>`;
-            } else if (documentos.length > 0) {
-              let doc = documentos[0]; // Solo el más reciente
-              certificado = `<a href="${doc.url}" target="_blank" class="text-primary text-decoration-underline fw-bold">${full['folio']}</a>`;
-            } else {
-              certificado = `${folio}`;
-            }
-/*           if (!folio) {
+          if (!folio) {
             certificado = `<span class="badge rounded-pill bg-danger">Sin certificado</span>`;
           } else if (documentos.length > 0) {
-            certificado = documentos
-              .filter(doc => doc.url && doc.nombre)
-              .map(
-                doc =>
-                  `<a href="${doc.url}" target="_blank" class="text-primary text-decoration-underline fw-bold">${full['folio']}</a>`
-              )
-              .join(', ');
+            let doc = documentos[0]; // Solo el más reciente
+            certificado = `<a href="${doc.url}" target="_blank" class="text-primary text-decoration-underline fw-bold">${full['folio']}</a>`;
           } else {
             certificado = `${folio}`;
-          } */
+          }
+          /*           if (!folio) {
+                      certificado = `<span class="badge rounded-pill bg-danger">Sin certificado</span>`;
+                    } else if (documentos.length > 0) {
+                      certificado = documentos
+                        .filter(doc => doc.url && doc.nombre)
+                        .map(
+                          doc =>
+                            `<a href="${doc.url}" target="_blank" class="text-primary text-decoration-underline fw-bold">${full['folio']}</a>`
+                        )
+                        .join(', ');
+                    } else {
+                      certificado = `${folio}`;
+                    } */
 
           return `<span class="small">
     <b>Certificadora: </b>${full['certificadora']} <br>
@@ -285,25 +285,25 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
         render: function (data, type, full, meta) {
           let acciones = '';
           if (window.puedeEditarUsuario) {
-              acciones += `<a data-id="${full['id']}"  href="/add_revision_requisitos/${full['id_instalacion']}" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Requisitos a evaluar</a>`;
-            }
-            if (window.puedeEditarUsuario) {
-              acciones += `<a class="dropdown-item waves-effect text-info edit-record"  data-id="${full['id_instalacion']}" data-bs-toggle="modal"
+            acciones += `<a data-id="${full['id']}"  href="/add_revision_requisitos/${full['id_instalacion']}" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Requisitos a evaluar</a>`;
+          }
+          if (window.puedeEditarUsuario) {
+            acciones += `<a class="dropdown-item waves-effect text-info edit-record"  data-id="${full['id_instalacion']}" data-bs-toggle="modal"
             data-bs-target="#modalEditInstalacion"><i class="ri-edit-box-line ri-20px text-info"></i> Modificar</a>`;
-            }
-            if (window.puedeEliminarUsuario) {
-              acciones += `<a class="dropdown-item waves-effect text-danger delete-record" data-id="${full['id_instalacion']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar </a>`;
-            }
-            // Si no hay acciones, no retornar el dropdown
-            if (!acciones.trim()) {
-              return `
+          }
+          if (window.puedeEliminarUsuario) {
+            acciones += `<a class="dropdown-item waves-effect text-danger delete-record" data-id="${full['id_instalacion']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar </a>`;
+          }
+          // Si no hay acciones, no retornar el dropdown
+          if (!acciones.trim()) {
+            return `
                 <button class="btn btn-sm btn-secondary" disabled>
                   <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
                 </button>
               `;
-            }
-            // Si hay acciones, construir el dropdown
-            const dropdown = `<div class="d-flex align-items-center gap-50"><button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+          }
+          // Si hay acciones, construir el dropdown
+          const dropdown = `<div class="d-flex align-items-center gap-50"><button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
             <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-end m-0">
@@ -311,7 +311,7 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
                 </div>
               </div>
             `;
-            return dropdown;
+          return dropdown;
         }
       }
     ],
@@ -338,7 +338,7 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
         sPrevious: 'Anterior'
       }
     },
- buttons: buttons,
+    buttons: buttons,
     responsive: {
       details: {
         display: $.fn.dataTable.Responsive.display.modal({
@@ -352,18 +352,18 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
           var data = $.map(columns, function (col, i) {
             return col.title !== ''
               ? '<tr data-dt-row="' +
-                  col.rowIndex +
-                  '" data-dt-column="' +
-                  col.columnIndex +
-                  '">' +
-                  '<td>' +
-                  col.title +
-                  ':' +
-                  '</td> ' +
-                  '<td>' +
-                  col.data +
-                  '</td>' +
-                  '</tr>'
+              col.rowIndex +
+              '" data-dt-column="' +
+              col.columnIndex +
+              '">' +
+              '<td>' +
+              col.title +
+              ':' +
+              '</td> ' +
+              '<td>' +
+              col.data +
+              '</td>' +
+              '</tr>'
               : '';
           }).join('');
           return data ? $('<table class="table"/><tbody />').append(data) : false;
@@ -1192,9 +1192,16 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
             var fullUrl = `../files/${numeroCliente}/certificados_instalaciones/${doc.url}`;
             var nombreDocumento = doc.nombre_documento || 'Documento sin nombre';
 
+            var fechaInicio = doc.created_at ? new Date(doc.created_at).toLocaleDateString() : 'N/A';
+            var fechaVigencia = doc.fecha_vigencia ? new Date(doc.fecha_vigencia).toLocaleDateString() : 'N/A';
+            var estatus = doc.estatus || 'Vigente'; // Ajusta según tu lógica
+
             tablaContenido += `
                   <tr>
                       <td style="text-align:left;">${nombreDocumento}</td>
+                      <td>${fechaInicio}</td>
+                      <td>${fechaVigencia}</td>
+                      <td>${estatus}</td>
                       <td>
                           <button
                               class="verDocumentoBtn"
@@ -1223,7 +1230,7 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
     });
   });
 
-$(document).on('click', '.verDocumentoBtn', function () {
+  $(document).on('click', '.verDocumentoBtn', function () {
     var nombreDocumento = $(this).data('nombre');
     var url = $(this).data('url');
 
@@ -1232,34 +1239,34 @@ $(document).on('click', '.verDocumentoBtn', function () {
 
     // Cuando ya esté completamente oculto, abrimos el modal de PDF
     $('#modalVerDocumento').on('hidden.bs.modal', function handler() {
-        // Nos quitamos el listener para que no se dispare más de una vez
-        $('#modalVerDocumento').off('hidden.bs.modal', handler);
+      // Nos quitamos el listener para que no se dispare más de una vez
+      $('#modalVerDocumento').off('hidden.bs.modal', handler);
 
-        $('#cargando').show();
-        $('#pdfViewer').hide();
-        $('#mostrarPdf').modal('show');
+      $('#cargando').show();
+      $('#pdfViewer').hide();
+      $('#mostrarPdf').modal('show');
 
-        $('#pdfViewer').attr('src', url);
-        $('#titulo_modal').text('Certificado Instalaciones');
-        $('#subtitulo_modal').text(nombreDocumento);
+      $('#pdfViewer').attr('src', url);
+      $('#titulo_modal').text('Certificado Instalaciones');
+      $('#subtitulo_modal').text(nombreDocumento);
 
-        var openPdfBtn = $('#NewPestana');
-        openPdfBtn.attr('href', url);
-        openPdfBtn.show();
+      var openPdfBtn = $('#NewPestana');
+      openPdfBtn.attr('href', url);
+      openPdfBtn.show();
     });
-});
+  });
 
-$('#pdfViewer').on('load', function () {
+  $('#pdfViewer').on('load', function () {
     $('#cargando').hide();
     $(this).show();
-});
+  });
 
-$('#mostrarPdf').on('hidden.bs.modal', function () {
+  $('#mostrarPdf').on('hidden.bs.modal', function () {
     $('#pdfViewer').hide().attr('src', '');
     $('#cargando').show();
     $('#NewPestana').hide().attr('href', '#');
     $('#titulo_modal, #subtitulo_modal').text('');
-});
+  });
 
 
 
@@ -1272,75 +1279,75 @@ $('#mostrarPdf').on('hidden.bs.modal', function () {
 
 
 'use strict';
-  $(function () {
-    // Configuración de AJAX para enviar el token CSRF
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+$(function () {
+  // Configuración de AJAX para enviar el token CSRF
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
+  // Inicializar FormValidation en el formulario
+  const form = document.getElementById('formularioRequisitos');
+  const fv = FormValidation.formValidation(form, {
+    fields: {
+      'respuesta[]': {
+        validators: {
+          notEmpty: {
+            message: 'Selecciona una respuesta.'
+          }
         }
-    });
+      },
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        eleInvalidClass: 'is-invalid',
+        rowSelector: '.resp'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    // Este evento se dispara cuando el formulario es válido
 
-    // Inicializar FormValidation en el formulario
-    const form = document.getElementById('formularioRequisitos');
-    const fv = FormValidation.formValidation(form, {
-        fields: {
-            'respuesta[]': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona una respuesta.'
-                    }
-                }
-            },
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: '.resp'
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-    }).on('core.form.valid', function () {
-        // Este evento se dispara cuando el formulario es válido
+    // Crear un objeto FormData con todos los datos del formulario
+    const formData = new FormData(form);
 
-        // Crear un objeto FormData con todos los datos del formulario
-        const formData = new FormData(form);
-
-        // Enviar la solicitud AJAX con todos los datos del formulario
-        $.ajax({
-            url: '/registrar_revision_requisitos',
-            type: 'POST',
-            data: formData,
-            contentType: false,  // Importante para enviar los datos correctamente
-            processData: false,  // Importante para evitar la transformación de los datos en cadena de consulta
-            success: function(response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: 'Revisión registrada exitosamente.',
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                }).then(() => {
-                    // Redirigir a la ruta después de mostrar el mensaje de éxito
-                    window.location.href = '/domicilios/instalaciones';
-                });
-            },
-            error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: xhr.responseJSON.message,
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
-            }
+    // Enviar la solicitud AJAX con todos los datos del formulario
+    $.ajax({
+      url: '/registrar_revision_requisitos',
+      type: 'POST',
+      data: formData,
+      contentType: false,  // Importante para enviar los datos correctamente
+      processData: false,  // Importante para evitar la transformación de los datos en cadena de consulta
+      success: function (response) {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Revisión registrada exitosamente.',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        }).then(() => {
+          // Redirigir a la ruta después de mostrar el mensaje de éxito
+          window.location.href = '/domicilios/instalaciones';
         });
-
+      },
+      error: function (xhr) {
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: xhr.responseJSON.message,
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
     });
+
+  });
 
 
 

@@ -353,7 +353,7 @@
                 if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
                     // Imagen
                     previewHtml = `
-                <div class="file-preview mb-2 p-2 rounded bg-light d-flex align-items-center justify-content-between" style="max-width: 300px;">
+                <div class="file-preview mt-1 mb-2 p-2 rounded bg-light d-flex align-items-center justify-content-between" style="max-width: 300px;">
                     <img src="${URL.createObjectURL(file)}" class="img-fluid rounded" style="max-width:50px; max-height:50px;">
                     <span class="ms-2 text-truncate" style="max-width:200px;">${file.name}</span>
                     <button type="button" class="btn-close btn-sm ms-2" aria-label="Close"></button>
@@ -361,7 +361,7 @@
                 } else {
                     // Otros archivos
                     previewHtml = `
-                <div class="file-preview mb-2 p-2 rounded bg-light d-flex align-items-center justify-content-between" style="max-width: 300px;">
+                <div class="file-preview mt-1 mb-2 p-2 rounded bg-light d-flex align-items-center justify-content-between" style="max-width: 300px;">
                     <i class="ri-file-line fs-3"></i>
                     <span class="ms-2 text-truncate" style="max-width:200px;">${file.name}</span>
                     <button type="button" class="btn-close btn-sm ms-2" aria-label="Close"></button>

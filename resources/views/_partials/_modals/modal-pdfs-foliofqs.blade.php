@@ -13,6 +13,9 @@
                         <tr>
                             <th><b>Tipo de Certificado</b></th>
                             <th id="name"><b>Nombre</b></th>
+                            <th><b>Fecha inicio</b></th>
+                            <th><b>Fecha vigencia</b></th>
+                            <th><b>Estatus</b></th>
                             <th><b>Certificado</b></th>
                         </tr>
                     </thead>
