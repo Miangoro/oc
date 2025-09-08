@@ -266,14 +266,26 @@
       "submenu": [
         {
           "url": "/hologramas/solicitud",
-          "name": "Solicitudes",
+          "name": "Solicitudes 070",
           "slug": "hologramas-solicitud",
           "can": "Visualizar solicitud de hologramas"
         },
         {
           "url": "/find_hologramas_activar",
-          "name": "Activaciones",
+          "name": "Activaciones 070",
           "slug": "hologramas-activar",
+          "can": "Visualizar activación de hologramas"
+        },
+       {
+          "url": "/hologramas052/solicitud",
+          "name": "Solicitudes 052",
+          "slug": "hologramas052-solicitud",
+          "can": "Visualizar solicitud de hologramas"
+        },
+        {
+          "url": "/find_hologramas_activar052",
+          "name": "Activaciones 052",
+          "slug": "hologramas052-activar",
           "can": "Visualizar activación de hologramas"
         }
       ]

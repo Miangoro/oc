@@ -197,6 +197,7 @@ use App\Http\Controllers\dictamenes\DictamenNoCumplimientoController;
 use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\certificados\Certificado_GranelController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
+use App\Http\Controllers\hologramas\solicitudHolograma_052;
 use App\Http\Controllers\catalogo\catalogoEquiposController;
 use App\Http\Controllers\insertar_datos_bd;
 use App\Http\Controllers\inspecciones\inspeccionesController;
@@ -228,6 +229,7 @@ use App\Http\Controllers\clientes\resumenController;
 use App\Http\Controllers\DocuSignController;
 use App\Http\Controllers\efirma\firmaController;
 use App\Http\Controllers\hologramas\hologramasACtivar;
+use App\Http\Controllers\hologramas\hologramasActivar_052;
 use App\Http\Controllers\insertar_datos_bd_actas;
 use App\Http\Controllers\insertar_datos_bd_certificados_granel;
 use App\Http\Controllers\insertar_datos_bd_dictamenes_exportacion;
@@ -739,7 +741,7 @@ Route::post('/destinos-register/{id_direccion}',  'store')->name('destinos-regis
 route::get('/destinos-list/{id_direccion}/edit', 'edit')->name('destinos.edit');
 route::post('/destinos-update/{id_direccion}', 'update')->name('destinos.update');
 });
-//Usuariosgit 
+//Usuariosgit
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes')->middleware(['auth','permission:Visualizar usuarios']);
 Route::resource('/user-list', UsuariosController::class)->middleware(['auth']);
 Route::get('/pdf_asignacion_usuario/{id}', [UsuariosController::class, 'pdfAsignacionUsuario'])->name('pdf_asignacion_usuario')->middleware(['auth']);
@@ -889,6 +891,35 @@ Route::middleware(['auth'])->controller(hologramasACtivar::class)->group(functio
     Route::post('/solicitud_holograma/update/updateActivados', [hologramasACtivar::class, 'updateActivados']);
 });
 
+//-------------------HOLOGRAMAS - SOLICITUD DE HOLOGRAMAS 052-------------------
+Route::middleware(['auth'])->controller(solicitudHolograma_052::class)->group(function () {
+    Route::get('/hologramas052/solicitud', [solicitudHolograma_052::class, 'UserManagement'])->name('hologramas052-solicitud');
+    Route::resource('/hologramas052-list', solicitudHolograma_052::class);
+    Route::post('/hologramas052/store', [solicitudHolograma_052::class, 'store']);
+    Route::get('/solicitud_holograma052/edit/{id_solicitud}', [solicitudHolograma_052::class, 'edit']);
+    Route::post('/solicitud_holograma052/update/', [solicitudHolograma_052::class, 'update']);
+    Route::get('/solicitud_de_holograma052/{id}', [solicitudHolograma_052::class, 'solicitud_de_holograma'])->name('solicitudDeHologramas052');
+    Route::post('/solicitud_holograma052/update2', [solicitudHolograma_052::class, 'update2']);
+    Route::post('/solicitud_holograma052/update3', [solicitudHolograma_052::class, 'update3']);
+    Route::post('/solicitud_holograma052/updateAsignar', [solicitudHolograma_052::class, 'updateAsignar']);
+    Route::post('/solicitud_holograma052/updateRecepcion', [solicitudHolograma_052::class, 'updateRecepcion']);
+
+    Route::get('/solicitud_holograma052/editActivos/{id}', [solicitudHolograma_052::class, 'editActivos']);
+    Route::get('/solicitud_holograma052/editActivados/{id}', [solicitudHolograma_052::class, 'editActivados']);
+    // solicitud hologramas
+    Route::post('/solicitud_holograma052/update/updateActivar', [solicitudHolograma_052::class, 'updateActivar']);
+});
+
+//-------------------ACTIVACION DE HOLOGRAMAS 052-------------------
+Route::middleware(['auth'])->controller(hologramasActivar_052::class)->group(function () {
+    Route::get('/find_hologramas_activar052', [hologramasActivar_052::class, 'find_hologramas_activar'])->name('hologramas052-activar');
+    Route::resource('/find_hologramas_activar052-list', hologramasActivar_052::class);
+    Route::get('/getDatosInpeccion052/{id_inspeccion}', 'getDatosInpeccion');
+    Route::post('/verificar-folios052', 'verificarFolios');
+    Route::post('/solicitud_holograma052/storeActivar', 'storeActivar');
+    Route::get('/activacion_holograma052/edit/{id}', [hologramasActivar_052::class, 'editActivados']);
+    Route::post('/solicitud_holograma052/update/updateActivados', [hologramasActivar_052::class, 'updateActivados']);
+});
 
 Route::get('/marcas/{id_empresa}', [lotesEnvasadoController::class, 'obtenerMarcasPorEmpresa'])->middleware(['auth']);
 

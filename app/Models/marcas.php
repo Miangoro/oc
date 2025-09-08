@@ -70,5 +70,10 @@ class marcas extends Model
         return $this->hasMany(solicitudHolograma::class, 'id_marca','id_marca');
     }
 
+     public function solicitudHolograma_052()
+    {
+        return $this->hasMany(solicitudHolograma_052::class, 'id_marca','id_marca');
+    }
+
 
 }
