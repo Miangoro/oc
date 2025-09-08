@@ -120,7 +120,7 @@
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="row g-0 align-items-center">
                         <!-- Texto de bienvenida -->
-                        <div class="col-md-4 p-4">
+                        <div class="col-md-3 p-4">
                             <div class="card-body">
                                 <h4 class="card-title mb-3">
                                     👋 Bienvenido a la nueva Plataforma
@@ -155,9 +155,35 @@
                             </div>
                         </div>
 
-                        <div class="col-md-5 text-center d-none d-md-block">
-
+                        <div class="col-md-6 text-center d-none d-md-block p-2">
+                        <div class="row">
+                            @foreach($maquiladores as $maquilador)
+                                @foreach($maquilador->maquiladores as $m)
+                                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                                        <div class="card text-center shadow border-0 h-100" style="font-size: 0.9rem;">
+                                            
+                                            <!-- Encabezado -->
+                                            <div class="card-header text-white py-2" style="background-color:#053160; font-size: 0.85rem;">
+                                                {{ $m->razon_social }}
+                                            </div>
+                                            
+                                            <!-- Cuerpo -->
+                                            <div class="card-body p-2">
+                                                <h6 class="card-title text-success" style="color:#30a86a !important; font-size: 0.85rem;">
+                                                    RFC: {{ $m->rfc }}
+                                                </h6>
+                                                <p class="card-text mb-1" style="font-size: 0.8rem;">
+                                                    <strong>Domicilio:</strong> {{ $m->domicilio_fiscal }}
+                                                </p>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endforeach
                         </div>
+                    </div>
+
 
                         <!-- Imagen decorativa -->
                         <div class="col-md-3 text-center d-none d-md-block">
@@ -197,39 +223,7 @@
                 </div>
             </div>
         </div>
-<div class="row">
-    @foreach($maquiladores as $maquilador)
-        @foreach($maquilador->maquiladores as $m)
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card text-center shadow-lg border-0 h-100">
-                    
-                    <!-- Encabezado -->
-                    <div class="card-header text-white" style="background-color:#053160;">
-                        {{ $m->razon_social }}
-                    </div>
-                    
-                    <!-- Cuerpo -->
-                    <div class="card-body">
-                        <h5 class="card-title text-success" style="color:#30a86a !important;">
-                            RFC: {{ $m->rfc }}
-                        </h5>
-                        <p class="card-text">
-                            <strong>Domicilio Fiscal:</strong> {{ $m->domicilio_fiscal }}
-                        </p>
-                       <!-- <a href="javascript:void(0)" class="btn text-white" style="background-color:#30a86a;">
-                            <i class="bi bi-eye me-2"></i> Ver más
-                        </a>-->
-                    </div>
-                    
-                    <!-- Footer
-                    <div class="card-footer text-muted">
-                        Última actualización: {{ now()->format('d/m/Y') }}
-                    </div> -->
-                </div>
-            </div>
-        @endforeach
-    @endforeach
-</div>
+
 
 
 
@@ -259,7 +253,7 @@
                                 </div>
                                 <h4 class="mb-0">{{ $solicitudesSinActa->count() }}</h4>
                             </div>
-                            <h6 class="mb-0 fw-normal">Pendiente de subir acta 2023</h6>
+                            <h6 class="mb-0 fw-normal">Pendiente de subir acta 2025</h6>
 
                             <hr>
                             <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"

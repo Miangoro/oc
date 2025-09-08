@@ -88,6 +88,9 @@
                     </select>
                     <button id="btnActualizarEstatus" class="btn btn-sm btn-primary ms-1">Actualizar</button>
                 </p>
+                <div id="alertEstatus" class="alert alert-success d-none" role="alert">
+                    ¡El estatus ha sido actualizado!
+                </div>
 
 
                 @if ($ticket->evidencias->count())
@@ -350,7 +353,7 @@
                 if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
                     // Imagen
                     previewHtml = `
-                <div class="file-preview mb-2 p-2 rounded bg-light d-flex align-items-center justify-content-between" style="max-width: 300px;">
+                <div class="file-preview mt-1 mb-2 p-2 rounded bg-light d-flex align-items-center justify-content-between" style="max-width: 300px;">
                     <img src="${URL.createObjectURL(file)}" class="img-fluid rounded" style="max-width:50px; max-height:50px;">
                     <span class="ms-2 text-truncate" style="max-width:200px;">${file.name}</span>
                     <button type="button" class="btn-close btn-sm ms-2" aria-label="Close"></button>
@@ -358,7 +361,7 @@
                 } else {
                     // Otros archivos
                     previewHtml = `
-                <div class="file-preview mb-2 p-2 rounded bg-light d-flex align-items-center justify-content-between" style="max-width: 300px;">
+                <div class="file-preview mt-1 mb-2 p-2 rounded bg-light d-flex align-items-center justify-content-between" style="max-width: 300px;">
                     <i class="ri-file-line fs-3"></i>
                     <span class="ms-2 text-truncate" style="max-width:200px;">${file.name}</span>
                     <button type="button" class="btn-close btn-sm ms-2" aria-label="Close"></button>
@@ -536,7 +539,18 @@
                             .removeClass('bg-warning bg-success bg-danger bg-secondary')
                             .addClass('bg-' + color);
 
-                        Swal.fire('¡Éxito!', 'Estatus actualizado correctamente', 'success');
+                        /* Swal.fire('¡Éxito!', 'Estatus actualizado correctamente', 'success'); */
+                        // Mostrar alert Bootstrap
+                        $('#alertEstatus')
+                            .removeClass('d-none')
+                            .text('¡Estatus actualizado correctamente!')
+                            .fadeIn();
+
+                        // Ocultarlo después de 3 segundos
+                        setTimeout(() => {
+                            $('#alertEstatus').fadeOut();
+                        }, 3000);
+
                     }
                 },
                 error: function(xhr) {

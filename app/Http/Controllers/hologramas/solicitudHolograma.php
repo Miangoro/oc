@@ -23,8 +23,18 @@ use Illuminate\Support\Facades\DB;
 class solicitudHolograma extends Controller
 {
     public function UserManagement()
-    {
-        $Empresa = Empresa::with('empresaNumClientes')->where('tipo', 2)->get();
+    {   
+        if (Auth::check() && Auth::user()->tipo == 3) {
+            $Empresa = empresa::with('empresaNumClientes')
+                ->where('tipo', 2)
+                ->where('id_empresa', Auth::user()->empresa?->id_empresa)
+                ->get();
+        } else {
+            $Empresa = empresa::with('empresaNumClientes')
+                ->where('tipo', 2)
+                ->get();
+        }
+ 
         $inspeccion = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 5);
         })
@@ -280,7 +290,7 @@ class solicitudHolograma extends Controller
             $holograma->id_empresa = $request->input('edit_id_empresa');
             $holograma->id_marca = $request->input('edit_id_marca');
             $holograma->tipo = $request->tipo;
-            $holograma->id_solicitante = Auth::user()->id; // Actualiza el ID del solicitante con el ID del usuario actual
+            //$holograma->id_solicitante = Auth::user()->id; // Actualiza el ID del solicitante con el ID del usuario actual
             $holograma->cantidad_hologramas = $request->input('edit_cantidad_hologramas');
             $holograma->id_direccion = $request->input('edit_id_direccion');
             $holograma->comentarios = $request->input('edit_comentarios');
@@ -296,8 +306,8 @@ class solicitudHolograma extends Controller
                 // Si existe un registro previo, usar su folio_final + 1 como el nuevo folio_inicial
 
                 $folioInicial = $ultimoFolio ? $ultimoFolio + 1 : 1;
-                $holograma->folio_inicial = $folioInicial;
-                $holograma->folio_final = $folioInicial + $request->input('edit_cantidad_hologramas') - 1;
+               // $holograma->folio_inicial = $folioInicial;
+                //$holograma->folio_final = $folioInicial + $request->input('edit_cantidad_hologramas') - 1;
 
             // Guarda los cambios en la base de datos
             $holograma->save();
@@ -464,7 +474,7 @@ class solicitudHolograma extends Controller
     } */
 
     //Metodo para cargar el pdf
-    public function ModelsSolicitudHolograma($id)
+    public function solicitud_de_holograma($id)
     {
         // Cargar la solicitud de holograma con la relación de la empresa
         $datos = ModelsSolicitudHolograma::with('empresa', 'direcciones', 'user', 'empresanumcliente','marcas')->findOrFail($id);

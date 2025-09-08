@@ -507,6 +507,61 @@ public function update(Request $request, $id)
             ], 500);
         }
     }
+/* public function getDocumentosPorInstalacion(Request $request)
+{
+    $request->validate([
+        'id_instalacion' => 'required|exists:instalaciones,id_instalacion',
+    ]);
+
+    try {
+        $instalacion = instalaciones::with('empresa.empresaNumClientes')->findOrFail($request->id_instalacion);
+
+        // IDs de documentos permitidos
+        $documentosPermitidos = [127, 128, 129, 130, 131];
+
+        // Traer dictámenes de la instalación
+        $dictamenesIds = \App\Models\Dictamen_instalaciones::where('id_instalacion', $instalacion->id_instalacion)
+            ->pluck('id_dictamen');
+
+        // Documentos asociados a la instalación
+        $documentos = \App\Models\Documentacion_url::whereIn('id_documento', $documentosPermitidos)
+            ->where('id_relacion', $instalacion->id_instalacion)
+            ->get()
+            ->map(function($doc) {
+                $doc->estatus = ($doc->fecha_vigencia && $doc->fecha_vigencia < now()) ? 'Vencido' : 'Vigente';
+                return $doc;
+            });
+
+        // Certificados asociados a los dictámenes
+        $certificados = \App\Models\Certificados::whereIn('id_dictamen', $dictamenesIds)
+            ->get()
+            ->map(function($cert) {
+                $cert->estatus = ($cert->fecha_vigencia && $cert->fecha_vigencia < now()) ? 'Vencido' : 'Vigente';
+                return $cert;
+            });
+
+        // Número de cliente
+        $numeroCliente = $instalacion->empresa->empresaNumClientes
+            ->pluck('numero_cliente')
+            ->first(fn($numero) => !empty($numero));
+
+        return response()->json([
+            'success'      => true,
+            'documentos'   => $documentos,
+            'certificados' => $certificados,
+            'numero_cliente' => $numeroCliente,
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al obtener los documentos: ' . $e->getMessage(),
+        ], 500);
+    }
+}
+ */
+
+
 
 //end
 }

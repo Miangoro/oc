@@ -824,7 +824,7 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
   }).on('core.form.valid', function () {
     var formData = new FormData(editHologramasForm);
     $.ajax({
-      url: '/solicitud_holograma/update/', // URL de la ruta de actualización
+      url: '/solicitud_holograma/update', // URL de la ruta de actualización
       method: 'POST',
       data: formData,
       processData: false,

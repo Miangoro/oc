@@ -78,24 +78,29 @@ class UsuariosInspectoresController extends Controller
     } else {
       $search = $request->input('search.value');
 
-      $users = User::where('id', 'LIKE', "%{$search}%")
-        ->where("tipo",3)
-        ->orWhere('name', 'LIKE', "%{$search}%")
-        ->orWhere('email', 'LIKE', "%{$search}%")
-        ->orWhere('puesto', 'LIKE', "%{$search}%")
-        ->orWhere('estatus', 'LIKE', "%{$search}%")
+    $users = User::where("tipo", 3)
+        ->where(function ($q) use ($search) {
+            $q->where('id', 'LIKE', "%{$search}%")
+              ->orWhere('name', 'LIKE', "%{$search}%")
+              ->orWhere('email', 'LIKE', "%{$search}%")
+              ->orWhere('puesto', 'LIKE', "%{$search}%")
+              ->orWhere('estatus', 'LIKE', "%{$search}%");
+        })
         ->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
         ->get();
 
-      $totalFiltered = User::where('id', 'LIKE', "%{$search}%")
-        ->where("tipo",2)
-        ->orWhere('name', 'LIKE', "%{$search}%")
-        ->orWhere('email', 'LIKE', "%{$search}%")
-        ->orWhere('puesto', 'LIKE', "%{$search}%")
-        ->orWhere('estatus', 'LIKE', "%{$search}%")
+    $totalFiltered = User::where("tipo", 3)
+        ->where(function ($q) use ($search) {
+            $q->where('id', 'LIKE', "%{$search}%")
+              ->orWhere('name', 'LIKE', "%{$search}%")
+              ->orWhere('email', 'LIKE', "%{$search}%")
+              ->orWhere('puesto', 'LIKE', "%{$search}%")
+              ->orWhere('estatus', 'LIKE', "%{$search}%");
+        })
         ->count();
+
     }
 
     $data = [];
@@ -203,7 +208,7 @@ class UsuariosInspectoresController extends Controller
                   'puesto' => $request->puesto,
               ]
           );
-          $users->syncRoles($request->rol_id); 
+          $users->syncRoles($request->rol_id);
           return response()->json('Modificado');
       } else {
           // Crear un nuevo inspector si el correo no existe
@@ -222,7 +227,7 @@ class UsuariosInspectoresController extends Controller
                   'firma' => $firmaPath,  // Guardar la ruta de la firma si existe
                   'puesto' => $request->puesto,
               ]);
-              $users->syncRoles($request->rol_id); 
+              $users->syncRoles($request->rol_id);
               return response()->json('Registrado');
           } else {
               return response()->json(['message' => 'Ya existe'], 422);

@@ -40,12 +40,12 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div class="me-1">
-                            <p class="text-heading mb-1">Users</p>
+                            <p class="text-heading mb-1">Clientes</p>
                             <div class="d-flex align-items-center">
                                 <h4 class="mb-1 me-2">{{ $totalUser }}</h4>
                                 <p class="text-success mb-1">(100%)</p>
                             </div>
-                            <small class="mb-0">Total Users</small>
+                            <small class="mb-0">Usuarios Clientes Totales</small>
                         </div>
                         <div class="avatar">
                             <div class="avatar-initial bg-label-primary rounded-3">
@@ -61,12 +61,12 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div class="me-1">
-                            <p class="text-heading mb-1">Verified Users</p>
+                            <p class="text-heading mb-1">Clientes Activos</p>
                             <div class="d-flex align-items-center">
                                 <h4 class="mb-1 me-1">{{ $verified }}</h4>
-                                <p class="text-success mb-1">(+95%)</p>
+                                <p class="text-success mb-1">({{ $verifiedPercentage }}%)</p>
                             </div>
-                            <small class="mb-0">Recent analytics</small>
+                            <small class="mb-0">Usuarios Clientes Inactivos</small>
                         </div>
                         <div class="avatar">
                             <div class="avatar-initial bg-label-success rounded-3">
@@ -82,12 +82,12 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div class="me-1">
-                            <p class="text-heading mb-1">Duplicate Users</p>
+                            <p class="text-heading mb-1">Clientes Inactivos</p>
                             <div class="d-flex align-items-center">
-                                <h4 class="mb-1 me-1">{{ $userDuplicates }}</h4>
-                                <p class="text-danger mb-1">(0%)</p>
+                                <h4 class="mb-1 me-1">{{ $notVerified }}</h4>
+                                <p class="text-danger mb-1">({{ $notVerifiedPercentage }}%)</p>
                             </div>
-                            <small class="mb-0">Recent analytics</small>
+                            <small class="mb-0">Usuarios Clientes Inactivos</small>
                         </div>
                         <div class="avatar">
                             <div class="avatar-initial bg-label-danger rounded-3">
@@ -98,7 +98,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-3">
+{{--         <div class="col-sm-6 col-xl-3">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -118,7 +118,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
     </div>
 

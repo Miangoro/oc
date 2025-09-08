@@ -39,26 +39,34 @@ class UsuariosController extends Controller
         ->where('id', '!=', 1)
         ->where('estatus', '!=', 'Inactivo')
         ->get();
-    $users = User::with('empresa')
-    ->offset(1)
-    ->limit(10)
-    ->get();
+    $users = User::where('tipo', 3)->get();
     $userCount = $users->count();
-    $verified = User::whereNotNull('email_verified_at')->get()->count();
-    $notVerified = User::whereNull('email_verified_at')->get()->count();
+    $verified = User::where('tipo', 3)
+                    ->where('estatus', 'Activo')
+                    ->count();
+
+    $notVerified = User::where('tipo', 3)
+                    ->where('estatus', 'Inactivo')
+                   ->count();
     $usersUnique = $users->unique(['email']);
-    $userDuplicates = $users->diff($usersUnique)->count();
+   /*  $userDuplicates = $users->diff($usersUnique)->count(); */
     //$roles = Role::All();
+     // 🔥 Cálculo de porcentajes (con protección para división entre 0)
+    $verifiedPercentage = $userCount > 0 ? round(($verified / $userCount) * 100, 2) : 0;
+    $notVerifiedPercentage = $userCount > 0 ? round(($notVerified / $userCount) * 100, 2) : 0;
+
     $roles = Role::where('id', '!=', 1)->get();
 
     return view('usuarios.find_usuarios_clientes_view', [
       'totalUser' => $userCount,
       'verified' => $verified,
       'notVerified' => $notVerified,
-      'userDuplicates' => $userDuplicates,
+      /* 'userDuplicates' => $userDuplicates, */
       'empresas' => $empresas,
       'users' => $users,
       'usuarios' => $usuarios,
+      'verifiedPercentage' => $verifiedPercentage,
+      'notVerifiedPercentage' => $notVerifiedPercentage,
       'roles' => $roles
     ]);
   }
