@@ -28,7 +28,9 @@ class lotes_envasado extends Model
         'estatus',
         'tipo',
         'id_etiqueta',
-        'cont_alc_envasado'
+        'cont_alc_envasado',
+        'id_empresa_destino', 
+        'id_usuario_registro',
     ];
 
     protected static function boot()
@@ -41,7 +43,7 @@ class lotes_envasado extends Model
             }
         });
     }
-    
+
 
     public function empresa()
     {
