@@ -14,6 +14,7 @@ use App\Models\estados;
 use App\Models\normas_catalo;
 use App\Models\User;
 use App\Models\catalogo_actividad_cliente;
+use App\Models\Documentacion_url;
 use App\Models\empresa_actividad;
 use App\Models\instalaciones;
 use App\Models\maquiladores_model;
@@ -24,7 +25,7 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Storage;
 
 class clientesConfirmadosController extends Controller
 {
@@ -157,7 +158,7 @@ public function editarCliente($id)
 
 
 ///PDF's
-public function pdfCartaAsignacion($id)
+public function pdfCartaAsignacion($id, $save = false)
 {
     $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, e.created_at, info_procesos, s.fecha_registro,
     e.correo, e.telefono, p.id_producto, nc.id_norma, a.id_actividad, e.estado
@@ -170,6 +171,8 @@ public function pdfCartaAsignacion($id)
 
     JOIN empresa_num_cliente nc ON (nc.id_empresa = e.id_empresa)
     WHERE nc.numero_cliente="'.$id.'" ');
+
+      
 
     $fecha_registro = Carbon::parse($res[0]->created_at)->translatedFormat('j \d\e F \d\e\l Y');
     // Obtener ID de la empresa
@@ -192,6 +195,26 @@ public function pdfCartaAsignacion($id)
         'codigo_oficio' => $codigo_oficio,
         'contacto'=>$contacto,
     ]);
+
+     if ($save) { 
+            // Guardar en storage/app/public/pdf/
+            $fileName = "uploads/{$id}/Carta de asignación de número de cliente{$id}.pdf";
+           
+            Storage::disk('public')->put($fileName, $pdf->output());
+
+                $documentacion_url = new Documentacion_url();
+                $documentacion_url->id_documento = 77; // id_documento de carta de asignación de número de cliente
+                $documentacion_url->id_empresa = $empresa_id;
+                $documentacion_url->nombre_documento ="Carta de asignación de número de cliente ".$id;
+                $documentacion_url->url = "Carta de asignación de número de cliente{$id}.pdf";
+                $documentacion_url->save();
+
+            // Retornar la ruta
+            return "Carta de asignación de número de cliente{$id}.pdf";
+
+            //dd(Storage::url($fileName));
+        }
+
     return $pdf->stream('Carta de asignación de número de cliente.pdf');
 }
 
@@ -676,6 +699,14 @@ public function registrarClientes(Request $request)
     $empresaNumCliente->id_norma = 3;
     $empresaNumCliente->save();
 
+       // Registrar las actividades seleccionadas utilizando Eloquent
+        foreach ($request->actividad as $id_actividad) {
+            empresa_actividad::create([
+                'id_empresa' => $cliente->id_empresa,
+                'id_actividad' => $id_actividad,
+            ]);
+        }
+
     // 2. Registrar el resto de normas, omitiendo la norma con id_norma = 3
     foreach ($validatedData['normas'] as $index => $id_norma) {
         if ($id_norma != 3 && isset($validatedData['numeros_clientes'][$index])) {
@@ -688,15 +719,11 @@ public function registrarClientes(Request $request)
             $empresaNumCliente->id_norma = $id_norma;
 
             $empresaNumCliente->save();
+           
+            $this->pdfCartaAsignacion($numero_cliente,true);
         }
     }
-        // Registrar las actividades seleccionadas utilizando Eloquent
-        foreach ($request->actividad as $id_actividad) {
-            empresa_actividad::create([
-                'id_empresa' => $cliente->id_empresa,
-                'id_actividad' => $id_actividad,
-            ]);
-        }
+     
 
     //si es maquilador
     /*if($validatedData['es_maquilador']=='Si'){
