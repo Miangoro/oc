@@ -269,7 +269,7 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'nombre_empresa')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
-                                                @if($tipo_certificado == 'Instalaciones de productor'){
+                                                @if($tipo_certificado == 'Instalaciones de productor')
                                                     @php    
                                                     $empresa =
                                                     $datos->certificado->dictamen->inspeccione->solicitud->empresa;
@@ -283,18 +283,18 @@
                                                             $idUsoDom,
                                                             $empresa->id_empresa,
                                                         );
-                                                    @endphp
-                                                
-                                                {{-- Mostrar documento solo si es la constancia fiscal --}}
+                                                        @endphp
+                                                    
+                                                    {{-- Mostrar documento solo si es la constancia fiscal --}}
 
-                                                @if ($cliente && $documento)
-                                                    <a target="_blank"
-                                                        href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
-                                                        <i
-                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                    </a>
+                                                    @if ($cliente && $documento)
+                                                        <a target="_blank"
+                                                            href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
+                                                            <i
+                                                                class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                        </a>
+                                                    @endif
                                                 @endif
-                                                }
                                             </td>
                                         @elseif ($pregunta->filtro == 'num_certificado')
                                             <td><b
