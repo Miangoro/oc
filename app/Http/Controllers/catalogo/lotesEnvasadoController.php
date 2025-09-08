@@ -254,8 +254,8 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
         }
     } */
 
-        public function store(Request $request)
-        {
+public function store(Request $request)
+{
             DB::beginTransaction();
 
             try {
@@ -366,7 +366,7 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                     'message' => $e->getMessage()
                 ], 500);
             }
-        }
+}
 
 
 

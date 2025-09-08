@@ -436,8 +436,11 @@ $(function () {
     });
   });
 
-  /* registro de un lote */
-  $(document).ready(function () {
+
+
+
+///REGISTRAR NUEVO LOTE
+$(document).ready(function () {
     var lotesDisponibles = []; // Variable para almacenar los lotes disponibles
 
     let rowIndex = 0; // Contador global para el índice de las filas
@@ -678,8 +681,58 @@ $(function () {
     });
 
 
-    const addNewLote = document.getElementById('loteForm');
-    const fv = FormValidation.formValidation(addNewLote, {
+
+
+// Detecta cambio de empresa
+  $('#id_empresa').on('change', function() {
+      obtenerDestinoEmpresa();
+  });
+// Función para obtener destino de la empresa
+async function obtenerDestinoEmpresa() {
+    let empresaId = $("#id_empresa").val();
+    if (!empresaId) return;
+
+    try {
+        const response = await $.get('/getDatosMaquila/' + empresaId);
+        let $selectDestino = $('#id_empresa_destino');
+
+        $selectDestino.empty();
+
+        // Obtener datos de la empresa seleccionada
+        let empresaSeleccionadaText = $("#id_empresa option:selected").text();
+        let numeroCliente = empresaSeleccionadaText.split('|')[0]?.trim() ?? '';
+        let razonSocial = empresaSeleccionadaText.split('|')[1]?.trim() ?? '';
+
+        if (response.empresasDestino.length > 1) {
+            // Tiene maquiladores: mostrar todos los destinos y habilitar select
+            response.empresasDestino.forEach(emp => {
+                let numeroClienteDestino = emp.empresa_num_clientes[0]?.numero_cliente
+                                            ?? emp.empresa_num_clientes[1]?.numero_cliente
+                                            ?? '';
+                $selectDestino.append(`<option value="${emp.id_empresa}">${numeroClienteDestino} | ${emp.razon_social}</option>`);
+            });
+            $selectDestino.prop('disabled', false);
+        } else {
+            // No tiene maquiladores: mostrar propia empresa visualmente y deshabilitar
+            $selectDestino.append(`<option value="${empresaId}" selected>${numeroCliente} | ${razonSocial}</option>`);
+            $selectDestino.prop('disabled', true);
+        }
+
+        // Reinicializar Select2 reflejando estado deshabilitado
+        /*$selectDestino.select2({
+            dropdownParent: $('#offcanvasAddLote'),
+        });
+        $(document).trigger('empresaDestinoCargada', [$selectDestino]);*/
+
+    } catch (error) {
+        console.error('Error al cargar los datos de la empresa:', error);
+        alert('Error al cargar los datos. Por favor, intenta nuevamente.');
+    }
+}
+
+//FORMULARIO AGREGAR
+const addNewLote = document.getElementById('loteForm');
+const fv = FormValidation.formValidation(addNewLote, {
       fields: {
         nombre_lote: {
           validators: {
@@ -807,7 +860,7 @@ $(function () {
         // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
-    }).on('core.form.valid', function (e) {
+}).on('core.form.valid', function (e) {
       $('#btnAdd').addClass('d-none'); // Ocultar el botón de envío
       $('#btnSpinner').removeClass('d-none'); // Mostrar el spinner de carga
       // e.preventDefault();
@@ -855,15 +908,20 @@ $(function () {
           $('#btnAdd').removeClass('d-none'); // Mostrar el spinner de carga
         }
       });
-    });
+});
     // Inicializar select2 y revalidar el campo cuando cambie
     $('#id_empresa, #id_guia, #tipo_agave').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
-  });
+
+});
 
 
-  $(document).ready(function () {
+
+
+///FUNCION ACTUALIZAR
+$(document).ready(function () {
+
     const edit_tipoLoteSelect = document.getElementById('edit_tipo_lote');
     const edit_ocCidamFields = document.getElementById('edit_oc_cidam_fields');
     const edit_otroOrganismoFields = document.getElementById('edit_otro_organismo_fields');
@@ -918,7 +976,10 @@ $(function () {
       rowIndex = $('#contenidoGranelesEdit').children('tr').length;
     }
 
-    $(document).on('click', '.edit-record', function () {
+
+
+///OBTENER LOTE
+$(document).on('click', '.edit-record', function () {
       var loteId = $(this).data('id');
       $('#edit_lote_id').val(loteId);
       $.ajax({
@@ -981,6 +1042,11 @@ $(function () {
             // Rellenar el modal con los datos del lote
             $('#edit_nombre_lote').val(lote.nombre_lote);
             $('#edit_id_empresa').val(lote.id_empresa).trigger('change');
+      
+      // Obtener empresa_destino asignada y cargar select
+      let empresaDestinoAsignada = lote.id_empresa_destino ?? null;
+      obtenerDestinoEmpresaEdit(empresaDestinoAsignada);
+              
             $('#edit_tipo_lote').val(lote.tipo_lote);
             $('#edit_id_tanque').val(lote.id_tanque);
             $('#edit_agua_entrada').val(lote.agua_entrada);
@@ -1193,7 +1259,8 @@ $(function () {
           });
         }
       });
-    });
+});
+
 
     var lotesDisponiblesEdit = [];
 
@@ -1354,10 +1421,55 @@ $(function () {
       }
 
 
-    const editLoteForm = document.getElementById('loteFormEdit');
 
-    // Configuración de FormValidation
-    const fv = FormValidation.formValidation(editLoteForm, {
+// Detecta cambio de empresa en edición
+$('#edit_id_empresa').on('change', function() {
+    obtenerDestinoEmpresaEdit();
+});
+// Función para obtener destinos de la empresa en edición
+async function obtenerDestinoEmpresaEdit(selectedDestino = null) {
+    let empresaId = $("#edit_id_empresa").val();
+    if (!empresaId) return;
+
+    try {
+        const response = await $.get('/getDatosMaquila/' + empresaId);
+        let $selectDestino = $('#edit_id_empresa_destino');
+        $selectDestino.empty();
+
+        // Obtener texto de la empresa seleccionada
+        let empresaSeleccionadaText = $("#edit_id_empresa option:selected").text();
+        let numeroCliente = empresaSeleccionadaText.split('|')[0]?.trim() ?? '';
+        let razonSocial = empresaSeleccionadaText.split('|')[1]?.trim() ?? '';
+
+        if (response.empresasDestino.length > 1) {
+            // Tiene maquiladores: mostrar todos los destinos y habilitar select
+            response.empresasDestino.forEach(emp => {
+                let numeroClienteDestino = emp.empresa_num_clientes[0]?.numero_cliente
+                                            ?? emp.empresa_num_clientes[1]?.numero_cliente
+                                            ?? '';
+                let selected = selectedDestino == emp.id_empresa ? 'selected' : '';
+                $selectDestino.append(`<option value="${emp.id_empresa}" ${selected}>${numeroClienteDestino} | ${emp.razon_social}</option>`);
+            });
+            $selectDestino.prop('disabled', false);
+        } else {
+            // No tiene maquiladores: mostrar propia empresa visualmente y deshabilitar
+            $selectDestino.append(`<option value="${empresaId}" selected>${numeroCliente} | ${razonSocial}</option>`);
+            $selectDestino.prop('disabled', true);
+        }
+
+    } catch (error) {
+        console.error('Error al cargar los datos de la empresa:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudieron cargar los destinos de la empresa.',
+            customClass: { confirmButton: 'btn btn-danger' }
+        });
+    }
+}
+///FORMULARIO EDITAR
+const editLoteForm = document.getElementById('loteFormEdit');
+const fv = FormValidation.formValidation(editLoteForm, {
       fields: {
         nombre_lote: {
           validators: {
@@ -1439,12 +1551,13 @@ $(function () {
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
-    }).on('core.form.valid', function () {
+
+}).on('core.form.valid', function () {
       $('#btnEdit').addClass('d-none'); // Ocultar el botón de envío
       $('#btnSpinnerEdit').removeClass('d-none'); // Mostrar el spinner de carga
       var formData = new FormData(editLoteForm);
       var loteId = $('#edit_lote_id').val();
-
+  ///ACTUALIZAR LOTE
       $.ajax({
         url: '/lotes-a-granel/' + loteId,
         type: 'POST',
@@ -1501,7 +1614,7 @@ $(function () {
           $('#btnEdit').removeClass('d-none'); // Mostrar el botón de envío
         }
       });
-    });
+});
 
     // Inicializar select2 y revalidar el campo cuando cambie
     $('#id_empresa, #id_guia, #tipo_agave').on('change', function () {
@@ -1513,7 +1626,9 @@ $(function () {
 
     // Añadir el listener para el cambio en el tipo de lote
     edit_tipoLoteSelect.addEventListener('change', updateFieldsAndValidation);
-  });
+
+});///fin funcion actualizar
+
 
   // Mover el último seleccionado al final visualmente
   $('#tipo_agave').on('select2:select', function (e) {
@@ -1528,6 +1643,9 @@ $(function () {
     $(this).append(selectedElement).trigger('change.select2');
   });
 
+
+
+///ELIMINAR LOTE
   $(document).on('click', '.btn-eliminar-doc', function () {
     var idDocumento = $(this).data('id');
     var dtrModal = $('.dtr-bs-modal.show');

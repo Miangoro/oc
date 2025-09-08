@@ -6,6 +6,7 @@ use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Support\Facades\Auth;
 
 class Documentacion_url extends Model
 {
@@ -23,6 +24,17 @@ class Documentacion_url extends Model
             'id_doc'
 
         ];
+
+        protected static function boot()
+        {
+            parent::boot();
+
+            static::creating(function ($model) {
+                if (Auth::check()) {
+                    $model->id_usuario_registro = Auth::id();
+                }
+            });
+        }
 
       // Método para obtener el nombre del registro que sirve para la trazabilidad
      /*   public function getLogName2(): string

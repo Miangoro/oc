@@ -150,7 +150,7 @@
           "url": "dictamenes/no_cumplimiento",
           "name": "No cumplimiento",
           "slug": "dictamenes-no-cumplimiento",
-          "can": "Visualizar dictamen de exportación"
+          "can": "Visualizar dictamen de no cumplimiento"
         }
       ]
     },
@@ -181,7 +181,7 @@
           "url": "certificados/venta_nacional",
           "name": "Venta Nacional",
           "slug": "certificados-nacional",
-          "can": "Visualizar certificado de instalaciones"
+          "can": "Visualizar certificado de venta nacional"
         }
       ]
     },
