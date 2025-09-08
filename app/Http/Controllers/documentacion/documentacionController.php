@@ -360,7 +360,7 @@ if ($act_instalacion != 'Produccion de agave') {
                           <input value="' . $documento->id_documento . '" class="form-control" type="hidden" name="id_documento[]">
                           <input value="' . $documento->nombre . '" class="form-control" type="hidden" name="nombre_documento[]">'.'<input type="hidden" name="id_relacion[]" value="' . $instalacion->id_instalacion . '">'.'
                 </td>
-                <td id="mostrar' . $documento->id_documento . '" class="text-end fw-medium">   
+                <td id="mostrar' . $documento->id_documento . $instalacion->id_instalacion . '" class="text-end fw-medium">   
                 
                   ' . $mostrarDocumento . '
                 
@@ -606,6 +606,7 @@ if ($act_instalacion != 'Produccion de agave') {
       $uploadedFiles = [];
       $documento_id = [];
       $id = [];
+      $id_instalacion = [];
       foreach ($request->file('url') as $index => $file) {
         $filename = str_replace('/', '-', $request->nombre_documento[$index]) . '_' . time().$i. '.' . $file->getClientOriginalExtension();
         $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
@@ -622,11 +623,12 @@ if ($act_instalacion != 'Produccion de agave') {
         $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null; // Usa null si no hay fecha
         $documentacion_url->save();
         $id[] = $documentacion_url->id;
+        $id_instalacion[] = $documentacion_url->id_relacion;
         $i++;
       }
     }
 
-    return response()->json(['success' => $request, 'files' => $uploadedFiles,'id_documento' => $documento_id,'id'=>$id, 'folder'=>$numeroCliente]);
+    return response()->json(['success' => $request, 'files' => $uploadedFiles,'id_documento' => $documento_id,'id'=>$id, 'folder'=>$numeroCliente,'id_instalacion' =>$id_instalacion]);
   }
 
 

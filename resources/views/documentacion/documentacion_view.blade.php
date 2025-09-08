@@ -294,8 +294,14 @@ Swal.fire({
             let response = JSON.parse(xhr.responseText);
             for (let i = 0; i < response.id_documento.length; i++) {
               $('input[type="file"]').val('');
-                  $("#mostrar"+response.id_documento[i]).append('<i onclick="abrirModal(\'files/' +response.folder+ '/' +response.files[i]+ '\','+response.id[i]+')" data-id="'+response.id[i]+'" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"  data-registro=""></i>');
+
+              if(response.id_instalacion[i]==0){
+                response.id_instalacion[i] = '';
               }
+             
+                  $("#mostrar"+response.id_documento[i]+response.id_instalacion[i]).append('<i onclick="abrirModal(\'files/' +response.folder+ '/' +response.files[i]+ '\','+response.id[i]+')" data-id="'+response.id[i]+'" class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"  data-registro=""></i>');
+              // alert(response.id_documento[i]+response.id_instalacion[i]);
+                }
         } else {
             Swal.fire({
                 icon: 'error',
