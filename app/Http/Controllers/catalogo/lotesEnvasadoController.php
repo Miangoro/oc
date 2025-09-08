@@ -19,10 +19,11 @@ use App\Models\tipos;
 use App\Models\clases;
 use App\Models\categorias;
 use App\Models\Destinos;
+use App\Models\maquiladores_model;
+use App\Models\Exception;
+//use Exception as GlobalException;
 use Illuminate\Support\Facades\Auth;//Permiso empresa
 
-use App\Models\Exception;
-use Exception as GlobalException;
 
 class lotesEnvasadoController extends Controller
 {
@@ -60,36 +61,111 @@ class lotesEnvasadoController extends Controller
         ]);
     }
 
-    public function index(Request $request)
-    {
-        $columns = [
-            1 => 'id_lote_envasado',
-            2 => 'id_empresa',
-            3 => 'nombre',
-            4 => 'sku',
-            5 => 'id_marca',
-            6 => 'destino_lote',
-            7 => 'cant_botellas',
-            8 => 'presentacion',
-            9 => 'unidad',
-            10 => 'volumen_total',
-            11 => 'lugar_envasado',
-        ];
-              if (auth()->user()->tipo == 3) {
-                  $empresaId = auth()->user()->empresa?->id_empresa;
-              } else {
-                  $empresaId = null;
-              }
 
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $orderColumnIndex = $request->input('order.0.column');
-        $order = 'id_lote_envasado';
-        $dir = $request->input('order.0.dir');
+private function obtenerEmpresasVisibles($empresaId)
+{
+    $idsEmpresas = [];
+    if ($empresaId) {
+        $idsEmpresas[] = $empresaId; // Siempre incluye la empresa del usuario
+        $idsEmpresas = array_merge(
+            $idsEmpresas,
+            maquiladores_model::where('id_maquiladora', $empresaId)->pluck('id_maquilador')->toArray()
+        );/* id_maquiladora  id_maquilador */
+    }
 
-        $searchValue = $request->input('search.value');
+    return array_unique($idsEmpresas);
+}
 
-        $query = lotes_envasado::with(['empresa.empresaNumClientes', 'marca', 'Instalaciones', 'lotes_envasado_granel']); // Cargar relaciones necesarias
+public function index(Request $request)
+{
+    //Permiso de empresa
+    $empresaId = null;
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaId = Auth::user()->empresa?->id_empresa;
+    }
+
+    $columns = [
+        1 => 'id_lote_envasado',
+        2 => 'id_empresa',
+        3 => 'nombre',
+        4 => 'sku',
+        5 => 'id_marca',
+        6 => 'destino_lote',
+        7 => 'cant_botellas',
+        8 => 'presentacion',
+        9 => 'unidad',
+        10 => 'volumen_total',
+        11 => 'lugar_envasado',
+    ];
+
+    $limit = $request->input('length');
+    $start = $request->input('start');
+    $dir = $request->input('order.0.dir') ?? 'desc';
+    $order = $columns[$request->input('order.0.column')] ?? 'id_lote_envasado';
+    $search = $request->input('search.value');
+
+
+        $query = lotes_envasado::with([
+                'empresa.empresaNumClientes', 
+                'marca', 
+                'Instalaciones', 
+                'lotes_envasado_granel'
+            ]); // Cargar relaciones necesarias
+
+        // Filtro empresa (propia + maquiladores)  SE OCULTO PORQUE YA NO SERA POR MAQUILADOR
+        /*if ($empresaId) {
+            $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
+            $query->whereIn('id_empresa', $empresasVisibles);
+        }*/
+        // Filtro empresa (creadora y destino)
+        if ($empresaId) {
+            $query->where(function ($q) use ($empresaId) {
+                $q->where('id_empresa', $empresaId)
+                ->orWhere('id_empresa_destino', $empresaId);
+            });
+        }
+
+        $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
+        $totalData = $baseQuery->count();// totalData (sin búsqueda)
+
+
+    // Búsqueda global
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('destino_lote', 'LIKE', "%{$search}%")
+                ->orWhere('nombre', 'LIKE', "%{$search}%")
+                ->orWhere('sku', 'LIKE', "%{$search}%")
+                ->orWhere('estatus', 'LIKE', "%{$search}%")
+                ->orWhereHas('empresa', fn($q) => $q->where('razon_social', 'LIKE', "%{$search}%"))
+                ->orWhereHas('Instalaciones', fn($q) => $q->where('direccion_completa', 'LIKE', "%{$search}%"))
+                ->orWhereHas('marca', fn($q) => $q->where('marca', 'LIKE', "%{$search}%"))
+                ->orWhereHas('lotes_envasado_granel.lotes_granel', fn($q) => $q->where('nombre_lote', 'LIKE', "%{$search}%"))
+                ->orWhereHas('empresa.empresaNumClientes', fn($q) => $q->where('numero_cliente', 'LIKE', "%{$search}%"));
+        });
+
+        $totalFiltered = $query->count();
+    } else {
+        $totalFiltered = $totalData;
+    }
+
+
+    $users = $query
+        ->offset($start)
+        ->limit($limit)
+        ->orderBy($order, $dir)
+        ->get();
+/*    
+    $limit = $request->input('length');
+    $start = $request->input('start');
+    $orderColumnIndex = $request->input('order.0.column');
+    $order = 'id_lote_envasado';
+    $dir = $request->input('order.0.dir');
+
+    $searchValue = $request->input('search.value');
+
+    $query = lotes_envasado::with(['empresa.empresaNumClientes', 'marca', 'Instalaciones', 'lotes_envasado_granel']); // Cargar relaciones necesarias
+
+
         if ($empresaId) {
             $query->where('id_empresa', $empresaId);
         }
@@ -130,7 +206,10 @@ class lotesEnvasadoController extends Controller
             ->limit($limit)
             ->orderBy($order, $dir)
             ->get();
+*/
 
+
+        //MANDA LOS DATOS AL JS
         $data = [];
         if ($users->isNotEmpty()) {
             $ids = $start;
@@ -178,6 +257,7 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
             }
         }
 
+
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
@@ -185,7 +265,10 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
             'code' => 200,
             'data' => $data,
         ]);
-    }
+}
+
+
+
 
     //Metodo para eliminar
     public function destroy($id_lote_envasado)
@@ -194,6 +277,8 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
         $clase->delete();
         return response()->json(['success' => 'Lote envasado eliminada correctamente']);
     }
+
+
 
     //Metodo para egistrar
 /*     public function store(Request $request)
@@ -253,7 +338,7 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
             ], 500);
         }
     } */
-
+///REGISTRAR NUEVO LOTE
 public function store(Request $request)
 {
             DB::beginTransaction();
@@ -284,6 +369,16 @@ public function store(Request $request)
                 // Crear lote envasado
                 $lotes = new lotes_envasado();
                 $lotes->id_empresa = $request->id_empresa;
+
+                //Manejo de empresa_destino
+                if ($request->filled('id_empresa_destino')) {
+                    // Si viene en el request, se guarda (maquilador con destino)
+                    $lotes->id_empresa_destino = $request->id_empresa_destino;
+                } else {
+                    // No maquilador → no aplica
+                    $lotes->id_empresa_destino = null;
+                }
+
                 $lotes->nombre = $request->nombre;
                 $lotes->sku = json_encode(['inicial' => $request->sku]);
                 $lotes->id_marca = $request->id_marca;
@@ -370,9 +465,9 @@ public function store(Request $request)
 
 
 
-    //Editar lotes envasados
-    public function edit($id)
-    {
+///OBTENER LOTE
+public function edit($id)
+{
         try {
             $envasado_granel = lotes_envasado::with(['lotes_envasado_granel.loteGranel'])->findOrFail($id);
             $sku = json_decode($envasado_granel->sku, true);
@@ -385,16 +480,14 @@ public function store(Request $request)
             // Retornar el objeto JSON
             return response()->json($envasado_granel);
         } catch (\Exception $e) {
+
             return response()->json(['error' => 'Error al obtener el lote envasado'], 500);
         }
-
-
-    }
-
-    //Actualizar lotes envasados
-    public function update(Request $request)
-    {
-        try {
+}
+///ACTUALIZAR LOTE
+public function update(Request $request)
+{
+    try {
             // Buscar el lote existente
             $lotes = lotes_envasado::findOrFail($request->input('id'));
 
@@ -412,6 +505,9 @@ public function store(Request $request)
 
             // Actualizar los campos del lote envasado
             $lotes->id_empresa = $request->edit_cliente;
+
+    $lotes->id_empresa_destino = $request->filled('id_empresa_destino') ? $request->id_empresa_destino : null;
+
             $lotes->nombre = $request->edit_nombre;
 
             // Decodificar el JSON existente
@@ -465,11 +561,14 @@ public function store(Request $request)
             }
         }
 
-            return response()->json(['success' => 'Lote envasado actualizado exitosamente.']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
+
+        return response()->json(['success' => 'Lote envasado actualizado exitosamente.']);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
     }
+}
+
+
 
     //Modificar SKU
     public function editSKU($id)

@@ -72,6 +72,12 @@ private function obtenerEmpresasVisibles($empresaId)
 
 public function index(Request $request)
 {
+    //Permiso de empresa
+    $empresaId = null;
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaId = Auth::user()->empresa?->id_empresa;
+    }
+    
         $columns = [
             1 => 'id_lote_granel',
             2 => 'nombre_lote',
@@ -90,12 +96,6 @@ public function index(Request $request)
             15 => 'fecha_vigencia',
             16 => 'estatus',
         ];
-
-        //Permiso de empresa
-        $empresaId = null;
-        if (Auth::check() && Auth::user()->tipo == 3) {
-            $empresaId = Auth::user()->empresa?->id_empresa;
-        }
 
         $limit = $request->input('length');
         $start = $request->input('start');

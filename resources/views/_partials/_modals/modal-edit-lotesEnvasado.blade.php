@@ -8,8 +8,9 @@
             <div class="modal-body p-8">
                 <form id="editLoteEnvasadoForm" method="POST" onsubmit="return false">
                     <input type="hidden" id="edit_id_lote_envasado" name="id">
+
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-md-7">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select onchange=" edit_obtenerGraneles(); obtenerEtiquetas2();" id="edit_cliente"
                                     name="edit_cliente" class="select2 form-select" required>
@@ -23,13 +24,23 @@
                                 <label for="edit_cliente">Cliente</label>
                             </div>
                         </div>
+<div class="col-md-5">
+    <div class="form-floating form-floating-outline mb-4">
+        <select id="edit_id_empresa_destino" name="id_empresa_destino" class="select2 form-select">
+            <option value="" disabled selected>Selecciona la empresa destino</option>
+        </select>
+        <label>Empresa destino</label>
+    </div>
+</div>
+                    </div>
+
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control" id="edit_nombre"
                                 placeholder="Introduce el nombre del lote" name="edit_nombre"
                                 aria-label="Nombre del lote" required />
                             <label for="name">Nombre del lote</label>
                         </div>
-                    </div>
+                    
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">

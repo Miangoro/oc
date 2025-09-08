@@ -7,7 +7,9 @@
             </div>
             <div class="modal-body p-8">
                 <form id="addNewLoteForm">
-                    <div class="col-12">
+
+                <div class="row">
+                    <div class="col-md-7">
                         <div class="form-floating form-floating-outline mb-4">
                             <select id="id_empresa" name="id_empresa" class="select2 form-select">
                                 <option value="">Selecciona cliente</option>
@@ -20,6 +22,17 @@
                             <label for="id_empresa">Cliente</label>
                         </div>
                     </div>
+<div class="col-md-5">
+    <div class="form-floating form-floating-outline mb-4">
+        <select id="id_empresa_destino" name="id_empresa_destino" class="select2 form-select">
+            <option value="" disabled selected>Selecciona la empresa destino</option>
+        </select>
+        <label>Empresa destino</label>
+    </div>
+</div>
+                </div>
+                
+
                     <div class="form-floating form-floating-outline mb-5">
                         <input type="text" class="form-control" id="nombre"
                             placeholder="Introduce el nombre del lote" name="nombre" aria-label="Nombre del lote" />
