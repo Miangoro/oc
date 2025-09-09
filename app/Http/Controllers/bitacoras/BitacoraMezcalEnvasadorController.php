@@ -182,6 +182,8 @@ class BitacoraMezcalEnvasadorController extends Controller
                       ->orWhere('alcohol_salidas', 'LIKE', "%{$search}%")
                       ->orWhere('volumen_final', 'LIKE', "%{$search}%")
                       ->orWhere('alcohol_final', 'LIKE', "%{$search}%")
+                      ->orWhere('observaciones', 'LIKE', "%{$search}%")
+
                       ->orWhere(function ($date) use ($search) {
                           $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]);
                       })
@@ -194,6 +196,7 @@ class BitacoraMezcalEnvasadorController extends Controller
                       ->orWhereHas('loteBitacora', function ($sub) use ($search) {
                           $sub->where('nombre_lote', 'LIKE', "%{$search}%")
                               ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+                              ->orWhere('id_tanque', 'LIKE', "%{$search}%")
                               ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
                       });
                 }
