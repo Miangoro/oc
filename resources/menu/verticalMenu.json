@@ -175,7 +175,7 @@
           "url": "certificados/exportacion",
           "name": "Exportación",
           "slug": "certificados-exportacion",
-          "can": "Visualizar certificado de instalaciones"
+          "can": "Visualizar certificado de exportación"
         },
         {
           "url": "certificados/venta_nacional",
