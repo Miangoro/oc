@@ -212,14 +212,14 @@
 <table class="tabla2" style="border-collapse: collapse;" width=100%>
     <tr>
         <td rowspan="2" class="verde" style="width:12%;">LOTES DE PROCEDENCIA:</td>
-        <td rowspan="2" colspan="2" style="padding: 0, font-size: 5px">
+        <td rowspan="2" colspan="2" style="padding: 0, font-size: 4px">
             {{-- {{ !empty($lotes_procedencia) ? implode(', ', $lotes_procedencia) : 'N/A' }} --}}
             {{ $lotesOriginales->map(function($lote) {
                 return $lote->nombre_lote;
             })->implode(', ') }} 
         </td>
         <td rowspan="2" class="verde" style="width:12%;">NO. DE FISICOQUÍMICO:</td>
-        <td rowspan="2" style="padding: 0, font-size: 5px">
+        <td rowspan="2" style="padding: 0, font-size: 4px">
             {{-- {{ $datos->solicitud->lote_granel->folio_fq ?? ''}} --}}
             {{ $lotesOriginales->map(function($lote) {
                 return $lote->folio_fq;
