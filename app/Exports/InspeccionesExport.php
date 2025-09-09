@@ -32,34 +32,45 @@ class InspeccionesExport implements FromCollection, WithHeadings, WithEvents, Wi
     public function collection()
     {
         $query = SolicitudesModel::with('empresa', 'tipo_solicitud', 'instalaciones', 'predios', 'inspeccion', 'inspector');
+
         if (isset($this->filtros['id_empresa']) && $this->filtros['id_empresa']) {
             $query->where('id_empresa', $this->filtros['id_empresa']);
         }
+
         if (isset($this->filtros['anio']) && $this->filtros['anio']) {
             $query->whereYear('fecha_solicitud', $this->filtros['anio']);
         }
+
         if (isset($this->filtros['estatus']) && $this->filtros['estatus'] && $this->filtros['estatus'] != 'todos') {
             $query->where('estatus', $this->filtros['estatus']);
         }
+
         if (isset($this->filtros['mes']) && $this->filtros['mes']) {
             $query->whereMonth('fecha_solicitud', $this->filtros['mes']);
         }
-        // Filtrar por id_soli
+
+        // 🔹 Filtro por tipo de solicitud
         if (isset($this->filtros['id_soli']) && !empty($this->filtros['id_soli'])) {
-          $idSoli = $this->filtros['id_soli'];
-          if (in_array("", $idSoli)) {
-              // Si "Todas" está seleccionada, no se aplica ningún filtro
-          } else {
-              // Si no está seleccionada "Todas", aplicar filtro por los valores seleccionados
-              $query->whereIn('id_tipo', $idSoli);
-          }
+            $idSoli = $this->filtros['id_soli'];
+            if (!in_array("", $idSoli)) { // si no seleccionaron "Todas"
+                $query->whereIn('id_tipo', $idSoli);
+            }
         }
 
+        // 🔹 Filtro por inspector (se va por inspecciones)
+        if (isset($this->filtros['id_inspector_export']) && !empty($this->filtros['id_inspector_export'])) {
+            $inspectores = $this->filtros['id_inspector_export'];
+            if (!in_array("", $inspectores)) { // si no seleccionaron "Todos"
+                $query->whereHas('inspeccion', function ($q) use ($inspectores) {
+                    $q->whereIn('id_inspector', $inspectores);
+                });
+            }
+        }
 
         $query->orderBy('fecha_solicitud', 'desc');
 
         return $query->get([
-          'id_solicitud',
+            'id_solicitud',
             'id_empresa',
             'id_tipo',
             'folio',
@@ -68,10 +79,10 @@ class InspeccionesExport implements FromCollection, WithHeadings, WithEvents, Wi
             'fecha_visita',
             'id_instalacion',
             'id_predio',
-           /*  'info_adicional', */
             'caracteristicas'
         ]);
     }
+
 
     /**
      * Definir los encabezados de la tabla.

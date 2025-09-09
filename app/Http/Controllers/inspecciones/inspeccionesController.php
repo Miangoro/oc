@@ -105,7 +105,7 @@ public function index(Request $request)
     $query = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion','predios')
         ->where('habilitado', 1)
         ->where('id_tipo', '!=', 12);
- 
+
 
     $columnsInput = $request->input('columns');
 
@@ -583,8 +583,8 @@ public function asignarInspector(Request $request)
             ? Helpers::formatearFecha($datos->fecha_servicio)
             : null;
 
-    $id_inspector = in_array($datos->id_inspector, [9, 15, 16, 17, 18]) 
-    ? User::find(6) 
+    $id_inspector = in_array($datos->id_inspector, [9, 15, 16, 17, 18])
+    ? User::find(6)
     : User::find(9);
 
 
@@ -887,7 +887,7 @@ public function asignarInspector(Request $request)
     public function etiqueta_muestra($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
-        
+
         //edicion del formato
         if ($datos->solicitud->fecha_solicitud < '2025-08-07') {
             $edicion = 'pdfs.etiqueta_agave_art'; // ed16
@@ -930,7 +930,7 @@ public function asignarInspector(Request $request)
             $edicion = 'pdfs.etiquetas_tapas_sellado_ed17';
         }
         $pdf = Pdf::loadView($edicion,  [
-            'datos' => $datos, 
+            'datos' => $datos,
             'lotesOriginales' => $lotesOriginales,
             //'lotes_procedencia' => $lotesOriginales,
         ]);
@@ -952,7 +952,7 @@ public function asignarInspector(Request $request)
                     ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
             }
         }
-        
+
         if ($datos->solicitud->fecha_solicitud < '2025-08-07') {//edicion del formato
             $edicion = 'pdfs.etiqueta_lotes_mezcal_granel'; // ed16
         } else {
@@ -985,7 +985,7 @@ public function asignarInspector(Request $request)
 
     public function exportar(Request $request)
     {
-        $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes', 'id_soli']);
+        $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes', 'id_soli', 'id_inspector_export']);
         // Pasar los filtros a la clase InspeccionesExport
          $fechaHora = now()->format('d-m-Y H-i');
          $nombreArchivo = "Reporte de Inspecciones {$fechaHora}.xlsx";

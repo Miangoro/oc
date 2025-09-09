@@ -43,7 +43,18 @@
                         </div>
                     </div>
 
-
+                    <div class="col-12 mb-4">
+                        <div class="form-floating form-floating-outline">
+                            <select id="id_inspector_export" name="id_inspector_export[]" class="select2 form-select"
+                                data-allow-clear="true" multiple>
+                                <option value="" >Todos</option>
+                                @foreach ($inspectores as $inspector)
+                                    <option value="{{ $inspector->id }}">{{ $inspector->name }}</option>
+                                @endforeach
+                            </select>
+                            <label for="id_inspector_export">Inspector de la unidad de inspección</label>
+                        </div>
+                    </div>
 
 
                     <div class="row">
