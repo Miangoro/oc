@@ -33,7 +33,7 @@ class lotes_envasado extends Model
         'id_usuario_registro',
     ];
 
-    protected static function boot()
+    protected static function boot()//registro automatico de usuario
     {
         parent::boot();
 
