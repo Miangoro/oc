@@ -351,7 +351,7 @@
 <table class="tabla3" style="border-collapse: collapse;" width=100%>
     <tr>
         <td class="verde" style="width: 17%;">NO. DE ANÁLISIS FISICOQUÍMICO:</td>
-        <td>
+        <td style="font-size: 6.5px; padding: 0">
             {{-- {{ $datos->solicitud->lote_granel->folio_fq ?? '' }} --}}
             {{ $lotesOriginales->map(function($lote) {
                 return $lote->folio_fq;
