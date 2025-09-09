@@ -212,20 +212,20 @@
 <table class="tabla2" style="border-collapse: collapse;" width=100%>
     <tr>
         <td rowspan="2" class="verde" style="width:12%;">LOTES DE PROCEDENCIA:</td>
-        <td rowspan="2" colspan="2" style="padding: 0, font-size: 3px">
+        <td rowspan="2" colspan="2" style="font-size: 6px; padding: 0">
             {{-- {{ !empty($lotes_procedencia) ? implode(', ', $lotes_procedencia) : 'N/A' }} --}}
             {{ $lotesOriginales->map(function($lote) {
                 return $lote->nombre_lote;
             })->implode(', ') }} 
         </td>
         <td rowspan="2" class="verde" style="width:12%;">NO. DE FISICOQUÍMICO:</td>
-        <td rowspan="2" style="padding: 0, font-size: 3px">
+        <td rowspan="2" style="font-size: 6px; padding: 0">
             {{-- {{ $datos->solicitud->lote_granel->folio_fq ?? ''}} --}}
             {{ $lotesOriginales->map(function($lote) {
                 return $lote->folio_fq;
             })->implode(', ') }}
         </td>
-        <td colspan="3" class="verde">TIPO DE ANÁLISIS: 000</td>
+        <td colspan="3" class="verde">TIPO DE ANÁLISIS:</td>
     </tr>
     <tr>
         <td class="verde" >Análisis Completo</td>
