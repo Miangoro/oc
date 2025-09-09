@@ -243,7 +243,7 @@ class solicitudHolograma_052 extends Controller
 
 
         // Obtener el último run_folio creado
-        $ultimoFolio = \App\Models\solicitudHolograma::latest('folio')->first();
+        $ultimoFolio = ModelsSolicitudHolograma::latest('folio')->first();
         // Extraer el número del último run_folio y calcular el siguiente número
         if ($ultimoFolio) {
             $ultimoNumero = intval(substr($ultimoFolio->folio, 4, 6)); // Extrae 000001 de SOL-GUIA-000001/24
@@ -254,7 +254,7 @@ class solicitudHolograma_052 extends Controller
 
         $anoActual = Carbon::now()->now()->year;
         // Formatear el nuevo run_folio
-        $nuevoFolio = sprintf('INV-%06d-%d', $nuevoNumero, $anoActual);
+        $nuevoFolio = sprintf('INV052-%06d-%d', $nuevoNumero, $anoActual);
         // Crear una nueva instancia del modelo Hologramas
         $holograma = new ModelsSolicitudHolograma();
         $holograma->folio = $nuevoFolio;
