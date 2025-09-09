@@ -695,7 +695,6 @@ async function obtenerDestinoEmpresa() {
     try {
         const response = await $.get('/getDatosMaquila/' + empresaId);
         let $selectDestino = $('#id_empresa_destino');
-
         $selectDestino.empty();
 
         // Obtener datos de la empresa seleccionada
@@ -705,6 +704,8 @@ async function obtenerDestinoEmpresa() {
 
         if (response.empresasDestino.length > 1) {
             // Tiene maquiladores: mostrar todos los destinos y habilitar select
+            $selectDestino.append(`<option value="" disabled selected>Selecciona una empresa destino</option>`);
+
             response.empresasDestino.forEach(emp => {
                 let numeroClienteDestino = emp.empresa_num_clientes[0]?.numero_cliente
                                             ?? emp.empresa_num_clientes[1]?.numero_cliente
@@ -717,12 +718,6 @@ async function obtenerDestinoEmpresa() {
             $selectDestino.append(`<option value="${empresaId}" selected>${numeroCliente} | ${razonSocial}</option>`);
             $selectDestino.prop('disabled', true);
         }
-
-        // Reinicializar Select2 reflejando estado deshabilitado
-        /*$selectDestino.select2({
-            dropdownParent: $('#offcanvasAddLote'),
-        });
-        $(document).trigger('empresaDestinoCargada', [$selectDestino]);*/
 
     } catch (error) {
         console.error('Error al cargar los datos de la empresa:', error);
@@ -806,7 +801,6 @@ const fv = FormValidation.formValidation(addNewLote, {
         },
 
 
-
         'folio_certificado': {
           validators: {
             notEmpty: {
@@ -839,6 +833,14 @@ const fv = FormValidation.formValidation(addNewLote, {
           validators: {
             notEmpty: {
               message: 'Por favor adjunta el certificado'
+            }
+          }
+        },
+
+        id_empresa_destino: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa destino'
             }
           }
         },
@@ -1458,13 +1460,8 @@ async function obtenerDestinoEmpresaEdit(selectedDestino = null) {
         }
 
     } catch (error) {
-        console.error('Error al cargar los datos de la empresa:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudieron cargar los destinos de la empresa.',
-            customClass: { confirmButton: 'btn btn-danger' }
-        });
+        console.error('Error al cargar maquiladora:', error);
+        alert('Error al cargar los datos. Por favor, intenta nuevamente.');
     }
 }
 ///FORMULARIO EDITAR

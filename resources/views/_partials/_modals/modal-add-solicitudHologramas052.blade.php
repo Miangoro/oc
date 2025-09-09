@@ -5,7 +5,7 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Registrar nueva Solicitud de Hologramas 052</h4>
-                    <p class="address-subtitle"> <b style="color: red"> (EL FOLIO SE GENERARÁ AUTOMÁTICAMENTE) no creo</b></p>
+                    <p class="address-subtitle"> <b style="color: red"> (EL FOLIO SE GENERARÁ AUTOMÁTICAMENTE)</b></p>
                 </div>
                 <form id="addHologramasForm">
                     @csrf

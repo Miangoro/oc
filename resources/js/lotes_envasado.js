@@ -323,7 +323,7 @@ $(function () {
           }
         }
       ],
-      order: [[2, 'desc']],
+      order: [[1, 'desc']],
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' +
@@ -390,15 +390,27 @@ $(function () {
     $elements.each(function () {
       var $this = $(this);
       select2Focus($this);
+
+      // Definir placeholder dinámico según el select
+      let placeholderText = 'Selecciona opción';
+      if ($this.attr('id') === 'id_empresa') {
+        placeholderText = 'Selecciona cliente';
+      } else if ($this.attr('id') === 'id_empresa_destino') {
+        placeholderText = 'Selecciona la empresa destino';
+      }
+
       $this.wrap('<div class="position-relative"></div>').select2({
-        placeholder: 'Selecciona cliente',
+        placeholder: placeholderText,
         dropdownParent: $this.parent()
       });
     });
   }
 
-  // Registrar Lotes y validar
-  $(function () {
+
+
+
+  //validar
+$(function () {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -601,16 +613,64 @@ $(function () {
         }
       });
     }
-  });
+});
 
-  $(function () {
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-    const addNewLoteForm = document.getElementById('addNewLoteForm');
-    const fv = FormValidation.formValidation(addNewLoteForm, {
+
+
+
+///REGISTRAR NUEVO LOTE
+$(function () {
+
+// Detecta cambio de empresa
+$('#id_empresa').on('change', function() {
+    obtenerDestinoEmpresa();
+});
+// Función para obtener destino de la empresa
+async function obtenerDestinoEmpresa() {
+    let empresaId = $("#id_empresa").val();
+    if (!empresaId) return;
+
+    try {
+        const response = await $.get('/getDatosMaquila/' + empresaId);
+        let $selectDestino = $('#id_empresa_destino');
+        $selectDestino.empty();
+
+        // Obtener datos de la empresa seleccionada
+        let empresaSeleccionadaText = $("#id_empresa option:selected").text();
+        let numeroCliente = empresaSeleccionadaText.split('|')[0]?.trim() ?? '';
+        let razonSocial = empresaSeleccionadaText.split('|')[1]?.trim() ?? '';
+
+        if (response.empresasDestino.length > 1) {
+            // Tiene maquiladores: mostrar todos los destinos y habilitar select
+            $selectDestino.append(`<option value="" disabled selected>Selecciona una empresa destino</option>`);
+
+            response.empresasDestino.forEach(emp => {
+                let numeroClienteDestino = emp.empresa_num_clientes[0]?.numero_cliente
+                                            ?? emp.empresa_num_clientes[1]?.numero_cliente
+                                            ?? '';
+                $selectDestino.append(`<option value="${emp.id_empresa}">${numeroClienteDestino} | ${emp.razon_social}</option>`);
+            });
+            $selectDestino.prop('disabled', false);
+        } else {
+            // No tiene maquiladores: mostrar propia empresa visualmente y deshabilitar
+            $selectDestino.append(`<option value="${empresaId}" selected>${numeroCliente} | ${razonSocial}</option>`);
+            $selectDestino.prop('disabled', true);
+        }
+
+    } catch (error) {
+        console.error('Error al cargar los datos de la empresa:', error);
+        alert('Error al cargar los datos. Por favor, intenta nuevamente.');
+    }
+}
+
+//FORMULARIO AGREGAR
+$.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+  const addNewLoteForm = document.getElementById('addNewLoteForm');
+  const fv = FormValidation.formValidation(addNewLoteForm, {
       fields: {
         id_empresa: {
           validators: {
@@ -688,7 +748,14 @@ $(function () {
               message: 'Por favor seleccione un lugar de envasado'
             }
           }
-        }
+        },
+        id_empresa_destino: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa destino'
+            }
+          }
+        },
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -701,7 +768,7 @@ $(function () {
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
-    }).on('core.form.valid', function (e) {
+  }).on('core.form.valid', function (e) {
       //e.preventDefault();
       $('#bntAddEnvasado').addClass('d-none');
       $('#btnSpinner').removeClass('d-none');
@@ -765,9 +832,11 @@ $(function () {
       // Restablecer la validación del formulario
       fv.resetForm(true);
     });
-  });
+});
 
   initializeSelect2(select2Elements);
+
+
 
   //Eliminar registro
   $(document).on('click', '.delete-record', function () {
@@ -821,8 +890,14 @@ $(function () {
     });
   });
 
+
+
+
+
+$(document).ready(function () {//funcion general edit
+
   // Método para mostrar el modal de edición con los datos del lote envasado
-  $(document).on('click', '.edit-record', function () {
+$(document).on('click', '.edit-record', function () {
     var id_lote_envasado = $(this).data('id');
 
     // Realizar la solicitud AJAX para obtener los datos del lote envasado
@@ -830,6 +905,11 @@ $(function () {
       // Rellenar el formulario con los datos obtenidos
       $('#edit_id_lote_envasado').val(data.id_lote_envasado);
       $('#edit_cliente').val(data.id_empresa).trigger('change');
+
+  // Obtener empresa_destino asignada y cargar select
+  let empresaDestinoAsignada = data.id_empresa_destino ?? null;
+  obtenerDestinoEmpresaEdit(empresaDestinoAsignada);
+
       $('#edit_lote_granel').val(data.id_lote_granel).trigger('change');
       $('#edit_nombre').val(data.nombre);
       $('#edit_sku').val(data.inicial);
@@ -987,16 +1067,65 @@ $(function () {
     $(document).on('click', '.remove-row', function () {
       $(this).closest('tr').remove();
     });
-  });
 
-  $(function () {
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-    //update valiacion: en editar
-    const editLoteEnvasadoForm = document.getElementById('editLoteEnvasadoForm');
+});
+
+
+
+
+
+
+  
+  
+//$(function () {
+// Detecta cambio de empresa en edición
+$('#edit_cliente').on('change', function() {
+    obtenerDestinoEmpresaEdit();
+});
+// Función para obtener destinos de la empresa en edición
+async function obtenerDestinoEmpresaEdit(selectedDestino = null) {
+    let empresaId = $("#edit_cliente").val();
+    if (!empresaId) return;
+
+    try {
+        const response = await $.get('/getDatosMaquila/' + empresaId);
+        let $selectDestino = $('#edit_id_empresa_destino');
+        $selectDestino.empty();
+
+        // Obtener texto de la empresa seleccionada
+        let empresaSeleccionadaText = $("#edit_cliente option:selected").text();
+        let numeroCliente = empresaSeleccionadaText.split('|')[0]?.trim() ?? '';
+        let razonSocial = empresaSeleccionadaText.split('|')[1]?.trim() ?? '';
+
+        if (response.empresasDestino.length > 1) {
+            // Tiene maquiladores: mostrar todos los destinos y habilitar select
+            response.empresasDestino.forEach(emp => {
+                let numeroClienteDestino = emp.empresa_num_clientes[0]?.numero_cliente
+                                            ?? emp.empresa_num_clientes[1]?.numero_cliente
+                                            ?? '';
+                let selected = selectedDestino == emp.id_empresa ? 'selected' : '';
+                $selectDestino.append(`<option value="${emp.id_empresa}" ${selected}>${numeroClienteDestino} | ${emp.razon_social}</option>`);
+            });
+            $selectDestino.prop('disabled', false);
+        } else {
+            // No tiene maquiladores: mostrar propia empresa visualmente y deshabilitar
+            $selectDestino.append(`<option value="${empresaId}" selected>${numeroCliente} | ${razonSocial}</option>`);
+            $selectDestino.prop('disabled', true);
+        }
+
+    } catch (error) {
+        console.error('Error al cargar maquiladora:', error);
+        alert('Error al cargar los datos. Por favor, intenta nuevamente.');
+    }
+}
+
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+  ///FORMULARIO EDITAR
+  const editLoteEnvasadoForm = document.getElementById('editLoteEnvasadoForm');
     // Validación del formulario
     const fv2 = FormValidation.formValidation(editLoteEnvasadoForm, {
       fields: {
@@ -1122,7 +1251,11 @@ $(function () {
         }
       });
     });
-  });
+
+});
+
+
+
 
   $(document).on('click', '.edit-reclasificacion', function () {
     var id_lote_envasado = $(this).data('id');
@@ -1263,4 +1396,6 @@ $(function () {
       $('input[name="volumen_parcial[]"]').val(volumenTotal ? volumenTotal.toFixed(2) : '');
     });
   });
+
+
 });

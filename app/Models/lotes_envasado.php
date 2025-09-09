@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class lotes_envasado extends Model
 {
@@ -27,8 +28,22 @@ class lotes_envasado extends Model
         'estatus',
         'tipo',
         'id_etiqueta',
-        'cont_alc_envasado'
+        'cont_alc_envasado',
+        'id_empresa_destino', 
+        'id_usuario_registro',
     ];
+
+    protected static function boot()//registro automatico de usuario
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (Auth::check()) {
+                $model->id_usuario_registro = Auth::id();
+            }
+        });
+    }
+
 
     public function empresa()
     {

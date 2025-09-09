@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use App\Traits\TranslatableActivityLog;
+use Illuminate\Support\Facades\Auth;
 
 class LotesGranel extends Model
 {
@@ -19,8 +20,20 @@ class LotesGranel extends Model
         'id_empresa','id_empresa_destino', 'id_tanque', 'nombre_lote', 'tipo_lote', 'folio_fq', 'volumen', 'volumen_restante',
         'cont_alc', 'id_categoria', 'id_clase', 'id_tipo', 'ingredientes',
         'edad', 'id_guia', 'folio_certificado', 'id_organismo',
-        'fecha_emision', 'fecha_vigencia', 'agua_entrada','estatus', 'lote_original_id', 'id_estado'
+        'fecha_emision', 'fecha_vigencia', 'agua_entrada','estatus', 'lote_original_id', 'id_estado', 'id_usuario_registro',
     ];
+    
+    protected static function boot()//registro automatico de usuario
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (Auth::check()) {
+                $model->id_usuario_registro = Auth::id();
+            }
+        });
+    }
+
 
     // Método para obtener el nombre del registro que sirve para la trazabilidad
     public function getLogName2(): string
