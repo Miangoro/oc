@@ -25,7 +25,11 @@ class hologramasActivar_052 extends Controller
 {
     public function find_hologramas_activar()
     {
-        $Empresa = Empresa::with('empresaNumClientes')->where('tipo', 2)->get();
+        /* $Empresa = Empresa::with('empresaNumClientes')->where('tipo', 2)->get(); */
+        $Empresa = empresa::whereHas('empresaNumClientesNorma2') // solo las que tengan cliente norma 2
+                ->with('empresaNumClientesNorma2')
+                ->where('tipo', 2)
+                ->get();
         $inspeccion = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
             $query->where('id_tipo', 5)
             ->Orwhere('id_tipo', 6)
@@ -80,12 +84,14 @@ class hologramasActivar_052 extends Controller
 
 
 
-    $query = activarHologramasModelo_052::when(['inspeccion', 'solicitudHolograma_052.marcas', 'solicitudHolograma_052.empresa'])
-        ->when($empresaId, function ($q) use ($empresaId) {
-            $q->whereHas('solicitudHolograma_052.empresa', function ($q2) use ($empresaId) {
-                $q2->where('id_empresa', $empresaId);
-            });
+$query = activarHologramasModelo_052::with(['inspeccion', 'solicitudHolograma_052.marcas.empresa.empresaNumClientesNorma2'])
+    ->whereHas('solicitudHolograma_052')
+    ->when($empresaId, function ($q) use ($empresaId) {
+        $q->whereHas('solicitudHolograma_052.empresa', function ($q2) use ($empresaId) {
+            $q2->where('id_empresa', $empresaId);
         });
+    });
+
 
 
         if (!empty($searchValue)) {
@@ -122,13 +128,15 @@ class hologramasActivar_052 extends Controller
 
             foreach ($datos as $dato) {
 
-                $numero_cliente = optional(
+                /* $numero_cliente = optional(
                     $dato->solicitudHolograma_052->marcas->empresa->empresaNumClientes
                         ->firstWhere('numero_cliente', '!=', null)
-                )->numero_cliente;
+                )->numero_cliente; */
+$numero_cliente = $dato->solicitudHolograma_052?->marcas?->empresa?->empresaNumClientesNorma2?->first()?->numero_cliente ?? 'N/A';
 
-                $marca = $dato->solicitudHolograma_052->marcas->marca;
-                $folioMarca = $dato->solicitudHolograma_052->marcas->folio;
+$marca = $dato->solicitudHolograma_052?->marcas?->marca ?? 'sin marca encontrada';
+$folioMarca = $dato->solicitudHolograma_052?->marcas?->folio ?? '';
+
                 $folios = $dato->folios;
                 $folios = json_decode($folios, true);
                 $rangoFolios = [];
