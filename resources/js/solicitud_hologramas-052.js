@@ -158,11 +158,10 @@ $(function () {
               $colorRegimen = 'secondary';
             }
 
-            return `${
-                    $verified
-                      ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                      : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                  }`;
+            return `${$verified
+                ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+              }`;
           }
         },
         {
@@ -184,27 +183,21 @@ $(function () {
             let textoEstatus = full['estatus_activado'] == 1
               ? 'Cambiar estatus <span class="text-danger">desactivado</span>'
               : 'Cambiar estatus <span class="text-primary">activado</span>';
-
             return (
               '<div class="d-flex align-items-center gap-50">' +
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
+              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">' +
+              '<i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>' +
+              '</button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              /*`<a id="activar_holograma" data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activarHologramas" href="javascript:;" class="dropdown-item activar_holograma"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +*/
               `<a id="activos_hologramas" data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activosHologramas" href="javascript:;" class="dropdown-item activos_hologramas"><i class="ri-barcode-box-line ri-20px text-primary"></i> Activos</a>` +
-              /* `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addRecepcion" href="javascript:;" class="dropdown-item edit-recepcion"><i class="ri-article-fill ri-20px text-secondary"></i> Recepción hologramas</a>` + */
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addEnvio" href="javascript:;" class="dropdown-item edit-envio"><i class="ri-send-plane-fill ri-20px text-success"></i> Enviar</a>` +
-             /* `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#asignarHolograma" href="javascript:;" class="dropdown-item edit-signar"><i class="ri-qr-scan-fill ri-20px text-dark"></i> Asignar hologramas</a>` +*/
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addPago" href="javascript:;" class="dropdown-item edit-pay"><i class="ri-bank-card-line ri-20px text-warning"></i> Adjuntar comprobante de pago</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#editHologramas" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar solicitud</a>` +
-              `<a data-id="${full['id_solicitud']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar solicitud</a>` +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="' +
-              userView +
-              '" class="dropdown-item">View</a>' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+              `<a data-id="${full['id_solicitud']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar solicitud</a>` +
               '</div>' +
               '</div>'
             );
+
           }
         }
       ],
@@ -224,6 +217,7 @@ $(function () {
         search: '',
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
+        emptyTable: 'No hay datos disponibles en la tabla',
         paginate: {
           sFirst: 'Primero',
           sLast: 'Último',
@@ -399,18 +393,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -458,7 +452,7 @@ $(function () {
       $.ajax({
         url: '/getDatos/' + empresa,
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
           // Cargar los detalles de las marcas en el select
           var contenido = "";
           for (let index = 0; index < response.marcas.length; index++) {
@@ -473,7 +467,7 @@ $(function () {
           // Revalidar el campo 'id_marca' para verificar la selección
           formValidator.revalidateField('id_marca');
         },
-        error: function() {
+        error: function () {
           //alert('Error al cargar las marcas.');
         }
       });
@@ -486,9 +480,9 @@ $(function () {
       $.ajax({
         url: '/getDatos/' + empresa,
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
           // Filtrar las direcciones para que solo se incluyan las que tienen tipo_direccion igual a 3
-          var direccionesFiltradas = response.direcciones.filter(function(direccion) {
+          var direccionesFiltradas = response.direcciones.filter(function (direccion) {
             return direccion.tipo_direccion == 3;
           });
 
@@ -512,7 +506,7 @@ $(function () {
           // Revalidar el campo 'id_direccion' para verificar la selección
           formValidator.revalidateField('id_direccion');
         },
-        error: function() {
+        error: function () {
           //alert('Error al cargar las direcciones.');
         }
       });
@@ -633,20 +627,20 @@ $(function () {
     });
   });
 
-// Limpiar campos al cerrar el modal
-$('#addHologramas').on('hidden.bs.modal', function () {
-  // Restablecer select de empresa
-  $('#id_empresa').val('');
-  $('#id_marca').html('');
-  $('.id_direccion').html('');
-  $('#folio').val('');
-  $('#comentarios').val('');
-  $('#id_solicitante').val('');
-  $('#cantidad_hologramas').val('');
+  // Limpiar campos al cerrar el modal
+  $('#addHologramas').on('hidden.bs.modal', function () {
+    // Restablecer select de empresa
+    $('#id_empresa').val('');
+    $('#id_marca').html('');
+    $('.id_direccion').html('');
+    $('#folio').val('');
+    $('#comentarios').val('');
+    $('#id_solicitante').val('');
+    $('#cantidad_hologramas').val('');
 
-  // Restablecer la validación del formulario
-  formValidator.resetForm(true);
-});
+    // Restablecer la validación del formulario
+    formValidator.resetForm(true);
+  });
 
 
   initializeSelect2(select2Elements);
@@ -705,8 +699,8 @@ $('#addHologramas').on('hidden.bs.modal', function () {
 
 
 
-///FORMATO PDF SOLICITUD HOLOGRAMAS
-$(document).on('click', '.pdfSolicitudHolograma', function () {
+  ///FORMATO PDF SOLICITUD HOLOGRAMAS
+  $(document).on('click', '.pdfSolicitudHolograma', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
     var iframe = $('#pdfViewer');
@@ -715,9 +709,9 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
     spinner.show();
     iframe.hide();
     //Cargar el PDF con el ID
-    iframe.attr('src', '/solicitud_de_holograma/' + id);
+    iframe.attr('src', '/solicitud_de_holograma052/' + id);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', '/solicitud_de_holograma/' + id).show();
+    $("#NewPestana").attr('href', '/solicitud_de_holograma052/' + id).show();
     $("#titulo_modal").text("Solicitud de entrega de hologramas");
     $("#subtitulo_modal").text(registro);
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
@@ -725,7 +719,7 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
       spinner.hide();
       iframe.show();
     });
-});
+  });
 
 
 
@@ -746,10 +740,10 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
             $('#edit_id_direccion').val(data.id_direccion).trigger('change');
       });
       */
-     // Cargar marcas y direcciones, luego seleccionar los valores correspondientes
+      // Cargar marcas y direcciones, luego seleccionar los valores correspondientes
       cargarInfoEmpresa(function () {
-          $('#edit_id_marca').val(data.id_marca).trigger('change');
-          $('#edit_id_direccion').val(data.id_direccion).trigger('change');
+        $('#edit_id_marca').val(data.id_marca).trigger('change');
+        $('#edit_id_direccion').val(data.id_direccion).trigger('change');
       });
 
       $('#tipo').val(data.tipo).trigger('change');
@@ -758,7 +752,7 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
       $('#edit_comentarios').val(data.comentarios);
       $('#editHologramas').modal('show');
     }).fail(function (jqXHR, textStatus, errorThrown) {
-      console.error('Error: ' + textStatus + ' - ' + errorThrown+' 2- '+jqXHR);
+      console.error('Error: ' + textStatus + ' - ' + errorThrown + ' 2- ' + jqXHR);
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
@@ -843,7 +837,7 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
         });
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        console.error('Error: ' + textStatus + ' - ' + errorThrown+ '2erro'+ jqXHR);
+        console.error('Error: ' + textStatus + ' - ' + errorThrown + '2erro' + jqXHR);
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
@@ -1787,44 +1781,44 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
       });
     }); */
 
-    $(document).ready(function () {
-      $('#id_inspeccion').change(function () {
-          var id_inspeccion = $(this).val(); // Obtener el valor seleccionado
+  $(document).ready(function () {
+    $('#id_inspeccion').change(function () {
+      var id_inspeccion = $(this).val(); // Obtener el valor seleccionado
 
 
-          if (id_inspeccion) {
-              $.ajax({
-                  url: '/getDatosSolicitud/' + id_inspeccion, // URL del backend
-                  type: 'GET',
-                  dataType: 'json',
-                  success: function (response) {
-                      if (response.success) {
-                          // Llenar los inputs con los datos recibidos
-                          $('#no_lote_agranel').val(response.data.lote_granel.nombre_lote || '');
-                          $('#categoria').val(response.data.lote_granel.id_categoria).trigger('change');
-                          $('#clase').val(response.data.lote_granel.id_clase).trigger('change');
-                          $('#id_tipo').val(response.data.lote_granel.tipo_lote).trigger('change');
-                          $('#cont_neto').val(response.data.lote_envasado.presentacion);
-                          $('#unidad').val(response.data.lote_envasado.unidad);
-                          $('#no_analisis').val(response.data.lote_granel.folio_fq);
-                          $('#contenido').val(response.data.lote_granel.cont_alc);
-                          $('#no_lote_envasado').val(response.data.lote_envasado.nombre);
-                          $('#lugar_envasado').val(response.data.instalacion.direccion_completa);
+      if (id_inspeccion) {
+        $.ajax({
+          url: '/getDatosSolicitud/' + id_inspeccion, // URL del backend
+          type: 'GET',
+          dataType: 'json',
+          success: function (response) {
+            if (response.success) {
+              // Llenar los inputs con los datos recibidos
+              $('#no_lote_agranel').val(response.data.lote_granel.nombre_lote || '');
+              $('#categoria').val(response.data.lote_granel.id_categoria).trigger('change');
+              $('#clase').val(response.data.lote_granel.id_clase).trigger('change');
+              $('#id_tipo').val(response.data.lote_granel.tipo_lote).trigger('change');
+              $('#cont_neto').val(response.data.lote_envasado.presentacion);
+              $('#unidad').val(response.data.lote_envasado.unidad);
+              $('#no_analisis').val(response.data.lote_granel.folio_fq);
+              $('#contenido').val(response.data.lote_granel.cont_alc);
+              $('#no_lote_envasado').val(response.data.lote_envasado.nombre);
+              $('#lugar_envasado').val(response.data.instalacion.direccion_completa);
 
 
 
 
 
-                      } else {
-                          Swal.fire('Error', 'No se encontraron datos', 'error');
-                      }
-                  },
-                  error: function () {
-                      Swal.fire('Error', 'Ocurrió un problema con la consulta', 'error');
-                  }
-              });
+            } else {
+              Swal.fire('Error', 'No se encontraron datos', 'error');
+            }
+          },
+          error: function () {
+            Swal.fire('Error', 'Ocurrió un problema con la consulta', 'error');
           }
-      });
+        });
+      }
+    });
   });
 
 

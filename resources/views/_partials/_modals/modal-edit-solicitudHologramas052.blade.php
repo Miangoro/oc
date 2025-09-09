@@ -24,8 +24,8 @@
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($Empresa as $cliente)
                                         <option value="{{ $cliente->id_empresa }}">
-                                            {{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }}
-                                            | {{ $cliente->razon_social }}</option>
+                                            {{ $cliente->empresaNumClientesNorma2->first()->numero_cliente }} | {{ $cliente->razon_social }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <label for="edit_id_empresa">Cliente</label>

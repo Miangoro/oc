@@ -99,7 +99,7 @@ class solicitudHolograma_052 extends Controller
         }
 
 
-        $query = ModelsSolicitudHolograma::with(['empresa.empresaNumClientes', 'user', 'marcas'])
+        $query = ModelsSolicitudHolograma::with(['empresa.empresaNumClientesNorma2', 'user', 'marcas'])
         ->when($empresaId, function ($q) use ($empresaId) {
             $q->where('id_empresa', $empresaId);
         });
@@ -113,7 +113,7 @@ class solicitudHolograma_052 extends Controller
                     $Nombre->where('razon_social', 'LIKE', "%{$searchValue}%");
                 });
 
-                $q->orWhereHas('empresa.empresaNumClientes', function ($q) use ($searchValue) {
+                $q->orWhereHas('empresa.empresaNumClientesNorma2', function ($q) use ($searchValue) {
                     $q->where('numero_cliente', 'LIKE', "%{$searchValue}%");
                 });
 
@@ -143,9 +143,11 @@ class solicitudHolograma_052 extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->marcas->id_empresa)
+                /* $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->marcas->id_empresa)
                 ->whereNotNull('numero_cliente')
-                ->value('numero_cliente');
+                ->value('numero_cliente'); */
+                $numero_cliente = optional($user->marcas->empresa->empresaNumClientesNorma2->first())->numero_cliente;
+
 
 
                 $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
@@ -496,9 +498,9 @@ class solicitudHolograma_052 extends Controller
     {
         try {
             // Obtener los registros con un join para traer el num_servicio de inspecciones
-            $activaciones = activarHologramasModelo_052::where('activar_hologramas.id_solicitud', $id)
-                ->join('inspecciones', 'activar_hologramas.id_inspeccion', '=', 'inspecciones.id_inspeccion')
-                ->select('activar_hologramas.*', 'inspecciones.num_servicio')
+            $activaciones = activarHologramasModelo_052::where('activar_hologramas_052.id_solicitud', $id)
+                ->join('inspecciones', 'activar_hologramas_052.id_inspeccion', '=', 'inspecciones.id_inspeccion')
+                ->select('activar_hologramas_052.*', 'inspecciones.num_servicio')
                 ->get();
 
             // Decodificar el JSON de los folios en cada registro
