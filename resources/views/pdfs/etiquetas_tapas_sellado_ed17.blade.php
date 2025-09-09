@@ -219,7 +219,7 @@
             })->implode(', ') }} 
         </td>
         <td rowspan="2" class="verde" style="width:12%;">NO. DE FISICOQUÍMICO:</td>
-        <td rowspan="2">
+        <td rowspan="2" style="padding: 0, font-size: 5px">
             {{-- {{ $datos->solicitud->lote_granel->folio_fq ?? ''}} --}}
             {{ $lotesOriginales->map(function($lote) {
                 return $lote->folio_fq;
