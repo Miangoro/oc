@@ -231,6 +231,7 @@ use App\Http\Controllers\efirma\firmaController;
 use App\Http\Controllers\hologramas\hologramasACtivar;
 use App\Http\Controllers\hologramas\hologramasActivar_052;
 use App\Http\Controllers\insertar_datos_bd_actas;
+use App\Http\Controllers\insertar_datos_bd_bitacorasGranelEnvasador;
 use App\Http\Controllers\insertar_datos_bd_certificados_granel;
 use App\Http\Controllers\insertar_datos_bd_dictamenes_exportacion;
 use App\Http\Controllers\insertar_datos_bd_dictamenes_graneles;
@@ -1192,6 +1193,7 @@ Route::get('/insertarGuiasDesdeAPI', [insertar_datos_bd_guias::class, 'insertarG
 Route::get('/insertarLotesEnvasadoDesdeAPI', [insertar_datos_bd_lotes_envasado::class, 'insertarLotesEnvasadoDesdeAPI'])->name('insertarLotesEnvasadoDesdeAPI');
 Route::get('/insertarPrediosDesdeAPI', [insertar_datos_bd_predios::class, 'insertarPrediosDesdeAPI'])->name('insertarPrediosDesdeAPI');
 Route::get('/insertarSolicitudesGranelDesdeAPI', [insertar_datos_bd_solicitudes_granel::class, 'insertarSolicitudesGranelDesdeAPI'])->name('insertarSolicitudesGranelDesdeAPI');
+Route::get('/insertarBitacorasGranelEnvasadorDesdeAPI', [insertar_datos_bd_bitacorasGranelEnvasador::class, 'insertarBitacorasGranelEnvasadorDesdeAPI'])->name('insertarBitacorasGranelEnvasadorDesdeAPI');
 
 
 
