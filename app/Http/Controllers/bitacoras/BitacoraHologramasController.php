@@ -181,13 +181,18 @@ class BitacoraHologramasController extends Controller
                       ->orWhere('num_sellos_salidas', 'LIKE', "%{$search}%")
                       ->orWhere('serie_final', 'LIKE', "%{$search}%")
                       ->orWhere('num_sellos_final', 'LIKE', "%{$search}%")
+                      ->orWhere('serie_merma', 'LIKE', "%{$search}%")
+                      ->orWhere('observaciones', 'LIKE', "%{$search}%")
                       ->orWhere(function ($date) use ($search) {
                        $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
                       ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
                           $sub->where('razon_social', 'LIKE', "%{$search}%");
                       })->orWhereHas('loteBitacora', function ($sub) use ($search) {
                           $sub->where('nombre', 'LIKE', "%{$search}%");
-                      });
+                      })
+                      ->orWhereHas('instalacion', function ($sub) use ($search) {
+                          $sub->where('direccion_completa', 'LIKE', "%{$search}%");
+                              });
                   }
               });
 

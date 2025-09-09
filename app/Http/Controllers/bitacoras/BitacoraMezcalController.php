@@ -185,17 +185,19 @@ if (Auth::check() && Auth::user()->tipo == 3) {
                       ->orWhere('alcohol_salidas', 'LIKE', "%{$search}%")
                       ->orWhere('volumen_final', 'LIKE', "%{$search}%")
                       ->orWhere('alcohol_final', 'LIKE', "%{$search}%")
+                      ->orWhere('observaciones', 'LIKE', "%{$search}%")
                       ->orWhere(function ($date) use ($search) {
                        $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
                       ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
                           $sub->where('razon_social', 'LIKE', "%{$search}%");
                       })
-                      ->orWhereHas('instalacion', function ($sub) use ($search) {
+                     ->orWhereHas('instalacion', function ($sub) use ($search) {
                           $sub->where('direccion_completa', 'LIKE', "%{$search}%");
                       })
                       ->orWhereHas('loteBitacora', function ($sub) use ($search) {
                           $sub->where('nombre_lote', 'LIKE', "%{$search}%")
                               ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+                              ->orWhere('id_tanque', 'LIKE', "%{$search}%")
                               ->orWhere('folio_certificado', 'LIKE', "%{$search}%");
                       });
                   }

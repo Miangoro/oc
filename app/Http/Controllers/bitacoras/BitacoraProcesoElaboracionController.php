@@ -163,6 +163,9 @@ class BitacoraProcesoElaboracionController extends Controller
                       ->orWhere('observaciones', 'LIKE', "%{$search}%")
                       ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
                           $sub->where('razon_social', 'LIKE', "%{$search}%");
+                      })
+                       ->orWhereHas('instalacion', function ($sub) use ($search) {
+                          $sub->where('direccion_completa', 'LIKE', "%{$search}%");
                       });
 
                     if (!empty($idsCoincidentes)) {

@@ -196,6 +196,7 @@ class BitacoraProductoTerminadoController extends Controller
 
                       ->orWhere('cant_cajas_final', 'LIKE', "%{$search}%")
                       ->orWhere('cant_bot_final', 'LIKE', "%{$search}%")
+                      ->orWhere('observaciones', 'LIKE', "%{$search}%")
                       ->orWhere(function ($date) use ($search) {
                        $date->whereRaw("DATE_FORMAT(fecha, '%d de %M del %Y') LIKE ?", ["%$search%"]); })
                       ->orWhereHas('empresaBitacora', function ($sub) use ($search) {
