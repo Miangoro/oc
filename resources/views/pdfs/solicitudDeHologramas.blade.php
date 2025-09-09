@@ -30,7 +30,7 @@
         }*/
 
         .negrita{
-          
+
             font-family:  'Century Gothic Negrita';
         }
 
@@ -166,7 +166,7 @@
               <span class="negrita" style="margin: 0;">Inicio de Vigencia:</span> <br>15/08/2024
             </td>
           </tr>
-          
+
 
       </table>
 
@@ -226,12 +226,32 @@
     <td class="rightLetter negrita" style="width: 110px"> Fecha de recibido:</td>
     <td></td>
 </tr>
+@php
+    $numeroCliente = $datos->marcas?->empresa?->empresaNumClientesNorma2?->first()?->numero_cliente;
+@endphp
+
 <tr>
+    <td class="rightLetter negrita">Folio inicial:</td>
+    <td class="letra-up">
+        @if($numeroCliente)
+            {{ $numeroCliente }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_inicial, 7, '0', STR_PAD_LEFT) }}
+        @endif
+    </td>
+
+    <td class="rightLetter negrita">Folio final:</td>
+    <td class="letra-up">
+        @if($numeroCliente)
+            {{ $numeroCliente }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_final, 7, '0', STR_PAD_LEFT) }}
+        @endif
+    </td>
+</tr>
+
+{{-- <tr>
     <td class="rightLetter negrita" >Folio inicial:</td>
     <td class="letra-up">{{ $datos->marcas->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_inicial, 7, '0', STR_PAD_LEFT) }}</td>
     <td class="rightLetter negrita">Folio final:</td>
     <td class="letra-up">{{ $datos->marcas->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_final, 7, '0', STR_PAD_LEFT) }}</td>
-</tr>
+</tr> --}}
 <tr>
     <td class="rightLetter negrita" >Total de hologramas <br>
         enviados:</td>

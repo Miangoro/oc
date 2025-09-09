@@ -483,7 +483,7 @@ class solicitudHolograma_052 extends Controller
     public function solicitud_de_holograma($id)
     {
         // Cargar la solicitud de holograma con la relación de la empresa
-        $datos = ModelsSolicitudHolograma::with('empresa', 'direcciones', 'user', 'empresanumcliente','marcas')->findOrFail($id);
+        $datos = ModelsSolicitudHolograma::with('empresa', 'direcciones', 'user', 'empresaNumClientesNorma2','marcas')->findOrFail($id);
 
         // Pasar los datos a la vista del PDF
         $pdf = Pdf::loadView('pdfs.solicitudDeHologramas', ['datos' => $datos]);

@@ -59,6 +59,12 @@ class solicitudHolograma_052 extends Model
         return $this->belongsTo(empresaNumCliente::class, 'id_empresa', 'id_empresa');
     }
 
+    public function empresaNumClientesNorma2()
+    {
+        return $this->hasMany(empresaNumCliente::class, 'id_empresa', 'id_empresa')
+                    ->where('id_norma', 2)
+                    ->whereNotNull('numero_cliente');
+    }
 
 
 
