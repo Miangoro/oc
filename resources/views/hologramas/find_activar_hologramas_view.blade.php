@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Solicitud Holograma')
+@section('title', 'Activar Holograma')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
