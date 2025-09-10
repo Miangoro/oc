@@ -282,26 +282,34 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            let acciones = '';
+          let acciones = '';
 
-            const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
-            const esAdminBitacoras = window.adminBitacoras === true;
+          const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
+          const esAdminBitacoras = window.adminBitacoras === true;
+          const esUsuarioTipo2 = window.tipoUsuario === 2;
 
-            if (!estaFirmado || esAdminBitacoras) {
-              if (window.puedeFirmarElUsuario) {
-                acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
-              }
-              if (window.puedeEditarElUsuario) {
-                acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
-              }
-              if (window.puedeEliminarElUsuario) {
-                acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
-              }
+          // Permitir firmar si NO está firmada, o si es admin, o si es usuario tipo 2
+          if (!estaFirmado || esAdminBitacoras || esUsuarioTipo2) {
+            if (window.puedeFirmarElUsuario) {
+              const textoFirma = (estaFirmado && esUsuarioTipo2)
+                ? 'Volver a firmar bitácora'
+                : 'Firmar bitácora';
+
+              acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning">
+                            <i class="ri-ball-pen-line ri-20px text-warning"></i> ${textoFirma}</a>`;
             }
+            if (window.puedeEditarElUsuario) {
+              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info">
+                            <i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
+            }
+            if (window.puedeEliminarElUsuario) {
+              acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger">
+                            <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora</a>`;
+            }
+          }
 
-            // Si hay acciones (bitácora NO firmada)
-            if (acciones.trim()) {
-              return `
+          if (acciones.trim()) {
+            return `
               <div class="d-flex align-items-center gap-50">
                 <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                   <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
@@ -311,16 +319,18 @@ $(function () {
                 </div>
               </div>
             `;
-            }
+          }
 
-            // Si la bitácora ya está firmada, mostrar botón visualmente deshabilitado
-            return `
+          // Si no hay acciones, mostrar botón deshabilitado
+          return `
             <div class="d-flex align-items-center gap-50">
               <button class="btn btn-sm btn-secondary disabled" style="opacity: 0.6; cursor: not-allowed;" disabled>
                 <i class="ri-settings-5-fill ri-20px me-1"></i> Opciones
               </button>
             </div>
           `;
+
+
           }
         }
       ],

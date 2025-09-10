@@ -221,19 +221,33 @@ $(function () {
             let acciones = '';
             const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
             const esAdminBitacoras = window.adminBitacoras === true;
+            const esUsuarioTipo2 = window.tipoUsuario === 2; // ✅ Detecta tipo de usuario
 
-            if (!estaFirmado || esAdminBitacoras) {
-            if (window.puedeFirmarElUsuario) {
-              acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning"> <i class="ri-ball-pen-line ri-20px text-warning"></i> Firmar bitácora</a>`;
+            // Permitir firmar si NO está firmada, si es admin, o si es usuario tipo 2
+            if (!estaFirmado || esAdminBitacoras || esUsuarioTipo2) {
+              if (window.puedeFirmarElUsuario) {
+                const textoFirma = (estaFirmado && esUsuarioTipo2)
+                  ? 'Volver a firmar bitácora'
+                  : 'Firmar bitácora';
+
+                acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning">
+                              <i class="ri-ball-pen-line ri-20px text-warning"></i> ${textoFirma}</a>`;
+              }
+
+              // 👇 Solo permitir editar/eliminar si NO es tipo 2
+              if (!esUsuarioTipo2 && window.puedeEditarElUsuario) {
+                acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal"
+                              class="dropdown-item edit-record waves-effect text-info">
+                              <i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
+              }
+
+              if (!esUsuarioTipo2 && window.puedeEliminarElUsuario) {
+                acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger">
+                              <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
+              }
             }
-            if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
-            }
-            if (window.puedeEliminarElUsuario) {
-              acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
-            }
-            }
-            // Si no hay acciones, no retornar el dropdown
+
+            // Si no hay acciones, mostrar botón deshabilitado
             if (!acciones.trim()) {
               return `
                 <button class="btn btn-sm btn-secondary" disabled>
@@ -241,16 +255,20 @@ $(function () {
                 </button>
               `;
             }
-            // Si hay acciones, construir el dropdown
-            const dropdown = `<div class="d-flex align-items-center gap-50">
-              <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button><div class="dropdown-menu dropdown-menu-end m-0">
 
+            // Si hay acciones, construir el dropdown
+            return `
+              <div class="d-flex align-items-center gap-50">
+                <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end m-0">
                   ${acciones}
                 </div>
               </div>
             `;
-            return dropdown;
           }
+
         }
       ],
 
