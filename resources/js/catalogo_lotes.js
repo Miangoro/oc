@@ -530,7 +530,7 @@ $(document).ready(function () {
       calcularVolumenTotal();
     });
 
-    $(document).on('input', '.volumen-parcial, #agua_entrada', function () {
+    $(document).on('input', '.volumen-parcial', function () { /* #agua_entrada */
       calcularVolumenTotal(); // Recalcular total en cada cambio
     });
 
@@ -575,7 +575,19 @@ $(document).ready(function () {
       $('#volumen').val(totalVolumen.toFixed(2)); // Mostrar el total con dos decimales
     } */
 
-    function calcularVolumenTotal() {
+      function calcularVolumenTotal() {
+      let totalVolumen = 0;
+
+      $('.volumen-parcial').each(function () {
+        const valor = parseFloat($(this).val()) || 0;
+        totalVolumen += valor;
+      });
+
+      $('#volumen').val(totalVolumen.toFixed(2));
+  }
+
+
+/*     function calcularVolumenTotal() {
       let totalVolumen = 0;
 
       $('.volumen-parcial').each(function () {
@@ -590,7 +602,7 @@ $(document).ready(function () {
 
       $('#volumen').val(totalVolumen.toFixed(2));
     }
-
+ */
 
 
     $(document).on('change', '.id_lote_granel', function () {
@@ -1388,7 +1400,7 @@ $(document).on('click', '.edit-record', function () {
       }
     }
 
-    $(document).on('input', '.volumen-parcial-edit,  #edit_agua_entrada', function () {
+    $(document).on('input', '.volumen-parcial-edit', function () {/* #edit_agua_entrada */
       actualizarVolumenTotalEdit();
     });
 
@@ -1405,7 +1417,21 @@ $(document).on('click', '.edit-record', function () {
 
       $('#edit_volumen').val(total.toFixed(2)); // Reemplaza con el ID correcto del campo total
     } */
+
       function actualizarVolumenTotalEdit() {
+        let total = 0;
+
+        // Sumar todos los volúmenes parciales
+        $('.volumen-parcial-edit').each(function () {
+          const val = parseFloat($(this).val()) || 0;
+          total += val;
+        });
+
+        // Actualizar el campo de volumen total
+        $('#edit_volumen').val(total.toFixed(2)); // ID del total en el formulario de edición
+      }
+
+/*       function actualizarVolumenTotalEdit() {
         let total = 0;
 
         // Sumar todos los volúmenes parciales
@@ -1421,7 +1447,7 @@ $(document).on('click', '.edit-record', function () {
         // Actualizar el campo de volumen total
         $('#edit_volumen').val(total.toFixed(2)); // ID del total en el formulario de edición
       }
-
+ */
 
 
 // Detecta cambio de empresa en edición
