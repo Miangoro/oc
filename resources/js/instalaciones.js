@@ -1167,7 +1167,71 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
     });
   });
 
-  $(document).on('click', '.verDocumentosBtn', function () {
+    $(document).on('click', '.verDocumentosBtn', function () {
+      var idInstalacion = $(this).data('id');
+      console.log('ID de Instalación:', idInstalacion);
+
+      $('.modal-title').html('Historial de certificados de instalaciones');
+      $('#modalEditInstalacion').modal('hide');
+      $('#modalVerDocumento').modal('hide');
+      $('#documentosTableBody').html('<tr><td colspan="5" class="text-center">Cargando documentos...</td></tr>');
+      $('#modalVerDocumento').modal('show');
+
+      $.ajax({
+          url: '/getDocumentosPorInstalacion',
+          method: 'GET',
+          data: { id_instalacion: idInstalacion },
+          success: function (response) {
+              if (response.success) {
+                  var documentos = response.documentos;
+                  var numeroCliente = response.numero_cliente || 'N/A';
+                  var tablaContenido = '';
+
+                  documentos.forEach(function (doc, index) {
+                      var nombreDocumento = doc.tipo_certificado || 'Documento sin nombre';
+                      var fechaInicio = doc.fecha_inicio
+                        ? new Date(doc.fecha_inicio + 'T00:00:00').toLocaleDateString()
+                        : 'N/A';
+                      var fechaVigencia = doc.fecha_vigencia
+                        ? new Date(doc.fecha_vigencia + 'T00:00:00').toLocaleDateString()
+                        : 'N/A';
+                      /* var fechaInicio = doc.fecha_inicio ? new Date(doc.fecha_inicio).toLocaleDateString() : 'N/A';
+                      var fechaVigencia = doc.fecha_vigencia ? new Date(doc.fecha_vigencia).toLocaleDateString() : 'N/A'; */
+                      var fullUrl = `../files/${numeroCliente}/certificados_instalaciones/${doc.certificado}`;
+
+                      tablaContenido += `
+                          <tr>
+                              <td style="text-align:left;">${nombreDocumento}</td>
+                              <td>${doc.num_certificado ?? 'N/A'}</td>
+                              <td>${fechaInicio}</td>
+                              <td>${fechaVigencia}</td>
+                              <td><span class="${doc.estatus_clase} px-2 py-1">${doc.estatus}</span></td>
+                              <td>
+                                  <button
+                                      class="verDocumentoBtn"
+                                      data-url="${fullUrl}"
+                                      data-nombre="${nombreDocumento}"
+                                      data-registro="Registro ${index + 1}"
+                                      style="border: none; background: transparent;">
+                                      <i class="ri-file-pdf-2-fill text-danger fs-1 cursor-pointer"></i>
+                                  </button>
+                              </td>
+                          </tr>`;
+                  });
+
+                  $('#documentosTableBody').html(tablaContenido);
+              } else {
+                  $('#documentosTableBody').html('<tr><td colspan="5" class="text-center">No se encontraron documentos.</td></tr>');
+              }
+          },
+          error: function () {
+              $('#documentosTableBody').html('<tr><td colspan="5" class="text-center">Error al cargar los documentos.</td></tr>');
+          }
+      });
+  });
+
+
+/*   $(document).on('click', '.verDocumentosBtn', function () {
     var idInstalacion = $(this).data('id');
     console.log('ID de Instalación:', idInstalacion);
     $('#name').remove();
@@ -1228,7 +1292,7 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
         );
       }
     });
-  });
+  }); */
 
   $(document).on('click', '.verDocumentoBtn', function () {
     var nombreDocumento = $(this).data('nombre');

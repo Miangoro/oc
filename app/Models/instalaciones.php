@@ -69,11 +69,28 @@ class instalaciones extends Model
     {
         return $this->belongsTo(Dictamen_instalaciones::class, 'id_instalacion', 'id_instalacion');
     }
+    public function dictamenes()
+    {
+        return $this->hasMany(Dictamen_instalaciones::class, 'id_instalacion', 'id_instalacion');
+    }
+
 
     public function certificado_instalacion()
     {
         return $this->hasOne(Dictamen_instalaciones::class, 'id_instalacion', 'id_instalacion')
             ->with('certificado');
+    }
+    // Relación a certificados directamente a través de dictámenes
+    public function certificados()
+    {
+        return $this->hasManyThrough(
+            Certificados::class,
+            Dictamen_instalaciones::class,
+            'id_instalacion', // FK de dictámenes hacia instalaciones
+            'id_dictamen',    // FK de certificados hacia dictámenes
+            'id_instalacion', // Local key en instalaciones
+            'id_dictamen'     // Local key en dictamenes
+        );
     }
 
 }

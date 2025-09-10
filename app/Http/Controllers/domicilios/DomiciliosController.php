@@ -467,7 +467,7 @@ public function update(Request $request, $id)
 
 
 
-    public function getDocumentosPorInstalacion(Request $request)
+/*     public function getDocumentosPorInstalacion(Request $request)
     {
         $request->validate([
             'id_instalacion' => 'required|exists:instalaciones,id_instalacion',
@@ -506,50 +506,68 @@ public function update(Request $request, $id)
                 'message' => 'Error al obtener los documentos: ' . $e->getMessage(),
             ], 500);
         }
-    }
-/* public function getDocumentosPorInstalacion(Request $request)
+    } */
+public function getDocumentosPorInstalacion(Request $request)
 {
     $request->validate([
         'id_instalacion' => 'required|exists:instalaciones,id_instalacion',
     ]);
 
     try {
-        $instalacion = instalaciones::with('empresa.empresaNumClientes')->findOrFail($request->id_instalacion);
+        // Carga la instalación con sus documentos y certificados
+        $instalacion = instalaciones::with(['documentos_certificados_instalaciones', 'certificados', 'empresa.empresaNumClientes'])
+            ->find($request->id_instalacion);
 
-        // IDs de documentos permitidos
-        $documentosPermitidos = [127, 128, 129, 130, 131];
-
-        // Traer dictámenes de la instalación
-        $dictamenesIds = \App\Models\Dictamen_instalaciones::where('id_instalacion', $instalacion->id_instalacion)
-            ->pluck('id_dictamen');
-
-        // Documentos asociados a la instalación
-        $documentos = \App\Models\Documentacion_url::whereIn('id_documento', $documentosPermitidos)
-            ->where('id_relacion', $instalacion->id_instalacion)
-            ->get()
-            ->map(function($doc) {
-                $doc->estatus = ($doc->fecha_vigencia && $doc->fecha_vigencia < now()) ? 'Vencido' : 'Vigente';
-                return $doc;
-            });
-
-        // Certificados asociados a los dictámenes
-        $certificados = \App\Models\Certificados::whereIn('id_dictamen', $dictamenesIds)
-            ->get()
-            ->map(function($cert) {
-                $cert->estatus = ($cert->fecha_vigencia && $cert->fecha_vigencia < now()) ? 'Vencido' : 'Vigente';
-                return $cert;
-            });
-
-        // Número de cliente
+        if (!$instalacion) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Instalación no encontrada.'
+            ], 404);
+        }
+        // Obtener número de cliente
         $numeroCliente = $instalacion->empresa->empresaNumClientes
             ->pluck('numero_cliente')
-            ->first(fn($numero) => !empty($numero));
+            ->first(function ($numero) {
+                return !empty($numero);
+            });
+        // Recorremos los documentos filtrados
+        $resultado = [];
+          $documentos = $instalacion->documentos_certificados_instalaciones;
+          $certificados = $instalacion->certificados;
 
+          $resultado = [];
+
+          foreach ($documentos as $index => $documento) {
+              $certificado = $certificados[$index] ?? null; // toma el certificado correspondiente si existe
+                  $estatus = null;
+                  $estatusClase = null;
+                  if ($certificado && $certificado->fecha_vigencia) {
+                      $hoy = Carbon::today();
+                      $fechaVigencia = Carbon::parse($certificado->fecha_vigencia);
+
+                      if ($fechaVigencia->lt($hoy)) {
+                          $estatus = 'Vencido';
+                          $estatusClase = 'rounded-pill bg-danger text-white';
+                      } else {
+                          $estatus = 'Vigente';
+                          $estatusClase = 'rounded-pill bg-success text-white';
+                      }
+                  }
+
+              $resultado[] = [
+                  'tipo_certificado' => $documento->nombre_documento,
+                  'fecha_inicio' => $certificado->fecha_emision ?? null,
+                  'fecha_vigencia' => $certificado->fecha_vigencia ?? null,
+                  'estatus' => $estatus,
+                  'estatus_clase' => $estatusClase,
+                  'certificado' => $documento->url,
+                  'num_certificado' => $certificado->num_certificado ?? null,
+              ];
+          }
         return response()->json([
-            'success'      => true,
-            'documentos'   => $documentos,
-            'certificados' => $certificados,
-            'numero_cliente' => $numeroCliente,
+            'success' => true,
+            'documentos' => $resultado,
+            'numero_cliente' => $numeroCliente ?? 'N/A',
         ]);
 
     } catch (\Exception $e) {
@@ -559,7 +577,6 @@ public function update(Request $request, $id)
         ], 500);
     }
 }
- */
 
 
 
