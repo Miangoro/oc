@@ -1011,6 +1011,8 @@ $(function () {
 
 
 
+
+///ACTUALIZAR
 $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -1411,6 +1413,8 @@ $(function () {
       });
     });
 });
+
+
 
 
 
