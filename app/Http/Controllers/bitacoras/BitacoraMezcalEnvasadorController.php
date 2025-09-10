@@ -207,11 +207,18 @@ class BitacoraMezcalEnvasadorController extends Controller
             $totalFiltered = $filteredQuery->count(); // sin filtros
         }
 
-        $bitacoras = $filteredQuery
+        /* $bitacoras = $filteredQuery
             ->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
+            ->get(); */
+            $bitacoras = $filteredQuery
+            ->orderBy('fecha', $dir) // 'desc' o 'asc' según lo que envíe DataTables
+            ->orderBy('id', 'desc')  // siempre último registro primero
+            ->offset($start)
+            ->limit($limit)
             ->get();
+
 
          /*
           if (!empty($search)) {
