@@ -1171,7 +1171,7 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
       var idInstalacion = $(this).data('id');
       console.log('ID de Instalación:', idInstalacion);
 
-      $('.modal-title').html('Historial de certificados de instalaciones');
+      $('#modalVerDocumentoLabel').html('Historial de certificados de instalaciones');
       $('#modalEditInstalacion').modal('hide');
       $('#modalVerDocumento').modal('hide');
       $('#documentosTableBody').html('<tr><td colspan="5" class="text-center">Cargando documentos...</td></tr>');

@@ -4,7 +4,7 @@
         <div class="modal-content">
 
             <div class="modal-header bg-primary pb-4">
-                <h5 id="modalAddInstalacionLabel" class="modal-title text-white">Nueva Instalación</h5>
+                <h5 id="modalAddInstalacionLabel" class="modal-title text-white">Registrar Instalación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -21,7 +21,7 @@
                         </select>
                         <label for="id_empresa">Cliente</label>
                     </div>
-                
+
                     <div class="row">
                         <div class="col-md-6">
                             <!-- Select de Tipo de Instalación -->
@@ -58,7 +58,7 @@
                             <option value="Comercializadora">Comercializadora</option>
                         </select>
                         <label for="eslabon">Elige el eslabón al que pertenece</label>
-                    </div>                        
+                    </div>
 
                     <!-- Input de Dirección Completa -->
                     <div class="form-floating form-floating-outline mb-3">
@@ -122,7 +122,7 @@
                         </div>
                     </div>
 
-                    
+
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
                             Registrar</button>
@@ -199,7 +199,7 @@
                             <option value="Comercializadora">Comercializadora</option>
                         </select>
                         <label for="eslabon">Elige el eslabón al que pertenece</label>
-                    </div>     
+                    </div>
 
                     <!-- Input de Dirección Completa -->
                     <div class="form-floating form-floating-outline mb-3">
@@ -266,7 +266,7 @@
                         </div>
                     </div>
 
-                  
+
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-pencil-fill"></i>
                             Editar</button>
