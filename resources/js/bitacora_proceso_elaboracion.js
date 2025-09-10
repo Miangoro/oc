@@ -67,9 +67,13 @@ $(function () {
 
             try {
               const etapas = JSON.parse(data);
-              const firmadas = Object.values(etapas).some(e => e.id_firmante && e.id_firmante != 0);
 
-              if (firmadas) {
+              // Validar que todos tengan un firmante distinto de 0
+              const todasFirmadas = Object.values(etapas).every(
+                e => e.id_firmante && e.id_firmante != 0
+              );
+
+              if (todasFirmadas) {
                 return `<span class="badge bg-success rounded-pill">Firmado</span>`;
               } else {
                 return `<span class="badge bg-warning rounded-pill">Sin firmar</span>`;
