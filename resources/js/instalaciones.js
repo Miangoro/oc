@@ -185,25 +185,31 @@ $(function () {
       {
         targets: 7,
         render: function (data, type, full, meta) {
-          //var $folio = full['folio'] ?? 'N/A';
-          //return '<span class="user-email">' + $folio + '</span>';
+            const numCertificado = full['num_certificado']; // <-- Aquí usamos el campo correcto
+            const documentos = Array.isArray(full['documentos']) ? full['documentos'] : [];
 
-          /* if (folio !== 'N/A') {//si hay folio
-    certificado=   `<u><a href="${$numeroCliente}/certificados_instalaciones/${url}" target="_blank"> </a></u>` ;
-  (relacionCertificado ?//si hay folio del certificado subido
-        certificado= `<u><a href="${$numeroCliente}/certificados_instalaciones/${url}" target="_blank" class="text-decoration-underline waves-effect text-primary"> </a></u>`
-      :  certificado= folio) +//solo folio
-} else {
-  certificado=  `<span class="badge rounded-pill bg-danger">Sin certificado</span>`;
+            let certificado = '';
 
-}
+            if (documentos.length > 0) {
+                // Tomamos el documento más reciente
+                let doc = documentos[0];
+                const nombreLink = numCertificado ?? doc.nombre ?? 'Certificado';
+                certificado = `<a href="${doc.url}" target="_blank" class="text-primary text-decoration-underline fw-bold">${nombreLink}</a>`;
+            } else if (!numCertificado) {
+                certificado = `<span class="badge rounded-pill bg-danger">Sin certificado</span>`;
+            } else {
+                certificado = `${numCertificado}`;
+            }
 
-return `<span><b>Certificadora: </b>${full['certificadora']} <br>
-        <b>Número de certificado: </b>${certificado} <br>
-          <b>Fecha de emisión: </b>${full['fecha_emision']} <br>
-          <b>Fecha de vigencia: </b>${full['fecha_vigencia']} <br>
-  </span>`; */
-          const folio = full['folio'];
+            return `<span class="small">
+                <b>Certificadora: </b>${full['certificadora']} <br>
+                <b>Certificado: </b>${certificado} <br>
+                <b>Fecha de emisión: </b>${full['fecha_emision_c'] ?? 'N/A'} <br>
+                <b>Fecha de vigencia: </b>${full['fecha_vigencia_c'] ?? 'N/A'} <br>
+            </span>`;
+
+
+/*           const folio = full['folio'];
           const documentos = Array.isArray(full['documentos']) ? full['documentos'] : [];
 
           let certificado = '';
@@ -215,35 +221,17 @@ return `<span><b>Certificadora: </b>${full['certificadora']} <br>
           } else {
             certificado = `${folio}`;
           }
-          /*           if (!folio) {
-                      certificado = `<span class="badge rounded-pill bg-danger">Sin certificado</span>`;
-                    } else if (documentos.length > 0) {
-                      certificado = documentos
-                        .filter(doc => doc.url && doc.nombre)
-                        .map(
-                          doc =>
-                            `<a href="${doc.url}" target="_blank" class="text-primary text-decoration-underline fw-bold">${full['folio']}</a>`
-                        )
-                        .join(', ');
-                    } else {
-                      certificado = `${folio}`;
-                    } */
+
 
           return `<span class="small">
     <b>Certificadora: </b>${full['certificadora']} <br>
     <b>Certificado: </b>${certificado} <br>
     <b>Fecha de emisión: </b>${full['fecha_emision'] ?? 'N/A'} <br>
     <b>Fecha de vigencia: </b>${full['fecha_vigencia'] ?? 'N/A'} <br>
-</span>`;
+</span>`; */
         }
       },
-      /*  {
-        targets: 8,
-        render: function (data, type, full, meta) {
-          var $organismo = full['organismo'] ?? 'N/A';
-          return '<span class="user-email">' + $organismo + '</span>';
-        }
-      },*/
+
       {
         targets: 8,
         className: 'text-center',

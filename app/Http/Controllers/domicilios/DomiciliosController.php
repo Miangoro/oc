@@ -211,7 +211,9 @@ if ($certificadoReciente) {
         })
         ->toArray();
 
-    $nestedData['fecha_emision']  = $certificadoReciente->fecha_emision;
+    $nestedData['fecha_emision_c']  = Helpers::formatearFecha($certificadoReciente->fecha_emision);
+    $nestedData['fecha_vigencia_c'] = Helpers::formatearFecha($certificadoReciente->fecha_vigencia);
+    $nestedData['num_certificado'] = $certificadoReciente->num_certificado;
 }
 
 $nestedData['folio'] = $instalacion->folio ?? null;
