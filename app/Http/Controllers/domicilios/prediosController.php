@@ -431,8 +431,8 @@ public function index(Request $request)
 
 
 
-        public function edit($id_predio)
-        {
+public function edit($id_predio)
+{
             try {
                 $predio = Predios::with(['coordenadas', 'predio_plantaciones', 'documentos'])->findOrFail($id_predio);
                 $tipos = tipos::all();
@@ -482,7 +482,18 @@ public function index(Request $request)
 
 ///ACTUALIZAR PRE-REGISTRO PREDIO
 public function update(Request $request, $id_predio)
-{
+{   
+    $predio = Predios::findOrFail($id_predio);
+
+    // Normalizar coordenadas: "" -> null y filtrar vacíos
+    $latitud = array_filter(array_map(fn($v) => $v === '' ? null : $v, $request->latitud ?? []));
+    $longitud = array_filter(array_map(fn($v) => $v === '' ? null : $v, $request->longitud ?? []));
+
+    $request->merge([
+        'latitud' => $latitud,
+        'longitud' => $longitud
+    ]);
+
         // Validar los datos del formulario
         $validated = $request->validate([
             'id_empresa' => 'required|exists:empresa,id_empresa',
@@ -493,10 +504,15 @@ public function update(Request $request, $id_predio)
             'puntos_referencia' => 'required|string',
             'tiene_coordenadas' => 'nullable|string|max:2',
             'superficie' => 'required|string',
-            'latitud' => 'nullable|array',
+            /*'latitud' => 'nullable|array',
             'latitud.*' => 'nullable|numeric',
             'longitud' => 'nullable|array',
-            'longitud.*' => 'nullable|numeric',
+            'longitud.*' => 'nullable|numeric',*/
+        'latitud' => 'nullable|array',
+        //'latitud.*' => 'nullable|numeric',
+        'longitud' => 'nullable|array',
+        //'longitud.*' => 'nullable|numeric',
+
             'id_tipo' => 'nullable|array',
             'id_tipo.*' => 'required|exists:catalogo_tipo_agave,id_tipo',
             'numero_plantas' => 'required|array',
@@ -510,7 +526,7 @@ public function update(Request $request, $id_predio)
             'nombre_documento' => 'required|string|max:255'
         ]);
 
-        $predio = Predios::findOrFail($id_predio);
+        
 
         // Obtener el documento actual
         $documentacion_url = Documentacion_url::where('id_relacion', $predio->id_predio)
@@ -575,7 +591,9 @@ public function update(Request $request, $id_predio)
             'superficie' => $validated['superficie'],
         ]);
 
-        // Manejar coordenadas
+
+        
+        /*// Manejar coordenadas
         if ($validated['tiene_coordenadas'] == 'Si') {
             // Eliminar coordenadas antiguas
             $predio->coordenadas()->delete();
@@ -593,6 +611,7 @@ public function update(Request $request, $id_predio)
             // Si no se tienen coordenadas, elimina las coordenadas existentes
             $predio->coordenadas()->delete();
         }
+
 
         // Manejar plantaciones
         if (!empty($validated['id_tipo'])) {
@@ -617,12 +636,45 @@ public function update(Request $request, $id_predio)
         } else {
             // Si no se tienen plantaciones, elimina las plantaciones existentes
             $predio->predio_plantaciones()->delete();
+        }*/
+         // Manejar coordenadas
+    $predio->coordenadas()->delete();
+    if ($validated['tiene_coordenadas'] === 'Si') {
+        foreach ($latitud as $i => $lat) {
+            if (!is_null($lat) && isset($longitud[$i])) {
+                $predio->coordenadas()->create([
+                    'latitud' => $lat,
+                    'longitud' => $longitud[$i]
+                ]);
+            }
         }
-        return response()->json([
-            'success' => true,
-            'message' => 'Predio actualizado exitosamente',
+    }
+
+    // Manejar plantaciones
+    $predio->predio_plantaciones()->delete();
+    if (!empty($validated['id_tipo'])) {
+        $length = min(
+            count($validated['id_tipo']),
+            count($validated['numero_plantas']),
+            count($validated['edad_plantacion']),
+            count($validated['tipo_plantacion'])
+        );
+
+        for ($i = 0; $i < $length; $i++) {
+            $predio->predio_plantaciones()->create([
+                'id_tipo' => $validated['id_tipo'][$i],
+                'num_plantas' => $validated['numero_plantas'][$i],
+                'anio_plantacion' => $validated['edad_plantacion'][$i],
+                'tipo_plantacion' => $validated['tipo_plantacion'][$i],
+            ]);
+        }
+    }
+
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Predio actualizado exitosamente',
         ]);
-    
 }
 
 
