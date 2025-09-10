@@ -52,7 +52,8 @@ class lotesGranelController extends Controller
         $guias = Guias::all(); // Obtén todas las guías
         $lotes = LotesGranel::with('empresa', 'categoria', 'clase', 'tipos', 'organismo', 'guias','certificadoGranel')->get();
         $documentos = Documentacion::where('id_documento', '=', '58')->get();
-        return view('catalogo.lotes_granel', compact('lotes', 'empresas', 'categorias', 'clases', 'tipos', 'organismos', 'estados', 'guias', 'documentos'));
+        $tipo_usuario =  Auth::user()->tipo;
+        return view('catalogo.lotes_granel', compact('lotes', 'empresas', 'categorias', 'clases', 'tipos', 'organismos', 'estados', 'guias', 'documentos', 'tipo_usuario'));
     }
 
 
@@ -77,7 +78,7 @@ public function index(Request $request)
     if (Auth::check() && Auth::user()->tipo == 3) {
         $empresaId = Auth::user()->empresa?->id_empresa;
     }
-    
+
         $columns = [
             1 => 'id_lote_granel',
             2 => 'nombre_lote',

@@ -21,7 +21,9 @@
                                     <select onchange="obtenerDatosEmpresa();" id="id_empresa"
                                         name="id_empresa" class="select2 form-select"
                                         data-error-message="por favor selecciona la empresa">
-                                        <option value="" disabled selected>Selecciona el cliente</option>
+                                        @if ($tipo_usuario != 3)
+                                                <option value="" disabled selected>Selecciona el cliente</option>
+                                        @endif
                                         @foreach ($empresas as $empresa)
                                             <option value="{{ $empresa->id_empresa }}">
                                                 {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
@@ -76,7 +78,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
@@ -510,7 +512,7 @@ function obtenerDestinoEmpresa() {
             alert('Error al cargar los datos. Por favor, intenta nuevamente.');
         }
     });
-} 
+}
 */
 
     // Llamar a obtenerDatosEmpresa cuando se selecciona la empresa

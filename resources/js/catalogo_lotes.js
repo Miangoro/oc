@@ -578,19 +578,19 @@ $(document).ready(function () {
     function calcularVolumenTotal() {
       let totalVolumen = 0;
 
-      // Sumar todos los volúmenes parciales
       $('.volumen-parcial').each(function () {
         const valor = parseFloat($(this).val()) || 0;
         totalVolumen += valor;
       });
 
-      // Sumar el agua de entrada si existe
+
       const aguaEntrada = parseFloat($('#agua_entrada').val()) || 0;
       totalVolumen += aguaEntrada;
 
-      // Actualizar el campo de volumen total
+
       $('#volumen').val(totalVolumen.toFixed(2));
     }
+
 
 
     $(document).on('change', '.id_lote_granel', function () {
@@ -837,13 +837,13 @@ const fv = FormValidation.formValidation(addNewLote, {
           }
         },
 
-        id_empresa_destino: {
+/*         id_empresa_destino: {
           validators: {
             notEmpty: {
               message: 'Por favor seleccione una empresa destino'
             }
           }
-        },
+        }, */
 
       },
 
@@ -1044,11 +1044,11 @@ $(document).on('click', '.edit-record', function () {
             // Rellenar el modal con los datos del lote
             $('#edit_nombre_lote').val(lote.nombre_lote);
             $('#edit_id_empresa').val(lote.id_empresa).trigger('change');
-      
+
       // Obtener empresa_destino asignada y cargar select
       let empresaDestinoAsignada = lote.id_empresa_destino ?? null;
       obtenerDestinoEmpresaEdit(empresaDestinoAsignada);
-              
+
             $('#edit_tipo_lote').val(lote.tipo_lote);
             $('#edit_id_tanque').val(lote.id_tanque);
             $('#edit_agua_entrada').val(lote.agua_entrada);
@@ -1721,4 +1721,26 @@ const fv = FormValidation.formValidation(editLoteForm, {
       }
     });
   });
+
+
+
+
+
+  $(document).ready(function () {
+    // Al abrir el modal, cargar marcas para el cliente seleccionado
+    $('#offcanvasAddLote').on('shown.bs.modal', function () {
+      obtenerDatosEmpresa();
+
+    });
+        // Llamar a obtenerDatosEmpresa cuando se selecciona la empresa
+   /*  $('#id_empresa').change(function() { */
+        obtenerDatosEmpresa();
+        /* obtenerDestinoEmpresa(); */
+ /*    }); */
+
+
+  });
+
+
+
 });
