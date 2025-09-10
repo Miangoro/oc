@@ -61,6 +61,7 @@ public function index(Request $request)
     $query = RevisionDictamen::with([
             'dictamenInstalacion',
             'dictamenGranel',
+            'dictamenEnvasado',
             'dictamenExportacion'
         ])->where('tipo_revision', 1); // Solo revisiones de OC
 
@@ -73,46 +74,56 @@ public function index(Request $request)
 
     /// Búsqueda Global
     if (!empty($search)) {
-        $query->where(function ($q) use ($search) {
-            $tipoDictamen = null;
-            $searchLower = strtolower($search);
+        // Convertir a minúsculas sin tildes para comparar
+        $searchNormalized = mb_strtolower(trim($search), 'UTF-8');
+        // También elimina tildes para mejor comparación
+        $searchNormalized = strtr($searchNormalized, [
+            'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
+            'Á' => 'a', 'É' => 'e', 'Í' => 'i', 'Ó' => 'o', 'Ú' => 'u'
+        ]);
 
-            // Mapear palabras clave a tipo_dictamen
-            if (str_contains($searchLower, 'granel')) {
-                $tipoDictamen = 2;
-            } elseif (str_contains($searchLower, 'exportacion') || str_contains($searchLower, 'exportación')) {
-                $tipoDictamen = 4;
-            } elseif (str_contains($searchLower, 'envasado')) {
-                $tipoDictamen = 3;
-            } elseif (
-                str_contains($searchLower, 'instalacion') || str_contains($searchLower, 'instalación') ||
-                str_contains($searchLower, 'productor') || str_contains($searchLower, 'envasador') ||
-                str_contains($searchLower, 'comercializador') || str_contains($searchLower, 'bodega') ||
-                str_contains($searchLower, 'maduracion') || str_contains($searchLower, 'maduración')
-            ) {
-                $tipoDictamen = 1;
+        // Buscar coincidencia de nombres a valores numéricos de tipo dictamen
+        $tiposDictamen = [// Palabras clave -> valor de tipo_dictamen
+            'productor'      => 1,
+            'envasador'      => 1,
+            'comercializador'=> 1,
+            'bodega'         => 1,
+            'maduracion'     => 1,
+            'granel'         => 2,
+            'envasado'       => 3,
+            'exportacion'    => 4,
+        ];
+
+        // Buscar coincidencia con nombre
+        $tipoDictamen = null;
+        foreach ($tiposDictamen as $clave => $valor) {
+            if (strpos($searchNormalized, $clave) !== false) {
+                $tipoDictamen = $valor;
+                break; // en cuanto encuentre coincidencia, detenemos
             }
+        }
 
+
+        // Aplicar la búsqueda
+        $query->where(function ($q) use ($search, $tipoDictamen) {
+            // Buscar por número de dictamen en distintos modelos
+            $q->orWhereHas('dictamenInstalacion', fn($q) => $q->where('num_dictamen', 'LIKE', "%{$search}%"))
+            ->orWhereHas('dictamenGranel', fn($q) => $q->where('num_dictamen', 'LIKE', "%{$search}%"))
+            ->orWhereHas('dictamenEnvasado', fn($q) => $q->where('num_dictamen', 'LIKE', "%{$search}%"))
+            ->orWhereHas('dictamenExportacion', fn($q) => $q->where('num_dictamen', 'LIKE', "%{$search}%"))
+            
             // Buscar por nombre del revisor
-            /*$q->orWhereHas('user', function ($sub) use ($search) {
-                $sub->where('name', 'LIKE', "%{$search}%");
-            })*/
-            $q->orWhereHas('user', fn($q) => $q->where('name', 'LIKE', "%{$search}%"))
+            ->orWhereHas('user', fn($q) => $q->where('name', 'LIKE', "%{$search}%"))
 
             // Buscar por fechas
-            ->orWhere(function ($sub) use ($search) {
-                $sub->whereRaw("DATE_FORMAT(created_at, '%d de %M del %Y') LIKE ?", ["%$search%"]);
-            })
-            ->orWhere(function ($sub) use ($search) {
-                $sub->whereRaw("DATE_FORMAT(updated_at, '%d de %M del %Y') LIKE ?", ["%$search%"]);
-            });
-
+            ->orWhereRaw("DATE_FORMAT(created_at, '%d de %M del %Y') LIKE ?", ["%$search%"])
+            ->orWhereRaw("DATE_FORMAT(updated_at, '%d de %M del %Y') LIKE ?", ["%$search%"]);
             
-
             // Filtrar por tipo de dictamen si se detectó una palabra clave
             if (!is_null($tipoDictamen)) {
                 $q->orWhere('tipo_dictamen', $tipoDictamen);
             }
+
         });
     }
 

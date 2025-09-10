@@ -872,10 +872,12 @@ public function storeRevisor(Request $request)
                         $revision->id_revisor = $validated['miembroConsejo'];
                         $actualizarRevision = true;
                     }
+
+                    $revision->observaciones  = $validated['observaciones'] ?? '';
                 }
 
                 // Siempre se actualizan observaciones y decision
-                $revision->observaciones  = $validated['observaciones'] ?? '';
+                //$revision->observaciones  = $validated['observaciones'] ?? '';
                 $revision->es_correccion  = $validated['esCorreccion'] ?? 'no';
 
                 // Solo si se indicó el tipo, se actualiza numero_revision
