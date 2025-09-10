@@ -431,8 +431,6 @@ public function index(Request $request)
 
 
 
-
-
         public function edit($id_predio)
         {
             try {
@@ -480,159 +478,156 @@ public function index(Request $request)
             }
         }
 
-        public function update(Request $request, $id_predio)
-        {
-            try {
 
 
-                // Validar los datos del formulario
-                $validated = $request->validate([
-                    'id_empresa' => 'required|exists:empresa,id_empresa',
-                    'nombre_productor' => 'required|string|max:70',
-                    'nombre_predio' => 'required|string',
-                    'ubicacion_predio' => 'nullable|string',
-                    'tipo_predio' => 'required|string',
-                    'puntos_referencia' => 'required|string',
-                    'tiene_coordenadas' => 'nullable|string|max:2',
-                    'superficie' => 'required|string',
-                    'latitud' => 'nullable|array',
-                    'latitud.*' => 'nullable|numeric',
-                    'longitud' => 'nullable|array',
-                    'longitud.*' => 'nullable|numeric',
-                    'id_tipo' => 'nullable|array',
-                    'id_tipo.*' => 'required|exists:catalogo_tipo_agave,id_tipo',
-                    'numero_plantas' => 'required|array',
-                    'numero_plantas.*' => 'required|numeric',
-                    'edad_plantacion' => 'required|array',
-                    'edad_plantacion.*' => 'required|numeric',
-                    'tipo_plantacion' => 'required|array',
-                    'tipo_plantacion.*' => 'required|string',
-                    'url' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
-                    'id_documento' => 'required|integer',
-                    'nombre_documento' => 'required|string|max:255'
-                ]);
+///ACTUALIZAR PRE-REGISTRO PREDIO
+public function update(Request $request, $id_predio)
+{
+        // Validar los datos del formulario
+        $validated = $request->validate([
+            'id_empresa' => 'required|exists:empresa,id_empresa',
+            'nombre_productor' => 'required|string|max:70',
+            'nombre_predio' => 'required|string',
+            'ubicacion_predio' => 'nullable|string',
+            'tipo_predio' => 'required|string',
+            'puntos_referencia' => 'required|string',
+            'tiene_coordenadas' => 'nullable|string|max:2',
+            'superficie' => 'required|string',
+            'latitud' => 'nullable|array',
+            'latitud.*' => 'nullable|numeric',
+            'longitud' => 'nullable|array',
+            'longitud.*' => 'nullable|numeric',
+            'id_tipo' => 'nullable|array',
+            'id_tipo.*' => 'required|exists:catalogo_tipo_agave,id_tipo',
+            'numero_plantas' => 'required|array',
+            'numero_plantas.*' => 'required|numeric',
+            'edad_plantacion' => 'required|array',
+            'edad_plantacion.*' => 'required|numeric',
+            'tipo_plantacion' => 'required|array',
+            'tipo_plantacion.*' => 'required|string',
+            'url' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+            'id_documento' => 'required|integer',
+            'nombre_documento' => 'required|string|max:255'
+        ]);
 
-                $predio = Predios::findOrFail($id_predio);
+        $predio = Predios::findOrFail($id_predio);
 
-                // Obtener el documento actual
-                $documentacion_url = Documentacion_url::where('id_relacion', $predio->id_predio)
-                    ->where('id_documento', $validated['id_documento'])
-                    ->first();
+        // Obtener el documento actual
+        $documentacion_url = Documentacion_url::where('id_relacion', $predio->id_predio)
+            ->where('id_documento', $validated['id_documento'])
+            ->first();
 
-                $oldFileName = $documentacion_url ? $documentacion_url->url : null;
+        $oldFileName = $documentacion_url ? $documentacion_url->url : null;
 
-                // Si se carga un nuevo archivo
-                if ($request->hasFile('url')) {
-                    $file = $request->file('url');
+        // Si se carga un nuevo archivo
+        if ($request->hasFile('url')) {
+            $file = $request->file('url');
 
-                    // Generar un nombre único para el archivo
-                    $uniqueId = uniqid();
-                    $filename = $validated['nombre_documento'] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+            // Generar un nombre único para el archivo
+            $uniqueId = uniqid();
+            $filename = $validated['nombre_documento'] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
 
-                    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $validated['id_empresa'])->first();
-                    $empresaNumCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
-                        return !empty($numero);
-                    });
-                    $directory = $empresaNumCliente;
-
-
-                    // Guardar el nuevo archivo
-                    $filePath = $file->storeAs($directory, $filename, 'public_uploads');
-
-                    // Actualizar el registro en la base de datos
-                    if ($documentacion_url) {
-                        $documentacion_url->url = basename($filePath);
-                        $documentacion_url->nombre_documento = $validated['nombre_documento'];
-                        $documentacion_url->save();
-                    } else {
-                        // Si no existe registro, crear uno nuevo
-                        Documentacion_url::create([
-                            'id_empresa' => $validated['id_empresa'],
-                            'url' => basename($filePath),
-                            'id_relacion' => $predio->id_predio,
-                            'id_documento' => $validated['id_documento'],
-                            'nombre_documento' => $validated['nombre_documento'],
-                        ]);
-                    }
-
-                    // Eliminar el archivo anterior
-                    if ($oldFileName) {
-                        $oldFilePath = storage_path('app/public/uploads/' . $empresaNumCliente . '/' . $oldFileName);
-                        if (file_exists($oldFilePath)) {
-                            unlink($oldFilePath);
-                        }
-                    }
-                }
+            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $validated['id_empresa'])->first();
+            $empresaNumCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
+            $directory = $empresaNumCliente;
 
 
-                // Actualizar los demás datos del predio
-                $predio->update([
+            // Guardar el nuevo archivo
+            $filePath = $file->storeAs($directory, $filename, 'public_uploads');
+
+            // Actualizar el registro en la base de datos
+            if ($documentacion_url) {
+                $documentacion_url->url = basename($filePath);
+                $documentacion_url->nombre_documento = $validated['nombre_documento'];
+                $documentacion_url->save();
+            } else {
+                // Si no existe registro, crear uno nuevo
+                Documentacion_url::create([
                     'id_empresa' => $validated['id_empresa'],
-                    'nombre_productor' => $validated['nombre_productor'],
-                    'nombre_predio' => $validated['nombre_predio'],
-                    'ubicacion_predio' => $validated['ubicacion_predio'],
-                    'tipo_predio' => $validated['tipo_predio'],
-                    'puntos_referencia' => $validated['puntos_referencia'],
-                    'cuenta_con_coordenadas' => $validated['tiene_coordenadas'],
-                    'superficie' => $validated['superficie'],
+                    'url' => basename($filePath),
+                    'id_relacion' => $predio->id_predio,
+                    'id_documento' => $validated['id_documento'],
+                    'nombre_documento' => $validated['nombre_documento'],
                 ]);
+            }
 
-                // Manejar coordenadas
-                if ($validated['tiene_coordenadas'] == 'Si') {
-                    // Eliminar coordenadas antiguas
-                    $predio->coordenadas()->delete();
-
-                    // Agregar nuevas coordenadas
-                    if (!empty($validated['latitud']) && !empty($validated['longitud'])) {
-                        foreach ($validated['latitud'] as $index => $latitud) {
-                            $predio->coordenadas()->create([
-                                'latitud' => $latitud,
-                                'longitud' => $validated['longitud'][$index],
-                            ]);
-                        }
-                    }
-                } else {
-                    // Si no se tienen coordenadas, elimina las coordenadas existentes
-                    $predio->coordenadas()->delete();
+            // Eliminar el archivo anterior
+            if ($oldFileName) {
+                $oldFilePath = storage_path('app/public/uploads/' . $empresaNumCliente . '/' . $oldFileName);
+                if (file_exists($oldFilePath)) {
+                    unlink($oldFilePath);
                 }
-
-                // Manejar plantaciones
-                // Manejar plantaciones
-                if (!empty($validated['id_tipo'])) {
-                    // Eliminar plantaciones antiguas
-                    $predio->predio_plantaciones()->delete();
-
-                    // Agregar nuevas plantaciones
-                    foreach ($validated['id_tipo'] as $index => $tipo) {
-                        // Asegúrate de que todos los datos necesarios estén presentes
-                        $numeroPlantas = isset($validated['numero_plantas'][$index]) ? $validated['numero_plantas'][$index] : null;
-                        $edadPlantacion = isset($validated['edad_plantacion'][$index]) ? $validated['edad_plantacion'][$index] : null;
-                        $tipoPlantacion = isset($validated['tipo_plantacion'][$index]) ? $validated['tipo_plantacion'][$index] : null;
-
-                        // Asegúrate de que el campo 'numero_plantas' sea manejado adecuadamente
-                        $predio->predio_plantaciones()->create([
-                            'id_tipo' => $tipo,
-                            'num_plantas' => $numeroPlantas,
-                            'anio_plantacion' => $edadPlantacion,
-                            'tipo_plantacion' => $tipoPlantacion,
-                        ]);
-                    }
-                } else {
-                    // Si no se tienen plantaciones, elimina las plantaciones existentes
-                    $predio->predio_plantaciones()->delete();
-                }
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Predio actualizado exitosamente',
-                ]);
-            } catch (\Exception $e) {
-                Log::error('Error al actualizar el predio: ' . $e->getMessage());
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al actualizar el predio: ' . $e->getMessage(),
-                ], 500);
             }
         }
+
+
+        // Actualizar los demás datos del predio
+        $predio->update([
+            'id_empresa' => $validated['id_empresa'],
+            'nombre_productor' => $validated['nombre_productor'],
+            'nombre_predio' => $validated['nombre_predio'],
+            'ubicacion_predio' => $validated['ubicacion_predio'],
+            'tipo_predio' => $validated['tipo_predio'],
+            'puntos_referencia' => $validated['puntos_referencia'],
+            'cuenta_con_coordenadas' => $validated['tiene_coordenadas'],
+            'superficie' => $validated['superficie'],
+        ]);
+
+        // Manejar coordenadas
+        if ($validated['tiene_coordenadas'] == 'Si') {
+            // Eliminar coordenadas antiguas
+            $predio->coordenadas()->delete();
+
+            // Agregar nuevas coordenadas
+            if (!empty($validated['latitud']) && !empty($validated['longitud'])) {
+                foreach ($validated['latitud'] as $index => $latitud) {
+                    $predio->coordenadas()->create([
+                        'latitud' => $latitud,
+                        'longitud' => $validated['longitud'][$index],
+                    ]);
+                }
+            }
+        } else {
+            // Si no se tienen coordenadas, elimina las coordenadas existentes
+            $predio->coordenadas()->delete();
+        }
+
+        // Manejar plantaciones
+        if (!empty($validated['id_tipo'])) {
+            // Eliminar plantaciones antiguas
+            $predio->predio_plantaciones()->delete();
+
+            // Agregar nuevas plantaciones
+            foreach ($validated['id_tipo'] as $index => $tipo) {
+                // Asegúrate de que todos los datos necesarios estén presentes
+                $numeroPlantas = isset($validated['numero_plantas'][$index]) ? $validated['numero_plantas'][$index] : null;
+                $edadPlantacion = isset($validated['edad_plantacion'][$index]) ? $validated['edad_plantacion'][$index] : null;
+                $tipoPlantacion = isset($validated['tipo_plantacion'][$index]) ? $validated['tipo_plantacion'][$index] : null;
+
+                // Asegúrate de que el campo 'numero_plantas' sea manejado adecuadamente
+                $predio->predio_plantaciones()->create([
+                    'id_tipo' => $tipo,
+                    'num_plantas' => $numeroPlantas,
+                    'anio_plantacion' => $edadPlantacion,
+                    'tipo_plantacion' => $tipoPlantacion,
+                ]);
+            }
+        } else {
+            // Si no se tienen plantaciones, elimina las plantaciones existentes
+            $predio->predio_plantaciones()->delete();
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Predio actualizado exitosamente',
+        ]);
+    
+}
+
+
+
+
 
     public function editInspeccion($id_predio) {
         $inspeccion = Predios_Inspeccion::with('predio.empresa.empresaNumClientes')

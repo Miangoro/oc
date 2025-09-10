@@ -306,6 +306,12 @@
           "name": "Consejo",
           "slug": "revision-consejo",
           "can": "Visualizar revisión del consejo"
+        },
+        {
+          "url": "/revision/unidad_inspeccion",
+          "name": "UI",
+          "slug": "revision-UI",
+          "can": "Visualizar revisión UI"
         }
       ]
     },

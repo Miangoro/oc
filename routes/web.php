@@ -207,6 +207,7 @@ use App\Http\Controllers\TrazabilidadController;
 use App\Http\Controllers\pdf_llenado\PdfController;
 use App\Http\Controllers\revision\RevisionPersonalController;
 use App\Http\Controllers\revision\RevisionConsejoController;
+use App\Http\Controllers\revision\RevisionUIController;
 use App\Http\Controllers\revision\catalogo_personal_seleccion_preguntas_controller;
 use App\Http\Controllers\bitacoras\BitacoraMezcalController;
 use App\Http\Controllers\bitacoras\BitacoraMezcalEnvasadorController;
@@ -1020,7 +1021,6 @@ Route::middleware(['auth'])->controller(RevisionPersonalController::class)->grou
     Route::get('/pdf_bitacora_revision_personal/{id}', 'pdf_bitacora_revision_personal');
 });
 
-
 //-------------------REVISION CONSEJO-------------------
 Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group(function () {
 /*   Route::get('/pdf/solicitud-exportacion/{id_revision}', [RevisionConsejoController::class, 'mostrarSolicitudPDFDesdeRevision'])
@@ -1049,8 +1049,15 @@ Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group
     Route::get('/pdf_bitacora_revision_certificado_instalaciones/{id}', 'pdf_bitacora_revision_certificado_instalaciones');
     Route::get('/pdf_bitacora_revision_certificado_granel/{id}', 'pdf_bitacora_revision_certificado_granel');
     Route::get('/pdf_bitacora_revision_certificado_exportacion/{id}', 'pdf_bitacora_revision_certificado_exportacion');
-
 });
+
+//-------------------REVISION UNIDAD DE INSPECCION-------------------
+Route::middleware(['auth'])->controller(RevisionUIController::class)->group(function () {
+    Route::get('/revision/unidad_inspeccion', 'UserManagement')->name('revision-UI');
+    Route::resource('/revision-ui-list', RevisionUIController::class);
+});
+
+
 
 // Pdfs Bitacoras
 Route::controller(CartaAsignacionController::class)->middleware(['auth'])->group(function () {
