@@ -197,28 +197,42 @@ $folio = $instalacion->folio ?? null;
     ->orderByDesc('fecha_emision')
     ->first();
 
-$documentos = [];
+    $nestedData['certificadora'] = $instalacion->organismos->organismo ?? 'OC CIDAM';
+    $folio = $instalacion->folio ?? null;
 
-if ($certificadoReciente) {
-    $documentos = Documentacion_url::where('id_relacion', $instalacion->id_instalacion)
-        ->whereIn('id_documento', [127, 128, 129])
-        ->get()
-        ->map(function ($doc) use ($numeroCliente) {
-            return [
-                'url' => '/files/' . $numeroCliente . '/certificados_instalaciones/' . rawurlencode($doc->url),
-                'nombre' => $doc->nombre_documento,
-            ];
-        })
-        ->toArray();
+    $certificadoReciente = Certificados::whereHas('dictamen', function ($q) use ($instalacion) {
+        $q->where('id_instalacion', $instalacion->id_instalacion);
+    })
+    ->orderByDesc('fecha_emision')
+    ->first();
 
-    $nestedData['fecha_emision_c']  = Helpers::formatearFecha($certificadoReciente->fecha_emision);
-    $nestedData['fecha_vigencia_c'] = Helpers::formatearFecha($certificadoReciente->fecha_vigencia);
-    $nestedData['num_certificado'] = $certificadoReciente->num_certificado;
-}
+    $documentos = [];
 
-$nestedData['folio'] = $instalacion->folio ?? null;
-$nestedData['documentos'] = $documentos;
+    if ($certificadoReciente && $nestedData['certificadora'] === 'OC CIDAM') {
+        // Solo para OC CIDAM usamos el certificado reciente
+        $documentos = Documentacion_url::where('id_relacion', $instalacion->id_instalacion)
+            ->whereIn('id_documento', [127, 128, 129])
+            ->get()
+            ->map(function ($doc) use ($numeroCliente) {
+                return [
+                    'url' => '/files/' . $numeroCliente . '/certificados_instalaciones/' . rawurlencode($doc->url),
+                    'nombre' => $doc->nombre_documento,
+                ];
+            })
+            ->toArray();
 
+        $nestedData['fecha_emision_c']  = Helpers::formatearFecha($certificadoReciente->fecha_emision);
+        $nestedData['fecha_vigencia_c'] = Helpers::formatearFecha($certificadoReciente->fecha_vigencia);
+        $nestedData['num_certificado'] = $certificadoReciente->num_certificado;
+    } else {
+        // Para otros organismos usamos la info de la instalación/documentos
+        $nestedData['fecha_emision_c']  = Helpers::formatearFecha($instalacion->fecha_emision ?? null);
+        $nestedData['fecha_vigencia_c'] = Helpers::formatearFecha($instalacion->fecha_vigencia ?? null);
+        $nestedData['num_certificado']  = $folio;
+    }
+
+    $nestedData['folio'] = $folio;
+    $nestedData['documentos'] = $documentos;
 
                 $data[] = $nestedData;
             }
