@@ -906,7 +906,7 @@ $(function () {
           $('#btnEdit').removeClass('d-none');
           $('#editarBitacoraMezcal').modal('hide');
           $('#editInventarioForm')[0].reset();
-          $('.datatables-users').DataTable().ajax.reload();
+          $('.datatables-users').DataTable().ajax.reload(null, false);
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
