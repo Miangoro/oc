@@ -401,6 +401,17 @@
                             </div>
                             <h6 class="mb-0 fw-normal">Certificados de exportación sin escaneado</h6>
                             <hr>
+                             <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                                data-bs-target="#modalactasSinActivarHologramas">
+                                <div class="avatar me-4">
+                                    <span class="avatar-initial rounded-3 bg-label-danger">
+                                    <i class="ri-close-circle-line ri-24px"></i>
+                                    </span>
+                                </div>
+                                <h4 class="mb-0">{{ $actasSinActivarHologramas->count() }}</h4>
+                            </div>
+                            <h6 class="mb-0 fw-normal">Actas sin activar hologramas</h6>
+                            <hr>
                             <p class="mb-0">
                                 <!--<span class="me-1 fw-medium">-2.5%</span>
                                                                                     <small class="text-muted">than last week</small>-->
@@ -1254,6 +1265,54 @@
                             </div>
                         @else
                             <p>No hay certificados sin escanear.</p>
+                        @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+          <!-- Modal -->
+        <div class="modal fade" id="modalactasSinActivarHologramas" tabindex="-1"
+            aria-labelledby="modalCertificadosLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalCertificadosLabel">Actas sin activar hologramas</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if ($actasSinActivarHologramas->count())
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Folio</th>
+                                            <th>No. servicio</th>
+                                            <th>Cliente</th>
+                                            <th>Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($actasSinActivarHologramas as $solicitud)
+                                            <tr>
+                                                <td>{{ $solicitud->folio ?? 'N/A' }}</td>
+                                                 <td>{!! $solicitud->inspeccion->num_servicio ?? "<span class='badge bg-danger'>Sin asignar</span>" !!}</td>
+                                                <td>{{ $solicitud->empresa->razon_social ?? 'N/A' }}
+                                                </td>
+                                                <td>{{ \Carbon\Carbon::parse($solicitud->fecha_solicitud)->format('d/m/Y') }}
+                                                </td>
+
+
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <p>No hay actas pendientes de activar hologramas.</p>
                         @endif
                     </div>
                     <div class="modal-footer">

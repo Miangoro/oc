@@ -48,6 +48,8 @@ class Analytics extends Controller
     })->orderByDesc('fecha_solicitud')
     ->get();
 
+ $actasSinActivarHologramas = solicitudesModel::where('id_tipo',5)->where('estatus_activado','0')->where('fecha_solicitud','>','2024-12-31')->orderByDesc('fecha_solicitud')->get();
+
 $solicitudesSinDictamen = solicitudesModel::where('fecha_solicitud', '>', '2024-12-31')
  ->where('habilitado', 1)
     ->where(function ($query) {
@@ -231,7 +233,7 @@ $pendientesRevisarCertificadosConsejo = Revisor::where('decision', 'Pendiente')
     $maquiladores = maquiladores_model::with('maquiladores')->where('id_maquiladora',$empresaId)->get();
     $maquiladora = maquiladores_model::with('maquiladora')->where('id_maquilador',$empresaId)->get();
 
-    return view('content.dashboard.dashboards-analytics', compact('maquiladora','maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+    return view('content.dashboard.dashboards-analytics', compact('actasSinActivarHologramas','maquiladora','maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
   }
 
 public function revisionesPorMes(Request $request)
