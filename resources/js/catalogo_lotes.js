@@ -683,7 +683,7 @@ $(document).ready(function () {
 
 
 
-// Detecta cambio de empresa
+/* // Detecta cambio de empresa
   $('#id_empresa').on('change', function() {
       obtenerDestinoEmpresa();
   });
@@ -723,7 +723,7 @@ async function obtenerDestinoEmpresa() {
         console.error('Error al cargar los datos de la empresa:', error);
         alert('Error al cargar los datos. Por favor, intenta nuevamente.');
     }
-}
+} */
 
 //FORMULARIO AGREGAR
 const addNewLote = document.getElementById('loteForm');
@@ -837,13 +837,13 @@ const fv = FormValidation.formValidation(addNewLote, {
           }
         },
 
-/*         id_empresa_destino: {
+        id_empresa_destino: {
           validators: {
             notEmpty: {
               message: 'Por favor seleccione una empresa destino'
             }
           }
-        }, */
+        },
 
       },
 
@@ -1730,13 +1730,13 @@ const fv = FormValidation.formValidation(editLoteForm, {
     // Al abrir el modal, cargar marcas para el cliente seleccionado
     $('#offcanvasAddLote').on('shown.bs.modal', function () {
       obtenerDatosEmpresa();
-
     });
         // Llamar a obtenerDatosEmpresa cuando se selecciona la empresa
-   /*  $('#id_empresa').change(function() { */
-        obtenerDatosEmpresa();
-        /* obtenerDestinoEmpresa(); */
- /*    }); */
+    /* $('#id_empresa').change(function() { */
+/*       var empresa = $("#id_empresa").val();
+      if (!empresa) return;
+        obtenerDestinoEmpresa(); */
+   /*  }); */
 
 
   });

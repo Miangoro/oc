@@ -18,7 +18,7 @@
 
                             <div class="col-md-7" id="select_empresa">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select onchange="obtenerDatosEmpresa();" id="id_empresa"
+                                    <select onchange="obtenerDatosEmpresa(); " id="id_empresa"
                                         name="id_empresa" class="select2 form-select"
                                         data-error-message="por favor selecciona la empresa">
                                         @if ($tipo_usuario != 3)
@@ -454,6 +454,7 @@
 
                 // Disparar un evento global para que el otro script pueda usar los lotes
                 $(document).trigger('lotesCargados', [response.lotes_granel]);
+                obtenerDestinoEmpresa();
             },
             error: function(xhr, status, error) {
                 console.error('Error al cargar los datos de la empresa:', error);
@@ -466,7 +467,7 @@
 
 
 ///NUEVA FUNCION
-/*
+
 function obtenerDestinoEmpresa() {
     var empresa = $("#id_empresa").val();
     if (!empresa) return;
@@ -497,12 +498,12 @@ function obtenerDestinoEmpresa() {
             // Deshabilitar si solo hay una opción
             if ($selectDestino.find('option').length === 1) {
                 $selectDestino.prop('disabled', true);
-                 $selectDestinoContainer.addClass('d-none'); // Oculta el select destino si solo hay uno
-                $selectEmpresaContainer.removeClass('col-md-12').addClass('col-md-12'); // Mantiene la empresa principal full width
+                /*  $selectDestinoContainer.addClass('d-none'); */ // Oculta el select destino si solo hay uno
+                /* $selectEmpresaContainer.removeClass('col-md-12').addClass('col-md-12'); */ // Mantiene la empresa principal full width
             } else {
                 $selectDestino.prop('disabled', false);
-                $selectDestinoContainer.removeClass('d-none');
-                $selectEmpresaContainer.removeClass('col-md-12').addClass('col-md-6'); // Ajusta ancho
+                /* $selectDestinoContainer.removeClass('d-none'); */
+                $selectEmpresaContainer.addClass('col-md-6'); // Ajusta ancho
             }
 
             $(document).trigger('empresaDestinoCargada', [$selectDestino]);
@@ -513,12 +514,11 @@ function obtenerDestinoEmpresa() {
         }
     });
 }
-*/
+
 
     // Llamar a obtenerDatosEmpresa cuando se selecciona la empresa
     $('#id_empresa').change(function() {
         obtenerDatosEmpresa();
-        /* obtenerDestinoEmpresa(); */
     });
 
 </script>
