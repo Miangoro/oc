@@ -1188,7 +1188,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                 {{-- Mostramos rangoFolios solo si old no contiene folio1 --}}
                                                 @if (empty($rangoFolios))
                                                     @foreach ($rangoFolios as $rango)
-                                                        <div>{!! $rango !!}</div> {{ $old }}
+                                                        <div>{!! $rango !!}</div> {{ $old }} fgfg
                                                     @endforeach
                                                 @endif
                                             @else
