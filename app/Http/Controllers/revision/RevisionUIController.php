@@ -66,11 +66,14 @@ public function index(Request $request)
         ])->where('tipo_revision', 1); // Solo revisiones de OC
 
 
-    // Si el usuario no es admin(ID especial) solo ve sus propias revisiones
+    // Si no es admin(ID especial) solo ve sus revisiones
     /*if (!in_array($userId, [1, 2, 3, 4, 320])) {
         $query->where('id_revisor', $userId);
     }*/
 
+    $baseQuery = clone $query;
+    $totalData = $baseQuery->count();// Siempre el total sin filtros
+    
 
     /// Búsqueda Global
     if (!empty($search)) {
@@ -103,7 +106,6 @@ public function index(Request $request)
             }
         }
 
-
         // Aplicar la búsqueda
         $query->where(function ($q) use ($search, $tipoDictamen) {
             // Buscar por número de dictamen en distintos modelos
@@ -125,23 +127,29 @@ public function index(Request $request)
             }
 
         });
+
+        $totalFiltered = $query->count();
+    } else {
+        $totalFiltered = $totalData;
     }
 
 
     // Paginación y ordenación
-    
-
-
-    // Obtener los totales de registros por separado
-    $totalDataRevisor = $query->count();
-
-
     // Consultar los registros
-    $revisores = $query->offset($start)->limit($limit)->orderBy($orderColumn, $orderDirection)->get();
+    $revisores = $query
+        ->with([
+            'dictamenInstalacion',
+            'dictamenGranel',
+            'dictamenEnvasado',
+            'dictamenExportacion'
+        ])
+        ->offset($start)
+        ->limit($limit)
+        ->orderBy($orderColumn, $orderDirection)
+        ->get();
 
 
 
-    // Formatear los datos para la vista
     // Formatear los datos para la vista
     $dataRevisor = $revisores->map(function ($revisor) use (&$start) {
 
@@ -149,8 +157,7 @@ public function index(Request $request)
 
         // Mapeo de tipos de dictamen → modelo + etiqueta
         $tipos = [
-            1 => [
-                'modelo' => 'dictamenInstalacion',
+            1 => ['modelo' => 'dictamenInstalacion',
                 'etiquetas' => [
                     1 => 'Instalaciones de productor',
                     2 => 'Instalaciones de envasador',
@@ -159,18 +166,15 @@ public function index(Request $request)
                     5 => 'Instalaciones de área de maduración',
                 ],
             ],
-            2 => [
-                'modelo' => 'dictamenGranel',
+            2 => ['modelo' => 'dictamenGranel',
                 'etiqueta' => 'Granel',
-            ],
-            3 => [
-                'modelo' => 'dictamenEnvasado',
+                ],
+            3 => ['modelo' => 'dictamenEnvasado', 
                 'etiqueta' => 'Envasado',
-            ],
-            4 => [
-                'modelo' => 'dictamenExportacion',
+                ],
+            4 => ['modelo' => 'dictamenExportacion',
                 'etiqueta' => 'Exportación',
-            ],
+                ],
         ];
 
         $tipoDictamen = $revisor->tipo_dictamen;
@@ -196,7 +200,6 @@ public function index(Request $request)
             }
         }
 
-  
         return [
             'fake_id' => ++$start,
             'id_revision' => $revisor->id_revision,
@@ -215,14 +218,11 @@ public function index(Request $request)
     });
 
 
-    // Total de resultados
-    $totalData = $totalDataRevisor;
-
     // Devolver los resultados como respuesta JSON
     return response()->json([
         'draw' => intval($request->input('draw')),
-        'recordsTotal' => intval($totalData),
-        'recordsFiltered' => intval($totalData),
+        'recordsTotal' => intval($totalData),//todos
+        'recordsFiltered' => intval($totalFiltered),// filtrados
         'data' => array_merge($dataRevisor->toArray()), // Combinacion
     ]);
 }
