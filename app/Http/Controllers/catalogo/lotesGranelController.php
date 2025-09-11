@@ -569,6 +569,7 @@ public function store(Request $request)
         'id_tanque' => 'nullable|string|max:100',
         'tipo_lote' => 'required|integer',
         'volumen' => 'required|numeric',
+        'volumen_total' => 'required|numeric',
         'cont_alc' => 'required|numeric',
         'id_categoria' => 'required|integer|exists:catalogo_categorias,id_categoria',
         'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
@@ -617,6 +618,7 @@ public function store(Request $request)
         $lote->volumen = $validatedData['volumen'];
         $lote->id_estado = $validatedData['id_estado'];
         $lote->volumen_restante = $validatedData['volumen'];
+        $lote->volumen_con_agua = $validatedData['volumen_total'];
         $lote->cont_alc = $validatedData['cont_alc'];
         $lote->id_categoria = $validatedData['id_categoria'];
         $lote->agua_entrada = $validatedData['agua_entrada'] ?? 0;
@@ -1036,9 +1038,13 @@ public function update(Request $request, $id_lote_granel)
               'edad' => $validated['edad'],
               'id_organismo' => $validated['id_organismo'] ?? null,
               'volumen' => $validated['volumen'],
+              /* 'volumen_con_agua' => $validated['volumen_total'] ?? null, */
           ];
           if (array_key_exists('volumen_restante', $validated)) {
               $updateData['volumen_restante'] = $validated['volumen_restante'];
+          }
+          if (array_key_exists('volumen_total', $validated)) {
+              $updateData['volumen_con_agua'] = $validated['volumen_total'];
           }
 
           // Solo agregamos estos campos si **no** vienen nulos (o están presentes con valor)
