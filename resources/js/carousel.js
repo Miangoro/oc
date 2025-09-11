@@ -36,11 +36,12 @@ $(function () {
         type: 'GET'
       },
       columns: [
-        { data: '' }, //0
-        { data: 'fake_id' }, // 1
-        { data: 'nombre' }, // 2
-        { data: 'url' }, // 3
-        { data: 'action' } // 4
+        { data: '' },        // 0 → responsive
+        { data: 'fake_id' }, // 1 → ID real en BD
+        { data: 'nombre' },  // 2
+        { data: 'url' },     // 3
+        { data: 'orden' },   // 4
+        { data: null }       // 5 → acciones
       ],
       columnDefs: [
         {
@@ -82,9 +83,15 @@ $(function () {
             `;
           }
         },
+       {
+          targets: 4,
+           render: function (data, type, full, meta) {
+            return `<span>${full.orden}</span>`;
+          }
+        },
         {
           // Actions botones de eliminar y actualizar(editar)
-          targets: 4,
+          targets: 5,
           title: 'Acciones',
           searchable: false,
           orderable: false,

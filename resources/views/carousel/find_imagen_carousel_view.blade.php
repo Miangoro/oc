@@ -39,6 +39,7 @@
                         <th>#</th>
                         <th>Nombre</th>
                         <th>Imagen</th>
+                        <th>orden</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
