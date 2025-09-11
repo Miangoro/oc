@@ -220,6 +220,7 @@ use App\Http\Controllers\bitacoras\BitacoraPTComController;
 use App\Http\Controllers\bitacoras\BitacoraProductoEtiquetaController;
 
 use App\Http\Controllers\catalogo\EtiquetasController;
+use App\Http\Controllers\carousel\ImagenController;
 use App\Http\Controllers\certificados\Certificado_ExportacionController;
 use App\Http\Controllers\certificados\Certificado_NacionalController;
 use App\Http\Controllers\insertar_datos_bd_certificados;
@@ -1505,3 +1506,12 @@ Route::post('/tickets/{ticket}/mensajes', [ticketsController::class, 'storeMensa
 Route::patch('/tickets/{ticket}/estatus', [ticketsController::class, 'updateEstatus'])
      ->name('tickets.updateEstatus')->middleware(['auth']);
 
+Route::controller(ImagenController::class)->middleware(['auth'])->group(function () {
+Route::get('/imagenes','UserManagement')->name('imagenes-carousel');
+// Subir nueva imagen
+Route::post('/imagenes-upload',  'store')->middleware(['auth'])->name('imagenes.upload');
+// Eliminar imagen
+Route::delete('/imagenes-delete/{filename}',  'destroy')->middleware(['auth'])->name('imagenes.delete');
+});
+
+Route::get('/imagenes-list', [ImagenController::class, 'index'])->middleware(['auth']);

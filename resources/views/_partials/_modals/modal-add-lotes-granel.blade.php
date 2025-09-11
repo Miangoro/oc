@@ -18,11 +18,11 @@
 
                             <div class="col-md-7" id="select_empresa">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select onchange="obtenerDatosEmpresa(); " id="id_empresa"
-                                        name="id_empresa" class="select2 form-select"
+                                    <select onchange="obtenerDatosEmpresa(); " id="id_empresa" name="id_empresa"
+                                        class="select2 form-select"
                                         data-error-message="por favor selecciona la empresa">
                                         @if ($tipo_usuario != 3)
-                                                <option value="" disabled selected>Selecciona el cliente</option>
+                                            <option value="" disabled selected>Selecciona el cliente</option>
                                         @endif
                                         @foreach ($empresas as $empresa)
                                             <option value="{{ $empresa->id_empresa }}">
@@ -34,15 +34,16 @@
                                     <label for="id_empresa" class="form-label">Cliente</label>
                                 </div>
                             </div>
-<div class="col-md-5">
-    <div class="form-floating form-floating-outline mb-4">
-        <select id="id_empresa_destino" name="id_empresa_destino" class="select2 form-select">
-            <option value="" disabled selected>Selecciona la empresa destino</option>
-        </select>
-        <label>Empresa destino</label>
-    </div>
-</div>
-{{--  obtenerDestinoEmpresa();
+                            <div class="col-md-5">
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <select id="id_empresa_destino" name="id_empresa_destino"
+                                        class="select2 form-select">
+                                        <option value="" disabled selected>Selecciona la empresa destino</option>
+                                    </select>
+                                    <label>Empresa destino</label>
+                                </div>
+                            </div>
+                            {{--  obtenerDestinoEmpresa();
 <div class="col-md-5" id="select_destino">
     <div class="form-floating form-floating-outline mb-4">
         <select id="id_empresa_destino" name="id_empresa_destino"
@@ -153,27 +154,29 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-md-12" id="volmen_in">
+                            {{--                             <div class="col-md-12" id="volmen_in">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="volumen" name="volumen"
                                         class="form-control" placeholder="Volumen de Lote Inicial (litros)"
                                         autocomplete="off" data-error-message="Por favor selecciona el volumen" />
                                     <label for="volumen">Volumen de Lote Inicial (litros)</label>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="row">
-                            <div class="col-md-4">
+
+                            <div class="col-md-4" id="volmen_in">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <input type="number" step="0.01" id="cont_alc" name="cont_alc"
-                                        class="form-control" placeholder="Contenido Alcohólico" autocomplete="off"
-                                        data-error-message="Por favor seleccione el contenido alcoholico" />
-                                    <label for="cont_alc">Contenido Alcohólico</label>
+                                    <input type="number" step="0.01" id="volumen" name="volumen"
+                                        class="form-control" placeholder="Volumen de Lote Inicial (litros)"
+                                        autocomplete="off" data-error-message="Por favor selecciona el volumen" />
+                                    <label for="volumen">Volumen de Lote Inicial (litros Sin agua)</label>
                                 </div>
                             </div>
+
                             <div class="col-md-4">
-                                <div class="form-floating form-floating-outline">
+                                <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" class="form-control" id="agua_entrada"
                                         name="agua_entrada" placeholder="Agua agregada (L)"
                                         aria-label="Agua entrada">
@@ -181,6 +184,32 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <input type="number" step="0.01" class="form-control bg-light text-muted" id="volumen_total"
+                                        name="volumen_total" placeholder="Volumen Total (Con agua)" readonly style="pointer-events: none;">
+                                    <label for="volumen_total">Volumen Total (Con agua)</label>
+                                </div>
+                            </div>
+
+                            {{-- <div class="col-md-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="number" step="0.01" class="form-control" id="agua_entrada_final"
+                                        name="agua_entrada_final" placeholder="Agua agregada final (L)"
+                                        aria-label="Agua entrada final">
+                                    <label for="agua_entrada">Agua agregada final (L)</label>
+                                </div>
+                            </div> --}}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <input type="number" step="0.01" id="cont_alc" name="cont_alc"
+                                        class="form-control" placeholder="Contenido Alcohólico" autocomplete="off"
+                                        data-error-message="Por favor seleccione el contenido alcoholico" />
+                                    <label for="cont_alc">Contenido Alcohólico</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="id_categoria" name="id_categoria" class=" form-select">
                                         <option value="" disabled selected
@@ -197,6 +226,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
@@ -405,6 +435,19 @@
 </div>
 
 <script>
+    function calcularVolumenTotalChelo() {
+        let volumen = parseFloat(document.getElementById("volumen").value) || 0;
+        let aguaEntrada = parseFloat(document.getElementById("agua_entrada").value) || 0;
+
+        let total = volumen + aguaEntrada;
+
+        document.getElementById("volumen_total").value = total.toFixed(2);
+    }
+
+    document.getElementById("volumen").addEventListener("input", calcularVolumenTotalChelo);
+    document.getElementById("agua_entrada").addEventListener("input", calcularVolumenTotalChelo);
+
+
     function obtenerDatosEmpresa() {
         var empresa = $("#id_empresa").val();
 
@@ -466,59 +509,60 @@
 
 
 
-///NUEVA FUNCION
+    ///NUEVA FUNCION
 
-function obtenerDestinoEmpresa() {
-    var empresa = $("#id_empresa").val();
-    if (!empresa) return;
+    function obtenerDestinoEmpresa() {
+        var empresa = $("#id_empresa").val();
+        if (!empresa) return;
 
-    $.ajax({
-        url: '/getDatosMaquila/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            var $selectDestino = $('#id_empresa_destino');
-             var $selectDestinoContainer = $('#select_destino');
-            var $selectEmpresaContainer = $('#select_empresa');
-            $selectDestino.empty();
+        $.ajax({
+            url: '/getDatosMaquila/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var $selectDestino = $('#id_empresa_destino');
+                var $selectDestinoContainer = $('#select_destino');
+                var $selectEmpresaContainer = $('#select_empresa');
+                $selectDestino.empty();
 
-            var opciones = [];
+                var opciones = [];
 
-            if (response.empresasDestino.length > 0) {
-                response.empresasDestino.forEach(function(emp) {
-                    var numeroCliente = (emp.empresa_num_clientes[0]?.numero_cliente ??
-                                         emp.empresa_num_clientes[1]?.numero_cliente ?? '');
-                    opciones.push(`<option value="${emp.id_empresa}">${numeroCliente} | ${emp.razon_social}</option>`);
-                });
-            } else {
-                opciones.push(`<option value="${empresa}" selected>Propia empresa</option>`);
+                if (response.empresasDestino.length > 0) {
+                    response.empresasDestino.forEach(function(emp) {
+                        var numeroCliente = (emp.empresa_num_clientes[0]?.numero_cliente ??
+                            emp.empresa_num_clientes[1]?.numero_cliente ?? '');
+                        opciones.push(
+                            `<option value="${emp.id_empresa}">${numeroCliente} | ${emp.razon_social}</option>`
+                        );
+                    });
+                } else {
+                    opciones.push(`<option value="${empresa}" selected>Propia empresa</option>`);
+                }
+
+                $selectDestino.append(opciones.join(''));
+
+                // Deshabilitar si solo hay una opción
+                if ($selectDestino.find('option').length === 1) {
+                    $selectDestino.prop('disabled', true);
+                    /*  $selectDestinoContainer.addClass('d-none'); */ // Oculta el select destino si solo hay uno
+                    /* $selectEmpresaContainer.removeClass('col-md-12').addClass('col-md-12'); */ // Mantiene la empresa principal full width
+                } else {
+                    $selectDestino.prop('disabled', false);
+                    /* $selectDestinoContainer.removeClass('d-none'); */
+                    $selectEmpresaContainer.addClass('col-md-6'); // Ajusta ancho
+                }
+
+                $(document).trigger('empresaDestinoCargada', [$selectDestino]);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al cargar los datos de la empresa:', error);
+                alert('Error al cargar los datos. Por favor, intenta nuevamente.');
             }
-
-            $selectDestino.append(opciones.join(''));
-
-            // Deshabilitar si solo hay una opción
-            if ($selectDestino.find('option').length === 1) {
-                $selectDestino.prop('disabled', true);
-                /*  $selectDestinoContainer.addClass('d-none'); */ // Oculta el select destino si solo hay uno
-                /* $selectEmpresaContainer.removeClass('col-md-12').addClass('col-md-12'); */ // Mantiene la empresa principal full width
-            } else {
-                $selectDestino.prop('disabled', false);
-                /* $selectDestinoContainer.removeClass('d-none'); */
-                $selectEmpresaContainer.addClass('col-md-6'); // Ajusta ancho
-            }
-
-            $(document).trigger('empresaDestinoCargada', [$selectDestino]);
-        },
-        error: function(xhr, status, error) {
-            console.error('Error al cargar los datos de la empresa:', error);
-            alert('Error al cargar los datos. Por favor, intenta nuevamente.');
-        }
-    });
-}
+        });
+    }
 
 
     // Llamar a obtenerDatosEmpresa cuando se selecciona la empresa
     $('#id_empresa').change(function() {
         obtenerDatosEmpresa();
     });
-
 </script>

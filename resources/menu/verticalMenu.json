@@ -434,7 +434,16 @@
       "icon": "menu-icon ri-customer-service-2-fill",
       "slug": "tickets-servicio",
       "can": "Visualizar tickets"
+    },
+    {
+      "name": "Imagenes",
+      "url": "/imagenes",
+      "icon": "menu-icon ri-gallery-fill",
+      "slug": "imagenes-carousel",
+      "can": "Visualizar imagenes carousel"
+
     }
+
 
 
 

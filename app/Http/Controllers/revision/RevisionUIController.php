@@ -72,8 +72,8 @@ public function index(Request $request)
     }*/
 
     $baseQuery = clone $query;
-    $totalData = $baseQuery->count();// Siempre el total sin filtros
-    
+    $totalData = $baseQuery->count();//total sin filtros
+
 
     /// Búsqueda Global
     if (!empty($search)) {
@@ -92,9 +92,9 @@ public function index(Request $request)
             'comercializador'=> 1,
             'bodega'         => 1,
             'maduracion'     => 1,
-            'granel'         => 2,
-            'envasado'       => 3,
-            'exportacion'    => 4,
+            'gran'         => 2,
+            'env'       => 3,
+            'expo'    => 4,
         ];
 
         // Buscar coincidencia con nombre
@@ -128,21 +128,14 @@ public function index(Request $request)
 
         });
 
-        $totalFiltered = $query->count();
+        $totalFiltered = $query->count();// total con filtros
     } else {
-        $totalFiltered = $totalData;
+        $totalFiltered = $totalData;// total sin filtros
     }
 
 
     // Paginación y ordenación
-    // Consultar los registros
     $revisores = $query
-        ->with([
-            'dictamenInstalacion',
-            'dictamenGranel',
-            'dictamenEnvasado',
-            'dictamenExportacion'
-        ])
         ->offset($start)
         ->limit($limit)
         ->orderBy($orderColumn, $orderDirection)
@@ -221,8 +214,8 @@ public function index(Request $request)
     // Devolver los resultados como respuesta JSON
     return response()->json([
         'draw' => intval($request->input('draw')),
-        'recordsTotal' => intval($totalData),//todos
-        'recordsFiltered' => intval($totalFiltered),// filtrados
+        'recordsTotal' => intval($totalData),   // total sin filtros
+        'recordsFiltered' => intval($totalFiltered), // total con filtros
         'data' => array_merge($dataRevisor->toArray()), // Combinacion
     ]);
 }

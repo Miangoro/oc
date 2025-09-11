@@ -644,13 +644,13 @@ $(document).ready(function () {
         $('#mostrar_guias').removeClass('d-none');
 
         // Cambiar la clase y el id de volumen
-        $('#volmen_in').removeClass('col-md-12').addClass('col-md-6').attr('id', 'volmen_in');
+        /* $('#volmen_in').removeClass('col-md-12').addClass('col-md-6').attr('id', 'volmen_in'); */
       } else {
         // Ocultar el campo de guías
         $('#mostrar_guias').addClass('d-none');
 
         // Restaurar la clase y el id de volumen
-        $('#volmen_in').removeClass('col-md-6').addClass('col-md-12').attr('id', 'volmen_in');
+        /* $('#volmen_in').removeClass('col-md-6').addClass('col-md-12').attr('id', 'volmen_in'); */
       }
     });
 
@@ -940,7 +940,7 @@ $(document).ready(function () {
     const edit_ocCidamFields = document.getElementById('edit_oc_cidam_fields');
     const edit_otroOrganismoFields = document.getElementById('edit_otro_organismo_fields');
     const edit_mostrarGuias = document.getElementById('edit_mostrar_guias');
-    const edit_volumenIn = document.getElementById('edit_volumen_in');
+    /* const edit_volumenIn = document.getElementById('edit_volumen_in'); */
 
     // Selecciona los campos de archivo y de texto
     const edit_otroOrganismoFileField = document.getElementById('file-59');
@@ -957,8 +957,8 @@ $(document).ready(function () {
 
         // Mostrar los campos de guías y volumen de tipo lote
         edit_mostrarGuias.classList.remove('d-none');
-        edit_volumenIn.classList.remove('col-md-12');
-        edit_volumenIn.classList.add('col-md-6');
+        /* edit_volumenIn.classList.remove('col-md-12');
+        edit_volumenIn.classList.add('col-md-6'); */
       }
       // Si el lote es certificado por otro organismo (Tipo 2)
       else if (selectedValue === '2') {
@@ -968,8 +968,8 @@ $(document).ready(function () {
 
         // Ocultar los campos de guías y hacer que el volumen ocupe todo el ancho
         edit_mostrarGuias.classList.add('d-none');
-        edit_volumenIn.classList.remove('col-md-6');
-        edit_volumenIn.classList.add('col-md-12');
+        /* edit_volumenIn.classList.remove('col-md-6');
+        edit_volumenIn.classList.add('col-md-12'); */
       }
       // Si no hay tipo de lote seleccionado
       else {
@@ -977,8 +977,8 @@ $(document).ready(function () {
         edit_ocCidamFields.classList.add('d-none');
         edit_otroOrganismoFields.classList.add('d-none');
         edit_mostrarGuias.classList.add('d-none');
-        edit_volumenIn.classList.remove('col-md-12');
-        edit_volumenIn.classList.add('col-md-6');
+       /*  edit_volumenIn.classList.remove('col-md-12');
+        edit_volumenIn.classList.add('col-md-6'); */
       }
     }
 
@@ -1076,6 +1076,7 @@ $(document).on('click', '.edit-record', function () {
             if (window.puedeVerElUsuario && $('#edit_volumen_restante').length > 0) {
               $('#edit_volumen_restante').val(lote.volumen_restante);
             }
+            $('#edit_volumen_total').val(lote.volumen_con_agua);
             $('#edit_cont_alc').val(lote.cont_alc);
             $('#edit_id_categoria').val(lote.id_categoria).trigger('change');
             $('#edit_clase_agave').val(lote.id_clase).trigger('change');
@@ -1113,7 +1114,7 @@ $(document).on('click', '.edit-record', function () {
 
               // Mostrar las guías solo si el lote es CIDAM
               $('#edit_mostrar_guias').removeClass('d-none');
-              $('#edit_volumen_in').removeClass('col-md-12').addClass('col-md-6');
+              /* $('#edit_volumen_in').removeClass('col-md-12').addClass('col-md-6'); */
               // Añadir guías al campo select de guías
               guias.forEach(function (guia) {
                 $('#edit_id_guia').append(new Option(guia.folio, guia.id));
@@ -1128,7 +1129,7 @@ $(document).on('click', '.edit-record', function () {
 
               // Ocultar el campo de las guías si es tipo 2
               $('#edit_mostrar_guias').addClass('d-none');
-              $('#edit_volumen_in').removeClass('col-md-6').addClass('col-md-12');
+              /* $('#edit_volumen_in').removeClass('col-md-6').addClass('col-md-12'); */
               // Eliminar las opciones de guías si es tipo 2
               $('#edit_id_guia').empty();
               // Mostrar enlace al archivo PDF si está disponible

@@ -29,14 +29,15 @@
                                     <label for="id_empresa">Cliente</label>
                                 </div>
                             </div>
-<div class="col-md-5">
-    <div class="form-floating form-floating-outline mb-4">
-        <select id="edit_id_empresa_destino" name="id_empresa_destino" class="select2 form-select">
-            <option value="" disabled selected>Selecciona la empresa destino</option>
-        </select>
-        <label>Empresa destino</label>
-    </div>
-</div>
+                            <div class="col-md-5">
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <select id="edit_id_empresa_destino" name="id_empresa_destino"
+                                        class="select2 form-select">
+                                        <option value="" disabled selected>Selecciona la empresa destino</option>
+                                    </select>
+                                    <label>Empresa destino</label>
+                                </div>
+                            </div>
                         </div>
 
 
@@ -116,7 +117,24 @@
                                     <label for="id_guia">Folio de guía de translado</label>
                                 </div>
                             </div>
-                            <div class="col-md-6" id="edit_volumen_in">
+
+                        </div>
+                        {{-- solo para los adminsitradores --}}
+                        @can('Modificar volumen restante a granel')
+                            <div class="row">
+                                <div class="col-md-6" id="edit_volumen_res">
+                                    <div class="form-floating form-floating-outline mb-4">
+                                        <input type="number" step="0.01" id="edit_volumen_restante"
+                                            name="volumen_restante" class="form-control"
+                                            placeholder="Volumen restante del Lote (litros)" autocomplete="off" />
+                                        <label for="volumen">Volumen restante del Lote (litros)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        @endcan
+
+                        <div class="row">
+                            <div class="col-md-4" id="">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="edit_volumen" name="volumen"
                                         class="form-control" placeholder="Volumen de Lote Inicial (litros)"
@@ -124,39 +142,34 @@
                                     <label for="volumen">Volumen de Lote Inicial (litros)</label>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <input type="number" step="0.01" class="form-control" id="edit_agua_entrada"
+                                        name="agua_entrada" placeholder="Agua agregada (L)"
+                                        aria-label="Agua entrada">
+                                    <label for="agua_entrada">Agua agregada (L)</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <input type="number" step="0.01" class="form-control bg-light text-muted"
+                                        id="edit_volumen_total" name="volumen_total"
+                                        placeholder="Volumen Total (Con agua)" readonly style="pointer-events: none;">
+                                    <label for="volumen_total">Volumen Total (Con agua)</label>
+                                </div>
+                            </div>
 
                         </div>
-                        {{-- solo para los adminsitradores --}}
-                        @can('Modificar volumen restante a granel')
-                          <div class="row">
-                              <div class="col-md-6" id="edit_volumen_res">
-                                  <div class="form-floating form-floating-outline mb-4">
-                                      <input type="number" step="0.01" id="edit_volumen_restante" name="volumen_restante"
-                                          class="form-control" placeholder="Volumen restante del Lote (litros)"
-                                          autocomplete="off" />
-                                      <label for="volumen">Volumen restante del Lote (litros)</label>
-                                  </div>
-                              </div>
-                          </div>
-                      @endcan
-
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="edit_cont_alc" name="cont_alc"
                                         class="form-control" placeholder="Contenido Alcohólico" autocomplete="off" />
                                     <label for="cont_alc">Contenido Alcohólico</label>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                        <div class="form-floating form-floating-outline">
-                                            <input type="number" step="0.01" class="form-control"
-                                                id="edit_agua_entrada" name="agua_entrada" placeholder="Agua agregada (L)"
-                                                aria-label="Agua entrada">
-                                            <label for="agua_entrada">Agua agregada (L)</label>
-                                        </div>
-                                    </div>
-                            <div class="col-md-4">
+
+                            <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="edit_id_categoria" name="id_categoria" class="form-select">
                                         <option value="" disabled selected>Selecciona la categoría de agave
@@ -171,9 +184,9 @@
                             </div>
                         </div>
                         <div class="row">
-                          <div class="col-md-4">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select id="edit_id_estado" name="id_estado" class="select2 form-select" >
+                                    <select id="edit_id_estado" name="id_estado" class="select2 form-select">
                                         <option value="" disabled selected>Selecciona el origen
                                         </option>
                                         @foreach ($estados as $estado)
@@ -200,7 +213,8 @@
                                         multiple>
                                         @foreach ($tipos as $tipo)
                                             <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}
-                                                ({{ $tipo->cientifico }})</option>
+                                                ({{ $tipo->cientifico }})
+                                            </option>
                                         @endforeach
                                     </select>
                                     <label for="tipo_agave">Tipo de Agave</label>
@@ -244,7 +258,8 @@
                                     <input type="file" id="edit_certificado_lote" name="documentos[0][url]"
                                         class="form-control" />
                                     <label for="edit_certificado_lote">Adjuntar certificado de lote a granel</label>
-                                    <input value="59" class="form-control" type="hidden" name="documentos[0][id_documento]">
+                                    <input value="59" class="form-control" type="hidden"
+                                        name="documentos[0][id_documento]">
                                     <!-- ID del documento -->
                                     <input value="Certificado de lote a granel" class="form-control" type="hidden"
                                         name="documentos[0][nombre_documento]"> <!-- Nombre del documento -->
@@ -295,91 +310,92 @@
                             </div>
                         </div>
                     </div>
-                                            <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Tipo de análisis</th>
-                                    <th>No. de Análisis Fisicoquímico</th>
-                                    <th>Documento</th>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Tipo de análisis</th>
+                                <th>No. de Análisis Fisicoquímico</th>
+                                <th>Documento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($documentos as $documento)
+                                <!-- Primer bloque para Análisis completo -->
+                                <tr id="documento-row-{{ $documento->id_documento }}">
+                                    <td>
+                                        <span>Análisis completo</span>
+                                        <input hidden readonly value="Análisis completo" type="text"
+                                            class="form-control form-control-sm"
+                                            id="tipo_analisis_{{ $documento->id_documento }}" name="tipo_analisis[]">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm"
+                                            id="folio_fq_completo_{{ $documento->id_documento }}" autocomplete="off"
+                                            name="folio_fq_completo"
+                                            value="{{ $documento->folio_fq_completo ?? '' }}">
+                                    </td>
+                                    <td>
+                                        <input class="form-control form-control-sm" type="file"
+                                            id="file_completo_{{ $documento->id_documento }}"
+                                            name="documentos[1][url]">
+                                        <input value="{{ $documento->id_documento }}" class="form-control"
+                                            type="hidden" name="documentos[1][id_documento]">
+                                        <input value="{{ $documento->nombre }}" class="form-control" type="hidden"
+                                            name="documentos[1][nombre_documento]">
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($documentos as $documento)
-                                    <!-- Primer bloque para Análisis completo -->
-                                    <tr id="documento-row-{{ $documento->id_documento }}">
-                                        <td>
-                                            <span>Análisis completo</span>
-                                            <input hidden readonly value="Análisis completo" type="text"
-                                                class="form-control form-control-sm"
-                                                id="tipo_analisis_{{ $documento->id_documento }}"
-                                                name="tipo_analisis[]">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control form-control-sm"
-                                                id="folio_fq_completo_{{ $documento->id_documento }}" autocomplete="off"
-                                                name="folio_fq_completo"
-                                                value="{{ $documento->folio_fq_completo ?? '' }}">
-                                        </td>
-                                        <td>
-                                            <input class="form-control form-control-sm" type="file"
-                                                id="file_completo_{{ $documento->id_documento }}" name="documentos[1][url]">
-                                            <input value="{{ $documento->id_documento }}" class="form-control"
-                                                type="hidden" name="documentos[1][id_documento]">
-                                            <input value="{{ $documento->nombre }}" class="form-control"
-                                                type="hidden" name="documentos[1][nombre_documento]">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2" id="archivo_url_display_completo_58">
-                                            <!-- La URL del documento completo se mostrará aquí -->
-                                        </td>
-                                        <td id="deleteArchivo58">
+                                <tr>
+                                    <td colspan="2" id="archivo_url_display_completo_58">
+                                        <!-- La URL del documento completo se mostrará aquí -->
+                                    </td>
+                                    <td id="deleteArchivo58">
 
-                                        </td>
-                                    </tr>
+                                    </td>
+                                </tr>
 
-                                    <!-- Segundo bloque para Ajuste de grado -->
-                                    <tr id="documento-row-134-2">
-                                        <td>
-                                            <span>Ajuste de grado</span>
-                                            <input hidden readonly value="Ajuste de grado" type="text"
-                                                class="form-control form-control-sm" id="tipo_analisis_134}-2"
-                                                name="tipo_analisis[]">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control form-control-sm"
-                                                id="folio_fq_ajuste_134" name="folio_fq_ajuste" autocomplete="off"
-                                                value="{{ $documento->folio_fq_ajuste ?? '' }}">
-                                        </td>
-                                        <td>
-                                            <input class="form-control form-control-sm" type="file"
-                                                id="file_ajuste_134" name="documentos[2][url]">
-                                            <input value="134" class="form-control" type="hidden"
-                                                name="documentos[2][id_documento]">
-                                            <input value="Fisicoquímicos de ajuste de grado" class="form-control"
-                                                type="hidden" name="documentos[2][nombre_documento]">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2" id="archivo_url_display_ajuste_134">
-                                            <!-- La URL del documento de ajuste se mostrará aquí -->
-                                        </td>
-                                        <td id="deleteArchivo134">
+                                <!-- Segundo bloque para Ajuste de grado -->
+                                <tr id="documento-row-134-2">
+                                    <td>
+                                        <span>Ajuste de grado</span>
+                                        <input hidden readonly value="Ajuste de grado" type="text"
+                                            class="form-control form-control-sm" id="tipo_analisis_134}-2"
+                                            name="tipo_analisis[]">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm"
+                                            id="folio_fq_ajuste_134" name="folio_fq_ajuste" autocomplete="off"
+                                            value="{{ $documento->folio_fq_ajuste ?? '' }}">
+                                    </td>
+                                    <td>
+                                        <input class="form-control form-control-sm" type="file"
+                                            id="file_ajuste_134" name="documentos[2][url]">
+                                        <input value="134" class="form-control" type="hidden"
+                                            name="documentos[2][id_documento]">
+                                        <input value="Fisicoquímicos de ajuste de grado" class="form-control"
+                                            type="hidden" name="documentos[2][nombre_documento]">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" id="archivo_url_display_ajuste_134">
+                                        <!-- La URL del documento de ajuste se mostrará aquí -->
+                                    </td>
+                                    <td id="deleteArchivo134">
 
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
 
                     <div class="d-flex justify-content-center mt-3">
-                      <button disabled class="btn btn-primary d-none me-2" type="button" id="btnSpinnerEdit">
+                        <button disabled class="btn btn-primary d-none me-2" type="button" id="btnSpinnerEdit">
                             <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
                             Actualizando...
                         </button>
-                        <button type="submit" class="btn btn-primary me-2" id="btnEdit"><i class="ri-pencil-fill me-1"></i> Editar</button>
-                        <button type="reset" class="btn btn-danger"
-                            data-bs-dismiss="modal"><i class="ri-close-line me-1"></i>Cancelar</button>
+                        <button type="submit" class="btn btn-primary me-2" id="btnEdit"><i
+                                class="ri-pencil-fill me-1"></i> Editar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"><i
+                                class="ri-close-line me-1"></i>Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -388,6 +404,19 @@
 </div>
 
 <script>
+      function calcularVolumenTotalCheloE() {
+        let volumenE = parseFloat(document.getElementById("edit_volumen").value) || 0;
+        let aguaEntradaE = parseFloat(document.getElementById("edit_agua_entrada").value) || 0;
+
+        let totalE = volumenE + aguaEntradaE;
+
+        document.getElementById("edit_volumen_total").value = totalE.toFixed(2);
+    }
+
+    document.getElementById("edit_volumen").addEventListener("input", calcularVolumenTotalCheloE);
+    document.getElementById("edit_agua_entrada").addEventListener("input", calcularVolumenTotalCheloE);
+
+
     function obtenerGuias1() {
         var empresa = $("#edit_id_empresa").val();
         // Verifica si el valor de empresa es válido
