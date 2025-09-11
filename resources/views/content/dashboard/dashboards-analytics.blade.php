@@ -44,6 +44,7 @@
 
 
 @section('content')
+
     <div class="row g-6">
         <!-- Gamification Card -->
         <!-- <div class="col-md-12 col-xxl-8">
