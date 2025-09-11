@@ -166,12 +166,7 @@ public function index(Request $request)
         ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
     // Aquí hacemos join con direcciones usando JSON_EXTRACT
     ->leftJoin('direcciones', DB::raw('JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, "$.direccion_destinatario"))'), '=', 'direcciones.id_direccion')
-        ->select('certificados_exportacion.*', 'empresa.razon_social')//especifica la columna obtenida
-        /*->where(function ($q) use ($search) {
-            $q->where('empresa.razon_social', 'LIKE', "%{$search}%")
-            ->orWhere('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
-            ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%");
-        })*/;
+        ->select('certificados_exportacion.*', 'empresa.razon_social');//especifica la columna obtenida
 
 
     // Filtro por empresa
