@@ -357,9 +357,9 @@
                 $folioInicial = str_pad($rango['inicial'] ?? '', 7, '0', STR_PAD_LEFT);
                 $folioFinal = str_pad($rango['final'] ?? '', 7, '0', STR_PAD_LEFT);
 
-                $enlaceInicial = '<a target="_blank" style="color: black; text-decoration: none;" href="/holograma/' . $num_clien_hol . '-' . $solic->tipo.$solic->marcas->folio . $folioInicial . '">' .
+                $enlaceInicial = '<a href="/holograma/' . $num_clien_hol . '-' . $solic->tipo.$solic->marcas->folio . $folioInicial . '" target="_blank" style="color: black; text-decoration: none;">' .
                     $no_cliente . '-' . $solic->tipo.$solic->marcas->folio . $folioInicial . '</a>';
-                $enlaceFinal = '<a target="_blank" style="color: black; text-decoration: none;" href="/holograma/' . $num_clien_hol . '-' . $solic->tipo.$solic->marcas->folio . $folioFinal . '">' .
+                $enlaceFinal = '<a href="/holograma/' . $num_clien_hol . '-' . $solic->tipo.$solic->marcas->folio . $folioFinal . '" target="_blank" style="color: black; text-decoration: none;">' .
                     $no_cliente . '-' . $solic->tipo.$solic->marcas->folio . $folioFinal  . '</a>';
 
                 $rangoTexto[] = $enlaceInicial . ' - ' . $enlaceFinal;
