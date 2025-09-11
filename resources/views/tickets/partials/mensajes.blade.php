@@ -91,6 +91,11 @@
                 <div id="alertEstatus" class="alert alert-success d-none" role="alert">
                     ¡El estatus ha sido actualizado!
                 </div>
+                <p>
+                <strong>Fecha de creación:</strong>
+                {{ \Carbon\Carbon::parse($ticket->created_at)->translatedFormat('d \d\e F \d\e Y \a \l\a\s H:i') }}
+              </p>
+
 
 
                 @if ($ticket->evidencias->count())

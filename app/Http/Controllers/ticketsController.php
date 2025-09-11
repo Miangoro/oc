@@ -76,7 +76,6 @@ class ticketsController extends Controller
     $estado = $request->input('estado');
     $prioridad = $request->input('prioridad');
 
-
     $search = $request->input('search.value');
     $limit = $request->input('length', 10);
     $start = $request->input('start', 0);

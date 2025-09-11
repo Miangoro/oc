@@ -45,6 +45,7 @@
             <label for="estado" class="form-label">Estado</label>
             <select id="estado" class="form-select select2">
                 <option value="">Todos</option>
+                <option value="Pendiente">Pendiente</option>
                 <option value="Abierto">Abierto</option>
                 <option value="Cerrado">Cerrado</option>
             </select>
