@@ -1506,9 +1506,12 @@ Route::post('/tickets/{ticket}/mensajes', [ticketsController::class, 'storeMensa
 Route::patch('/tickets/{ticket}/estatus', [ticketsController::class, 'updateEstatus'])
      ->name('tickets.updateEstatus')->middleware(['auth']);
 
-Route::get('/imagenes', [ImagenController::class, 'UserManagement'])->name('imagenes-carousel');
-Route::get('/imagenes-list', [ImagenController::class, 'index'])->middleware(['auth']);
+Route::controller(ImagenController::class)->middleware(['auth'])->group(function () {
+Route::get('/imagenes','UserManagement')->name('imagenes-carousel');
 // Subir nueva imagen
-Route::post('/imagenes-upload', [ImagenController::class, 'store'])->middleware(['auth'])->name('imagenes.upload');
+Route::post('/imagenes-upload',  'store')->middleware(['auth'])->name('imagenes.upload');
 // Eliminar imagen
-Route::delete('/imagenes-delete/{filename}', [ImagenController::class, 'destroy'])->middleware(['auth'])->name('imagenes.delete');
+Route::delete('/imagenes-delete/{filename}',  'destroy')->middleware(['auth'])->name('imagenes.delete');
+});
+
+Route::get('/imagenes-list', [ImagenController::class, 'index'])->middleware(['auth']);

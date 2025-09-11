@@ -71,8 +71,15 @@ $(function () {
         {
           targets: 3,
           render: function (data, type, full, meta) {
-            // Mostrar la imagen
-            return `<img src="${full.url}" alt="${full.nombre}" style="max-width:80px; max-height:50px;"/>`;
+            return `
+              <div class="card shadow-sm border-0" style="width: 130px;">
+                <img src="${full.url}"
+                    alt="${full.nombre}"
+                    class="card-img-top rounded img-preview"
+                    data-src="${full.url}"
+                    style="cursor: pointer; object-fit: cover; height: 70px;" />
+              </div>
+            `;
           }
         },
         {
@@ -170,6 +177,13 @@ $(function () {
       }
     });
   }
+
+  // Detectar clic en la imagen
+  $(document).on('click', '.img-preview', function () {
+    let src = $(this).data('src');
+    $('#previewImage').attr('src', src);
+    $('#imagePreviewModal').modal('show');
+  });
 
   $(function () {
     // Configuración de CSRF para Laravel
@@ -306,5 +320,6 @@ $(function () {
         }
       });
     });
+
   });
 });

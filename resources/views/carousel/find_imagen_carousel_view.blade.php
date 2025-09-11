@@ -93,6 +93,16 @@
             </div>
         </div>
 
+    <!-- Modal Bootstrap -->
+    <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-body text-center">
+            <img id="previewImage" src="" class="img-fluid rounded shadow">
+          </div>
+        </div>
+      </div>
+    </div>
 
 
 
