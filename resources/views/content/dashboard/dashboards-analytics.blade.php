@@ -199,12 +199,12 @@
                                 </div>
                                 <div class="carousel-inner">
                                     <div class="carousel-item active">
-                                        <img class="d-block w-100" src="{{ asset('assets/img/carousel/primera.jpg') }}"
+                                        <img class="d-block w-100" src="{{ asset('assets/img/carousel/1.jpg') }}"
                                             alt="First slide" />
 
                                     </div>
                                     <div class="carousel-item">
-                                        <img class="d-block w-100" src="{{ asset('assets/img/carousel/segunda.jpg') }}"
+                                        <img class="d-block w-100" src="{{ asset('assets/img/carousel/2.jpg') }}"
                                             alt="Second slide" />
                                     </div>
                                 </div>
