@@ -1099,19 +1099,19 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                             $old = json_decode($datos->certificado->old_hologramas, true);
                                         @endphp
                                         <td>
-                                            @if (!isset($old['folio1']))
+                                         
                                                 {{-- Mostramos rangoFolios solo si old no contiene folio1 --}}
-                                                @if (empty($rangoFolios))
+                                                @if (!empty($rangoFolios))
                                                     @foreach ($rangoFolios as $rango)
                                                         <div>{!! $rango !!}</div>
                                                     @endforeach
+                                               
+                                                    @else
+                                                    {{-- Mostramos los old_hologramas --}}
+                                                    @foreach ($old as $key => $folio)
+                                                        <div>{{ $folio }}</div>
+                                                    @endforeach
                                                 @endif
-                                            @else
-                                                {{-- Mostramos los old_hologramas --}}
-                                                @foreach ($old as $key => $folio)
-                                                    <div>{!! str_replace([',', ], ['<br>'], $folio) !!}</div>
-                                                @endforeach
-                                            @endif
                                         </td>
                                         @elseif($pregunta->filtro == 'etiqueta')
                                             <td>

@@ -323,6 +323,33 @@
         }
     </style>
 
+  
+
+{{-- Confetti --}}
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Lanzar confeti con colores patrios
+        confetti({
+            particleCount: 200,
+            spread: 200,
+            colors: ['#006847', '#ffffff', '#ce1126'], // verde, blanco y rojo
+            origin: { y: 0.6 }
+        });
+
+        // Repetir confeti cada cierto tiempo (opcional)
+        setInterval(() => {
+            confetti({
+                particleCount: 150,
+                spread: 160,
+                colors: ['#006847', '#ffffff', '#ce1126'],
+            });
+        }, 4000);
+    });
+</script>
+
     <div id="desktop-view" class="d-none">
         <div class="authentication-wrapper authentication-cover">
             <a href="{{ url('/') }}" class="auth-cover-brand d-flex align-items-center gap-2">
