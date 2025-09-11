@@ -1189,7 +1189,7 @@ $(function () {
 
                       tablaContenido += `
                           <tr>
-                              <td style="text-align:left;">${nombreDocumento}</td>
+                              <td style="text-align:left;">${nombreDocumento} ${doc.organismos ?? ''}</td>
                               <td>${doc.num_certificado ?? 'N/A'}</td>
                               <td>${fechaInicio}</td>
                               <td>${fechaVigencia}</td>

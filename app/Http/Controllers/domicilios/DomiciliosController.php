@@ -530,6 +530,124 @@ public function getDocumentosPorInstalacion(Request $request)
     ]);
 
     try {
+        $instalacion = instalaciones::with([
+            'documentos_certificados_instalaciones',
+            'certificados',
+            'empresa.empresaNumClientes',
+            'organismos' // relación con catalogo_organismos
+        ])->find($request->id_instalacion);
+
+        if (!$instalacion) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Instalación no encontrada.'
+            ], 404);
+        }
+
+        // Obtener número de cliente
+        $numeroCliente = $instalacion->empresa->empresaNumClientes
+            ->pluck('numero_cliente')
+            ->first(function ($numero) {
+                return !empty($numero);
+            });
+
+        $resultado = [];
+
+        if ($instalacion->certificacion === 'oc_cidam') {
+            // Caso CIDAM: emparejar documentos + certificados
+            $documentos = $instalacion->documentos_certificados_instalaciones;
+            $certificados = $instalacion->certificados;
+
+            foreach ($documentos as $index => $documento) {
+                $certificado = $certificados[$index] ?? null;
+
+                $estatus = null;
+                $estatusClase = null;
+                if ($certificado && $certificado->fecha_vigencia) {
+                    $hoy = Carbon::today();
+                    $fechaVigencia = Carbon::parse($certificado->fecha_vigencia);
+
+                    if ($fechaVigencia->lt($hoy)) {
+                        $estatus = 'Vencido';
+                        $estatusClase = 'rounded-pill bg-danger text-white';
+                    } else {
+                        $estatus = 'Vigente';
+                        $estatusClase = 'rounded-pill bg-success text-white';
+                    }
+                }
+
+                $resultado[] = [
+                    'tipo_certificado' => $documento->nombre_documento,
+                    'fecha_inicio' => $certificado->fecha_emision ?? null,
+                    'fecha_vigencia' => $certificado->fecha_vigencia ?? null,
+                    'estatus' => $estatus,
+                    'estatus_clase' => $estatusClase,
+                    'certificado' => $documento->url,
+                    'num_certificado' => $certificado->num_certificado ?? null,
+                    'organismos' => 'CIDAM',
+                ];
+            }
+        }else {
+            // Caso otro organismo
+            $docs = documentacion_url::where('id_relacion', $instalacion->id_instalacion)
+                ->whereIn('id_documento', [127,128,129,130,131]) // IDs de certificados, opcional
+                ->get();
+
+            foreach ($docs as $doc) {
+                $estatus = null;
+                $estatusClase = null;
+                if ($instalacion->fecha_vigencia) {
+                    $hoy = Carbon::today();
+                    $fechaVigencia = Carbon::parse($instalacion->fecha_vigencia);
+
+                    if ($fechaVigencia->lt($hoy)) {
+                        $estatus = 'Vencido';
+                        $estatusClase = 'rounded-pill bg-danger text-white';
+                    } else {
+                        $estatus = 'Vigente';
+                        $estatusClase = 'rounded-pill bg-success text-white';
+                    }
+                }
+
+                $resultado[] = [
+                    'tipo_certificado' => $doc->nombre_documento,
+                    'fecha_inicio' => $instalacion->fecha_emision,
+                    'fecha_vigencia' => $instalacion->fecha_vigencia,
+                    'estatus' => $estatus,
+                    'estatus_clase' => $estatusClase,
+                    'certificado' => $doc->url,
+                    'num_certificado' => $instalacion->folio ?? null,
+                    'organismos' => $instalacion->organismos->organismo ?? 'N/A',
+                ];
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'documentos' => $resultado,
+            'numero_cliente' => $numeroCliente ?? 'N/A',
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al obtener los documentos: ' . $e->getMessage(),
+        ], 500);
+    }
+}
+
+
+
+
+
+
+        ///este sirve para solo el organismo certificador cidam
+/* public function getDocumentosPorInstalacion(Request $request)
+{
+    $request->validate([
+        'id_instalacion' => 'required|exists:instalaciones,id_instalacion',
+    ]);
+
+    try {
         // Carga la instalación con sus documentos y certificados
         $instalacion = instalaciones::with(['documentos_certificados_instalaciones', 'certificados', 'empresa.empresaNumClientes'])
             ->find($request->id_instalacion);
@@ -592,7 +710,7 @@ public function getDocumentosPorInstalacion(Request $request)
             'message' => 'Error al obtener los documentos: ' . $e->getMessage(),
         ], 500);
     }
-}
+} */
 
 
 
