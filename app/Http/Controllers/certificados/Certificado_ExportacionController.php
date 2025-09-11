@@ -165,7 +165,7 @@ public function index(Request $request)
         ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
         ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
     // Aquí hacemos join con direcciones usando JSON_EXTRACT
-    ->leftJoin('direcciones', DB::raw('JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, "$.direccion_destinatario"))'), '=', 'direcciones.id_direccion')
+    /*->leftJoin('direcciones', DB::raw('JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, "$.direccion_destinatario"))'), '=', 'direcciones.id_direccion')*/
         ->select('certificados_exportacion.*', 'empresa.razon_social');//especifica la columna obtenida
 
 
@@ -205,10 +205,10 @@ public function index(Request $request)
             ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             //->orWhere('solicitudes.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
             //->orWhereRaw("solicitudes.caracteristicas COLLATE utf8mb4_unicode_ci LIKE ?", ["%{$search}%"])//aplica todo el JSON
-            ->orWhereRaw("LOWER( 
+            /*->orWhereRaw("LOWER( 
                 REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
                 JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, '$.\"no_pedido\"')),
-                'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') ) LIKE ?", ["%{$search}%"])
+                'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') ) LIKE ?", ["%{$search}%"])*/
 
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
             ->orWhere('direcciones.pais_destino', 'LIKE', "%{$search}%")
