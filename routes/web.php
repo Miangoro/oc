@@ -74,7 +74,7 @@ use App\Http\Controllers\pages\AccountSettingsConnections;
 use App\Http\Controllers\pages\Faq;
 use App\Http\Controllers\pages\Pricing as PagesPricing;
 use App\Http\Controllers\pages\MiscError;
-use App\Http\Controllers\pages\HologramasValidacion;
+use App\Http\Controllers\hologramas\HologramasValidacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

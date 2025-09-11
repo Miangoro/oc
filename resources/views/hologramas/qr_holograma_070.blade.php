@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Verificar Autenticidad de Holograma')
+@section('title', 'VALIDACIÓN DE HOLOGRAMA 070')
 
 
 @section('page-style')
@@ -8,33 +8,10 @@
     @vite(['resources/css/hologramas.css'])
 @endsection
 
-<style>
-        //estios para el pie
-    .panel-footer {
-        background: url('{{ asset('img_pdf/organismo_certificador_cidam2.png') }}')no-repeat 50% !important;
-    
-    }
-
-    .panel-footer {
-        background: url('{{ asset('img_pdf/organismo_certificador_cidam2.png') }}')no-repeat 50% !important;
-       
-    }
-
-    @media only screen and (max-width: 900px) {
-        .panel-footer {
-            background: url('{{ asset('img_pdf/organismo_certificador_cidam2.png') }}') no-repeat 50% !important;
-            background-size: 100% !important;
-            background-color: #e9e9e9 !important;
-    
-           
-        }
-    }
-</style>
-
 @section('content')
 
     <div class="nav_bar">
-        <div id="texto1">VALIDACIÓN DE HOLOGRAMAS</div>
+        <div id="texto1">VALIDACIÓN DE HOLOGRAMA 070</div>
         <div id="texto2">ORGANISMO CERTIFICADOR CIDAM</div>
     </div>
 
@@ -45,12 +22,14 @@
                     class="panel panel-default">
 
                     @if($ya_activado == true)
-                    <div id="trazabilidad" class="panel-heading">Trazabilidad</div>
+                    <div id="trazabilidad" class="panel-heading">FOLIO DE HOLOGRAMA: <br>{{ $folio }}</div>
+
+                    
+                    <!--<div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;" class="alert">
+                        <strong>FOLIO DE HOLOGRAMA: {{ $folio }}</strong>
+                    </div>-->
                    
 
-                    <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;" class="alert">
-                        <strong>FOLIO DE HOLOGRAMA: {{ $folio }}</strong>
-                    </div>
 
                     <div
                         style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white; font-size: 30px">

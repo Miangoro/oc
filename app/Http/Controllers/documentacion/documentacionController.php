@@ -215,7 +215,7 @@ class documentacionController extends Controller
         $predios = Predios::where('id_empresa', '=', $id_empresa)
      // Excluir los de tipo 1
     ->orderBy('created_at', 'desc') // Ordenar por los más recientes
-    ->take(10) // Limitar a 10 registros
+    ->take(30) // Limitar a 10 registros
     ->get();
 
 

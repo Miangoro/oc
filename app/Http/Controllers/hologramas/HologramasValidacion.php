@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\pages;
+namespace App\Http\Controllers\hologramas;
 
 use App\Http\Controllers\Controller;
 use App\Models\activarHologramasModelo;
@@ -77,7 +77,7 @@ class HologramasValidacion extends Controller
 
 
 
-    return view('content.pages.pages-hologramas-validacion', compact('pageConfigs', 'folio', 'cliente', 'marca', 'ya_activado', 'datosHolograma'));
+    return view('hologramas.qr_holograma_070', compact('pageConfigs', 'folio', 'cliente', 'marca', 'ya_activado', 'datosHolograma'));
   }
 
 
