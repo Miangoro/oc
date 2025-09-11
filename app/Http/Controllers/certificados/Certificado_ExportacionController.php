@@ -107,10 +107,6 @@ private function obtenerEmpresasVisibles($empresaId)
 public function index(Request $request)
 {
     //Permiso de empresa
-    /*$empresaId = null;
-    if (Auth::check() && Auth::user()->tipo == 3) {
-        $empresaId = Auth::user()->empresa?->id_empresa;
-    }*/
     $empresaId = null;
     $instalacionAuth = [];
     if (Auth::check() && Auth::user()->tipo == 3) {
@@ -168,19 +164,11 @@ public function index(Request $request)
         ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
         ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
         ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
-        ->select('certificados_exportacion.*', 'empresa.razon_social')//especifica la columna obtenida
-        /*->where(function ($q) use ($search) {
-            $q->where('empresa.razon_social', 'LIKE', "%{$search}%")
-            ->orWhere('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
-            ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%");
-        })*/;
-    /* if ($empresaId) {
-        $query->where('solicitudes.id_empresa', $empresaId);
-    } */
-    /*if ($empresaId) {
-        $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId); // 👈 Aquí
-        $query->whereIn('solicitudes.id_empresa', $empresasVisibles);
-    }*/
+    // Aquí hacemos join con direcciones usando JSON_EXTRACT
+    /*->leftJoin('direcciones', DB::raw('JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, "$.direccion_destinatario"))'), '=', 'direcciones.id_direccion')*/
+        ->select('certificados_exportacion.*', 'empresa.razon_social');//especifica la columna obtenida
+
+
     // Filtro por empresa
     if ($empresaId) {
         $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
@@ -197,10 +185,6 @@ public function index(Request $request)
 
     // Búsqueda Global
     if (!empty($search)) {//solo se aplica si hay búsqueda global
-        /*1)$query->where(function ($q) use ($search) {
-            $q->where('num_certificado', 'LIKE', "%{$search}%")
-              ->orWhere('id_certificado', 'LIKE', "%{$search}%");
-        });*/
         //Buscar lote envasado y granel
         $loteIds = DB::table('lotes_envasado')
             ->select('id_lote_envasado')
@@ -219,8 +203,15 @@ public function index(Request $request)
             ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
             ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
-            ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
+            //->orWhere('solicitudes.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
+            //->orWhereRaw("solicitudes.caracteristicas COLLATE utf8mb4_unicode_ci LIKE ?", ["%{$search}%"])//aplica todo el JSON
+            /*->orWhereRaw("LOWER( 
+                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, '$.\"no_pedido\"')),
+                'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') ) LIKE ?", ["%{$search}%"])*/
+
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhere('direcciones.pais_destino', 'LIKE', "%{$search}%")
             ->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
 
             // Buscar por cada id_lote_envasado dentro del JSON de caracteristicas
@@ -436,7 +427,8 @@ public function index(Request $request)
 
     return response()->json([
         'draw' => intval($request->input('draw')),
-        'recordsTotal' => intval($totalData),
+        //'recordsTotal' => intval($totalData),
+        'recordsTotal' => $empresaId ? intval($totalFiltered) : intval($totalData),//total oculto a clientes
         'recordsFiltered' => intval($totalFiltered),
         'code' => 200,
         'data' => $data,

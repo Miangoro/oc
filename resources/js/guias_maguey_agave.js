@@ -116,13 +116,13 @@ if (dt_user_table.length) {
           orderable: false,
           render: function (data, type, full, meta) {
           let acciones = '';
-            if (window.puedeEditarElUsuario) {
+            
               acciones += `<a data-id="${full['run_folio']}" data-bs-toggle="modal" data-bs-target="#verGuiasRegistardas" href="javascript:;" class="dropdown-item ver-registros"><i class="ri-id-card-line ri-20px text-primary"></i> Ver guías</a>`;
-            }
-
+            
+            if (window.puedeEditarElUsuario) {
       /*acciones += `<a data-id="${full['run_folio']}" data-bs-toggle="modal" data-bs-target="#ModalEditSolGuias" href="javascript:;" class="dropdown-item editSolGuias"><i class="ri-edit-box-line ri-20px text-info"></i> Editar solicitud de guía</a>`;*/
       acciones += `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias" href="javascript:;" class="dropdown-item edit-guia"> <i class="ri-edit-box-line ri-20px text-info"> </i> Llenar solicitud de guía</a>`;
-
+              }
       
             if (window.puedeEliminarElUsuario) {
               acciones += `<a data-id="${full['id_guia']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar solicitud de guía</a>`;
