@@ -553,6 +553,8 @@ class RevisionPersonalController extends Controller
              $preguntasQuery->where('id_pregunta', '<',851);
         }
 
+        $preguntas = $preguntasQuery->get();
+
         $respuestas_json = json_decode($datos->respuestas, true); // Convierte el campo JSON a array PHP
         $respuestas_revision = $respuestas_json['Revision '.$datos->numero_revision] ?? []; // O la clave correspondiente
 
