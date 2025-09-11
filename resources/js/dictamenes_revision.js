@@ -328,7 +328,7 @@ if (dt_user_table.length) {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de Certificado: ' + data['num_dictamen'];            }
+              return 'Detalles del Dictamen: ' + data['num_dictamen'];            }
           }),
           type: 'column',
           renderer: function (api, rowIdx, columns) {

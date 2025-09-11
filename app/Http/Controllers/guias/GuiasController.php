@@ -47,93 +47,93 @@ class GuiasController  extends Controller
         ]);
     }
 
-    public function index(Request $request)
-    {
-        //Permiso de empresa
-        $empresaId = null;
-        if (Auth::check() && Auth::user()->tipo == 3) {
-            $empresaId = Auth::user()->empresa?->id_empresa;
-        }
+public function index(Request $request)
+{
+    //Permiso de empresa
+    $empresaId = null;
+    if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaId = Auth::user()->empresa?->id_empresa;
+    }
 
-  $columns = [
-    1 => 'id_guia',
-    2 => 'razon_social',
-    3 => 'folio',
-    4 => 'run_folio',
-    5 => 'nombre_predio',
-    6 => 'numero_guias',
-    7 => 'numero_plantas',
-    8 => 'num_anterior',
-    9 => 'num_comercializadas',
-    10 => 'mermas_plantas',
-];
+    $columns = [
+        1 => 'id_guia',
+        2 => 'razon_social',
+        3 => 'folio',
+        4 => 'run_folio',
+        5 => 'numero_guias',
+        6 => 'numero_plantas',
+        7 => 'num_anterior',
+        8 => 'num_comercializadas',
+        9 => 'mermas_plantas',
+        10 => ''
+    ];
 
-$limit = $request->input('length');
-$start = $request->input('start');
-$orderColumnIndex = $request->input('order.0.column');
-$order = $columns[$orderColumnIndex] ?? 'id_guia';
-$dir = $request->input('order.0.dir');
-$searchValue = $request->input('search.value');
+    $limit = $request->input('length');
+    $start = $request->input('start');
+    $orderColumnIndex = $request->input('order.0.column');
+    $order = $columns[$orderColumnIndex] ?? 'id_guia';
+    $dir = $request->input('order.0.dir');
+    $searchValue = $request->input('search.value');
 
-// --------- Query base para contar total de folios únicos ---------
-$queryBase = Guias::select('run_folio')
-    ->when($empresaId, fn($q) => $q->where('id_empresa', $empresaId))
-    ->groupBy('run_folio');
+    // --------- Query base para contar total de folios únicos ---------
+    $queryBase = Guias::select('run_folio')
+        ->when($empresaId, fn($q) => $q->where('id_empresa', $empresaId))
+        ->groupBy('run_folio');
 
-$totalData = $queryBase->get()->count(); // total de folios únicos
+    $totalData = $queryBase->get()->count(); // total de folios únicos
 
-// --------- Query agrupada con agregados ---------
-$query = Guias::select([
-        'run_folio',
-        'empresa.id_empresa AS id_empresa',
-        DB::raw('MIN(guias.id_guia) as id_guia'),
-        DB::raw('MAX(guias.folio) as folio'),
-         DB::raw('MAX(predios.num_predio) as num_predio'),
-        DB::raw('MAX(predios.nombre_predio) as nombre_predio'),
-        DB::raw('MAX(empresa.razon_social) as razon_social'),
-        DB::raw('COUNT(guias.id_guia) as numero_guias'),
-        DB::raw('SUM(guias.numero_plantas) as numero_plantas'),
-        DB::raw('SUM(guias.num_anterior) as num_anterior'),
-        DB::raw('SUM(guias.num_comercializadas) as num_comercializadas'),
-        DB::raw('SUM(guias.mermas_plantas) as mermas_plantas')
-    ])
-    ->join('empresa', 'empresa.id_empresa', '=', 'guias.id_empresa')
-    ->leftJoin('predios', 'predios.id_predio', '=', 'guias.id_predio')
-    ->when($empresaId, fn($q) => $q->where('guias.id_empresa', $empresaId))
-    ->groupBy('run_folio');
+    // --------- Query agrupada con agregados ---------
+    $query = Guias::select([
+            'run_folio',
+            'empresa.id_empresa AS id_empresa',
+            DB::raw('MIN(guias.id_guia) as id_guia'),
+            DB::raw('MAX(guias.folio) as folio'),
+            DB::raw('MAX(predios.num_predio) as num_predio'),
+            DB::raw('MAX(predios.nombre_predio) as nombre_predio'),
+            DB::raw('MAX(empresa.razon_social) as razon_social'),
+            DB::raw('COUNT(guias.id_guia) as numero_guias'),
+            DB::raw('SUM(guias.numero_plantas) as numero_plantas'),
+            DB::raw('SUM(guias.num_anterior) as num_anterior'),
+            DB::raw('SUM(guias.num_comercializadas) as num_comercializadas'),
+            DB::raw('SUM(guias.mermas_plantas) as mermas_plantas')
+        ])
+        ->join('empresa', 'empresa.id_empresa', '=', 'guias.id_empresa')
+        ->leftJoin('predios', 'predios.id_predio', '=', 'guias.id_predio')
+        ->when($empresaId, fn($q) => $q->where('guias.id_empresa', $empresaId))
+        ->groupBy('run_folio');
 
-// --------- Filtros de búsqueda ---------
-if (!empty($searchValue)) {
-    $query->where(function ($q) use ($searchValue) {
-        $q->where('run_folio', 'LIKE', "%{$searchValue}%")
-          ->orWhere('guias.folio', 'LIKE', "%{$searchValue}%")
-          ->orWhere('empresa.razon_social', 'LIKE', "%{$searchValue}%")
-          ->orWhere('predios.nombre_predio', 'LIKE', "%{$searchValue}%");
-    });
 
-    $totalFiltered = $query->get()->count();
-} else {
-    $totalFiltered = $totalData;
-}
+    // --------- Filtros de búsqueda ---------
+    if (!empty($searchValue)) {
+        $query->where(function ($q) use ($searchValue) {
+            $q->where('run_folio', 'LIKE', "%{$searchValue}%")
+            //->orWhere('guias.folio', 'LIKE', "%{$searchValue}%")
+            ->orWhere('empresa.razon_social', 'LIKE', "%{$searchValue}%")
+            ->orWhere('predios.nombre_predio', 'LIKE', "%{$searchValue}%")
+            ->orWhere('predios.num_predio', 'LIKE', "%{$searchValue}%");
+        });
 
-// --------- Paginación y orden ---------
-$guias = $query->orderBy($order, $dir)
-    ->offset($start)
-    ->limit($limit)
-    ->get();
+        $totalFiltered = $query->get()->count();
+    } else {
+        $totalFiltered = $totalData;
+    }
+
+
+    // --------- Paginación y orden ---------
+    $guias = $query->orderBy($order, $dir)
+        ->offset($start)
+        ->limit($limit)
+        ->get();
+
 
 
         $data = [];
-
         if ($guias->isNotEmpty()) {
             $ids = $start;
-
-
-
             foreach ($guias as $user) {
                 $numero_cliente = empresaNumCliente::where('id_empresa', $user->id_empresa)
-    ->whereNotNull('numero_cliente')
-    ->value('numero_cliente');
+                    ->whereNotNull('numero_cliente')
+                    ->value('numero_cliente');
 
                 // Nombre y Número de empresa
                // $empresa = $user->empresa ?? null;
@@ -143,7 +143,6 @@ $guias = $query->orderBy($order, $dir)
                         $item->empresa_id === $empresa->id && !empty($item->numero_cliente)
                     )?->numero_cliente ?? 'No encontrado' : 'N/A';*/
 
-                
                 $documentoGuia = Documentacion_url::where('id_relacion', $user->id_guia)
                     ->where('id_documento', 71)
                     ->first();
@@ -153,7 +152,6 @@ $guias = $query->orderBy($order, $dir)
                     ->first();
 
                 $nestedData = [
-
                     'documento_guia' => $documentoGuia?->url
                         ? asset("files/{$numero_cliente}/{$documentoGuia->url}") : null,
 
@@ -167,7 +165,7 @@ $guias = $query->orderBy($order, $dir)
                     'run_folio' => $user->run_folio,
                     'razon_social' => $user->razon_social ?? 'No encontrado',
                     'numero_cliente' => $numero_cliente, // Asignar numero_cliente
-                    'id_predio' => $user->num_predio.' '.$user->nombre_predio,
+                    'id_predio' => '<b>'.$user->num_predio.'</b><br>'.$user->nombre_predio,
                     'numero_plantas' => $user->numero_plantas,
                     'num_anterior' => $user->num_anterior,
                     'num_comercializadas' => $user->num_comercializadas,
@@ -194,7 +192,7 @@ $guias = $query->orderBy($order, $dir)
             'code' => 200,
             'data' => $data,
         ]);
-    }
+}
 
 
 

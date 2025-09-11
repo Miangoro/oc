@@ -63,7 +63,7 @@
             <th>Predio</th>
             <th>Cliente</th>
             <th>Folio</th>
-            <th>Run Folio</th>
+            <th>Folio de solicitud</th>
             <th>Cantidad guias</th>
             <th>Plantas actuales</th>
             <th>No. anterior</th>

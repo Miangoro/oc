@@ -42,7 +42,7 @@ if (dt_user_table.length) {
         // columns according to JSON
         { data: '' },
         //{ data: 'id_guia' },
-        { data: 'id_predio' },
+        { data: 'id_predio'},
         {
           data: null, // Se usará null porque combinaremos varios valores
           render: function (data, type, row) {
@@ -63,6 +63,7 @@ if (dt_user_table.length) {
         { data: 'action' }
       ],
       columnDefs: [
+        { orderable: false, targets: [0,1,2,3,5,6,7,8,9] },//solo ordenamos RUN-FOLIO
         {
           // For Responsive
           targets: 0,
@@ -74,6 +75,7 @@ if (dt_user_table.length) {
             return '';
           }
         },
+
         /* {
           searchable: false,
           orderable: false,
