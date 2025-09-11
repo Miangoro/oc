@@ -1184,11 +1184,11 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                             $old = json_decode($datos->certificado->old_hologramas, true);
                                         @endphp
                                         <td>
-                                            @if (1==1) {{ $old }} fgfg
+                                            @if (1==1)  {{ $old['folio1'] }} 
                                                 {{-- Mostramos rangoFolios solo si old no contiene folio1 --}}
                                                 @if (empty($rangoFolios))
                                                     @foreach ($rangoFolios as $rango)
-                                                        <div>{!! $rango !!}</div> 
+                                                        <div>{!! $rango !!}</div>
                                                     @endforeach
                                                 @endif
                                             @else
