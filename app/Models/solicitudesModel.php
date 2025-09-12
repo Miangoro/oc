@@ -6,6 +6,7 @@ use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Support\Facades\Auth;
 
 class solicitudesModel extends Model
 {
@@ -23,8 +24,20 @@ class solicitudesModel extends Model
         'id_predio',
         'info_adicional',
         'caracteristicas',
-        'habilitado'
+        'habilitado',
+        'id_usuario_registro'
     ];
+
+    protected static function boot()//registro automatico de usuario
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (Auth::check()) {
+                $model->id_usuario_registro = Auth::id();
+            }
+        });
+    }
 
     // Método para obtener el nombre del registro que sirve para la trazabilidad
     public function getLogName2(): string
