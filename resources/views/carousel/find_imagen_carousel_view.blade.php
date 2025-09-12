@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Imagenes Carrusel')
+@section('title', 'Imágenes Carrusel')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
@@ -36,7 +36,7 @@
     <!-- Users List Table -->
     <div class="card">
         <div class="card-header pb-0">
-            <h3 class="card-title mb-0">Imagenes Carrusel</h3>
+            <h3 class="card-title mb-0">Imágenes Carrusel</h3>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-users table">
