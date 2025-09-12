@@ -114,7 +114,7 @@
                       </div>
                       <div class="col-md-6">
                           <div class="form-floating form-floating-outline mb-4">
-                              <input type="email" id="correo_edit" name="correo" class="form-control"
+                              <input type="text" id="correo_edit" name="correo" class="form-control"
                                   autocomplete="off" placeholder="Correo electrónico" required />
                               <label for="correo">Correo electrónico</label>
                           </div>
