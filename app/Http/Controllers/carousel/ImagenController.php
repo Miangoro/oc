@@ -5,7 +5,7 @@ namespace App\Http\Controllers\carousel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\carousel;
-
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\File;
 
 class ImagenController extends Controller
@@ -25,7 +25,7 @@ class ImagenController extends Controller
             'fake_id' => $index + 1,       // índice incremental
             'id_carousel' => $item->id_carousel,
             'nombre' => $item->nombre,
-            'url' => asset('assets/img/carousel/' . $item->url),
+            'url' => asset($item->url),
             'orden' => $item->orden,
         ];
     });
@@ -96,5 +96,42 @@ class ImagenController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Imagen eliminada correctamente']);
     }
+
+    public function edit($id)
+    {
+        $carousel = carousel::findOrFail($id);
+
+        return response()->json([
+            'id_carousel' => $carousel->id_carousel,
+            'nombre' => $carousel->nombre,
+            'url' => asset($carousel->url),
+            'orden' => $carousel->orden,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'orden'  => [
+                'required',
+                'numeric',
+                Rule::unique('imagenes_carousel', 'orden')->ignore($id, 'id_carousel'),
+            ],
+        ], [
+            'orden.unique' => 'El orden ya está asignado a otra imagen.',
+        ]);
+
+        $carousel = carousel::findOrFail($id);
+        $carousel->nombre = $request->nombre;
+        $carousel->orden  = $request->orden;
+        $carousel->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Imagen actualizada correctamente'
+        ]);
+    }
+
 
 }
