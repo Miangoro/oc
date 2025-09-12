@@ -246,6 +246,7 @@ use App\Http\Controllers\permisos\rolesController;
 //Tickets
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\ticketsController;
+use App\Http\Controllers\mensajes\MensajesController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -1518,3 +1519,13 @@ Route::controller(ImagenController::class)->middleware(['auth'])->group(function
 });
 
 Route::get('/imagenes-list', [ImagenController::class, 'index'])->middleware(['auth']);
+
+Route::controller(MensajesController::class)->middleware(['auth'])->group(function () {
+    Route::get('/mensajes-personalizados','UserManagement')->name('mensajes-dashboard');
+    Route::post('/mensajes-upload',  'store')->name('mensajes.upload');
+    Route::get('/mensajes/{id}/edit', 'edit');
+    Route::put('/mensajes/{id}', 'update');
+    Route::delete('/mensajes/{id}', 'destroy');
+});
+
+Route::get('/mensajes-list', [MensajesController::class, 'index'])->middleware(['auth']);
