@@ -164,7 +164,7 @@
     </tr>
 
     <tr>
-        <td colspan="2" style="padding:8px;">{{ $datos->solicitud->instalaciones->responsable ?? ''}}</td>
+        <td colspan="2" style="padding:8px;">{{-- {{ $datos->solicitud->instalaciones->responsable ?? ''}} --}}</td>
         <td style="border: none;"></td><!--ESPACIO-->
         <td colspan="2" style="padding:8px;">{{ $datos->inspector->name ?? ''}}</td>
     </tr>
