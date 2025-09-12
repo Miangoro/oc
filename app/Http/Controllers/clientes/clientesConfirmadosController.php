@@ -478,7 +478,7 @@ public function editar_cliente_confirmado(Request $request)
         'estado' => 'required|exists:estados,id',
         'cp' => 'required|string|max:5',
         'rfc' => 'required|string|max:13',
-        'correo' => 'required|email|max:255',
+        'correo' => 'required|string|max:255',
         'telefono' => 'nullable|string|max:15',
         'id_contacto' => 'required|exists:users,id',
         'normas' => 'required|array',

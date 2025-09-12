@@ -222,6 +222,18 @@ public function index(Request $request)
 
 
 
+///REGISTRAR
+public function registrar($id)
+{
+    $revision = RevisionDictamen::findOrFail($id);
+
+    $preguntas = preguntas_revision_dictamen::where('tipo_revisor', 1)->get();
+   
+    return view('dictamenes.add_revision', compact('revision', 'preguntas'));
+}
+
+
+
 
 
 

@@ -1057,6 +1057,8 @@ Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group
 Route::middleware(['auth'])->controller(RevisionUIController::class)->group(function () {
     Route::get('/revision/unidad_inspeccion', 'UserManagement')->name('revision-UI');
     Route::resource('/revision-ui-list', RevisionUIController::class);
+
+    Route::get('/revision/registrar/{id}', 'registrar');
 });
 
 
