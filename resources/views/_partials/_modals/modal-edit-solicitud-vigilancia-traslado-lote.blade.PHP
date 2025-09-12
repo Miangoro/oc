@@ -266,9 +266,7 @@
                             seleccionado = "";
                         }
                         contenido = '<option ' + seleccionado + ' value="' + response.lotes_granel[index]
-                            .id_lote_granel + '">' +
-                            response
-                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
+                            .id_lote_granel + '">' + response.lotes_granel[index].nombre_lote + ' | Vol: ' + response.lotes_granel[index].volumen + ' | %Alc. Vol.: ' + response.lotes_granel[index].cont_alc + '</option>' + contenido;
                     }
                     if (response.lotes_granel.length == 0) {
                         contenido = '<option value="">Sin lotes registrados</option>';
