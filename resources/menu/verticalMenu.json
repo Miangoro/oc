@@ -437,7 +437,7 @@
       "can": "Visualizar tickets"
     },
     {
-      "name": "Imagenes",
+      "name": "Imágenes",
       "url": "/imagenes",
       "icon": "menu-icon ri-gallery-fill",
       "slug": "imagenes-carousel",

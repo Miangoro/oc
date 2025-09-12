@@ -144,13 +144,13 @@
                                 </p>
 
                                 @if($maquiladora)
-                                   
+
                                     @foreach($maquiladora AS $maquiladoras)
 
                                     @foreach($maquiladoras->maquiladora AS $soymaquilador)
                                          Maquilador de {{ $soymaquilador->razon_social }} <br>
                                      @endforeach
-                                        
+
                                     @endforeach
                                 @endif
                             </div>
@@ -162,12 +162,12 @@
                                 @foreach($maquilador->maquiladores as $m)
                                     <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                                         <div class="card text-center shadow border-0 h-100" style="font-size: 0.9rem;">
-                                            
+
                                             <!-- Encabezado -->
                                             <div class="card-header text-white py-2" style="background-color:#053160; font-size: 0.85rem;">
                                                 {{ $m->razon_social }}
                                             </div>
-                                            
+
                                             <!-- Cuerpo -->
                                             <div class="card-body p-2">
                                                 <h6 class="card-title text-success" style="color:#30a86a !important; font-size: 0.85rem;">
@@ -177,7 +177,7 @@
                                                     <strong>Domicilio:</strong> {{ $m->domicilio_fiscal }}
                                                 </p>
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 @endforeach
@@ -185,9 +185,41 @@
                         </div>
                     </div>
 
+                    <div class="col-md-3 text-center d-none d-md-block">
+                        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                            <!-- Indicadores -->
+                            <div class="carousel-indicators">
+                                @foreach($imagenes as $index => $img)
+                                    <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="{{ $index }}"
+                                            class="{{ $index == 0 ? 'active' : '' }}"
+                                            aria-current="{{ $index == 0 ? 'true' : '' }}"
+                                            aria-label="Slide {{ $index + 1 }}"></button>
+                                @endforeach
+                            </div>
+
+                            <!-- Slides -->
+                            <div class="carousel-inner">
+                                @foreach($imagenes as $index => $img)
+                                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                        <img class="d-block w-100" src="{{ asset($img->url) }}" alt="{{ $img->nombre }}">
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <!-- Controles -->
+                            <a class="carousel-control-prev" href="#carouselExample" role="button" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExample" role="button" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </a>
+                        </div>
+                    </div>
 
                         <!-- Imagen decorativa -->
-                        <div class="col-md-3 text-center d-none d-md-block">
+                        {{-- <div class="col-md-3 text-center d-none d-md-block">
                             <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
                                 <div class="carousel-indicators">
                                     <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0"
@@ -219,7 +251,9 @@
                                     <span class="visually-hidden">Next</span>
                                 </a>
                             </div>
-                        </div>
+                        </div> --}}
+
+
                     </div>
                 </div>
             </div>

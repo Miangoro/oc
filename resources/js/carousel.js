@@ -97,12 +97,21 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             let acciones = '';
-            /*             if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id_clase']}" data-bs-toggle="offcanvas" data-bs-target="#editClase" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar catalago clase</a`;
-            } */
-            if (window.puedeEliminarElUsuario) {
-              acciones += `<a data-filename="${full['nombre']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar Imagen</a>`;
+
+            if (window.puedeEditarElUsuario) {
+              acciones += `<li><a data-id="${full['id_carousel']}" data-bs-toggle="offcanvas" data-bs-target="#editCarousel" href="javascript:;" class="dropdown-item edit-record text-info"><i class="ri-image-edit-fill ri-20px text-info"></i> Editar información</a></li>`;
             }
+            if (window.puedeEliminarElUsuario) {
+              acciones += `<li><a data-id="${full['id_carousel']}" class="dropdown-item delete-record text-danger waves-effect"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar imagen</a></li>`;
+            }
+
+
+/*             if (window.puedeEditarElUsuario) {
+              acciones += `<a data-id="${full['id_clase']}" data-bs-toggle="offcanvas" data-bs-target="#editClase" href="javascript:;" class="dropdown-item edit-record"><i class="ri-image-edit-fill ri-20px text-info"></i> Editar información</a`;
+            }
+            if (window.puedeEliminarElUsuario) {
+              acciones += `<a data-filename="${full['nombre']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar imagen</a>`;
+            } */
             // Si no hay acciones, no retornar el dropdown
             if (!acciones.trim()) {
               return `
@@ -192,6 +201,9 @@ $(function () {
     $('#imagePreviewModal').modal('show');
   });
 
+
+
+
   $(function () {
     // Configuración de CSRF para Laravel
     $.ajaxSetup({
@@ -280,7 +292,7 @@ $(function () {
 
     // ELIMINAR IMAGEN
     $(document).on('click', '.delete-record', function () {
-      var filename = $(this).data('filename');
+      const id = $(this).data('id'); // ✅ ahora tomamos el ID real
 
       Swal.fire({
         title: '¿Está seguro?',
@@ -298,21 +310,22 @@ $(function () {
         if (result.isConfirmed) {
           $.ajax({
             type: 'DELETE',
-            url: `/imagenes-delete/${filename}`,
-            success: function () {
-              dt_user.draw();
+            url: `/carousel/${id}`, // ✅ ruta con el ID correcto
+            success: function (response) {
+              $('.datatables-users').DataTable().ajax.reload();
+
               Swal.fire({
                 icon: 'success',
                 title: '¡Eliminado!',
-                text: 'Imagen eliminada correctamente',
+                text: response.message ?? 'Imagen eliminada correctamente',
                 customClass: { confirmButton: 'btn btn-success' }
               });
             },
-            error: function (error) {
+            error: function (xhr) {
               Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'No se pudo eliminar la imagen',
+                text: xhr.responseJSON?.message ?? 'No se pudo eliminar la imagen',
                 customClass: { confirmButton: 'btn btn-danger' }
               });
             }
@@ -328,5 +341,129 @@ $(function () {
       });
     });
 
+
+
+
+
   });
+
+
+
+// Detectar clic en el ícono de editar imagen
+$(document).on('click', '.edit-record', function () {
+  const id = $(this).data('id');
+
+  $.get(`/carousel/${id}/edit`, function (data) {
+    // Rellenar los campos del formulario
+    $('#edit_carousel_id').val(data.id_carousel);
+    $('#edit_carousel_nombre').val(data.nombre);
+    $('#preview_edit_image').attr('src', data.url);
+    $('#edit_carousel_orden').val(data.orden);
+
+    // ✅ Obtener instancia existente o crear una sola vez
+    const offcanvasEl = document.getElementById('editCarousel');
+    let offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+    if (!offcanvas) {
+      offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+    }
+    offcanvas.show();
+  }).fail(function () {
+    Swal.fire({
+      icon: 'error',
+      title: '¡Error!',
+      text: 'No se pudieron cargar los datos de la imagen.',
+      confirmButtonText: 'Cerrar',
+      customClass: { confirmButton: 'btn btn-danger' }
+    });
+  });
+});
+
+
+
+      $(function () {
+      // Configuración de CSRF para Laravel
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+
+      // Inicializar FormValidation para el formulario de edición de imagen
+      const form = document.getElementById('editImageForm');
+      const fv = FormValidation.formValidation(form, {
+        fields: {
+          nombre: {
+            validators: {
+              notEmpty: {
+                message: 'El nombre de la imagen es obligatorio.'
+              }
+            }
+          },
+          orden: {
+            validators: {
+              notEmpty: {
+                message: 'El orden es obligatorio.'
+              },
+              numeric: {
+                message: 'El orden debe ser un número.'
+              }
+            }
+          }
+        },
+        plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+            eleValidClass: '',
+            eleInvalidClass: 'is-invalid',
+            rowSelector: '.form-floating, .mb-3' // soporta ambos estilos
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+      }).on('core.form.valid', function () {
+        let id = $('#edit_carousel_id').val();
+        let formData = $(form).serialize();
+
+        $.ajax({
+          url: '/carousel/' + id,
+          type: 'PUT', // método correcto para actualizar
+          data: formData,
+          success: function (response) {
+            const offcanvasEl = document.getElementById('editCarousel');
+            const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+            if (offcanvas) {
+              offcanvas.hide();
+            }
+
+            $('#editImageForm')[0].reset();
+            $('.datatables-users').DataTable().ajax.reload();
+
+            Swal.fire({
+              icon: 'success',
+              title: '¡Actualizado!',
+              text: response.message ?? 'Imagen actualizada correctamente.',
+              confirmButtonText: 'OK',
+              customClass: { confirmButton: 'btn btn-success' }
+            });
+          },
+          error: function (xhr) {
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: xhr.responseJSON?.message ?? 'No se pudo actualizar la imagen.',
+              confirmButtonText: 'Cerrar',
+              customClass: { confirmButton: 'btn btn-danger' }
+            });
+          }
+        });
+      });
+    });
+
+/* offcanvasEl.addEventListener('hidden.bs.offcanvas', function () {
+  $('.offcanvas-backdrop').remove();
+  $('body').removeClass('offcanvas-backdrop');
+});
+ */
+
+//fin
 });

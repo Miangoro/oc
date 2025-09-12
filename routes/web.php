@@ -1509,11 +1509,14 @@ Route::patch('/tickets/{ticket}/estatus', [ticketsController::class, 'updateEsta
      ->name('tickets.updateEstatus')->middleware(['auth']);
 
 Route::controller(ImagenController::class)->middleware(['auth'])->group(function () {
-Route::get('/imagenes','UserManagement')->name('imagenes-carousel');
-// Subir nueva imagen
-Route::post('/imagenes-upload',  'store')->middleware(['auth'])->name('imagenes.upload');
-// Eliminar imagen
-Route::delete('/imagenes-delete/{filename}',  'destroy')->middleware(['auth'])->name('imagenes.delete');
+  Route::get('/imagenes','UserManagement')->name('imagenes-carousel');
+  // Subir nueva imagen
+  Route::post('/imagenes-upload',  'store')->middleware(['auth'])->name('imagenes.upload');
+  // Eliminar imagen
+  Route::get('/carousel/{id}/edit', 'edit');
+  Route::put('/carousel/{id}', 'update');
+  Route::delete('/carousel/{id}', 'destroy');
+
 });
 
 Route::get('/imagenes-list', [ImagenController::class, 'index'])->middleware(['auth']);

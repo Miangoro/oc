@@ -19,6 +19,7 @@ use App\Models\Revisor;
 use App\Models\solicitudesModel;
 use App\Models\solicitudTipo;
 use App\Models\User;
+use App\Models\carousel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -232,8 +233,8 @@ $pendientesRevisarCertificadosConsejo = Revisor::where('decision', 'Pendiente')
 
     $maquiladores = maquiladores_model::with('maquiladores')->where('id_maquiladora',$empresaId)->get();
     $maquiladora = maquiladores_model::with('maquiladora')->where('id_maquilador',$empresaId)->get();
-
-    return view('content.dashboard.dashboards-analytics', compact('actasSinActivarHologramas','maquiladora','maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado'));
+    $imagenes = carousel::orderBy('orden')->get();
+    return view('content.dashboard.dashboards-analytics', compact('actasSinActivarHologramas','maquiladora','maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado', 'imagenes'));
   }
 
 public function revisionesPorMes(Request $request)

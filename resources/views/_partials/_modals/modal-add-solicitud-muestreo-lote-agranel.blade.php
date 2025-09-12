@@ -176,7 +176,7 @@
                     if (response.lotes_granel && response.lotes_granel.length > 0) {
                         response.lotes_granel.forEach(function(lote) {
                             contenidogranel += '<option value="' + lote.id_lote_granel + '">' +
-                                lote.nombre_lote + '</option>';
+                                lote.nombre_lote + ' Vol: ' + lote.volumen + ' %Alc. Vol. ' + lote.cont_alc + '</option>'; 
                         });
                     } else {
                         contenidogranel = '<option value="">Sin lotes registrados</option>';
