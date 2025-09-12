@@ -215,19 +215,8 @@ if (dt_user_table.length) {
             // Revisar (Registrar revisión del personal)
             if (puedeRevisar) {
               acciones += `
-                <a class="dropdown-item waves-effect text-info cuest"
-                  href="/add_revision/${full['id_revision']}"
-                  data-id="${full['id_revision']}"
-                  data-revisor-id="${full['id_revisor']}"
-                  data-dictamen-id="${full['id_dictamen']}"
-                  data-num-certificado="${full['num_dictamen']}"
-                  data-num-dictamen="${full['num_dictamen']}"
-                  data-tipo-dictamen="${full['tipo_dictamen']}"
-                  data-fecha-vigencia="${full['fecha_vigencia']}"
-                  data-fecha-vencimiento="${full['fecha_vigencia']}"
-                  data-tipo="${full['tipo_dictamen']}"
-                  data-tipo_revision="${full['tipo_revision']}"
-                  data-bs-target="#fullscreenModal">
+                <a class="dropdown-item waves-effect text-info"
+                  href="/revision/registrar/${full['id_revision']}" >
                   <i class="ri-eye-fill ri-20px text-info"></i> Revisar
                 </a>`;
             }

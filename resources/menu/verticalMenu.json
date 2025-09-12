@@ -306,14 +306,15 @@
           "name": "Consejo",
           "slug": "revision-consejo",
           "can": "Visualizar revisión del consejo"
-        },
-        {
-          "url": "/revision/unidad_inspeccion",
-          "name": "UI",
-          "slug": "revision-UI",
-          "can": "Visualizar revisión UI"
         }
       ]
+    },
+    {
+      "name": "Revisión de dictamenes",
+      "url": "/revision/unidad_inspeccion",
+      "icon": "menu-icon ri-file-chart-fill",
+      "slug": "revision-UI",
+      "can": "Visualizar revisión UI"
     },
     {
       "name": "Bitácoras",
