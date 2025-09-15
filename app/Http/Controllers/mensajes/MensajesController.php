@@ -72,6 +72,13 @@ public function UserManagement()
 
             $users = mensajes_dashboard::where('id', 'LIKE', "%{$search}%")
                 ->orWhere('mensaje', 'LIKE', "%{$search}%")
+                ->orWhere('titulo', 'LIKE', "%{$search}%")
+                ->orWhereHas('usuarioDestino', function ($sub) use ($search) {
+                          $sub->where('name', 'LIKE', "%{$search}%");
+                      })
+                      ->orWhereHas('usuarioRegistro', function ($sub) use ($search) {
+                          $sub->where('name', 'LIKE', "%{$search}%");
+                      })
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
@@ -79,6 +86,13 @@ public function UserManagement()
 
             $totalFiltered = mensajes_dashboard::where('id', 'LIKE', "%{$search}%")
                 ->orWhere('mensaje', 'LIKE', "%{$search}%")
+                ->orWhere('titulo', 'LIKE', "%{$search}%")
+                ->orWhereHas('usuarioDestino', function ($sub) use ($search) {
+                          $sub->where('name', 'LIKE', "%{$search}%");
+                      })
+                      ->orWhereHas('usuarioRegistro', function ($sub) use ($search) {
+                          $sub->where('name', 'LIKE', "%{$search}%");
+                      })
                 ->count();
         }
 
