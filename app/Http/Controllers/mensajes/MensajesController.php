@@ -184,7 +184,7 @@ public function update(Request $request, $id)
     $mensaje->mensaje            = $request->mensaje;
     $mensaje->tipo               = $request->tipo;
     $mensaje->activo             = $request->has('activo') && $request->activo ? 1 : 0;
-    $mensaje->orden              = $request->orden ?: null;
+    $mensaje->orden              = $request->orden;
     $mensaje->id_usuario_registro = Auth::id();
     $mensaje->save();
 

@@ -257,6 +257,12 @@ $(function () {
     initializeSelect2($(this).find('.select2'));
   });
 
+      // Cuando se abre un offcanvas
+    $(document).on('show.bs.offcanvas', function () {
+      // Cierra cualquier modal que DataTables haya abierto
+      $('.dtr-bs-modal').modal('hide');
+    });
+
   $(document).ready(function () {
       // Mapa completo de colores (como los badges de Bootstrap)
       const colorMap = {
