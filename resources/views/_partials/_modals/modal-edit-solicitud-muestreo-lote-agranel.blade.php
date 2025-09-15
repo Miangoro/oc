@@ -193,7 +193,7 @@
                 success: function(response) {
                     var contenido = "";
                     for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' + response.lotes_granel[index].nombre_lote + ' | Vol: ' + response.lotes_granel[index].volumen + ' | %Alc. Vol.: ' + response.lotes_granel[index].cont_alc + '</option>' + contenido;
+                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' + response.lotes_granel[index].nombre_lote + ' | Vol: ' + response.lotes_granel[index].volumen_con_agua + ' | %Alc. Vol.: ' + response.lotes_granel[index].cont_alc + '</option>' + contenido;
                     }
                     if (response.lotes_granel.length == 0) {
                         contenido = '<option value="">Sin lotes registrados</option>';

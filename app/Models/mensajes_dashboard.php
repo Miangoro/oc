@@ -13,7 +13,10 @@ class mensajes_dashboard extends Model
 
     protected $fillable = [
         'id_usuario_destino',
+        'titulo',
+        'tipo_titulo',
         'mensaje',
+        'tipo',
         'activo',
         'orden',
         'id_usuario_registro'
@@ -21,4 +24,14 @@ class mensajes_dashboard extends Model
     ];
        public $timestamps = false;
 
+    // Relación con User (usuario destino)
+        public function usuarioDestino()
+    {
+        return $this->belongsTo(User::class, 'id_usuario_destino');
+    }
+        // Relación con User (usuario registro)
+        public function usuarioRegistro()
+    {
+        return $this->belongsTo(User::class, 'id_usuario_registro');
+    }
 }

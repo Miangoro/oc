@@ -7,18 +7,29 @@ $(function () {
   // Si tiene permiso, agregas el botón
   if (puedeAgregarElUsuario) {
     buttons.push({
-      text: '<i class="ri-image-add-fill ri-20px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar Imagen</span>',
+      text: '<i class="ri-chat-new-line ri-20px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar Mensaje</span>',
       className: 'add-new btn btn-primary waves-effect waves-light',
       attr: {
         'data-bs-toggle': 'offcanvas',
-        'data-bs-target': '#offcanvasAddUser'
+        'data-bs-target': '#offcanvasAddMensaje'
       }
     });
   }
 
+  const colorMaper = {
+    'Normal': '',          // vacío = color por defecto
+    'primary': '#2EAC6B',
+    'secondary': '#6D788D',
+    'success': '#72E128',
+    'danger': '#FF4D49',
+    'warning': '#FDB528',
+    'info': '#26C6F9',
+    'dark': '#312D4B'
+};
+
   // Variable declaration for table
   var dt_user_table = $('.datatables-users');
-
+  $('.select2').select2();
   // ajax setup
   $.ajaxSetup({
     headers: {
@@ -36,12 +47,17 @@ $(function () {
         type: 'GET'
       },
       columns: [
-        { data: '' },        // 0 → responsive
-        { data: 'fake_id' }, // 1 → ID real en BD
-        { data: 'nombre' },  // 2
-        { data: 'url' },     // 3
-        { data: 'orden' },   // 4
-        { data: null }       // 5 → acciones
+        { data: '' /* null, orderable: false, searchable: false  */ }, // checkbox o expand
+        { data: 'fake_id' }, // 1 id o consecutivo
+        { data: 'usuario_registro' }, //2
+        { data: 'usuario_destino' },  //3 nombre del usuario destino
+        { data: 'titulo' },  //4 nuevo  titulo
+        { data: 'tipo_titulo' },  //5 nuevo tipo de titulo
+        { data: 'mensaje' },  // 6 mensaje
+        { data: 'tipo' }, //7 tipo de texto
+        { data: 'orden' },  //8 orden
+        { data: 'estatus' }, //9 estatus
+        { data: 'acciones' } //10 botones de acción
       ],
       columnDefs: [
         {
@@ -58,7 +74,6 @@ $(function () {
         {
           targets: 1,
           searchable: false,
-          orderable: false,
           render: function (data, type, full, meta) {
             return `<span>${full.fake_id}</span>`;
           }
@@ -66,32 +81,59 @@ $(function () {
         {
           targets: 2,
           render: function (data, type, full, meta) {
-            return `<span>${full.nombre}</span>`;
+            return `<span>${full.usuario_registro}</span>`;
           }
         },
         {
           targets: 3,
           render: function (data, type, full, meta) {
-            return `
-              <div class="card shadow-sm border-0" style="width: 130px;">
-                <img src="${full.url}"
-                    alt="${full.nombre}"
-                    class="card-img-top rounded img-preview"
-                    data-src="${full.url}"
-                    style="cursor: pointer; object-fit: cover; height: 70px;" />
-              </div>
-            `;
+            return `<span>${full.usuario_destino}</span>`;
           }
         },
-       {
-          targets: 4,
-           render: function (data, type, full, meta) {
+        {
+            targets: 4, // Título
+            render: function (data, type, full, meta) {
+                const color = colorMaper[full.tipo_titulo] ?? '#000';
+                return `<span style="color: ${color}">${full.titulo ?? 'N/A'}</span>`;
+            }
+        },
+        {
+            targets: 5, // Tipo del título
+            render: function (data, type, full, meta) {
+                const color = colorMaper[full.tipo_titulo] ?? '#000';
+                return `<span style="color: ${color}">${full.tipo_titulo}</span>`;
+            }
+        },
+        {
+            targets: 6, // Mensaje
+            render: function (data, type, full, meta) {
+                const color = colorMaper[full.tipo] ?? '#000';
+                return `<span style="color: ${color}">${full.mensaje}</span>`;
+            }
+        },
+        {
+            targets: 7, // Tipo del mensaje
+            render: function (data, type, full, meta) {
+                const color = colorMaper[full.tipo] ?? '#000';
+                return `<span style="color: ${color}">${full.tipo}</span>`;
+            }
+        },
+        {
+          targets: 8,
+          render: function (data, type, full, meta) {
             return `<span>${full.orden}</span>`;
           }
         },
         {
+          targets: 9, // o la columna que quieras
+          render: function (data, type, full, meta) {
+            let color = full.estatus === 'Activo' ? 'info' : 'danger';
+            return `<span class="badge rounded-pill bg-${color}">${full.estatus}</span>`;
+          }
+        },
+        {
           // Actions botones de eliminar y actualizar(editar)
-          targets: 5,
+          targets: 10,
           title: 'Acciones',
           searchable: false,
           orderable: false,
@@ -99,19 +141,19 @@ $(function () {
             let acciones = '';
 
             if (window.puedeEditarElUsuario) {
-              acciones += `<li><a data-id="${full['id_carousel']}" data-bs-toggle="offcanvas" data-bs-target="#editCarousel" href="javascript:;" class="dropdown-item edit-record text-info"><i class="ri-image-edit-fill ri-20px text-info"></i> Editar información</a></li>`;
+              acciones += `<li><a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEditMensaje" href="javascript:;" class="dropdown-item edit-record text-info"><i class="ri-message-2-line ri-20px text-info"></i> Editar mensaje</a></li>`;
             }
             if (window.puedeEliminarElUsuario) {
-              acciones += `<li><a data-id="${full['id_carousel']}" class="dropdown-item delete-record text-danger waves-effect"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar imagen</a></li>`;
+              acciones += `<li><a data-id="${full['id']}" class="dropdown-item delete-record text-danger waves-effect"><i class="ri-chat-delete-line ri-20px text-danger"></i> Eliminar mensaje</a></li>`;
             }
 
 
-/*             if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id_clase']}" data-bs-toggle="offcanvas" data-bs-target="#editClase" href="javascript:;" class="dropdown-item edit-record"><i class="ri-image-edit-fill ri-20px text-info"></i> Editar información</a`;
-            }
-            if (window.puedeEliminarElUsuario) {
-              acciones += `<a data-filename="${full['nombre']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar imagen</a>`;
-            } */
+            /*             if (window.puedeEditarElUsuario) {
+                          acciones += `<a data-id="${full['id_clase']}" data-bs-toggle="offcanvas" data-bs-target="#editClase" href="javascript:;" class="dropdown-item edit-record"><i class="ri-image-edit-fill ri-20px text-info"></i> Editar información</a`;
+                        }
+                        if (window.puedeEliminarElUsuario) {
+                          acciones += `<a data-filename="${full['nombre']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar imagen</a>`;
+                        } */
             // Si no hay acciones, no retornar el dropdown
             if (!acciones.trim()) {
               return `
@@ -132,7 +174,7 @@ $(function () {
           }
         }
       ],
-      order: [[0, 'asc']],
+      order: [[1, 'asc']],
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' +
@@ -145,9 +187,13 @@ $(function () {
       lengthMenu: [10, 20, 50, 70, 100], //for length of menu
       language: {
         sLengthMenu: '_MENU_',
+        sZeroRecords: 'No se encontraron resultados',
         search: '',
         searchPlaceholder: 'Buscar',
+        infoEmpty: 'Mostrando 0 a 0 de 0 registros',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
+        infoFiltered: '(filtrado de _MAX_ registros en total)',
+        emptyTable: 'No hay datos disponibles en la tabla',
         paginate: {
           sFirst: 'Primero',
           sLast: 'Último',
@@ -164,7 +210,7 @@ $(function () {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de ' + data['clase'];
+              return 'Detalles del mensaje'/*  + data['clase'] */;
             }
           }),
           type: 'column',
@@ -172,18 +218,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -194,15 +240,48 @@ $(function () {
     });
   }
 
-  // Detectar clic en la imagen
-  $(document).on('click', '.img-preview', function () {
-    let src = $(this).data('src');
-    $('#previewImage').attr('src', src);
-    $('#imagePreviewModal').modal('show');
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      $this.select2({
+        dropdownParent: $this.closest('.offcanvas') // <-- importante
+      });
+    });
+  }
+
+  // Inicializar los select2 al cargar la página
+  initializeSelect2($('.select2'));
+
+  // También puedes inicializar cuando se muestre el offcanvas
+  $('#offcanvasAddMensaje').on('shown.bs.offcanvas', function () {
+    initializeSelect2($(this).find('.select2'));
   });
 
+  $(document).ready(function () {
+      // Mapa completo de colores (como los badges de Bootstrap)
+      const colorMap = {
+          'Normal': '#3B4056',    // gris oscuro
+          'primary': '#2EAC6B',
+          'secondary': '#6D788D',
+          'success': '#72E128',
+          'danger': '#FF4D49',
+          'warning': '#FDB528',
+          'info': '#26C6F9',
+          'dark': '#312D4B'
+      };
 
+      // Cambiar color al seleccionar tipo
+      $('#tipo, #edit_tipo').on('change', function () {
+          const val = $(this).val();
+          $(this).css('color', colorMap[val] || '#3B4056'); // default gris
+      });
 
+      // Cambiar color al seleccionar tipo_titulo
+      $('#tipo_titulo, #edit_tipo_titulo').on('change', function () {
+          const val = $(this).val();
+          $(this).css('color', colorMap[val] || '#3B4056'); // default gris
+      });
+  });
 
   $(function () {
     // Configuración de CSRF para Laravel
@@ -213,38 +292,45 @@ $(function () {
     });
 
     // SUBIR IMAGEN
-    const formUpload = document.getElementById('addNewImageForm'); // formulario offcanvas
+    const formUpload = document.getElementById('addNewMensajeForm'); // formulario offcanvas
     const fvUpload = FormValidation.formValidation(formUpload, {
       fields: {
-        clase: {
-          // aquí el campo 'clase' lo usaremos como nombre o título de la imagen opcional
+        id_usuario_destino: {
           validators: {
             notEmpty: {
-              message: 'Por favor selecciona una imagen.'
+              message: 'Por favor seleccione un usuario.'
             }
           }
         },
-        imagen: {
+        mensaje: {
           validators: {
             notEmpty: {
-              message: 'Debes seleccionar un archivo de imagen'
+              message: 'Por favor seleccione un mensaje.'
             },
-            file: {
-              extension: 'jpg,jpeg,png,gif',
-              type: 'image/jpeg,image/png,image/gif',
-              maxSize: 5 * 1024 * 1024, // 5 MB
-              message: 'Solo se permiten imágenes de máximo 5MB'
+          },
+          tipo: {
+            validators: {
+              notEmpty: {
+                message: 'Por favor seleccione un tipo.'
+              },
             }
           },
-          nombre_imagen: {
-            validators: {
-              stringLength: {
-                max: 100,
-                message: 'El nombre de la imagen no debe exceder 100 caracteres'
-              }
+        },
+        titulo: { // campo independiente
+          validators: {
+            maxLength: {
+              max: 50,
+              message: 'El título no debe exceder los 50 caracteres.'
             }
           }
-        }
+        },
+        tipo_titulo: { // campo independiente
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un tipo de título.'
+            },
+          }
+        },
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -257,25 +343,31 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
+      $('#btnAdd').addClass('d-none');
+      $('#loading').removeClass('d-none');
       // FormData para archivos
       var formData = new FormData(formUpload);
 
       $.ajax({
-        url: '/imagenes-upload',
+        url: '/mensajes-upload',
         type: 'POST',
         data: formData,
         processData: false,
         contentType: false,
         success: function (response) {
-          $('#offcanvasAddUser').offcanvas('hide');
-          $('#addNewImageForm')[0].reset();
+          $('#offcanvasAddMensaje').offcanvas('hide');
+          $('#addNewMensajeForm')[0].reset();
+          $('.select2').val(null).trigger('change'); // resetear select2
+          $('#tipo_titulo, #tipo').css('color', '#3B4056'); // resetear color a gris
           /* dt_user.draw();  */ // recargar DataTable
           $('.datatables-users').DataTable().ajax.reload();
+          $('#btnAdd').removeClass('d-none');
+          $('#loading').addClass('d-none');
 
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
-            text: 'Imagen subida correctamente',
+            text: 'Mensaje creado correctamente',
             customClass: { confirmButton: 'btn btn-success' }
           });
         },
@@ -283,9 +375,11 @@ $(function () {
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'No se pudo subir la imagen',
+            text: 'Error al guardar el mensaje',
             customClass: { confirmButton: 'btn btn-danger' }
           });
+          $('#btnAdd').removeClass('d-none');
+          $('#loading').addClass('d-none');
         }
       });
     });
@@ -310,14 +404,14 @@ $(function () {
         if (result.isConfirmed) {
           $.ajax({
             type: 'DELETE',
-            url: `/carousel/${id}`, // ✅ ruta con el ID correcto
+            url: `/mensajes/${id}`, // ✅ ruta con el ID correcto
             success: function (response) {
               $('.datatables-users').DataTable().ajax.reload();
 
               Swal.fire({
                 icon: 'success',
                 title: '¡Eliminado!',
-                text: response.message ?? 'Imagen eliminada correctamente',
+                text: response.message ?? 'Mensaje eliminado correctamente',
                 customClass: { confirmButton: 'btn btn-success' }
               });
             },
@@ -325,7 +419,7 @@ $(function () {
               Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: xhr.responseJSON?.message ?? 'No se pudo eliminar la imagen',
+                text: xhr.responseJSON?.message ?? 'No se pudo eliminar el mensaje',
                 customClass: { confirmButton: 'btn btn-danger' }
               });
             }
@@ -333,7 +427,7 @@ $(function () {
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire({
             title: 'Cancelado',
-            text: 'La eliminación de la imagen ha sido cancelada',
+            text: 'La eliminación del mensaje ha sido cancelada',
             icon: 'info',
             customClass: { confirmButton: 'btn btn-primary' }
           });
@@ -349,121 +443,163 @@ $(function () {
 
 
 
-// Detectar clic en el ícono de editar imagen
-$(document).on('click', '.edit-record', function () {
-  const id = $(this).data('id');
+  // Detectar clic en el ícono de editar imagen
+  $(document).on('click', '.edit-record', function () {
+    const id = $(this).data('id');
 
-  $.get(`/carousel/${id}/edit`, function (data) {
-    // Rellenar los campos del formulario
-    $('#edit_carousel_id').val(data.id_carousel);
-    $('#edit_carousel_nombre').val(data.nombre);
-    $('#preview_edit_image').attr('src', data.url);
-    $('#edit_carousel_orden').val(data.orden);
+    $.get(`/mensajes/${id}/edit`, function (data) {
+      // Rellenar los campos del formulario
+      $('#edit_mensaje_id').val(data.id);
+      $('#edit_id_usuario_destino').val(data.id_usuario_destino).trigger('change');
+      $('#edit_titulo').val(data.titulo);
+      $('#edit_tipo_titulo').val(data.tipo_titulo).trigger('change');
+      $('#edit_mensaje').val(data.mensaje);
+      $('#edit_tipo').val(data.tipo).trigger('change');
+      $('#edit_orden').val(data.orden);
+      // Activar o desactivar el switch según el valor de 'activo'
+      if (data.activo == 1) {
+        $('#edit_activo').prop('checked', true);
+      } else {
+        $('#edit_activo').prop('checked', false);
+      }
 
-    // ✅ Obtener instancia existente o crear una sola vez
-    const offcanvasEl = document.getElementById('editCarousel');
-    let offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
-    if (!offcanvas) {
-      offcanvas = new bootstrap.Offcanvas(offcanvasEl);
-    }
-    offcanvas.show();
-  }).fail(function () {
-    Swal.fire({
-      icon: 'error',
-      title: '¡Error!',
-      text: 'No se pudieron cargar los datos de la imagen.',
-      confirmButtonText: 'Cerrar',
-      customClass: { confirmButton: 'btn btn-danger' }
+      // ✅ Obtener instancia existente o crear una sola vez
+      const offcanvasEl = document.getElementById('offcanvasEditMensaje');
+      let offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+      if (!offcanvas) {
+        offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+      }
+      offcanvas.show();
+    }).fail(function () {
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'No se pudieron cargar los datos del mensaje.',
+        confirmButtonText: 'Cerrar',
+        customClass: { confirmButton: 'btn btn-danger' }
+      });
     });
   });
-});
 
 
 
-      $(function () {
-      // Configuración de CSRF para Laravel
-      $.ajaxSetup({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-      });
+  $(function () {
+    // Configuración de CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
 
-      // Inicializar FormValidation para el formulario de edición de imagen
-      const form = document.getElementById('editImageForm');
-      const fv = FormValidation.formValidation(form, {
-        fields: {
-          nombre: {
-            validators: {
-              notEmpty: {
-                message: 'El nombre de la imagen es obligatorio.'
-              }
-            }
-          },
-          orden: {
-            validators: {
-              notEmpty: {
-                message: 'El orden es obligatorio.'
-              },
-              numeric: {
-                message: 'El orden debe ser un número.'
-              }
+    // Inicializar FormValidation para el formulario de edición de imagen
+    const form = document.getElementById('editMensajeForm');
+    const fv = FormValidation.formValidation(form, {
+      fields: {
+        id_usuario_destino: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un usuario.'
             }
           }
         },
-        plugins: {
-          trigger: new FormValidation.plugins.Trigger(),
-          bootstrap5: new FormValidation.plugins.Bootstrap5({
-            eleValidClass: '',
-            eleInvalidClass: 'is-invalid',
-            rowSelector: '.form-floating, .mb-3' // soporta ambos estilos
-          }),
-          submitButton: new FormValidation.plugins.SubmitButton(),
-          autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-      }).on('core.form.valid', function () {
-        let id = $('#edit_carousel_id').val();
-        let formData = $(form).serialize();
-
-        $.ajax({
-          url: '/carousel/' + id,
-          type: 'PUT', // método correcto para actualizar
-          data: formData,
-          success: function (response) {
-            const offcanvasEl = document.getElementById('editCarousel');
-            const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
-            if (offcanvas) {
-              offcanvas.hide();
-            }
-
-            $('#editImageForm')[0].reset();
-            $('.datatables-users').DataTable().ajax.reload();
-
-            Swal.fire({
-              icon: 'success',
-              title: '¡Actualizado!',
-              text: response.message ?? 'Imagen actualizada correctamente.',
-              confirmButtonText: 'OK',
-              customClass: { confirmButton: 'btn btn-success' }
-            });
+        mensaje: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un mensaje.'
+            },
           },
-          error: function (xhr) {
-            Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: xhr.responseJSON?.message ?? 'No se pudo actualizar la imagen.',
-              confirmButtonText: 'Cerrar',
-              customClass: { confirmButton: 'btn btn-danger' }
-            });
+          tipo: {
+            validators: {
+              notEmpty: {
+                message: 'Por favor seleccione un tipo.'
+              },
+            }
           }
-        });
+        },
+        orden: {
+          validators: {
+            notEmpty: {
+              message: 'El orden es obligatorio.'
+            },
+            numeric: {
+              message: 'El orden debe ser un número.'
+            }
+          }
+        },
+        titulo: { // campo independiente
+          validators: {
+            maxLength: {
+              max: 50,
+              message: 'El título no debe exceder los 50 caracteres.'
+            }
+          }
+        },
+        tipo_titulo: { // campo independiente
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un tipo de título.'
+            },
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating, .mb-3' // soporta ambos estilos
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      let id = $('#edit_mensaje_id').val();
+      let formData = $(form).serialize();
+      $('#btnEdit').addClass('d-none');
+      $('#updating').removeClass('d-none');
+      $.ajax({
+        url: '/mensajes/' + id,
+        type: 'PUT', // método correcto para actualizar
+        data: formData,
+        success: function (response) {
+          const offcanvasEl = document.getElementById('offcanvasEditMensaje');
+          const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+          if (offcanvas) {
+            offcanvas.hide();
+          }
+
+          $('#editMensajeForm')[0].reset();
+          $('.datatables-users').DataTable().ajax.reload();
+          $('#btnEdit').removeClass('d-none');
+          $('#updating').addClass('d-none');
+          Swal.fire({
+            icon: 'success',
+            title: '¡Actualizado!',
+            text: response.message ?? 'Imagen actualizada correctamente.',
+            confirmButtonText: 'OK',
+            customClass: { confirmButton: 'btn btn-success' }
+          });
+        },
+        error: function (xhr) {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: xhr.responseJSON?.message ?? 'No se pudo actualizar la imagen.',
+            confirmButtonText: 'Cerrar',
+            customClass: { confirmButton: 'btn btn-danger' }
+          });
+          $('#btnEdit').removeClass('d-none');
+          $('#updating').addClass('d-none');
+        }
       });
     });
+  });
 
-/* offcanvasEl.addEventListener('hidden.bs.offcanvas', function () {
-  $('.offcanvas-backdrop').remove();
-  $('body').removeClass('offcanvas-backdrop');
-});
- */
+  /* offcanvasEl.addEventListener('hidden.bs.offcanvas', function () {
+    $('.offcanvas-backdrop').remove();
+    $('body').removeClass('offcanvas-backdrop');
+  });
+   */
 
-//fin
+  //fin
 });

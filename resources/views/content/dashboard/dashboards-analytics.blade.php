@@ -182,6 +182,25 @@
                                     </div>
                                 @endforeach
                             @endforeach
+                        <!-- Mensajes del dashboard -->
+                      @foreach($mensajes as $mensaje)
+                          @if($mensaje->activo == 1)
+                              @if($mensaje->id_usuario_destino == auth()->id() || is_null($mensaje->id_usuario_destino))
+                                  <div class="mb-2 py-1 px-2">
+                                      {{-- Título --}}
+                                      <h4 class="mb-1 {{ $mensaje->tipo_titulo != 'Normal' ? 'text-'.$mensaje->tipo_titulo : '' }}">
+                                          <strong>{{ $mensaje->titulo }}</strong>
+                                      </h4>
+
+                                      {{-- Mensaje --}}
+                                      <h5 class="mb-0 {{ $mensaje->tipo != 'Normal' ? 'text-'.$mensaje->tipo : '' }}">
+                                          {{ $mensaje->mensaje }}
+                                      </h5>
+                                  </div>
+                              @endif
+                          @endif
+                      @endforeach
+
                         </div>
                     </div>
 
