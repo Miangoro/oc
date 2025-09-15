@@ -175,8 +175,11 @@
                     // Iterar sobre los lotes a granel recibidos
                     if (response.lotes_granel && response.lotes_granel.length > 0) {
                         response.lotes_granel.forEach(function(lote) {
+                            let volumenMostrar = (lote.volumen_con_agua && lote.volumen_con_agua > 0)
+                            ? lote.volumen_con_agua
+                            : lote.volumen;
                             contenidogranel += '<option value="' + lote.id_lote_granel + '">' +
-                                lote.nombre_lote + ' Vol: ' + lote.volumen_con_agua + ' %Alc. Vol. ' + lote.cont_alc + '</option>';
+                                lote.nombre_lote + ' Vol: ' + volumenMostrar  + ' %Alc. Vol. ' + lote.cont_alc + '</option>';
                         });
                     } else {
                         contenidogranel = '<option value="">Sin lotes registrados</option>';
