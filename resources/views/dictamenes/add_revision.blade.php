@@ -139,7 +139,7 @@
 
 <!-- FORMULARIO -->
 <form id="formulario" method="POST">
-  <input type="hidden" id="id_revision" name="id_revision" value="">
+  <input type="hidden" id="id_revision" name="id_revision" value="{{ $revision->id_revision }}">
   <div class="row">
     <div class="col-md-12">
       <div class="card">
@@ -207,7 +207,7 @@
 
                   <!--OBSERVACIONES-->
                   <td>
-                    <textarea id="" name="" name="observaciones[{{ $index }}]" rows="1"  
+                    <textarea id="" name="observaciones[{{ $index }}]" rows="1"  
                         class="form-control" placeholder="Observaciones">
                     </textarea>
                   </td>

@@ -29,10 +29,12 @@ class RevisionDictamen extends Model
         'tipo_dictamen'
     ];
 
-    /*public function getLogName2(): string
+    public function getLogName2(): string
     {
         return 'Revisor'; // Devuelve el nombre que desees
-    }*/
+    }
+
+    
     public function user()
     {
         return $this->belongsTo(User::class, 'id_revisor', 'id');

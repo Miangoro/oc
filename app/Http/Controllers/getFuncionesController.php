@@ -167,7 +167,7 @@ class getFuncionesController extends Controller
         ]);
     }
 
-    public function getDictamenesEnvasado($id_empresa)
+    /*public function getDictamenesEnvasado($id_empresa)
     {
         $dictamenes = Dictamen_Envasado::with(['inspeccion.solicitud', 'lote_envasado'])
             ->whereHas('lote_envasado', function ($query) use ($id_empresa) {
@@ -190,7 +190,46 @@ class getFuncionesController extends Controller
         });
 
         return response()->json($formateados);
+    }*/
+public function getDictamenesEnvasado($id_empresa)
+{
+    if (!$id_empresa) {
+        return response()->json([]);
     }
+
+    // IDs de empresas visibles: propia + maquiladores
+    $idsEmpresas = [$id_empresa];
+    $maquiladores = maquiladores_model::where('id_maquiladora', $id_empresa)
+        ->pluck('id_maquilador')
+        ->toArray();
+
+    $idsEmpresas = array_unique(array_merge($idsEmpresas, $maquiladores));
+
+    // Obtener dictámenes
+    $dictamenes = Dictamen_Envasado::with(['inspeccion.solicitud', 'lote_envasado'])
+        ->whereHas('lote_envasado', function ($query) use ($idsEmpresas) {
+            $query->whereIn('id_empresa', $idsEmpresas);
+        })
+        ->orderBy('id_dictamen_envasado', 'desc')
+        ->get();
+
+    // Formatear resultado
+    $formateados = $dictamenes->map(function ($d) {
+        $solicitud = $d->inspeccion->solicitud ?? null;
+
+        return [
+            'id_dictamen_envasado' => $d->id_dictamen_envasado,
+            'num_dictamen' => $d->num_dictamen,
+            'folio' => $solicitud->folio ?? 'Sin folio',
+            'lote_nombre' => $d->lote_envasado->nombre ?? 'Sin nombre',
+            'id_instalacion' => $solicitud->id_instalacion ?? '',
+            'fecha_visita' => $solicitud->fecha_visita ?? '',
+        ];
+    });
+
+    return response()->json($formateados);
+}
+
 
     public function obtenerDatosInspeccion($idDictamen)
     {

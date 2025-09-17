@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 
 //FECHAS
 /* $(document).ready(function () {
@@ -9,7 +9,7 @@
       locale: "es",        // idioma a español
   });
 }); */
-$('.datepicker').datepicker({
+/*$('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     autoclose: true,
     todayHighlight: true,
@@ -260,7 +260,7 @@ if (dt_user_table.length) {
                   <i class="ri-delete-bin-7-line text-danger ri-20px"></i> Eliminar
                 </a>`;
             }
-            **/
+            *
 
             // Si no tiene ningún permiso
             if (!acciones.trim()) {
@@ -368,7 +368,6 @@ if (dt_user_table.length) {
       });
   }
 
-/*
 ///REGISTRAS RESPUESTAS
 $(function () {
     // Configuración de AJAX para enviar el token CSRF
@@ -439,15 +438,15 @@ $(function () {
         });
 
     });
-});*/
+});
 
 
 
-});//end-function
+});//end-function*/
 
 
 ////////////////////////////////////////
-/*'use strict';
+'use strict';
 
 $(function () {
 
@@ -631,7 +630,7 @@ $(function () {
             const puedeEditar    = window.puedeEditarElUsuario;
             /*const puedeHistorial = window.puedeVerHistorialElUsuario;
             const puedeAprobar   = window.puedeAprobarElUsuario;
-            const puedeEliminar  = window.puedeEliminarElUsuario;**
+            const puedeEliminar  = window.puedeEliminarElUsuario;*/
 
             let acciones = '';
 
@@ -639,7 +638,7 @@ $(function () {
             if (puedeRevisar) {
               acciones += `
                 <a class="dropdown-item waves-effect text-info cuest"
-                  href="/revision/registrar/${full['id_revision']}"
+                  href="/revision/ver/${full['id_revision']}"
                   data-id="${full['id_revision']}"
                   data-revisor-id="${full['id_revisor']}"
                   data-dictamen-id="${full['id_certificado']}"
@@ -692,7 +691,7 @@ $(function () {
                 <a data-id='${full['id_revision']}' class="dropdown-item waves-effect text-danger eliminar-revision">
                   <i class="ri-delete-bin-7-line text-danger ri-20px"></i> Eliminar
                 </a>`;
-            }**
+            }*/
 
             // Si no tiene ningún permiso
             if (!acciones.trim()) {
@@ -1338,7 +1337,7 @@ $(document).on('hidden.bs.modal', '#fullscreenModal', function () {
 
 //end
 });
-*/
+
 
 
 
@@ -1383,7 +1382,7 @@ $(function () {
 
         // Enviar la solicitud AJAX con todos los datos del formulario
         $.ajax({
-            url: '/registrar_revision',
+            url: '/revision/registrar',
             type: 'POST',
             data: formData,
             contentType: false,  // Importante para enviar los datos correctamente
@@ -1398,7 +1397,7 @@ $(function () {
                     }
                 }).then(() => {
                     // Redirigir a la ruta después de mostrar el mensaje de éxito
-                    window.location.href = '/revision/personal';
+                    window.location.href = '/revision/unidad_inspeccion';
                 });
             },
             error: function(xhr) {
@@ -1414,10 +1413,13 @@ $(function () {
         });
 
     });
-
+    
 });
 
-/*
+
+
+
+
 'use strict';
 
 $(function () {
@@ -1492,4 +1494,4 @@ $(function () {
         });
     }
 });
-*/
+
