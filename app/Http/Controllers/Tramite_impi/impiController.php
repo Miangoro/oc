@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 use App\Models\Impi;
 use App\Models\Impi_evento;
 use App\Models\empresa;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Str;
 
 
 class impiController extends Controller
@@ -42,9 +42,9 @@ class impiController extends Controller
             8 => 'observaciones',
             9 => 'estatus'
         ];
-        
+
     $search = [];
-    
+
     $totalData = Impi::count();
     $totalFiltered = $totalData;
 
@@ -70,7 +70,7 @@ class impiController extends Controller
         /*$impi = Impi::where('id_impi', 'LIKE', "%{$search}%")
           ->where("nombre", 1)
           ->orWhere('tramite', 'LIKE', "%{$search}%")
-  
+
           ->offset($start)
           ->limit($limit)
           ->orderBy($order, $dir)
@@ -110,7 +110,7 @@ class impiController extends Controller
             ->limit($limit)
             ->orderBy($order, $dir)
             ->get();
-  
+
         $totalFiltered = Impi::where('id_impi', 'LIKE', "%{$search}%")
           ->where("id_impi", 1)
           ->orWhere('tramite', 'LIKE', "%{$search}%")
@@ -193,9 +193,24 @@ public function store(Request $request)
 
     // Genera el folio
     $newFolio = 'TRÁMITE-' . str_pad($nextFolioNumber, 4, '0', STR_PAD_LEFT);*/
+        $year = date('y'); // Últimos dos dígitos del año
+
+        // Buscar el último registro de este año
+        $lastRecord = Impi::where('folio', 'like', "TRÁMITE-$year-%")
+            ->orderBy('id_impi', 'desc')
+            ->first();
+
+        if ($lastRecord) {
+            preg_match('/-(\d+)$/', $lastRecord->folio, $matches);
+            $nextNumber = (int) $matches[1] + 1;
+        } else {
+            $nextNumber = 1;
+        }
+
+        $newFolio = "TRÁMITE-$year-" . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
 
         $var = new Impi();
-        $var->folio = 0;
+        $var->folio = $newFolio;
         $var->fecha_solicitud = $request->fecha_solicitud;
         $var->id_empresa = $request->id_empresa;
         $var->tramite = $request->tramite;
@@ -203,6 +218,7 @@ public function store(Request $request)
         $var->pago = $request->pago;
         $var->observaciones = $request->observaciones;
         $var->estatus = $request->estatus;
+        $var->id_usuario_registro = Auth::id();  // o auth()->id()
         $var->save();//guardar en BD
 
         return response()->json(['success' => 'Registro agregado correctamente']);
@@ -252,7 +268,7 @@ public function edit($id_impi)
 }
 
 ///FUNCION PARA ACTUALIZAR
-public function update(Request $request, $id_impi) 
+public function update(Request $request, $id_impi)
 {
     $var2 = Impi::findOrFail($id_impi);
     //$var2->id_impi = $request->id_impi;
@@ -281,20 +297,20 @@ public function evento(Request $request)
     ]);
 
     $impi = Impi::findOrFail($validated['id_impi']);
-    $empresa = Empresa::with("empresaNumClientes")
+    /* $empresa = Empresa::with("empresaNumClientes")
                 ->where("id_empresa", $impi->id_empresa)
                 ->first();
-    
+
     $numeroCliente = $empresa->empresaNumClientes
                     ->pluck('numero_cliente')
                     ->first(function ($numero) {
                         return !empty($numero);
-                    });
+                    }); */
 
     $url_anexo = null;
     if ($request->hasFile('url_anexo')) {
         $nombreArchivo = $impi->folio.'_'. uniqid() .'.pdf';
-        $rutaCarpeta = "public/uploads/{$numeroCliente}/tramites_impi";
+        $rutaCarpeta = "public/tramites_impi";
         Storage::putFileAs($rutaCarpeta, $request->file('url_anexo'), $nombreArchivo);
 
         $url_anexo = "$nombreArchivo";
@@ -336,7 +352,73 @@ public function tracking($id)
 
 
 
+  public function show($id)
+    {
+        $evento = Impi_evento::findOrFail($id);
+        return response()->json($evento);
+    }
 
+public function update_event(Request $request)
+{
+    $request->validate([
+        'id_evento'   => 'required|exists:evento_impi,id_evento',
+        'evento'      => 'required|string|max:255',
+        'descripcion' => 'required|string',
+        'estatus'     => 'required|in:1,2,3,4', // Asegura que estatus sea válido
+        'url_anexo'   => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240', // 10MB
+    ]);
+
+    $evento = Impi_evento::findOrFail($request->id_evento);
+    $evento->evento = $request->evento;
+    $evento->descripcion = $request->descripcion;
+    $evento->estatus = $request->estatus;
+
+    // Actualizar archivo si se envió uno
+    if ($request->hasFile('url_anexo')) {
+        // Borrar archivo antiguo si existe
+        if ($evento->url_anexo && Storage::exists('public/tramites_impi/' . $evento->url_anexo)) {
+            Storage::delete('public/tramites_impi/' . $evento->url_anexo);
+        }
+
+        // Obtener extensión del archivo
+        $extension = $request->file('url_anexo')->getClientOriginalExtension();
+
+        // Crear nombre: TRÁMITE-[folio]-[numeracion]_[aleatorio].ext
+        $folio = str_replace('TRÁMITE-', '', $evento->impi->folio ?? '0000'); // si tienes relación con el trámite
+        $numeroAleatorio = Str::random(12);
+        $numeroSecuencia = str_pad($evento->id_evento, 4, '0', STR_PAD_LEFT); // opcional: secuencia interna
+        $filename = "TRÁMITE-{$folio}-{$numeroSecuencia}_{$numeroAleatorio}.{$extension}";
+
+        // Guardar archivo
+        $request->file('url_anexo')->storeAs('public/tramites_impi', $filename);
+        $evento->url_anexo = $filename;
+    }
+
+    $evento->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Evento actualizado correctamente',
+        'id_impi' => $evento->id_impi
+    ]);
+}
+
+public function destroy_event($id)
+{
+    $evento = Impi_evento::findOrFail($id);
+
+    // Borrar archivo si existe
+    if ($evento->url_anexo && Storage::exists('public/tramites_impi/'.$evento->url_anexo)) {
+        Storage::delete('public/tramites_impi/'.$evento->url_anexo);
+    }
+
+    $evento->delete();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Evento eliminado correctamente'
+    ]);
+}
 
 
 }//fin CONTROLLER

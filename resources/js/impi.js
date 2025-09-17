@@ -13,13 +13,13 @@ $(document).ready(function () {
 
  // Datatable (jquery)
  $(function () {
- 
+
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
     userView = baseUrl + 'app/user/view/account',
     offCanvasForm = $('#offcanvasAddUser');
- 
+
 
 var select2Elements = $('.select2');
   // Función para inicializar Select2 en elementos específicos
@@ -41,8 +41,8 @@ initializeSelect2(select2Elements);
        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
      }
   });
- 
- 
+
+
    //FUNCIONALIDAD DE LA VISTA datatable
    if (dt_user_table.length) {
      var dt_user = dt_user_table.DataTable({
@@ -81,7 +81,7 @@ initializeSelect2(select2Elements);
           targets: 3,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
-            var $razon_social = full['razon_social'] ?? 'N/A';
+            var $razon_social = full['id_empresa'] ?? 'N/A';
             return '<span class="user-email">' + $razon_social + '</span>';
           }
         },
@@ -95,19 +95,19 @@ initializeSelect2(select2Elements);
            if ($tramite == 1){
              return '<span style="color:red;">Registro de marca</span>';
            }
-           else if($tramite == 2){ 
+           else if($tramite == 2){
                  return '<span style="color:red;">Trámite USO DE LA DOM</span>';
            }
-           else if($tramite == 3){ 
+           else if($tramite == 3){
              return '<span style="color:red;">Inscripción de convenio de correponsabilidad</span>';
            }
-           else if($tramite == 4){ 
+           else if($tramite == 4){
              return '<span style="color:red;">Licenciamiento de la marca</span>';
            }
-           else if($tramite == 5){ 
+           else if($tramite == 5){
             return '<span style="color:red;">Cesión de derechos de marca</span>';
           }
-          else if($tramite == 6){ 
+          else if($tramite == 6){
             return '<span style="color:red;">Declaración de uso de marca</span>';
           }else{
             return ' ';
@@ -124,13 +124,13 @@ initializeSelect2(select2Elements);
             if ($name == 1){
               return '<span class="badge rounded-pill bg-dark">Pendiente</span>';
             }
-            else if($name == 2){ 
+            else if($name == 2){
                   return '<span class="badge rounded-pill bg-warning">Tramite</span>';
             }
-            else if($name == 3){ 
+            else if($name == 3){
               return '<span class="badge rounded-pill bg-primary">Tramite favorable</span>';
             }
-            else if($name == 4){ 
+            else if($name == 4){
               return '<span class="badge rounded-pill bg-danger">Tramite no favorable</span>';
             }else{
               return ' ';
@@ -146,8 +146,7 @@ initializeSelect2(select2Elements);
               '<span class="fw-bold">Correo:</span>';*/
               return '<span class="user-email">' + $contacto + '</span>';
            }
-         }, 
- 
+         },
          {
            // Actions
            targets: -1,
@@ -160,25 +159,22 @@ initializeSelect2(select2Elements);
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
 
-                   `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item editar"><i class="ri-edit-box-line ri-20px text-info"></i> Editar </a>` +
+                   `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" class="dropdown-item waves-effect editar text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar evento</a>` +
 
-                   `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#addEvento" href="javascript:;" class="dropdown-item add-event"><i class="ri-add-box-line  ri-25px"></i> Agregar evento </a> ` +
+                   `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#addEvento"  class="dropdown-item waves-effect add-event text-primary"><i class="ri-add-circle-line  ri-20px text-primary"></i> Agregar evento </a> ` +
 
-                   `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad" href="javascript:;"> 
-                   <i class="ri-history-line text-secondary"></i> Trazabilidad</a> ` +
-                   
-                   `<a data-id="${full['id_impi']}" class="dropdown-item waves-effect text-danger eliminar"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar </a>` +
-                  
-                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                 '<a href="' + userView + '" class="dropdown-item">View</a>' +
-                 '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+                   `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-warning trazabilidad" >
+                   <i class="ri-history-line ri-20px text-warning"></i> Trazabilidad</a> ` +
+
+                   `<a data-id="${full['id_impi']}" class="dropdown-item waves-effect text-danger eliminar"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar evento</a>` +
+
                  '</div>' +
                '</div>'
              );
            }
          }
        ],
- 
+
        order: [[2, 'desc']],
        dom:
          '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
@@ -202,7 +198,7 @@ initializeSelect2(select2Elements);
                  "sPrevious": "Anterior"
                }
        },
- 
+
        // Opciones Exportar Documentos
        buttons: [
          {
@@ -215,7 +211,7 @@ initializeSelect2(select2Elements);
            }
          }
        ],
- 
+
  ///PAGINA RESPONSIVA
        responsive: {
          details: {
@@ -245,15 +241,15 @@ initializeSelect2(select2Elements);
                      '</tr>'
                  : '';
              }).join('');
- 
+
              return data ? $('<table class="table"/><tbody />').append(data) : false;
            }
          }
        }
- 
-       
+
+
      });
-   } 
+   }
 
 
 
@@ -330,7 +326,7 @@ const fv = FormValidation.formValidation(formAdd, {
           console.log('Registrado:', response);
             $('#ModalAgregar').modal('hide');
             $('#FormAgregar')[0].reset();
-  
+
             dt_user.ajax.reload();
             // Mostrar alerta de éxito
             Swal.fire({
@@ -338,7 +334,7 @@ const fv = FormValidation.formValidation(formAdd, {
                 title: '¡Éxito!',
                 text: response.success,
                 customClass: {
-                    confirmButton: 'btn btn-success'
+                    confirmButton: 'btn btn-primary'
                 }
             });
         },
@@ -410,7 +406,7 @@ $(document).on('click', '.eliminar', function () {
                         title: '¡Eliminado!',
                         text: '¡El registro ha sido eliminado correctamente!',
                         customClass: {
-                            confirmButton: 'btn btn-success'
+                            confirmButton: 'btn btn-primary'
                         }
                     });
                 },
@@ -469,7 +465,7 @@ $(document).on('click', '.eliminar', function () {
             $('#edit_estatus').val(data.estatus).prop('selected', true).change();
             $('#edit_observaciones').val(data.observaciones);
             //$('#edit_categorias').val(data.categorias).trigger('change');
-            
+
             // Mostrar el modal de edición
             $('#ModalEditar').modal('show');
           },
@@ -549,7 +545,7 @@ $(document).on('click', '.eliminar', function () {
       //enviar el formulario cuando pase la validación
       var formData = new FormData(formEdit);
       var id_impi = $('#edit_id_impi').val();
-      
+
       $.ajax({
           url: '/actualizarImpi/'+ id_impi,
           type: 'POST',
@@ -557,7 +553,7 @@ $(document).on('click', '.eliminar', function () {
           contentType: false,
           processData: false,
           success: function (response) {
-            dt_user.ajax.reload(null, false); 
+            dt_user.ajax.reload(null, false);
             $('#ModalEditar').modal('hide');//ocultar modal
             Swal.fire({
               icon: 'success',
@@ -685,7 +681,7 @@ var formData = new FormData(NuevoEvento);
               title: '¡Éxito!',
               text: response.success,
               customClass: {
-                  confirmButton: 'btn btn-success'
+                  confirmButton: 'btn btn-primary'
               }
           });
       },
@@ -707,7 +703,7 @@ var formData = new FormData(NuevoEvento);
 
 
 ///VER TRAZABILIDAD
-$(document).on("click", ".trazabilidad", function () {
+/* $(document).on("click", ".trazabilidad", function () {
     let idImpi = $(this).data("id");
     $("#ListTracking").html(""); // limpia la lista
 
@@ -727,12 +723,12 @@ $(document).on("click", ".trazabilidad", function () {
                     <li class="timeline-item timeline-item-transparent">
                         <span class="timeline-point timeline-point-primary"></span>
                         <div class="mt-2 pb-3 border border-blue p-3 rounded">
-                            <h6 class="text-primary mb-1"><i class="ri-user-line me-1"></i> ${ev.evento}</h6>
+                            <h6 class="text-primary mb-1"><i class="ri-user-fill me-1"></i> ${ev.evento}</h6>
                             <p class="mb-2">${ev.descripcion}</p>
-                            ${ev.url_anexo 
-                                ? `<a href="/storage/uploads/${ev.url_anexo}" target="_blank" class="btn btn-sm btn-outline-primary">
+                            ${ev.url_anexo
+                                ? `<a href="/storage/tramites_impi/${ev.url_anexo}" target="_blank" class="btn btn-sm btn-outline-primary">
                                     <i class="ri-file-download-line me-1"></i> Ver anexo
-                                   </a>` 
+                                   </a>`
                                 : ""
                             }
                             <p class="text-muted small mt-2 mb-0">
@@ -745,9 +741,315 @@ $(document).on("click", ".trazabilidad", function () {
             });
         }
     });
+}); */
+/* $(document).on("click", ".trazabilidad", function () {
+    let idImpi = $(this).data("id");
+    $("#ListTracking").html(""); // limpia la lista
+
+    $.get(`/trazabilidadImpi/${idImpi}`, function (data) {
+        if (data.length === 0) {
+            $("#ListTracking").append(
+                `<li class="timeline-item timeline-item-transparent">
+                    <span class="timeline-point timeline-point-secondary"></span>
+                    <div class="mt-2 pb-3 border border-secondary p-3 rounded text-center">
+                        <h6 class="text-muted">Sin eventos registrados</h6>
+                    </div>
+                </li>`
+            );
+        } else {
+            data.forEach(ev => {
+                $("#ListTracking").append(`
+                  <li class="timeline-item timeline-item-transparent">
+                      <span class="timeline-point timeline-point-primary"></span>
+                      <div class="mt-2 pb-3 border border-blue p-3 rounded">
+
+                          <!-- Header con evento y botones -->
+                          <div class="d-flex justify-content-between align-items-center mb-2">
+                              <h6 class="text-primary mb-0">
+                                  <i class="ri-user-fill me-1"></i> ${ev.evento}
+                              </h6>
+                              <div class="flex-shrink-0">
+                                  <button class="btn btn-info btn-sm me-1 edit-event" data-id="${ev.id_evento}">
+                                      <i class="ri-edit-2-line"></i>
+                                  </button>
+                                  <button class="btn btn-danger btn-sm delete-event" data-id="${ev.id_evento}">
+                                      <i class="ri-delete-bin-line"></i>
+                                  </button>
+                              </div>
+                          </div>
+
+                          <!-- Descripción recortada -->
+                          <p class="mb-2" style="max-width:100%;" title="${ev.descripcion}">
+                              ${ev.descripcion}
+                          </p>
+
+                          <!-- Anexo -->
+                          ${ev.url_anexo
+                              ? `<a href="/storage/tramites_impi/${ev.url_anexo}" target="_blank" class="btn btn-sm btn-primary">
+                                  <i class="ri-file-download-line me-1"></i> Ver anexo
+                                </a>`
+                              : ""
+                          }
+
+                          <!-- Fecha -->
+                          <p class="text-muted small mt-2 mb-0">
+                              <i class="ri-time-line me-1"></i> ${new Date(ev.created_at).toLocaleString()}
+                          </p>
+                      </div>
+                  </li>
+                  <hr>
+              `);
+
+            });
+        }
+    });
+}); */
+
+function cargarTrazabilidad(idImpi) {
+    /* $("#ListTracking").html(""); */ // limpiar lista
+    $("#ListTracking li.timeline-item").remove();
+    $('hr').remove(); // Eliminar líneas horizontales previas
+    $("#cargando").show();
+    $.get(`/trazabilidadImpi/${idImpi}`, function (data) {
+    $("#cargando").hide();
+        if (data.length === 0) {
+            $("#ListTracking").append(`
+                <li class="timeline-item timeline-item-transparent">
+                    <span class="timeline-point timeline-point-secondary"></span>
+                    <div class="mt-2 pb-3 border border-secondary p-3 rounded text-center">
+                        <h6 class="text-muted">Sin eventos registrados</h6>
+                    </div>
+                </li>
+            `);
+        } else {
+            data.forEach(ev => {
+                $("#ListTracking").append(`
+                    <li class="timeline-item timeline-item-transparent">
+                        <span class="timeline-point timeline-point-primary"></span>
+                        <div class="mt-2 pb-3 border border-blue p-3 rounded">
+
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="text-primary mb-0">
+                                    <i class="ri-user-fill me-1"></i> ${ev.evento}
+                                </h6>
+                                <div class="flex-shrink-0">
+                                    <button class="btn btn-info btn-sm me-1 edit-event" data-id="${ev.id_evento}">
+                                        <i class="ri-edit-2-line"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-event" data-id="${ev.id_evento}">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <p class="mb-2" style="max-width:100%;" title="${ev.descripcion}">
+                                ${ev.descripcion}
+                            </p>
+
+                            ${ev.url_anexo
+                                ? `<a href="/storage/tramites_impi/${ev.url_anexo}" target="_blank" class="btn btn-sm btn-primary">
+                                    <i class="ri-file-download-line me-1"></i> Ver anexo
+                                  </a>`
+                                : ""
+                            }
+
+                            <p class="text-muted small mt-2 mb-0">
+                                <i class="ri-time-line me-1"></i> ${new Date(ev.created_at).toLocaleString()}
+                            </p>
+                        </div>
+                    </li>
+                    <hr>
+                `);
+            });
+        }
+    });
+}
+
+$(document).on("click", ".trazabilidad", function () {
+    let idImpi = $(this).data("id");
+    cargarTrazabilidad(idImpi);
+    $("#ModalTracking").modal("show");
+});
+
+/* $(document).on("click", ".edit-event", function () {
+    let idEvento = $(this).data("id");
+
+    // Limpia el formulario
+    $("#EditEventoForm")[0].reset();
+
+    // Petición AJAX para traer datos del evento
+    $.get(`/impi/evento/${idEvento}`, function (data) {
+        $('#ModalTracking').modal('hide'); // Cerrar modal de trazabilidad
+        // Rellenar inputs del modal
+        $("#EditEvento input[name='id']").val(data.id);
+        $("#EditEvento input[name='evento']").val(data.evento);
+        $("#EditEvento textarea[name='descripcion']").val(data.descripcion);
+        $('#url_anexo').html(data.url_anexo); // Limpiar el contenedor del anexo
+
+        // Abrir modal
+        $("#EditEvento").modal("show");
+    });
+}); */
+
+
+
+
+$(document).ready(function() {
+
+  // Inicializar validación
+  const fvEdit = FormValidation.formValidation(
+    document.getElementById('EditEventoForm'),
+    {
+      fields: {
+        evento: {
+          validators: {
+            notEmpty: {
+              message: 'El evento es obligatorio.'
+            }
+          }
+        },
+        descripcion: {
+          validators: {
+            notEmpty: {
+              message: 'La descripción es obligatoria.'
+            },
+            stringLength: {
+              max: 500,
+              message: 'La descripción no puede exceder 500 caracteres.'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          rowSelector: '.form-floating',
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }
+  );
+
+fvEdit.on('core.form.valid', function() {
+    var form = document.getElementById('EditEventoForm');
+    var formData = new FormData(form); // <-- incluye archivos
+
+    $.ajax({
+        url: "/impi/evento/update",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            $("#EditEvento").modal("hide");
+            dt_user.ajax.reload();
+            Swal.fire({
+              icon: "success",
+              title: "¡Éxito!",
+              text: response.message,
+              customClass: { confirmButton: 'btn btn-primary' }
+            });
+            /* $("#ModalTracking").modal('show'); // Reabrir modal de trazabilidad */
+            // Recargar la trazabilidad actualizada
+            cargarTrazabilidad(response.id_impi);
+            $("#ModalTracking").modal("show");
+        },
+        error: function(xhr) {
+            Swal.fire({
+              icon: "error",
+              title: "¡Error!",
+              text: xhr.responseJSON?.message || "No se pudo actualizar el evento",
+              customClass: { confirmButton: 'btn btn-danger' }
+            });
+        }
+    });
 });
 
 
+
+  // Abrir modal con datos del evento
+  $(document).on("click", ".edit-event", function () {
+    let idEvento = $(this).data("id");
+
+    $("#EditEventoForm")[0].reset();   // limpiar formulario
+    $("#url_anexo").html('');          // limpiar contenedor del anexo
+
+    $.get(`/impi/evento/${idEvento}`, function(data) {
+      $("#ModalTracking").modal('hide'); // cerrar modal de trazabilidad
+
+      // Rellenar formulario
+      $("#EditEventoForm input[name='id_evento']").val(data.id_evento);
+      $("#EditEventoForm input[name='evento']").val(data.evento);
+      $('#2edit_estatus').val(data.estatus).prop('selected', true).change();
+      $("#EditEventoForm textarea[name='descripcion']").val(data.descripcion);
+      // Mostrar enlace al anexo si existe
+        if (data.url_anexo) {
+            $("#url_anexo").html(`
+                <a href="/storage/tramites_impi/${data.url_anexo}" target="_blank" class="btn btn-sm btn-primary mt-2">
+                    <i class="ri-file-download-line me-1"></i> Ver anexo
+                </a>
+            `);
+        }
+
+      // Abrir modal de edición
+      $("#EditEvento").modal("show");
+    });
+  });
+
+});
+
+
+
+//delete event
+$(document).on("click", ".delete-event", function () {
+    let idEvento = $(this).data("id");
+
+    Swal.fire({
+        title: '¿Está seguro?',
+        text: 'No podrá revertir este evento',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+            confirmButton: 'btn btn-primary me-3',
+            cancelButton: 'btn btn-label-secondary'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/impi/evento/delete/${idEvento}`,
+                type: 'DELETE',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    dt_user.ajax.reload(); // refrescar DataTable o trazabilidad
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Eliminado!',
+                        text: response.message,
+                        customClass: { confirmButton: 'btn btn-primary' }
+                    });
+                    $("#ModalTracking").modal('hide'); // cerrar modal de trazabilidad
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: xhr.responseJSON?.message || 'No se pudo eliminar el evento',
+                        customClass: { confirmButton: 'btn btn-danger' }
+                    });
+                }
+            });
+        }
+    });
+
+});
 
 
 

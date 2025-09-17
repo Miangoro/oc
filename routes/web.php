@@ -1455,6 +1455,14 @@ Route::middleware(['auth'])->controller(impiController::class)->group(function (
     Route::post('crearEvento', 'evento')->name('crear-eventoIMPI');
     //Trazabilidad
     Route::get('/trazabilidadImpi/{id}', 'tracking')->name('trazabilidad de eventos');
+        // Obtener un evento por id (para precargar en el modal)
+    Route::get('/impi/evento/{id}',  'show')->name('impi.evento.show');
+
+    // Actualizar un evento
+    Route::post('/impi/evento/update', 'update_event')->name('impi.evento.update_event');
+
+    Route::delete('/impi/evento/delete/{id}', 'destroy_event')->name('impi.evento.delete');
+
 });
 
 //-------------------RESUMEN DE INFORMACION DEL CLIENTE-------------------

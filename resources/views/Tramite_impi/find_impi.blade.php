@@ -19,7 +19,12 @@
 @endsection
 
 <!-- Vendor Scripts -->
-@section('vendor-script')
+@section('vendor-script')s
+<style>
+.card-datatable.table-responsive {
+  overflow: visible !important;
+}
+</style>
 @vite([
   'resources/assets/vendor/libs/moment/moment.js',
   'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js',
@@ -44,7 +49,7 @@
 @section('content')
 
 <div class="card">
- 
+
   <div class="card-header pb-0">
     <h3 class="card-title mb-0">Historial de Trámites ante el IMPI</h3>
   </div>

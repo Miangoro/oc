@@ -16,17 +16,18 @@ class Impi_evento extends Model
 
     protected $fillable = [
         'id_evento',
-        'id_impi', 
-        'evento', 
+        'id_impi',
+        'evento',
         'descripcion',
+        'estatus',
         'url_anexo',
     ];
 
 
-    /* Public function impi()
+    Public function impi()
     {
-        return $this->belongsTo(Impi::class, 'id_impi', 'id_impi');   
-    }  */
+        return $this->belongsTo(Impi::class, 'id_impi', 'id_impi');
+    }
 
-    
+
 }

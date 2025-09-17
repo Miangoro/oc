@@ -22,7 +22,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="tramite" class="form-select" name="tramite" >
-                                    <option value="" disabled selected>Selecciona una opción</option> 
+                                    <option value="" disabled selected>Selecciona una opción</option>
                                     <option value="1">Registro de marca</option>
                                     <option value="2">Trámite USO DE LA DOM</option>
                                     <option value="3">Inscripción de convenio de correponsabilidad</option>
@@ -36,13 +36,8 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="cliente" name="id_empresa" class="form-select select2">
-                                    <option value="" disabled selected>Selecciona la empresa</option>
-                                    @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="id_empresa">Empresa</label>
+                                <input type="text" class="form-control" id="cliente" name="id_empresa" placeholder="Nombre de la empresa">
+                                <label for="cliente">Empresa</label>
                             </div>
                         </div>
                     </div>
@@ -80,7 +75,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-12">
-                                <textarea id="observaciones" name="observaciones" class="form-control h-px-150" 
+                                <textarea id="observaciones" name="observaciones" class="form-control h-px-150"
                                         placeholder="Observaciones"></textarea>
                                 <label for="">Observaciones</label>
                             </div>
@@ -93,7 +88,7 @@
                             <i class="ri-add-line"></i>Registrar</button>
                         <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="ri-close-line"></i> Cancelar</button>
                     </div>
-                    
+
                 </form>
             </div>
         </div>
@@ -138,15 +133,10 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-4">
-                        <select id="edit_cliente" name="id_empresa" class="form-select select2">
-                            @foreach ($empresas as $empresa)
-                                <option value="{{ $empresa->id_empresa }}">
-                                    {{ $empresa->empresaNumClientes[0]->numero_cliente ?? 
-                                    $empresa->empresaNumClientes[1]->numero_cliente }} | 
-                                    {{ $empresa->razon_social }}
-                                </option>
-                            @endforeach
-                        </select>
+                       <div class="form-floating form-floating-outline mb-6">
+                                <input type="text" class="form-control" id="edit_cliente" name="id_empresa" placeholder="Nombre de la empresa">
+                                <label for="cliente">Empresa</label>
+                            </div>
                         <label for="id_empresa">Empresa</label>
                     </div>
                 </div>
@@ -179,13 +169,13 @@
             </div>
                 <div class="col-md-12">
                     <div class="form-floating form-floating-outline mb-12">
-                        <textarea id="edit_observaciones" name="observaciones" class="form-control h-px-150" 
+                        <textarea id="edit_observaciones" name="observaciones" class="form-control h-px-150"
                                 placeholder="Observaciones"></textarea>
                         <label for="">Observaciones</label>
                     </div>
                 </div>
-                
-                
+
+
                 <div class="d-flex mt-6 justify-content-center">
                     <button type="submit" class="btn btn-primary me-2">
                         <i class="ri-pencil-fill"></i>Editar</button>
