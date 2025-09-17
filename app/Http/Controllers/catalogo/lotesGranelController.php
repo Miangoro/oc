@@ -73,6 +73,7 @@ private function obtenerEmpresasVisibles($empresaId)
 
 public function index(Request $request)
 {
+    $userId = Auth::id();
     //Permiso de empresa
     $empresaId = null;
     if (Auth::check() && Auth::user()->tipo == 3) {
@@ -126,12 +127,24 @@ public function index(Request $request)
             $query->whereIn('id_empresa', $empresasVisibles);
         }*/
         // Filtro empresa (creadora y destino)
-        if ($empresaId) {
+        /*if ($empresaId) {
+            $query->where(function ($q) use ($empresaId) {
+                $q->where('id_empresa', $empresaId)
+                ->orWhere('id_empresa_destino', $empresaId);
+            });
+        }*/
+        if (in_array($userId, [328, 46])) {
+            //registros creados por el propio usuario (natividad o alberto mendez)
+            $query->where('id_usuario_registro', $userId);
+        } elseif ($empresaId) {
+            // Filtro normal: creadora o destino
             $query->where(function ($q) use ($empresaId) {
                 $q->where('id_empresa', $empresaId)
                 ->orWhere('id_empresa_destino', $empresaId);
             });
         }
+
+        
 
         $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
         $totalData = $baseQuery->count();// totalData (sin búsqueda)

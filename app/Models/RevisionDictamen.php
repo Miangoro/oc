@@ -58,33 +58,24 @@ class RevisionDictamen extends Model
         return $this->belongsTo(Dictamen_Exportacion::class, 'id_dictamen', 'id_dictamen');
     }
 
-
-
     public function getDictamenAttribute()
     {
         switch ($this->tipo_dictamen) {
             case 1:
-                return $this->certificadoNormal;
+                return $this->dictamenInstalacion()->first();
             case 2:
-                return $this->certificadoGranel;
+                return $this->dictamenGranel()->first();
             case 3:
-                return $this->dictamenExportacion;
+                return $this->dictamenEnvasado()->first();
+            case 4:
+                return $this->dictamenExportacion()->first();
             default:
                 return null;
         }
     }
 
 
-
-
-    
-
-
-    public function aprobador()
-    {
-        return $this->belongsTo(User::class, 'id_aprobador');
-    }
-
+    //talvez...
     public function obtenerDocumentosClientes($id_documento, $id_cliente)
     {
         $documento = Documentacion_url::where("id_documento", "=", $id_documento)
@@ -93,6 +84,16 @@ class RevisionDictamen extends Model
 
         return $documento ? $documento->url : null; // Devuelve solo el atributo `url` o `null` si no hay documento
     }
+
+
+
+
+    public function aprobador()
+    {
+        return $this->belongsTo(User::class, 'id_aprobador');
+    }
+
+    
 
     public function obtenerDocumentoActa($id_documento, $id_solicitud)
     {

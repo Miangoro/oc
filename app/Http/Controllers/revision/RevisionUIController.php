@@ -223,13 +223,51 @@ public function index(Request $request)
 
 
 ///REGISTRAR
-public function registrar($id)
+public function add_revision($id)
 {
-    $revision = RevisionDictamen::findOrFail($id);
+    $revision = RevisionDictamen::findOrFail($id);//espera exista registro
+    
+    // Obtiene dictamen según tipo_dictamen
+    $dictamen = $revision->dictamen;
+        if ($revision->tipo_dictamen == 1) { //Instalaciones
+            switch ($dictamen->tipo_dictamen) {
+                case 1:
+                    $tipo = 'Instalaciones de productor';
+                    $url = "/dictamen_productor/" . $dictamen->id_dictamen;
+                    break;
+                case 2:
+                    $tipo = 'Instalaciones de envasador';
+                    $url = "/dictamen_envasador/" . $dictamen->id_dictamen;
+                    break;
+                case 3:
+                    $tipo = 'Instalaciones de comercializador';
+                    $url = "/dictamen_comercializador/" . $dictamen->id_dictamen;
+                    break;
+                case 4:
+                    $tipo = 'Instalaciones de almacén y bodega';
+                    $url = "/dictamen_almacen/" . $dictamen->id_dictamen;
+                    break;
+                case 5:
+                    $tipo = 'Instalaciones de área de maduración';
+                    $url = "/dictamen_maduracion/" . $dictamen->id_dictamen;
+                    break;
+                default:
+                    $tipo = 'Desconocido';
+            }
+        } elseif ($revision->tipo_dictamen == 2) { //Granel
+            $url = "/dictamen_granel/" . $dictamen->id_dictamen;
+            $tipo = "Granel";
+        } elseif ($revision->tipo_dictamen == 3) { //envasado
+            $url = "/dictamen_envasado/" . $dictamen->id_dictamen;
+            $tipo = "Envasado";
+        } elseif ($revision->tipo_dictamen == 4) { //exportacion
+            $url = "/dictamen_exportacion/" . $dictamen->id_dictamen;
+            $tipo = "Exportación";
+        }
 
     $preguntas = preguntas_revision_dictamen::where('tipo_revisor', 1)->get();
    
-    return view('dictamenes.add_revision', compact('revision', 'preguntas'));
+    return view('dictamenes.add_revision', compact('revision', 'dictamen', 'tipo', 'url', 'preguntas'));
 }
 
 
