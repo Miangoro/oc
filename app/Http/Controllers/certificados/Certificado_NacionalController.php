@@ -614,7 +614,7 @@ public function certificado($id_certificado)
         'presentacion' =>$data->dictamen->inspeccion->solicitud->lote_envasado->presentacion ?? 'No encontrado',
         'unidad' =>$data->dictamen->inspeccion->solicitud->lote_envasado->unidad ?? 'No encontrado',
         'analisis_fq' =>$data->dictamen->inspeccion->solicitud->lote_envasado?->lotesGranel->first()->folio_fq ?? 'No encontrado',
-        'sku' =>json_decode($data->dictamen->inspeccion->solicitud->lote_envasado->sku ?? '{}', true)['inicial'] ?? 'Sin sku',
+        'sku' =>json_decode($data->dictamen->inspeccion->solicitud->lote_envasado->sku ?? '{}', true)['inicial'] ?? 'N/A',
         'envasado_en' =>$data->dictamen->inspeccion->solicitud->instalacion->direccion_completa ?? 'No encontrado',
     ];
 
