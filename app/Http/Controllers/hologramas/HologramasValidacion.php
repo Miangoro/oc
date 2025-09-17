@@ -80,6 +80,71 @@ class HologramasValidacion extends Controller
     return view('hologramas.qr_holograma_070', compact('pageConfigs', 'folio', 'cliente', 'marca', 'ya_activado', 'datosHolograma'));
   }
 
+  public function qr_holograma_052($folio)
+  {
+    $pageConfigs = ['myLayout' => 'blank'];
+
+    $numero_cliente = substr($folio, 0, 12); // Extrae los primeros 13 caracteres
+    $cliente = empresaNumCliente::with('empresa')
+      ->where('numero_cliente', $numero_cliente)
+      ->first();
+
+    $folio_marca = substr($folio, 14, 1);
+    $marca = marcas::where('folio', $folio_marca)->where('id_empresa', $cliente->id_empresa)->first();
+
+     $tipo_holograma = substr($folio, 13, 1);
+
+
+
+    $folio_numerico = (int) substr($folio, -7); // Suponiendo que los últimos 7 dígitos son el número del folio
+    $ya_activado = false;
+    $datosHolograma = null;
+
+    $activaciones = activarHologramasModelo::with('solicitudHolograma')
+      ->whereHas('solicitudHolograma', function ($query) use ($marca) {
+        $query->where('id_marca', $marca->id_marca);
+      })
+      ->get();
+
+
+
+    foreach ($activaciones as $activacion) {
+    $folios_activados = json_decode($activacion->folios, true);
+
+    if (!isset($folios_activados['folio_inicial'], $folios_activados['folio_final'])) {
+        continue; // si no existen, pasamos a la siguiente activación
+    }
+
+    for ($i = 0; $i < count($folios_activados['folio_inicial']); $i++) {
+        // Validamos que existan ambos extremos y no estén vacíos
+        if (empty($folios_activados['folio_inicial'][$i]) || empty($folios_activados['folio_final'][$i])) {
+            continue;
+        }
+
+        $activado_folio_inicial = (int) $folios_activados['folio_inicial'][$i];
+        $activado_folio_final   = (int) $folios_activados['folio_final'][$i];
+
+        // Validamos que el folio esté dentro del rango correcto
+        if (
+            $folio_numerico >= $activado_folio_inicial &&
+            $folio_numerico <= $activado_folio_final &&
+            $activacion->solicitudHolograma->tipo == $tipo_holograma
+        ) {
+            $ya_activado   = true;
+            $datosHolograma = $activacion;
+            break 2; // salir de ambos bucles
+        }
+    }
+}
+
+
+
+
+
+
+    return view('hologramas.qr_holograma_052', compact('pageConfigs', 'folio', 'cliente', 'marca', 'ya_activado', 'datosHolograma'));
+  }
+
 
 
   public function qr_certificado($id)

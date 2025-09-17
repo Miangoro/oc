@@ -227,7 +227,8 @@
     <td></td>
 </tr>
 @php
-    $numeroCliente = $datos->marcas?->empresa?->empresaNumClientesNorma2?->first()?->numero_cliente;
+    $numeroCliente052 = $datos->marcas?->empresa?->empresaNumClientesNorma2?->first()?->numero_cliente;
+     $numeroCliente = $datos->marcas?->empresa?->empresaNumClientes?->first()?->numero_cliente;
 @endphp
 
 <tr>
@@ -236,12 +237,19 @@
         @if($numeroCliente)
             {{ $numeroCliente }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_inicial, 7, '0', STR_PAD_LEFT) }}
         @endif
+         @if($numeroCliente052)
+            {{ $numeroCliente052 }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_inicial, 7, '0', STR_PAD_LEFT) }}
+        @endif
     </td>
 
     <td class="rightLetter negrita">Folio final:</td>
     <td class="letra-up">
         @if($numeroCliente)
             {{ $numeroCliente }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_final, 7, '0', STR_PAD_LEFT) }}
+        @endif
+
+        @if($numeroCliente052)
+            {{ $numeroCliente052 }}-{{ $datos->tipo }}{{ $datos->marcas->folio }}{{ str_pad($datos->folio_final, 7, '0', STR_PAD_LEFT) }}
         @endif
     </td>
 </tr>
