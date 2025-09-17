@@ -134,9 +134,10 @@ public function index(Request $request)
             });
         }*/
         if (in_array($userId, [328, 46])) {
-            // solo registros creados por natividad/alberto mendez
-            $query->whereIn('id_usuario_registro', [328, 46]);
-        } else {
+            //registros creados por el propio usuario (natividad o alberto mendez)
+            $query->where('id_usuario_registro', $userId);
+        } elseif ($empresaId) {
+            // Filtro normal: creadora o destino
             $query->where(function ($q) use ($empresaId) {
                 $q->where('id_empresa', $empresaId)
                 ->orWhere('id_empresa_destino', $empresaId);
