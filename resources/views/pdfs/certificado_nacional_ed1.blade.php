@@ -212,7 +212,7 @@
             {{ mb_strtoupper($domicilio) }}
         </td>
         <td class="td-margins" style="font-weight: bold; font-size: 12px;">
-            código Postal:</td>
+            Código Postal:</td>
         <td class="td-margins">
             {{ $cp }}
         </td>

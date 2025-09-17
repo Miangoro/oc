@@ -613,7 +613,7 @@ public function storeEmisionCertificadoVentaNacional(Request $request)
             'id_lote_envasado' => $request->id_lote_envasado,
             'cantidad_cajas' => $request->cantidad_cajas,
             'cantidad_botellas' => $request->cantidad_botellas,
-
+            'cont_alc' => $request->cont_alc,
         ]);
 
         $emisionCertificado->save();
@@ -1844,6 +1844,7 @@ public function actualizarSolicitudes(Request $request, $id_solicitud)
                   'id_lote_envasado' => $request->id_lote_envasado,
                   'cantidad_cajas' => $request->cantidad_cajas,
                   'cantidad_botellas' => $request->cantidad_botellas,
+                  'cont_alc' => $request->cont_alc,
                 ];
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([

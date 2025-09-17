@@ -1381,6 +1381,9 @@ const ahora = new Date();
               if (caracteristicas.cantidad_botellas) {
                 modal.find('#edit_num_botellas').val(caracteristicas.cantidad_botellas);
               }
+              if (caracteristicas.cont_alc) {
+                modal.find('#edit_cont_alc').val(caracteristicas.cont_alc);
+              }
 
               modal.find('#edit_comentarios_e_venta_n').val(response.data.info_adicional);
             } else if (id_tipo === 14) {
@@ -4002,6 +4005,13 @@ const ahora = new Date();
           validators: {
             notEmpty: {
               message: 'Por favor ingrese la cantidad de cajas.'
+            }
+          }
+        },
+        cont_alc: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el %Alc. Vol.'
             }
           }
         }

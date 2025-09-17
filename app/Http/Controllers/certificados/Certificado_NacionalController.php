@@ -582,8 +582,9 @@ public function certificado($id_certificado)
     $nombre_id_sustituye = $id_sustituye ? Certificado_Nacional::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
     //caracteristicas
     $caracteristicas = json_decode($data->solicitud->caracteristicas ?? '', true);
-    $cajas = $caracteristicas['cajas'] ?? 'No encontrado';
-    $botellas = $caracteristicas['botellas'] ?? 'No encontrado';
+    $cajas = $caracteristicas['cantidad_cajas'] ?? 'No encontrado';
+    $botellas = $caracteristicas['cantidad_botellas'] ?? 'No encontrado';
+    $cont_alc = $caracteristicas['cont_alc'] ?? 'No encontrado';
 
     $pdf =  [
         'data' => $data,
@@ -609,7 +610,10 @@ public function certificado($id_certificado)
         'lote_granel' =>$data->dictamen->inspeccion->solicitud->lote_envasado?->lotesGranel->first()->nombre_lote ?? 'No encontrado',
         'categoria' =>$data->dictamen->inspeccion->solicitud->lote_envasado?->lotesGranel->first()->categoria->categoria ?? 'No encontrado',
         'clase' =>$data->dictamen->inspeccion->solicitud->lote_envasado?->lotesGranel->first()->clase->clase ?? 'No encontrado',
-        'cont_alc' =>$data->dictamen->inspeccion->solicitud->lote_envasado?->lotesGranel->first()->cont_alc ?? 'No encontrado',
+
+        /* 'cont_alc' =>$data->dictamen->inspeccion->solicitud->lote_envasado?->lotesGranel->first()->cont_alc ?? 'No encontrado', */
+        'cont_alc' => $cont_alc,
+
         'marca' =>$data->dictamen->inspeccion->solicitud->lote_envasado->marca->marca ?? 'No encontrado',
         'presentacion' =>$data->dictamen->inspeccion->solicitud->lote_envasado->presentacion ?? 'No encontrado',
         'unidad' =>$data->dictamen->inspeccion->solicitud->lote_envasado->unidad ?? 'No encontrado',
