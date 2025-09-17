@@ -142,7 +142,7 @@ class HologramasValidacion extends Controller
 
 
 
-    return view('hologramas.qr_holograma_070', compact('pageConfigs', 'folio', 'cliente', 'marca', 'ya_activado', 'datosHolograma'));
+    return view('hologramas.qr_holograma_052', compact('pageConfigs', 'folio', 'cliente', 'marca', 'ya_activado', 'datosHolograma'));
   }
 
 
