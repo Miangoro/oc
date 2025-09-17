@@ -24,23 +24,24 @@
                                 <label for="edit_cliente">Cliente</label>
                             </div>
                         </div>
-<div class="col-md-5">
-    <div class="form-floating form-floating-outline mb-4">
-        <select id="edit_id_empresa_destino" name="id_empresa_destino" class="select2 form-select">
-            <option value="" disabled selected>Selecciona la empresa destino</option>
-        </select>
-        <label>Empresa destino</label>
-    </div>
-</div>
+                        <div class="col-md-5">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select id="edit_id_empresa_destino" name="id_empresa_destino"
+                                    class="select2 form-select">
+                                    <option value="" disabled selected>Selecciona la empresa destino</option>
+                                </select>
+                                <label>Empresa destino</label>
+                            </div>
+                        </div>
                     </div>
 
-                        <div class="form-floating form-floating-outline mb-5">
-                            <input type="text" class="form-control" id="edit_nombre"
-                                placeholder="Introduce el nombre del lote" name="edit_nombre"
-                                aria-label="Nombre del lote" required />
-                            <label for="name">Nombre del lote</label>
-                        </div>
-                    
+                    <div class="form-floating form-floating-outline mb-5">
+                        <input type="text" class="form-control" id="edit_nombre"
+                            placeholder="Introduce el nombre del lote" name="edit_nombre" aria-label="Nombre del lote"
+                            required />
+                        <label for="name">Nombre del lote</label>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
@@ -299,15 +300,16 @@
             var edit_presentacion = parseFloat(document.getElementById('edit_presentacion').value) || 0;
             var edit_unidad = document.getElementById('edit_unidad').value;
             var volumenTotal;
-            if (edit_unidad === "Litros") {
+            if (edit_unidad === "L") {
                 volumenTotal = cantidadBotellas * edit_presentacion;
-            } else if (edit_unidad === "Mililitros") {
+            } else if (edit_unidad === "mL") {
                 volumenTotal = (cantidadBotellas * edit_presentacion) / 1000;
-            } else if (edit_unidad === "Centrilitros") {
+            } else if (edit_unidad === "cL") {
                 volumenTotal = (cantidadBotellas * edit_presentacion) / 100;
             } else {
                 volumenTotal = '';
             }
+
             document.getElementById('edit_volumen_total').value = volumenTotal ? volumenTotal.toFixed(2) : '';
         }
         document.getElementById('edit_cant_botellas').addEventListener('input', calcularVolumenTotal);
