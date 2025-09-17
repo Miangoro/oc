@@ -360,7 +360,6 @@ Route::get('/pages/faq', [Faq::class, 'index'])->name('pages-faq')->middleware([
 Route::get('/pages/pricing', [PagesPricing::class, 'index'])->name('pages-pricing');
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
 Route::get('/holograma/{folio}', [HologramasValidacion::class, 'index2'])->name('pages-hologramas-validacion');
-Route::get('/holograma052/{folio}', [HologramasValidacion::class, 'qr_holograma_052'])->name('qr_holograma_052');
 Route::get('/validar_dictamen', [HologramasValidacion::class, 'validar_dictamen'])->name('validar_dictamen');
 //ruta QR guias
 Route::get('/autenticidad_guia/{id}', [HologramasValidacion::class, 'qr_guias'])->name('QR-guias');
@@ -1056,18 +1055,14 @@ Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group
 
 //-------------------REVISION UNIDAD DE INSPECCION-------------------
 Route::middleware(['auth'])->controller(RevisionUIController::class)->group(function () {
-    Route::get('/revision/unidad_inspeccion', 'UserManagement')->name('revision-UI');
+    Route::get('/revision/unidad_inspeccion', 'UserManagement')->name('UI-revision');
     Route::resource('/revision-ui-list', RevisionUIController::class);
 
-<<<<<<< HEAD
     Route::get('/revision/ver/{id}', 'add_revision');
     Route::post('/revision/registrar', 'registrar')->name('registrar-revision');
 
-    Route::get('/revision/{id}', 'edit_revision');
+    Route::get('/revision/obtener/{id}', 'edit_revision');
     Route::post('/revision/editar', 'editar')->name('editar-revision');
-=======
-    Route::get('/revision/registrar/{id}', 'registrar');
->>>>>>> 7a81cbc2803f55ed5f44ee518b2fac7eefb8809a
 });
 
 
