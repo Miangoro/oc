@@ -929,10 +929,14 @@ $(document).on('click', '.edit-record', function () {
 
       // Agregar las opciones y rellenar cada fila del lote
       data.lotes_envasado_granel.forEach(function (lote, index) {
+        /*  */
+        var isFirst = index === 0; // la primera fila
+        var disabledAttr = isFirst ? 'disabled' : '';
+  /*  */
         var newRow = `
         <tr>
           <th>
-            <button type="button" class="btn btn-danger remove-row">
+            <button type="button" class="btn btn-danger remove-row" ${disabledAttr}>
               <i class="ri-delete-bin-5-fill"></i>
             </button>
           </th>
@@ -970,10 +974,15 @@ $(document).on('click', '.edit-record', function () {
 
   // Agregar nueva fila en la tabla de edición
   $(document).on('click', '.add-row-edit', function () {
+    /*  */
+    var totalRows = $('#edit_contenidoGraneles tr').length;
+     var disabledAttr = totalRows === 0 ? 'disabled' : '';
+     /*  */
+
     var newRow = `
     <tr>
       <th>
-        <button type="button" class="btn btn-danger btn-sm remove-row">
+        <button type="button" class="btn btn-danger btn-sm remove-row" ${disabledAttr}>
           <i class="ri-delete-bin-5-fill"></i>
         </button>
       </th>
@@ -1075,8 +1084,8 @@ $(document).on('click', '.edit-record', function () {
 
 
 
-  
-  
+
+
 //$(function () {
 // Detecta cambio de empresa en edición
 $('#edit_cliente').on('change', function() {
@@ -1222,33 +1231,43 @@ async function obtenerDestinoEmpresaEdit(selectedDestino = null) {
         processData: false,
         contentType: false,
         success: function (response) {
-          $('#editLoteEnvasado').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
           $('#btnSpinnerEdit').addClass('d-none');
           $('#btnEditEnvasado').removeClass('d-none');
-          // Mostrar alerta de éxito
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.success,
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
+
+          if (response.success === true || typeof response.success === 'string') {
+            // Cerrar modal y refrescar solo en caso de éxito
+            $('#editLoteEnvasado').modal('hide');
+            $('.datatables-users').DataTable().ajax.reload();
+
+            Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: typeof response.success === 'string' ? response.success : 'Operación exitosa.',
+              customClass: { confirmButton: 'btn btn-success' }
+            });
+          } else {
+            // Mostrar mensaje de error enviado desde backend
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: response.message || 'Ocurrió un error inesperado.',
+              customClass: { confirmButton: 'btn btn-danger' }
+            });
+          }
         },
         error: function (xhr) {
-          // Mostrar alerta de error
+          $('#btnSpinnerEdit').addClass('d-none');
+          $('#btnEditEnvasado').removeClass('d-none');
+
+          let res = xhr.responseJSON;
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al registrar el lote envasado',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
+            text: res && res.message ? res.message : 'Error al registrar el lote envasado',
+            customClass: { confirmButton: 'btn btn-danger' }
           });
-          $('#btnSpinnerEdit').addClass('d-none');
-          $('#btnEditEnvasado').removeClass('d-none');
         }
+
       });
     });
 
