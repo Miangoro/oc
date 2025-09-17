@@ -172,7 +172,7 @@
             {{ $expedicion }}
         </td>
         <td style="font-weight: bold;  text-align: right; padding-right: 20px; border:none">
-            Vigencia de 90 días<br>naturales:</td>
+            Vigencia: </td>
         <td style="font-weight: bold; text-align: right;padding-right: 20px; border:none">
             {{ $vigencia }}
         </td>
