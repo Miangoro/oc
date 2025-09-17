@@ -29,7 +29,21 @@ class lotesEnvasadoController extends Controller
 {
     public function UserManagement()
     {
-        $clientes = empresa::where('tipo', 2)->get();
+       $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
+        ? Auth::user()->empresa?->id_empresa
+        : null;
+          if ($empresaIdAut) {
+                  //Usa la función que ya tienes
+                  $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, null);
+
+                  $clientes = empresa::with('empresaNumClientes')
+                      ->whereIn('id_empresa', $idsEmpresas)
+                      ->get();
+              } else {
+                  $clientes = empresa::with('empresaNumClientes')
+                      ->where('tipo', 2)
+                      ->get();
+              }
         $marcas = marcas::all();
         $lotes_granel = LotesGranel::all();
         $lotes_envasado = lotes_envasado::all();

@@ -172,7 +172,7 @@
             {{ $expedicion }}
         </td>
         <td style="font-weight: bold;  text-align: right; padding-right: 20px; border:none">
-            Vigencia de 90 días<br>naturales:</td>
+            Vigencia: </td>
         <td style="font-weight: bold; text-align: right;padding-right: 20px; border:none">
             {{ $vigencia }}
         </td>
@@ -212,7 +212,7 @@
             {{ mb_strtoupper($domicilio) }}
         </td>
         <td class="td-margins" style="font-weight: bold; font-size: 12px;">
-            código Postal:</td>
+            Código Postal:</td>
         <td class="td-margins">
             {{ $cp }}
         </td>

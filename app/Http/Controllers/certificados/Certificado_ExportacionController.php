@@ -1048,7 +1048,7 @@ public function MostrarCertificadoExportacion($id_certificado,$conMarca = true)
         'data' => $data,//declara todo = {{ $data->inspeccione->num_servicio }}
         'lotes' =>$lotes,
         'expedicion' => $fecha_emision,
-        'vigencia' => $fecha_vigencia,
+        'vigencia' => $fecha_vigencia ?? 'Indefinido',
         'n_cliente' => $numero_cliente,
         'empresa' => $data->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado',
         'domicilio' => $data->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'No encontrado',

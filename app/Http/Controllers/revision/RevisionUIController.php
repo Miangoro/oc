@@ -222,17 +222,259 @@ public function index(Request $request)
 
 
 
-///REGISTRAR
-public function registrar($id)
+///VER REVISION
+public function add_revision($id)
 {
-    $revision = RevisionDictamen::findOrFail($id);
+    $revision = RevisionDictamen::findOrFail($id);//espera exista registro
+    
+    // Obtiene dictamen según tipo_dictamen
+    $dictamen = $revision->dictamen;
+        if ($revision->tipo_dictamen == 1) { //Instalaciones
+            switch ($dictamen->tipo_dictamen) {
+                case 1:
+                    $tipo = 'Instalaciones de productor';
+                    $url = "/dictamen_productor/" . $dictamen->id_dictamen;
+                    break;
+                case 2:
+                    $tipo = 'Instalaciones de envasador';
+                    $url = "/dictamen_envasador/" . $dictamen->id_dictamen;
+                    break;
+                case 3:
+                    $tipo = 'Instalaciones de comercializador';
+                    $url = "/dictamen_comercializador/" . $dictamen->id_dictamen;
+                    break;
+                case 4:
+                    $tipo = 'Instalaciones de almacén y bodega';
+                    $url = "/dictamen_almacen/" . $dictamen->id_dictamen;
+                    break;
+                case 5:
+                    $tipo = 'Instalaciones de área de maduración';
+                    $url = "/dictamen_maduracion/" . $dictamen->id_dictamen;
+                    break;
+                default:
+                    $tipo = 'Desconocido';
+            }
+        } elseif ($revision->tipo_dictamen == 2) { //Granel
+            $url = "/dictamen_granel/" . $dictamen->id_dictamen;
+            $tipo = "Granel";
+        } elseif ($revision->tipo_dictamen == 3) { //envasado
+            $url = "/dictamen_envasado/" . $dictamen->id_dictamen;
+            $tipo = "Envasado";
+        } elseif ($revision->tipo_dictamen == 4) { //exportacion
+            $url = "/dictamen_exportacion/" . $dictamen->id_dictamen;
+            $tipo = "Exportación";
+        }
 
     $preguntas = preguntas_revision_dictamen::where('tipo_revisor', 1)->get();
    
-    return view('dictamenes.add_revision', compact('revision', 'preguntas'));
+    return view('dictamenes.add_revision', compact('revision', 'dictamen', 'tipo', 'url', 'preguntas'));
+}
+///REGISTRAR REVISION
+public function registrar(Request $request)
+{
+    $request->validate([
+        'id_revision' => 'required|integer',
+        'respuesta' => 'required|array',
+        'observaciones' => 'nullable|array',
+        'id_pregunta' => 'required|array',
+    ]);
+
+    $revisor = RevisionDictamen::where('id_revision', $request->id_revision)->first();
+    if (!$revisor) {
+        return response()->json(['message' => 'El registro no fue encontrado.'], 404);
+    }
+
+    // Obtener el historial de respuestas como array
+    $historialRespuestas = $revisor->respuestas ?? [];
+
+    // Asegurarse de que es un array, por si viene como JSON string
+    if (is_string($historialRespuestas)) {
+        $historialRespuestas = json_decode($historialRespuestas, true);
+    }
+
+    // Definir número de revisión
+    $numRevision = count($historialRespuestas) + 1;
+    $revisionKey = "Revision $numRevision";
+
+
+
+    $nuevoRegistro = [];
+    $todasLasRespuestasSonC = true;
+
+    foreach ($request->respuesta as $key => $nuevaRespuesta) {
+        $nuevaObservacion = $request->observaciones[$key] ?? null;
+        $nuevaIdPregunta = $request->id_pregunta[$key] ?? null;
+
+        if ($nuevaRespuesta == 'NC') {
+            $todasLasRespuestasSonC = false;
+        }
+
+        $nuevoRegistro[] = [ // Aquí usamos `[]` en lugar de `$key`
+            'id_pregunta' => $nuevaIdPregunta,
+            'respuesta' => $nuevaRespuesta,
+            'observacion' => $nuevaObservacion,
+        ];
+    }
+
+    // Guardar respuestas en formato JSON (Laravel lo maneja automáticamente)
+    $historialRespuestas[$revisionKey] = $nuevoRegistro;
+    $revisor->fill([
+        'respuestas' => $historialRespuestas,
+        'decision' => $todasLasRespuestasSonC ? 'positiva' : 'negativa',
+    ]);
+
+    $revisor->save();
+
+
+    return response()->json(['message' => 'Respuestas y decisión registradas exitosamente.'], 201);
 }
 
 
+
+
+/*public function obtenerRespuestas($id)
+{
+    
+        $revisor = RevisionDictamen::where('id_revision', $id)->first();
+
+        if (!$revisor) {
+            return response()->json(['message' => 'El registro no fue encontrado.'], 404);
+        }
+
+        // Decodificar respuestas
+        $historialRespuestas = json_decode($revisor->respuestas, true);
+
+        // Verificar si es un array válido
+        $ultimaRevision = is_array($historialRespuestas) ? end($historialRespuestas) : null;
+        $decision = $revisor->decision;
+
+
+        // Respuesta con datos o vacío si no hay historial
+        return response()->json([
+            'message' => 'Datos de la revisión más actual recuperados exitosamente.',
+            'respuestas' => $ultimaRevision,
+            'decision' => $decision,
+        ], 200);
+}*/
+///OBTENER REVISION
+public function edit_revision($id)
+{
+    $datos = RevisionDictamen::findOrFail($id);
+    $preguntasQuery = preguntas_revision_dictamen::where('tipo_revisor', 1);
+
+
+    $preguntas = $preguntasQuery->get();
+
+    $respuestas_json = json_decode($datos->respuestas, true); // Convierte el campo JSON a array PHP
+    $respuestas_revision = $respuestas_json['Revision '.$datos->numero_revision] ?? []; // O la clave correspondiente
+
+    // Crear un array indexado por id_pregunta para fácil acceso
+    $respuestas_map = collect($respuestas_revision)->keyBy('id_pregunta');
+
+    $id_dictamen = $datos->tipo_dictamen ?? '';
+
+
+    // Obtiene dictamen según tipo_dictamen
+    $dictamen = $datos->dictamen;
+        if ($datos->tipo_dictamen == 1) { //Instalaciones
+            switch ($dictamen->tipo_dictamen) {
+                case 1:
+                    $tipo = 'Instalaciones de productor';
+                    $url = "/dictamen_productor/" . $dictamen->id_dictamen;
+                    break;
+                case 2:
+                    $tipo = 'Instalaciones de envasador';
+                    $url = "/dictamen_envasador/" . $dictamen->id_dictamen;
+                    break;
+                case 3:
+                    $tipo = 'Instalaciones de comercializador';
+                    $url = "/dictamen_comercializador/" . $dictamen->id_dictamen;
+                    break;
+                case 4:
+                    $tipo = 'Instalaciones de almacén y bodega';
+                    $url = "/dictamen_almacen/" . $dictamen->id_dictamen;
+                    break;
+                case 5:
+                    $tipo = 'Instalaciones de área de maduración';
+                    $url = "/dictamen_maduracion/" . $dictamen->id_dictamen;
+                    break;
+                default:
+                    $tipo = 'Desconocido';
+            }
+        } elseif ($datos->tipo_dictamen == 2) { //Granel
+            $url = "/dictamen_granel/" . $dictamen->id_dictamen;
+            $tipo = "Granel";
+        } elseif ($datos->tipo_dictamen == 3) { //envasado
+            $url = "/dictamen_envasado/" . $dictamen->id_dictamen;
+            $tipo = "Envasado";
+        } elseif ($datos->tipo_dictamen == 4) { //exportacion
+            $url = "/dictamen_exportacion/" . $dictamen->id_dictamen;
+            $tipo = "Exportación";
+        }
+
+    return view('dictamenes.edit_revision', compact('datos', 'dictamen', 'preguntas', 'url', 'tipo', 'respuestas_map'));
+}
+///EDITAR REVISION
+public function editar(Request $request)
+{
+        $request->validate([
+            'id_revision' => 'required|integer',
+            'respuesta' => 'required|array',
+            'observaciones' => 'nullable|array',
+            'id_pregunta' => 'required|array',
+          // Número de la revisión a editar
+        ]);
+
+        $revisor = RevisionDictamen::where('id_revision', $request->id_revision)->first();
+        if (!$revisor) {
+            return response()->json(['message' => 'El registro no fue encontrado.'], 404);
+        }
+
+        // Obtener el historial de respuestas como array
+        $historialRespuestas = $revisor->respuestas ?? [];
+
+        // Asegurarse de que es un array, por si viene como JSON string
+        if (is_string($historialRespuestas)) {
+            $historialRespuestas = json_decode($historialRespuestas, true);
+        }
+
+        $revisionKey = "Revision " . $request->numero_revision;
+
+        // Verificar que la revisión exista
+        if (!array_key_exists($revisionKey, $historialRespuestas)) {
+            return response()->json(['message' => "La $revisionKey no existe."], 404);
+        }
+
+        $nuevoRegistro = [];
+        $todasLasRespuestasSonC = true;
+
+        foreach ($request->respuesta as $key => $nuevaRespuesta) {
+            $nuevaObservacion = $request->observaciones[$key] ?? null;
+            $nuevaIdPregunta = $request->id_pregunta[$key] ?? null;
+
+            if ($nuevaRespuesta == 'NC') {
+                $todasLasRespuestasSonC = false;
+            }
+
+            $nuevoRegistro[] = [
+                'id_pregunta' => $nuevaIdPregunta,
+                'respuesta' => $nuevaRespuesta,
+                'observacion' => $nuevaObservacion,
+            ];
+        }
+
+        // Actualizar la revisión específica
+        $historialRespuestas[$revisionKey] = $nuevoRegistro;
+
+        $revisor->fill([
+            'respuestas' => $historialRespuestas,
+            'decision' => $todasLasRespuestasSonC ? 'positiva' : 'negativa',
+        ]);
+
+        $revisor->save();
+
+    return redirect('/revision/unidad_inspeccion');
+}
 
 
 

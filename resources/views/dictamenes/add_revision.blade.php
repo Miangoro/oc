@@ -54,7 +54,7 @@
 @section('content')
 
 
-<!-- PANEL -->
+<!-- PANEL REVISION-->
 <div class="container mt-4 mb-4">
   <div class="card shadow-sm border-0 rounded-3">
 
@@ -71,32 +71,39 @@
         <!-- Tipo de dictamen -->
         <div class="col-md-4">
           <p class="text-muted mb-1">Tipo de dictamen</p>
-          <h5 class="fw-semibold"></h5>
-          <span class="badge bg-info">Combinado</span>
-          <span class="badge bg-danger">Es corrección</span>
-
-          <div class="mt-2">
-            <small class="text-muted">Este certificado sustituye al:</small><br>
-            <a target="_blank" href="" class="text-primary fw-bold"></a>
-            <p class="mt-1"><strong>Motivo:</strong></p>
-          </div>
-
-          <p class="mt-2"><strong>Observaciones:</strong></p>
-
+          <h5 class="fw-semibold">
+          {{ $tipo }}
+          </h5>
+          @if($revision->tipo_dictamen == 4 && $dictamen->inspeccione->solicitud->lotesEnvasadoDesdeJson()->count() > 1)
+            <span class="badge bg-info">Combinado</span>
+          @endif
+          @if($revision->es_correccion == 'si')
+            <span class="badge bg-danger">Es corrección</span>
+          @endif
+          
           <div class="mt-3">
-            <p class="text-muted mb-1">Evidencias:</p>
+            <p class="text-muted mb-1">Observaciones de la asignación:</p>
             <div class="d-flex align-items-center gap-2 mb-1">
               <a href="/storage/revisiones/" target="_blank">
                 <i class="ri-file-pdf-2-fill text-danger ri-24px"></i>
               </a>
             </div>
           </div>
+
+          <div class="mt-2">
+            <span class="text-muted">Este certificado sustituye al:</span>
+            <a target="_blank" href="" class="text-primary fw-bold"></a>
+            <br>
+            <span class="text-muted">Motivo: </span><strong> </strong>
+          </div>
         </div>
 
         <!-- Cliente -->
         <div class="col-md-4">
           <p class="text-muted mb-1">Cliente</p>
-          <h5 class="fw-semibold"></h5>
+          <h5 class="fw-semibold">
+            {{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+          </h5>
         </div>
 
         <!-- Revisor -->
@@ -115,9 +122,10 @@
           </div>
 
           <!-- PDF Dictamen -->
-          <div class="mt-3">
+          <div class="mt-4">
             <p class="text-muted mb-1">Dictamen</p>
-            <a href="" target="_blank">
+            <span class="fw-semibold">{{$dictamen->num_dictamen}}</span>
+            <a href="{{ $url ?? '#' }}" target="_blank">
               <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
             </a>
           </div>
@@ -131,7 +139,7 @@
 
 <!-- FORMULARIO -->
 <form id="formulario" method="POST">
-  <input type="hidden" id="id_revision" name="id_revision" value="">
+  <input type="hidden" id="id_revision" name="id_revision" value="{{ $revision->id_revision }}">
   <div class="row">
     <div class="col-md-12">
       <div class="card">
@@ -148,18 +156,44 @@
               </tr>
             </thead>
             <tbody>
+              
+              @php    
+                $empresa = $dictamen->inspeccione->solicitud->empresa;
+                $cliente = $empresa?->empresaNumClientes->firstWhere( 'numero_cliente', '!=', null );
+              @endphp
               @foreach ($preguntas as $index => $pregunta)
+
                 <tr>
                   <td>{{ $index + 1 }}</td>
                   <td>
                     {{ $pregunta->pregunta }}
                     <input value="{{ $pregunta->id_pregunta }}" type="hidden" name="id_pregunta[]">
                   </td>
+
+                  <!--COLUMNA DOCUMENTO-->
                   <td>
-                    <a target="_blank" href="">
-                      <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                    </a>
+                    @if($pregunta->filtro == 'acta')
+                      {{ $dictamen->inspeccione->num_servicio}}
+                    @php
+                      $acta = null;
+                      if ($pregunta->id_documento) {
+                        // Obtiene acta específica
+                        $acta = \App\Models\documentacion_url::where('id_empresa', $empresa->id_empresa)
+                                ->where('id_documento', 69)
+                                ->where('id_relacion', $dictamen->inspeccione->solicitud->id_solicitud)
+                                ->value('url');
+                      }
+                    @endphp
+                      @if($acta)
+                        <a target="_blank" href="{{ asset('files/' . $cliente->numero_cliente . '/actas/' . $acta) }}">
+                          <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                        </a>
+                      @else
+                          <span class="text-muted">Sin documento</span>
+                      @endif
+                    @endif
                   </td>
+
                   <td>
                     <div class="resp">
                         <select class="form-select form-select-sm" aria-label="Elige la respuesta"          name="respuesta[]">
@@ -170,8 +204,10 @@
                         </select>
                     </div>
                   </td>
+
+                  <!--OBSERVACIONES-->
                   <td>
-                    <textarea id="" name="" name="observaciones[{{ $index }}]" rows="1"  
+                    <textarea id="" name="observaciones[{{ $index }}]" rows="1"  
                         class="form-control" placeholder="Observaciones">
                     </textarea>
                   </td>
@@ -187,7 +223,7 @@
 
         <div class="d-flex justify-content-center mt-3">
             <button type="submit" class="btn btn-primary me-2 waves-effect waves-light">
-                <i class="ri-add-line"></i> Registrar revisión
+                <i class="ri-add-line"></i> Registrar {{ $revision->numero_revision }}ª revisión
             </button>
             <a href="/revision/unidad_inspeccion" class="btn btn-danger waves-effect">
                 <i class="ri-close-line"></i> Cancelar

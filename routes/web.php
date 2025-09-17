@@ -1055,10 +1055,17 @@ Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group
 
 //-------------------REVISION UNIDAD DE INSPECCION-------------------
 Route::middleware(['auth'])->controller(RevisionUIController::class)->group(function () {
-    Route::get('/revision/unidad_inspeccion', 'UserManagement')->name('revision-UI');
+    Route::get('/revision/unidad_inspeccion', 'UserManagement')->name('UI-revision');
     Route::resource('/revision-ui-list', RevisionUIController::class);
 
-    Route::get('/revision/registrar/{id}', 'registrar');
+    Route::get('/revision/ver/{id}', 'add_revision');
+    Route::post('/revision/registrar', 'registrar')->name('registrar-revision');
+
+
+    //Route::get('/revisor/obtener-respuestas/{id}', 'obtenerRespuestas');
+
+    Route::get('/revision/obtener/{id}', 'edit_revision');
+    Route::post('/revision/editar', 'editar')->name('editar-revision');
 });
 
 

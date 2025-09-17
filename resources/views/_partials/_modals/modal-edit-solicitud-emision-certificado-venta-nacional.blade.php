@@ -48,18 +48,24 @@
 
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
                                 <input type="number" id="edit_num_cajas" name="cantidad_cajas" class="form-control">
                                 <label for="num_cajas">No. de Cajas</label>
                             </div>
                         </div>
-
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
                                 <input type="number" id="edit_num_botellas" name="cantidad_botellas"
                                     class="form-control" required>
                                 <label for="num_botellas">No. de Botellas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input type="text" id="edit_cont_alc" name="cont_alc"
+                                    class="form-control" required>
+                                <label>%Alc. Vol</label>
                             </div>
                         </div>
                     </div>

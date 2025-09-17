@@ -654,9 +654,17 @@
                     {{ $datos->lote_envasado->cont_alc_envasado ?? '---------------' }} 
                 @elseif ($exportacion == 'X') 
                     {{ $datos->lote_envasado->cont_alc_envasado ?? '---------------' }} 
+
+                @elseif ($certificado_nacional == 'X')
+                    @php
+                        $caracteristicas = $datos->caracteristicasDecodificadas();
+                    @endphp
+                    {{ $caracteristicas['cont_alc'] ?? '-' }}
+                    
                 @elseif ($muestreo_granel != 'X') 
                     {{ $datos->lote_granel->cont_alc ?? '---------------' }} 
                 @else --------------- @endif
+              
             </td>
         </tr>
         <tr>
@@ -677,20 +685,26 @@
                 @endif
             </td>
             <td class="con-negra" colspan="4" style="text-align: left">10) Cajas y botellas:</td>
-            <td colspan="4">@php
+            <td colspan="4">
+            {{--@php
                 $caracteristicas = json_decode($datos->caracteristicas, true);
             @endphp
-
                 @if (isset($caracteristicas['detalles']))
                     @foreach ($caracteristicas['detalles'] as $detalle)
                         <span>Cantidad de Botellas: {{ $detalle['cantidad_botellas'] ?? 'No definido' }}</span><br>
                         <span>Cantidad de Cajas: {{ $detalle['cantidad_cajas'] ?? 'No definido' }}</span><br>
                         
-                    @endforeach
-                @elseif($inspeccion_envasado === 'X')
+                    @endforeach --}}
+                @if($inspeccion_envasado === 'X')
                    <span>Cantidad de Botellas:  {{ $datos->lote_envasado->cant_botellas ?? 'No definido' }}</span><br>
                    <span>Cantidad de Cajas: {{ $caracteristicas['cantidad_caja'] ?? 'No definido' }}</span><br>
-                   
+                @elseif ($certificado_nacional === 'X')
+                     @php
+                        $caracteristicas = $datos->caracteristicasDecodificadas();
+                    @endphp
+
+                    <span>Cantidad de Cajas:</span> {{ $caracteristicas['cantidad_cajas'] ?? '-' }} <br>
+                    <span>Cantidad de Botellas:</span> {{ $caracteristicas['cantidad_botellas'] ?? '-' }}
                 @else
                     <p>---------------</p>
                 @endif

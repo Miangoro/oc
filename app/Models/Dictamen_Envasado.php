@@ -48,5 +48,9 @@ class Dictamen_Envasado extends Model
     }
 
 
+    public function inspeccione()//uso unico en RevisionDictamen
+    {
+        return $this->belongsTo(inspecciones::class, 'id_inspeccion');
+    }
     
 }

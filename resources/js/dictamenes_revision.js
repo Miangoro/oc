@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 
 //FECHAS
 /* $(document).ready(function () {
@@ -9,7 +9,7 @@
       locale: "es",        // idioma a español
   });
 }); */
-$('.datepicker').datepicker({
+/*$('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     autoclose: true,
     todayHighlight: true,
@@ -260,7 +260,7 @@ if (dt_user_table.length) {
                   <i class="ri-delete-bin-7-line text-danger ri-20px"></i> Eliminar
                 </a>`;
             }
-            */
+            *
 
             // Si no tiene ningún permiso
             if (!acciones.trim()) {
@@ -368,10 +368,436 @@ if (dt_user_table.length) {
       });
   }
 
+///REGISTRAS RESPUESTAS
+$(function () {
+    // Configuración de AJAX para enviar el token CSRF
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // Inicializar FormValidation en el formulario
+    const form = document.getElementById('formulario');
+    const fv = FormValidation.formValidation(form, {
+        fields: {
+            'respuesta[]': {
+                validators: {
+                    notEmpty: {
+                        message: 'Selecciona una respuesta.'
+                    }
+                }
+            },
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: '.resp'
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+    }).on('core.form.valid', function () {
+        // Este evento se dispara cuando el formulario es válido
+
+        // Crear un objeto FormData con todos los datos del formulario
+        const formData = new FormData(form);
+
+        // Enviar la solicitud AJAX con todos los datos del formulario
+        $.ajax({
+            url: '/registrar/r',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: 'Revisión registrada exitosamente.',
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                }).then(() => {
+                    // Redirigir a la ruta después de mostrar el mensaje de éxito
+                    window.location.href = '/revision/unidad_inspeccion';
+                });
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: xhr.responseJSON.message,
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        });
+
+    });
+});
 
 
 
+});//end-function*/
 
+
+////////////////////////////////////////
+'use strict';
+
+$(function () {
+
+  var dt_user_table = $('.datatables-users')
+
+  if (dt_user_table.length) {
+    var dt_user = dt_user_table.DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: {
+        url: '/revision-ui-list',
+      },
+      columns: [
+        { data: '#' },                //0
+        { data: 'fake_id' },          //1
+        { data: '' },    //2
+        { data: 'num_dictamen' },  //3
+        { data: 'id_revisor' },       //4
+        { data: 'created_at' },       //5
+        { data: 'updated_at' },       //6
+        { data: 'PDF' },              //7
+        { data: 'decision' },         //8
+        { data: 'actions' }           //9
+      ],
+      columnDefs: [
+        {
+          className: 'control',
+          searchable: false,
+          orderable: false,
+          responsivePriority: 2,
+          targets: 0,
+          render: function (data, type, full, meta) {
+            return '';
+          }
+        },
+        {
+          searchable: false,
+          orderable: false,
+          targets: 1,
+          render: function (data, type, full, meta) {
+            return `<span>${full.fake_id}</span>`;
+          }
+        },
+        {//tipo certificado
+          targets: 2,
+          searchable: true,
+          orderable: false,
+          render: function (data, type, row) {
+              var tipoRevision = row['tipo_revision'];
+              var icono = '';
+
+              if (tipoRevision === 'Instalaciones de productor' || tipoRevision === 'Instalaciones de envasador' || tipoRevision === 'Instalaciones de comercializador' || tipoRevision === 'Instalaciones de almacén o bodega' || tipoRevision === 'Instalaciones de área de maduración') {
+                  icono = `<span class="fw-bold mt-1 badge bg-secondary">${tipoRevision}</span>`;
+              }
+              if (tipoRevision === 'Granel') {
+                icono = `<span class="fw-bold mt-1 badge bg-dark">${tipoRevision}</span>`;
+              }
+              if (tipoRevision === 'Envasado') {
+                icono = `<span class="fw-bold mt-1 badge bg-info">${tipoRevision}</span>`;
+              }
+              if (tipoRevision === 'Exportación') {
+                  icono = `<span class="fw-bold mt-1 badge bg-primary">${tipoRevision}</span>`;
+              }
+
+              return icono;
+          }
+        },
+        {///num_dictamen
+          targets: 3,
+          searchable: true,
+          orderable: false,
+          render: function (data, type, full, meta) {
+            var $num_dictamen = full['num_dictamen'];
+
+
+              return `
+              <div style="display: flex; flex-direction: column; align-items: start; gap: 4px;">
+                <span class="fw-bold">
+                  ${$num_dictamen}
+                </span>
+              </div>
+              `;
+            }
+
+        },
+        {//Revisor
+          targets: 4,
+          searchable: true,
+          orderable: false,
+          render: function (data, type, full, meta) {
+            var $id_revisor = full['id_revisor'];
+            return '<span class="user-email">' + $id_revisor + '</span>';
+          }
+        },
+
+        {
+          targets: 5,
+          searchable: false,
+          orderable: false,
+          render: function (data, type, full, meta) {
+            var $created_at = full['created_at'];
+            return '<span class="user-email">' + $created_at + '</span>';
+          }
+        },
+        {
+          targets: 6,
+          searchable: false,
+          orderable: false,
+          render: function (data, type, full, meta) {
+            var $updated_at = full['updated_at'];
+            return '<span class="user-email">' + $updated_at + '</span>';
+          }
+        },
+        {
+          targets: 7,
+          className: 'text-center',
+          searchable: false,
+          orderable: false,
+          render: function (data, type, full, meta) {
+              if (full['decision']!='Pendiente') {
+                  // Si existe la decisión, el ícono es funcional (activo)
+                  return `
+                      <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"
+                         data-bs-target="#mostrarPdf"
+                         data-bs-toggle="modal"
+                         data-bs-dismiss="modal"
+                         data-num-dictamen="${full['num_dictamen']}"
+                         data-tipo="${full['tipo_dictamen']}"
+                         data-id="${full['id_revision']}"
+                         data-tipo_revision="${full['tipo_revision']}">
+                      </i>`;
+              } else {
+                  // Si la decisión no existe, el ícono se ve como deshabilitado con un color más claro
+                  return `
+                      <i class="ri-file-pdf-2-fill ri-40px cursor-not-allowed" style="color: lightgray;"></i>`;
+              }
+          }
+        },
+        {
+          targets: 8,
+          orderable: 0,
+          render: function (data, type, full, meta) {
+            let $decision = full['decision'];
+            let $colorDesicion;
+            let $nombreDesicion;
+            let num_revision = '';
+
+
+            if(full['num_revision'] == 1){
+              num_revision = 'Primera';
+            }else{
+               num_revision = 'Segunda';
+            }
+
+            switch ($decision) {
+              case "positiva":
+                $nombreDesicion = num_revision +' Revisión positiva';
+                $colorDesicion = 'primary';
+              break;
+
+              case "negativa":
+                $nombreDesicion = num_revision + ' Revisión negativa';
+                $colorDesicion = 'danger';
+              break;
+              default:
+                $nombreDesicion = num_revision + ' Revisión pendiente';
+                $colorDesicion = 'warning';
+            }
+
+            return `<span class="badge rounded-pill bg-${$colorDesicion}">${$nombreDesicion}</span>`;
+          }
+        },
+        {
+          // Actions
+          targets: 9,
+          searchable: false,
+          orderable: false,
+          title: 'Acciones',
+          render: function (data, type, full, meta) {
+            const puedeRevisar   = window.puedeAgregarElUsuario;
+            const puedeEditar    = window.puedeEditarElUsuario;
+            /*const puedeHistorial = window.puedeVerHistorialElUsuario;
+            const puedeAprobar   = window.puedeAprobarElUsuario;
+            const puedeEliminar  = window.puedeEliminarElUsuario;*/
+
+            let acciones = '';
+
+            // Revisar (Registrar revisión del personal)
+            if (puedeRevisar) {
+              acciones += `
+                <a class="dropdown-item waves-effect text-info cuest"
+                  href="/revision/ver/${full['id_revision']}"
+                  data-id="${full['id_revision']}"
+                  data-revisor-id="${full['id_revisor']}"
+                  data-dictamen-id="${full['id_certificado']}"
+                  data-num-dictamen="${full['num_dictamen']}"
+                  data-num-dictamen="${full['num_dictamen']}"
+                  data-tipo-dictamen="${full['tipo_dictamen']}"
+                  data-fecha-vigencia="${full['fecha_vigencia']}"
+                  data-fecha-vencimiento="${full['fecha_vigencia']}"
+                  data-tipo="${full['tipo_dictamen']}"
+                  data-tipo_revision="${full['tipo_revision']}"
+                  data-bs-target="#fullscreenModal">
+                  <i class="ri-eye-fill ri-20px text-info"></i> Revisar
+                </a>`;
+            }
+
+            // Editar revisión
+            if (puedeEditar) {
+              acciones += `
+                <a class="dropdown-item waves-effect text-primary editar-revision"
+                  href="/revision/obtener/${full['id_revision']}"
+                  data-id="${full['id_revision']}"
+                  data-tipo="${full['tipo_dictamen']}"
+                  data-tipo_revision="${full['tipo_revision']}"
+                  data-accion="editar">
+                  <i class="ri-pencil-fill ri-20px text-primary"></i> Editar Revisión
+                </a>`;
+            }
+
+            // Aprobación
+            /*if (puedeAprobar) {
+              acciones += `
+                <a data-id='${full['id_revision']}' data-num-certificado="${full['num_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalAprobacion"
+                  class="dropdown-item Aprobacion-record waves-effect text-success">
+                  <i class="ri-checkbox-circle-line text-success"></i> Aprobación
+                </a>`;
+            }
+
+            // Historial
+            if (puedeHistorial) {
+              acciones += `
+                <a data-id='${full['id_revision']}' class="dropdown-item waves-effect text-warning abrir-historial"
+                  data-bs-toggle="modal" data-bs-target="#historialModal">
+                  <i class="ri-history-line text-warning"></i> Historial
+                </a>`;
+            }
+
+            // Eliminar (si aplica)
+            if (puedeEliminar) {
+              acciones += `
+                <a data-id='${full['id_revision']}' class="dropdown-item waves-effect text-danger eliminar-revision">
+                  <i class="ri-delete-bin-7-line text-danger ri-20px"></i> Eliminar
+                </a>`;
+            }*/
+
+            // Si no tiene ningún permiso
+            if (!acciones.trim()) {
+              return `
+                <button class="btn btn-sm btn-secondary" disabled>
+                  <i class="ri-lock-line ri-20px me-1"></i> Opciones
+                </button>
+              `;
+            }
+
+            // Retornar dropdown con acciones válidas
+            return `
+              <div class="d-flex align-items-center gap-50">
+                <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                  <i class="ri-settings-5-fill"></i> Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end m-0">
+                  ${acciones}
+                </div>
+              </div>
+            `;
+          }
+
+        }
+      ],
+      order: [[1, 'desc']],
+      dom:
+        '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
+        '<"me-5 ms-n2"f>' +
+        '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"l>>' +
+        '>t' +
+        '<"row mx-1"' +
+        '<"col-sm-12 col-md-6"i>' +
+        '<"col-sm-12 col-md-6"p>' +
+        '>',
+      lengthMenu: [10, 20, 50, 70, 100],
+      language: {
+        sLengthMenu: '_MENU_',
+        search: '',
+        searchPlaceholder: 'Buscar',
+        info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
+        paginate: {
+          "sFirst": "Primero",
+          "sLast": "Último",
+          "sNext": "Siguiente",
+          "sPrevious": "Anterior"
+        }
+      },
+      responsive: {
+        details: {
+          display: $.fn.dataTable.Responsive.display.modal({
+            header: function (row) {
+              var data = row.data();
+              return 'Detalles de Certificado: ' + data['num_dictamen'];            }
+          }),
+          type: 'column',
+          renderer: function (api, rowIdx, columns) {
+            var data = $.map(columns, function (col, i) {
+              return col.title !== ''
+                ? '<tr data-dt-row="' +
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
+                : '';
+            }).join('');
+
+            return data ? $('<table class="table"/><tbody />').append(data) : false;
+          }
+        }
+      }
+    });
+  }
+
+  // FUNCIONES DEL FUNCIONAMIENTO DEL CRUD
+
+  dt_user.on('draw', function () {
+    // Inicializa todos los tooltips después de cada redibujado
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+  // Inicializacion Elementos
+  function initializeSelect2($elements) {
+      $elements.each(function () {
+          var $this = $(this);
+          $this.wrap('<div class="position-relative"></div>').select2({
+              dropdownParent: $this.parent(),
+          });
+      });
+  }
+
+  $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true,
+});
 
 // Registrar Respuesta y mostrar PDF correspondiente
 let id_revision;
@@ -436,9 +862,6 @@ $(document).on('click', '.cuest', function () {
     $('tbody#revisor').hide();
   }
 });
-
-
-
 
 $(document).on('click', '#registrarRevision', function () {
   if (typeof id_revision === 'undefined') {
@@ -550,16 +973,10 @@ $(document).on('click', '#registrarRevision', function () {
   });
 });
 
-
-
-
-
 // Quitar Validacion al llenar Select
 $(document).on('change', 'select[name^="respuesta"], textarea[name^="observaciones"], select[name^="tipo"]', function () {
   $(this).removeClass('is-invalid');
 });
-
-
 
 // Limpiar Validacion al cerrar Modal
 $(document).on('hidden.bs.modal', '#fullscreenModal', function () {
@@ -569,8 +986,6 @@ $(document).on('hidden.bs.modal', '#fullscreenModal', function () {
       respuesta.value = '';
   });
 });
-
-
 
 function cargarRespuestas(id_revision) {
   $.ajax({
@@ -610,15 +1025,11 @@ function cargarRespuestas(id_revision) {
   });
 }
 
-
-
-
-
-//PDF BITACORA
+//Abrir PDF Bitacora
 $(document).on('click', '.pdf', function () {
   var id_revisor = $(this).data('id');
   var tipoRevision = $(this).data('tipo_revision'); // Nuevo: tipo de revisión
-  var num_dictamen = $(this).data('num-certificado');
+  var num_dictamen = $(this).data('num-dictamen');
 
   console.log('ID del Revisor:', id_revisor);
   console.log('Tipo de Revisión:', tipoRevision);
@@ -654,14 +1065,10 @@ $('#pdfViewer').on('load', function () {
   $('#pdfViewer').show();
 });
 
-
-
-
-
 // Abrir modal Aprobacion
 $(document).on('click', '.Aprobacion-record', function() {
   const idRevision = $(this).data('id');
-  const certificado = $(this).data('num-certificado');
+  const certificado = $(this).data('num-dictamen');
   const select2Elements = $('#id_firmante');
   initializeSelect2(select2Elements);
 
@@ -688,11 +1095,6 @@ $(document).on('click', '.Aprobacion-record', function() {
       }
   });
 });
-
-
-
-
-
 
 // Registrar Aprobacion
 $(function () {
@@ -807,16 +1209,12 @@ $('#modalAprobacion').on('hidden.bs.modal', function () {
 });
 
 
-
-
 // Historial
 $(document).on('click', '.abrir-historial', function() {
   const id_revision = $(this).data('id');
   console.log('ID de revisión clicado:', id_revision);
   $('#historialModal').modal('show');
 });
-
-
 
 function cargarHistorial(id_revision) {
   console.log('Cargando historial para ID de revisión:', id_revision);
@@ -863,9 +1261,6 @@ function cargarHistorial(id_revision) {
       }
   });
 }
-
-
-
 
 function mostrarRespuestas(respuestas) {
   if (typeof respuestas === 'string') {
@@ -940,8 +1335,164 @@ $(document).on('hidden.bs.modal', '#fullscreenModal', function () {
   });
 });
 
+//end
+});
 
 
 
 
-});//end-function
+
+
+///REGISTRAR REVISION
+'use strict';
+
+$(function () {
+    // Configuración de AJAX para enviar el token CSRF
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // Inicializar FormValidation en el formulario
+    const form = document.getElementById('formulario');
+    const fv = FormValidation.formValidation(form, {
+        fields: {
+            'respuesta[]': {
+                validators: {
+                    notEmpty: {
+                        message: 'Selecciona una respuesta.'
+                    }
+                }
+            },
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: '.resp'
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+    }).on('core.form.valid', function () {
+        // Este evento se dispara cuando el formulario es válido
+
+        // Crear un objeto FormData con todos los datos del formulario
+        const formData = new FormData(form);
+
+        // Enviar la solicitud AJAX con todos los datos del formulario
+        $.ajax({
+            url: '/revision/registrar',
+            type: 'POST',
+            data: formData,
+            contentType: false,  // Importante para enviar los datos correctamente
+            processData: false,  // Importante para evitar la transformación de los datos en cadena de consulta
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: 'Revisión registrada exitosamente.',
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                }).then(() => {
+                    // Redirigir a la ruta después de mostrar el mensaje de éxito
+                    window.location.href = '/revision/unidad_inspeccion';
+                });
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: xhr.responseJSON.message,
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        });
+
+    });
+    
+});
+
+
+
+///EDITAR REVISION
+'use strict';
+
+$(function () {
+    // Configuración de AJAX para enviar el token CSRF
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // Inicializar FormValidation en el formulario de edición de personal
+    const formEditar = document.getElementById('formularioEditar');
+    if (formEditar) {
+        const fvEditar = FormValidation.formValidation(formEditar, {
+            fields: {
+                'respuesta[]': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Selecciona una respuesta.'
+                        }
+                    }
+                },
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                    eleValidClass: '',
+                    eleInvalidClass: 'is-invalid',
+                    rowSelector: '.resp'
+                }),
+                submitButton: new FormValidation.plugins.SubmitButton(),
+                autoFocus: new FormValidation.plugins.AutoFocus()
+            }
+        }).on('core.form.valid', function () {
+            // Este evento se dispara cuando el formulario es válido
+
+            // Crear un objeto FormData con todos los datos del formulario
+            const formData = new FormData(formEditar);
+
+            // Enviar la solicitud AJAX con todos los datos del formulario
+            $.ajax({
+                url: '/revision/editar',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: 'Revisión editada exitosamente.',
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    }).then(() => {
+                        // Redirigir a la ruta después de mostrar el mensaje de éxito
+                        window.location.href = '/revision/unidad_inspeccion';
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: xhr.responseJSON?.message || 'Ocurrió un error al editar la revisión.',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            });
+
+        });
+    }
+});
+
