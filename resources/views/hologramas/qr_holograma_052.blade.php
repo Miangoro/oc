@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'VALIDACIÓN DE HOLOGRAMA 070')
+@section('title', 'VALIDACIÓN DE HOLOGRAMA 052')
 
 
 @section('page-style')
