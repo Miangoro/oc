@@ -301,13 +301,66 @@
         </td>
     </tr>
 
+@php
+    $idHologramas = json_decode($data->id_hologramas, true);
+    $oldHologramas = $data->old_hologramas; // string
+
+    $textoMostrar = '------'; // valor por defecto
+
+    ///SOLICITUD Y ACTIVACION HOLOGRAMAS
+use App\Models\activarHologramasModelo;
+use App\Models\solicitudHolograma;
+
+$id_activacion = $idHologramas['id'] ?? null;
+$activacion = activarHologramasModelo::find($id_activacion);
+$solic = $activacion ? solicitudHolograma::find($activacion->id_solicitud) : null;
+
+$empresa_hol = $solic->empresa ?? null;
+$num_clien_hol = 'N/A';
+if ($empresa_hol && $empresa_hol->empresaNumClientes->isNotEmpty()) {
+    $cliente = $empresa_hol->empresaNumClientes->first(function ($item) use ($empresa_hol) {
+        return $item->empresa_id === $empresa_hol->id && !empty($item->numero_cliente);
+    });
+    $num_clien_hol = $cliente->numero_cliente ?? 'No encontrado';
+}
+$no_cliente = explode('070-', $num_clien_hol)[1] ?? null;
+
+if (!empty($idHologramas)) {
+    $foliosTexto = [];
+    foreach ($idHologramas as $holo) {
+        $inicio = str_pad($holo['inicio'] ?? '', 7, '0', STR_PAD_LEFT);
+        $final  = str_pad($holo['final'] ?? '', 7, '0', STR_PAD_LEFT);
+
+        // Solo anteponer el no_cliente al inicio y al final
+        if ($no_cliente) {
+            $foliosTexto[] = $no_cliente . '-' . $inicio . ' - ' . $no_cliente . '-' . $final;
+        } else {
+            $foliosTexto[] = $inicio . ' - ' . $final;
+        }
+    }
+    $textoMostrar = implode(', ', $foliosTexto);
+} elseif (!empty($oldHologramas)) {
+        // Convertir string a array separando por comas
+        $rangos = array_map('trim', explode(',', $oldHologramas));
+        $rangosFormateados = [];
+
+        foreach ($rangos as $r) {
+            if (!empty($r)) {
+                $rangosFormateados[] = $r; // texto tal cual
+            }
+        }
+
+        $textoMostrar = !empty($rangosFormateados) ? implode(', ', $rangosFormateados) : '------';
+    }
+@endphp
     <tr>
         <td style="font-weight: bold; font-size: 12px; padding: 6px;">
             Folios de holograma:</td>
         <td colspan="5">
-            {{ $hologramas }}
+            {!! $textoMostrar !!}
         </td>
     </tr>
+
 
     <tr>
         <td style="font-weight: bold; font-size: 12px; height: 30px">

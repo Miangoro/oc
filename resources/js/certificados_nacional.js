@@ -675,6 +675,33 @@ $(document).ready(function () {
           $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
           $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();
 
+          // --- Rellenar hologramas ---
+          if (datos.id_hologramas) {
+              let valores = [];
+              try {
+                  let hologramas = Array.isArray(datos.id_hologramas) 
+                      ? datos.id_hologramas 
+                      : JSON.parse(datos.id_hologramas); // asegurar que sea un array
+
+                  hologramas.forEach(h => {
+                      if (h.inicio && h.final && h.id) {
+                          valores.push(`${h.id}|${h.inicio}|${h.final}`);
+                      }
+                  });
+
+                  $('select[name="id_hologramas[]"]').val(valores).trigger('change');
+              } catch (e) {
+                  console.error("Error al parsear id_hologramas:", e);
+                  $('select[name="id_hologramas[]"]').val(null).trigger('change');
+              }
+          } else {
+              $('select[name="id_hologramas[]"]').val(null).trigger('change');
+          }
+
+          // Hologramas descripción
+          $('input[name="old_hologramas"]').val(datos.old_hologramas ?? '');
+
+
           flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
             dateFormat: "Y-m-d",
             enableTime: false,

@@ -65,6 +65,43 @@
                     </div>
 
 
+                    <!-- Aquí se insertan los hologramas -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline mb-6 select2-primary">
+                                <select class="form-select select2" id="holograma1" name="id_hologramas[]"
+                                    data-placeholder="Selecciona una opcion" multiple>
+                            @php
+                                $opcionesHologramas = [];
+                                foreach ($hologramas as $holo) {
+                                    $folios = json_decode($holo->folios, true);
+                                    $iniciales = $folios['folio_inicial'] ?? [];
+                                    $finales = $folios['folio_final'] ?? [];
+
+                                    foreach ($iniciales as $idx => $inicio) {
+                                        $final = $finales[$idx] ?? '';
+                                        $valor = "{$holo->id}|{$inicio}|{$final}";
+                                        $texto = "Activación {$holo->folio_activacion}: {$inicio} - {$final}";
+                                        $opcionesHologramas[] = ['valor' => $valor, 'texto' => $texto];
+                                    }
+                                }
+                            @endphp
+                                    @foreach ($opcionesHologramas as $op)
+                                        <option value="{{ $op['valor'] }}">{{ $op['texto'] }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="">Holograma1</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="text" class="form-control" name="old_hologramas" placeholder="Descripción del holograma">
+                                <label for="">Holograma2</label>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="d-flex mt-6 justify-content-center">
                         <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
                             Registrar</button>
@@ -140,6 +177,40 @@
                                 <input class="form-control flatpickr-datetime" id="edit_fecha_vigencia" name="fecha_vigencia"
                                     placeholder="YYYY-MM-DD">
                                 <label for="">Vigencia hasta</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline mb-6 select2-primary">
+                                <select class="form-select select2" name="id_hologramas[]" multiple>
+                    @php
+                        $opcionesHologramas = [];
+                        foreach ($hologramas as $holo) {
+                            $folios = json_decode($holo->folios, true);
+                            $iniciales = $folios['folio_inicial'] ?? [];
+                            $finales = $folios['folio_final'] ?? [];
+
+                            foreach ($iniciales as $idx => $inicio) {
+                                $final = $finales[$idx] ?? '';
+                                $valor = "{$holo->id}|{$inicio}|{$final}";
+                                $texto = "Activación {$holo->folio_activacion}: {$inicio} - {$final}";
+                                $opcionesHologramas[] = ['valor' => $valor, 'texto' => $texto];
+                            }
+                        }
+                    @endphp
+                                @foreach ($opcionesHologramas as $op)
+                                    <option value="{{ $op['valor'] }}">{{ $op['texto'] }}</option>
+                                @endforeach
+                                </select>
+                                <label for="">Holograma1</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="text" class="form-control" name="old_hologramas" placeholder="Descripción del holograma">
+                                <label for="">Holograma2</label>
                             </div>
                         </div>
                     </div>
