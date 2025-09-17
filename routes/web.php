@@ -1054,10 +1054,10 @@ Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group
 
 //-------------------REVISION UNIDAD DE INSPECCION-------------------
 Route::middleware(['auth'])->controller(RevisionUIController::class)->group(function () {
-    Route::get('/revision/unidad_inspeccion', 'UserManagement')->name('revision-UI');
+    Route::get('/revision/unidad_inspeccion', 'UserManagement')->name('UI-revision');
     Route::resource('/revision-ui-list', RevisionUIController::class);
 
-    Route::get('/revision/registrar/{id}', 'registrar');
+    Route::get('/revision/registrar/{id}', 'add_revision');
 });
 
 

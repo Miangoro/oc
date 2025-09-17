@@ -313,7 +313,7 @@
       "name": "Revisión de dictamenes",
       "url": "/revision/unidad_inspeccion",
       "icon": "menu-icon ri-file-chart-fill",
-      "slug": "revision-UI",
+      "slug": "UI-revision",
       "can": "Visualizar revisión UI"
     },
     {
