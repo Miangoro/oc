@@ -48,7 +48,7 @@
                                     name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
-                                <label >Domicilio de inspección</label>
+                                <label>Domicilio de inspección</label>
                             </div>
                         </div>
                     </div>
@@ -193,11 +193,25 @@
                 success: function(response) {
                     var contenido = "";
                     for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' + response.lotes_granel[index].nombre_lote + ' | Vol: ' + response.lotes_granel[index].volumen + ' | %Alc. Vol.: ' + response.lotes_granel[index].cont_alc + '</option>' + contenido;
+                        let lote = response.lotes_granel[index];
+
+                        // Si volumen_con_agua no existe o es 0, usamos volumen
+                        let volumenMostrar = (lote.volumen_con_agua && lote.volumen_con_agua > 0) ?
+                            lote.volumen_con_agua :
+                            lote.volumen;
+
+                        contenido =
+                            '<option value="' + lote.id_lote_granel + '">' +
+                            lote.nombre_lote +
+                            ' | Vol: ' + volumenMostrar +
+                            ' | %Alc. Vol.: ' + lote.cont_alc +
+                            '</option>' + contenido;
                     }
+
                     if (response.lotes_granel.length == 0) {
                         contenido = '<option value="">Sin lotes registrados</option>';
-                    } else {}
+                    }
+
                     $('#edit_id_lote_granel_muestreo').html(contenido);
 
                     // Mantener el dato del select
@@ -209,6 +223,7 @@
                             .trigger('change');
                     }
                 },
+
                 error: function() {}
             });
         }
