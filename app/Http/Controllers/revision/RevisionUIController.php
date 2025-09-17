@@ -331,11 +331,36 @@ public function registrar(Request $request)
 
 
 
+
+/*public function obtenerRespuestas($id)
+{
+    
+        $revisor = RevisionDictamen::where('id_revision', $id)->first();
+
+        if (!$revisor) {
+            return response()->json(['message' => 'El registro no fue encontrado.'], 404);
+        }
+
+        // Decodificar respuestas
+        $historialRespuestas = json_decode($revisor->respuestas, true);
+
+        // Verificar si es un array válido
+        $ultimaRevision = is_array($historialRespuestas) ? end($historialRespuestas) : null;
+        $decision = $revisor->decision;
+
+
+        // Respuesta con datos o vacío si no hay historial
+        return response()->json([
+            'message' => 'Datos de la revisión más actual recuperados exitosamente.',
+            'respuestas' => $ultimaRevision,
+            'decision' => $decision,
+        ], 200);
+}*/
 ///OBTENER REVISION
 public function edit_revision($id)
 {
     $datos = RevisionDictamen::findOrFail($id);
-    $preguntasQuery = preguntas_revision_dictamen::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1);
+    $preguntasQuery = preguntas_revision_dictamen::where('tipo_revisor', 1);
 
 
     $preguntas = $preguntasQuery->get();
@@ -387,7 +412,7 @@ public function edit_revision($id)
             $tipo = "Exportación";
         }
 
-    return view('dictamenes.edit_revision', compact('datos', 'preguntas', 'url', 'tipo', 'respuestas_map'));
+    return view('dictamenes.edit_revision', compact('datos', 'dictamen', 'preguntas', 'url', 'tipo', 'respuestas_map'));
 }
 ///EDITAR REVISION
 public function editar(Request $request)

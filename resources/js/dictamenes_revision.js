@@ -658,7 +658,7 @@ $(function () {
             if (puedeEditar) {
               acciones += `
                 <a class="dropdown-item waves-effect text-primary editar-revision"
-                  href="/edit_revision/${full['id_revision']}"
+                  href="/revision/obtener/${full['id_revision']}"
                   data-id="${full['id_revision']}"
                   data-tipo="${full['tipo_dictamen']}"
                   data-tipo_revision="${full['tipo_revision']}"
@@ -1342,6 +1342,8 @@ $(document).on('hidden.bs.modal', '#fullscreenModal', function () {
 
 
 
+
+///REGISTRAR REVISION
 'use strict';
 
 $(function () {
@@ -1418,8 +1420,7 @@ $(function () {
 
 
 
-
-
+///EDITAR REVISION
 'use strict';
 
 $(function () {
@@ -1461,7 +1462,7 @@ $(function () {
 
             // Enviar la solicitud AJAX con todos los datos del formulario
             $.ajax({
-                url: '/editar_revision',
+                url: '/revision/editar',
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -1476,7 +1477,7 @@ $(function () {
                         }
                     }).then(() => {
                         // Redirigir a la ruta después de mostrar el mensaje de éxito
-                        window.location.href = '/revision/personal';
+                        window.location.href = '/revision/unidad_inspeccion';
                     });
                 },
                 error: function(xhr) {

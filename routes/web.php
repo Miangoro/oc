@@ -1061,6 +1061,9 @@ Route::middleware(['auth'])->controller(RevisionUIController::class)->group(func
     Route::get('/revision/ver/{id}', 'add_revision');
     Route::post('/revision/registrar', 'registrar')->name('registrar-revision');
 
+
+    //Route::get('/revisor/obtener-respuestas/{id}', 'obtenerRespuestas');
+
     Route::get('/revision/obtener/{id}', 'edit_revision');
     Route::post('/revision/editar', 'editar')->name('editar-revision');
 });
