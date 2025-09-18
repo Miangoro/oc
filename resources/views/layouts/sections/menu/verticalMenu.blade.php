@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
   <div class="app-brand demo">
     <a href="{{url('/')}}" class="app-brand-link">
        @if(Auth::check() && Auth::user()->tipo == 2)
-      <img height="55px" src="{{ asset('assets/img/branding/logo_ui.png') }}" alt="">
+      <img height="55px" src="{{ asset('assets/img/branding/logo_ui2.png') }}" alt="">
       @else
         <img height="55px" src="{{ asset('assets/img/branding/logo_oc.png') }}" alt="">
       @endif
