@@ -241,8 +241,8 @@ public function index(Request $request)
             $nestedData['nombre_lote_granel'] = $certificado->dictamen->lote_envasado->lotesGranel->first()->nombre_lote ?? 'No encontrado';
             $nestedData['marca'] = $certificado->dictamen->lote_envasado->marca->marca ?? 'No encontrado';
             $caracteristicas = json_decode($certificado->solicitud->caracteristicas ?? '', true);
-            $nestedData['cajas'] = $caracteristicas['cajas'] ?? 'No encontrado';
-            $nestedData['botellas'] = $caracteristicas['botellas'] ?? 'No encontrado';
+            $nestedData['cajas'] = $caracteristicas['cantidad_cajas'] ?? 'No encontrado';
+            $nestedData['botellas'] = $caracteristicas['cantidad_botellas'] ?? 'No encontrado';
 
 
             $data[] = $nestedData;
