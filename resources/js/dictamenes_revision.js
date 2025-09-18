@@ -460,16 +460,14 @@ $(function () {
         url: '/revision-ui-list',
       },
       columns: [
-        { data: '#' },                //0
-        { data: 'fake_id' },          //1
-        { data: '' },    //2
-        { data: 'num_dictamen' },  //3
-        { data: 'id_revisor' },       //4
-        { data: 'created_at' },       //5
-        { data: 'updated_at' },       //6
-        { data: 'PDF' },              //7
-        { data: 'decision' },         //8
-        { data: 'actions' }           //9
+        { data: '' }, //0   
+        { data: 'fake_id' }, //1
+        { data: 'id_inspeccion' },    //2
+        { data: 'num_servicio' },  //4
+        { data: 'id_revisor' },       //5
+        { data: 'created_at' },       //6
+        { data: 'decision' },         //7
+        { data: 'actions' }           //8
       ],
       columnDefs: [
         {
@@ -482,50 +480,34 @@ $(function () {
             return '';
           }
         },
-        {
+        {//1
+          targets: 1,
           searchable: false,
           orderable: false,
-          targets: 1,
           render: function (data, type, full, meta) {
             return `<span>${full.fake_id}</span>`;
           }
         },
-        {//tipo certificado
+        {//tipo solicitud
           targets: 2,
           searchable: true,
           orderable: false,
           render: function (data, type, row) {
-              var tipoRevision = row['tipo_revision'];
-              var icono = '';
-
-              if (tipoRevision === 'Instalaciones de productor' || tipoRevision === 'Instalaciones de envasador' || tipoRevision === 'Instalaciones de comercializador' || tipoRevision === 'Instalaciones de almacén o bodega' || tipoRevision === 'Instalaciones de área de maduración') {
-                  icono = `<span class="fw-bold mt-1 badge bg-secondary">${tipoRevision}</span>`;
-              }
-              if (tipoRevision === 'Granel') {
-                icono = `<span class="fw-bold mt-1 badge bg-dark">${tipoRevision}</span>`;
-              }
-              if (tipoRevision === 'Envasado') {
-                icono = `<span class="fw-bold mt-1 badge bg-info">${tipoRevision}</span>`;
-              }
-              if (tipoRevision === 'Exportación') {
-                  icono = `<span class="fw-bold mt-1 badge bg-primary">${tipoRevision}</span>`;
-              }
-
-              return icono;
+              return `<span class="fw-bold mt-1 badge bg-${row['badge_class']}">${row['tipo_revision']}</span>`;
           }
         },
-        {///num_dictamen
+        {///num_servicio
           targets: 3,
           searchable: true,
           orderable: false,
           render: function (data, type, full, meta) {
-            var $num_dictamen = full['num_dictamen'];
+            var $num_servicio = full['num_servicio'];
 
 
               return `
               <div style="display: flex; flex-direction: column; align-items: start; gap: 4px;">
                 <span class="fw-bold">
-                  ${$num_dictamen}
+                  ${$num_servicio}
                 </span>
               </div>
               `;
@@ -541,17 +523,23 @@ $(function () {
             return '<span class="user-email">' + $id_revisor + '</span>';
           }
         },
-
-        {
+        {//fechas
           targets: 5,
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            var $created_at = full['created_at'];
-            return '<span class="user-email">' + $created_at + '</span>';
+            var created = full['created_at'] || '';
+            var updated = full['updated_at'] || '';
+
+            return `
+              <div>
+                  <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Asignación:<br></strong> ${created}</span></div>
+                  <div><span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Revisión:<br></strong> ${updated}</span></div>
+              </div>
+            `;
           }
         },
-        {
+        /*{
           targets: 6,
           searchable: false,
           orderable: false,
@@ -559,9 +547,9 @@ $(function () {
             var $updated_at = full['updated_at'];
             return '<span class="user-email">' + $updated_at + '</span>';
           }
-        },
-        {
-          targets: 7,
+        },*/
+        /*{
+          targets: 6,
           className: 'text-center',
           searchable: false,
           orderable: false,
@@ -574,7 +562,7 @@ $(function () {
                          data-bs-toggle="modal"
                          data-bs-dismiss="modal"
                          data-num-dictamen="${full['num_dictamen']}"
-                         data-tipo="${full['tipo_dictamen']}"
+                         data-tipo="${full['tipo_solicitud']}"
                          data-id="${full['id_revision']}"
                          data-tipo_revision="${full['tipo_revision']}">
                       </i>`;
@@ -584,9 +572,9 @@ $(function () {
                       <i class="ri-file-pdf-2-fill ri-40px cursor-not-allowed" style="color: lightgray;"></i>`;
               }
           }
-        },
+        },*/
         {
-          targets: 8,
+          targets: 6,
           orderable: 0,
           render: function (data, type, full, meta) {
             let $decision = full['decision'];
@@ -621,7 +609,7 @@ $(function () {
         },
         {
           // Actions
-          targets: 9,
+          targets: 7,
           searchable: false,
           orderable: false,
           title: 'Acciones',
@@ -633,49 +621,63 @@ $(function () {
             const puedeEliminar  = window.puedeEliminarElUsuario;*/
 
             let acciones = '';
-
-            // Revisar (Registrar revisión del personal)
-            if (puedeRevisar) {
+            if (full['decision'] == 'Pendiente'){
               acciones += `
                 <a class="dropdown-item waves-effect text-info cuest"
                   href="/revision/ver/${full['id_revision']}"
                   data-id="${full['id_revision']}"
-                  data-revisor-id="${full['id_revisor']}"
-                  data-dictamen-id="${full['id_certificado']}"
-                  data-num-dictamen="${full['num_dictamen']}"
-                  data-num-dictamen="${full['num_dictamen']}"
-                  data-tipo-dictamen="${full['tipo_dictamen']}"
-                  data-fecha-vigencia="${full['fecha_vigencia']}"
-                  data-fecha-vencimiento="${full['fecha_vigencia']}"
-                  data-tipo="${full['tipo_dictamen']}"
+                  data-id-revisor="${full['id_revisor']}"
+                  data-num-servicio="${full['num_servicio']}"
+                  data-tipo="${full['tipo_solicitud']}"
+                  data-bs-target="#fullscreenModal">
+                  <i class="ri-eye-fill ri-20px text-info"></i> Revisar
+                </a>`;
+            }else{
+              acciones += `
+                <a class="dropdown-item waves-effect text-primary editar-revision"
+                  href="/revision/obtener/${full['id_revision']}"
+                  data-id="${full['id_revision']}"
+                  data-tipo="${full['tipo_solicitud']}"
                   data-tipo_revision="${full['tipo_revision']}"
+                  data-accion="editar">
+                  <i class="ri-pencil-fill ri-20px text-primary"></i> Editar Revisión
+                </a>`;
+            }
+            // Revisar (Registrar revisión del personal)
+            /*if (puedeRevisar) {
+              acciones += `
+                <a class="dropdown-item waves-effect text-info cuest"
+                  href="/revision/ver/${full['id_revision']}"
+                  data-id="${full['id_revision']}"
+                  data-id-revisor="${full['id_revisor']}"
+                  data-num-servicio="${full['num_servicio']}"
+                  data-tipo="${full['tipo_solicitud']}"
                   data-bs-target="#fullscreenModal">
                   <i class="ri-eye-fill ri-20px text-info"></i> Revisar
                 </a>`;
             }
-
             // Editar revisión
             if (puedeEditar) {
               acciones += `
                 <a class="dropdown-item waves-effect text-primary editar-revision"
                   href="/revision/obtener/${full['id_revision']}"
                   data-id="${full['id_revision']}"
-                  data-tipo="${full['tipo_dictamen']}"
+                  data-tipo="${full['tipo_solicitud']}"
                   data-tipo_revision="${full['tipo_revision']}"
                   data-accion="editar">
                   <i class="ri-pencil-fill ri-20px text-primary"></i> Editar Revisión
                 </a>`;
             }
 
+
             // Aprobación
-            /*if (puedeAprobar) {
+            if (puedeAprobar) {
               acciones += `
                 <a data-id='${full['id_revision']}' data-num-certificado="${full['num_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalAprobacion"
                   class="dropdown-item Aprobacion-record waves-effect text-success">
                   <i class="ri-checkbox-circle-line text-success"></i> Aprobación
                 </a>`;
             }
-
             // Historial
             if (puedeHistorial) {
               acciones += `
@@ -745,7 +747,7 @@ $(function () {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de Certificado: ' + data['num_dictamen'];            }
+              return 'Detalles del acta: ' + data['num_servicio'];            }
           }),
           type: 'column',
           renderer: function (api, rowIdx, columns) {
@@ -1029,11 +1031,11 @@ function cargarRespuestas(id_revision) {
 $(document).on('click', '.pdf', function () {
   var id_revisor = $(this).data('id');
   var tipoRevision = $(this).data('tipo_revision'); // Nuevo: tipo de revisión
-  var num_dictamen = $(this).data('num-dictamen');
+  var num_servicio = $(this).data('num-servicio');
 
   console.log('ID del Revisor:', id_revisor);
   console.log('Tipo de Revisión:', tipoRevision);
-  console.log('Número de Certificado:', num_dictamen);
+  console.log('Número de Certificado:', num_servicio);
 
   // Definir URL según el tipo de revisión
   var url_pdf = '../pdf_bitacora_revision_personal/' + id_revisor;
@@ -1043,7 +1045,7 @@ $(document).on('click', '.pdf', function () {
 
   // Configurar encabezados del modal
   $('#titulo_modal_Dictamen').text("Bitácora de revisión documental");
-  $('#subtitulo_modal_Dictamen').text(num_dictamen);
+  $('#subtitulo_modal_Dictamen').text(num_servicio);
 
   // Configurar botón para abrir PDF
   var openPdfBtn = $('#openPdfBtnDictamen');

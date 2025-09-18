@@ -179,12 +179,10 @@
                 <tr>
                     <th></th>
                     <th>#</th>
-                    <th>Tipo</th>
+                    <th>Solicitud</th>
                     <th>Acta</th>
                     <th>Revisor</th>
-                    <th>Fecha asignación</th>
-                    <th>Fecha revisión</th>
-                    <th>Bitácora</th>
+                    <th>Fechas</th>
                     <th>Estatus</th>
                     <th>Acciones</th>
                 </tr>

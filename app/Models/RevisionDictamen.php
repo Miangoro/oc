@@ -17,7 +17,7 @@ class RevisionDictamen extends Model
     protected $fillable = [
         'tipo_revision',
         'id_revisor',
-        'id_dictamen',
+        'id_inspeccion',
         'numero_revision',
         'es_correccion',
         'observaciones',
@@ -26,7 +26,7 @@ class RevisionDictamen extends Model
         'id_aprobador',
         'aprobacion',
         'fecha_aprobacion',
-        'tipo_dictamen'
+        'tipo_solicitud'
     ];
 
     public function getLogName2(): string
@@ -39,6 +39,12 @@ class RevisionDictamen extends Model
     {
         return $this->belongsTo(User::class, 'id_revisor', 'id');
     }
+
+    public function inspeccion()
+    {
+        return $this->hasOne(inspecciones::class, 'id_inspeccion', 'id_inspeccion');
+    }
+
 
     public function dictamenInstalacion()
     {
@@ -89,13 +95,11 @@ class RevisionDictamen extends Model
 
 
 
-
+/*
     public function aprobador()
     {
         return $this->belongsTo(User::class, 'id_aprobador');
     }
-
-    
 
     public function obtenerDocumentoActa($id_documento, $id_solicitud)
     {
@@ -106,9 +110,10 @@ class RevisionDictamen extends Model
         return $documento ? $documento->url : null; // Devuelve solo el atributo `url` o `null` si no hay documento
     }
 
-        public function evidencias()
-        {
-            return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_certificado')->where('id_documento',133);
-        }
+    public function evidencias()
+    {
+        return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_certificado')->where('id_documento',133);
+    }
+*/
     
 }

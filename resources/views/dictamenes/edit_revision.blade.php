@@ -39,7 +39,7 @@
 
     <div class="card-header bg-menu-theme text-center py-3">
       <h5 class="mb-0 text-white">
-        Revisión de dictamen <br>
+        Revisión de acta <br>
         <span class="badge bg-warning text-dark"></span>
       </h5>
     </div>
@@ -49,39 +49,33 @@
 
         <!-- Tipo de dictamen -->
         <div class="col-md-4">
-          <p class="text-muted mb-1">Tipo de dictamen</p>
+          <p class="text-muted mb-1">Tipo de solicitud</p>
           <h5 class="fw-semibold">
           {{ $tipo }}
           </h5>
-          @if($datos->tipo_dictamen == 4 && $dictamen->inspeccione->solicitud->lotesEnvasadoDesdeJson()->count() > 1)
-            <span class="badge bg-info">Combinado</span>
-          @endif
-          @if($datos->es_correccion == 'si')
-            <span class="badge bg-danger">Es corrección</span>
-          @endif
-          
-          <div class="mt-3">
-            <p class="text-muted mb-1">Observaciones de la asignación:</p>
-            <div class="d-flex align-items-center gap-2 mb-1">
-              <a href="/storage/revisiones/" target="_blank">
-                <i class="ri-file-pdf-2-fill text-danger ri-24px"></i>
-              </a>
-            </div>
-          </div>
 
-          <div class="mt-2">
-            <span class="text-muted">Este certificado sustituye al:</span>
-            <a target="_blank" href="" class="text-primary fw-bold"></a>
-            <br>
-            <span class="text-muted">Motivo: </span><strong> </strong>
-          </div>
+          <div class="mt-4">
+                <p class="text-muted mb-1">Acta</p>
+                <span class="fw-semibold"> </span>
+            @php    
+              $empresa = $datos->inspeccion->solicitud->empresa;
+              $cliente = $empresa?->empresaNumClientes->firstWhere( 'numero_cliente', '!=', null );
+              $acta = \App\Models\documentacion_url::where('id_empresa', $empresa->id_empresa)
+                    ->where('id_documento', 69)
+                    ->where('id_relacion', $datos->inspeccion->solicitud->id_solicitud)
+                    ->value('url');
+            @endphp
+                <a href="{{ asset('files/' . $cliente->numero_cliente . '/actas/' . $acta) }}" target="_blank">
+                  <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                </a>
+            </div>
         </div>
 
         <!-- Cliente -->
         <div class="col-md-4">
           <p class="text-muted mb-1">Cliente</p>
           <h5 class="fw-semibold">
-            {{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+            {{ $datos->inspeccion->solicitud->empresa->razon_social ?? 'N/A' }}
           </h5>
         </div>
 
@@ -100,14 +94,6 @@
             </div>
           </div>
 
-          <!-- PDF Dictamen -->
-          <div class="mt-4">
-            <p class="text-muted mb-1">Dictamen</p>
-            <span class="fw-semibold">{{$dictamen->num_dictamen}}</span>
-            <a href="{{ $url ?? '#' }}" target="_blank">
-              <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-            </a>
-          </div>
         </div>
 
       </div>
@@ -130,7 +116,6 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Pregunta</th>
-                                    <th>Documento</th>
                                     <th>Respuesta</th>
                                     <th>Observaciones</th>
                                 </tr>
@@ -138,46 +123,22 @@
                             <tbody>
 
                     @php    
-                        $empresa = $dictamen->inspeccione->solicitud->empresa;
+                        $empresa = $datos->inspeccion->solicitud->empresa;
                         $cliente = $empresa?->empresaNumClientes->firstWhere( 'numero_cliente', '!=', null );
                     @endphp
                     @foreach ($preguntas as $index => $pregunta)
 
-                                    @php
-                                        $respuesta = $respuestas_map[$pregunta->id_pregunta] ?? null;
-                                        $respuesta_actual = $respuesta['respuesta'] ?? null;
-                                    @endphp
-                                    <tr>
-                                        <th>{{ $index + 1 }}</th>
-                                        <th>{{ $pregunta->pregunta }} <input value="{{ $pregunta->id_pregunta }}"
-                                                type="hidden" name="id_pregunta[]">
-                                        </th>
+                        @php
+                            $respuesta = $respuestas_map[$pregunta->id_pregunta] ?? null;
+                            $respuesta_actual = $respuesta['respuesta'] ?? null;
+                        @endphp
+                        <tr>
+                            <th>{{ $index + 1 }}</th>
+                            <th>{{ $pregunta->pregunta }} <input value="{{ $pregunta->id_pregunta }}"
+                                    type="hidden" name="id_pregunta[]">
+                            </th>
 
                                 
-                        <!--COLUMNA DOCUMENTO-->
-                        <td>
-                            @if($pregunta->filtro == 'acta')
-                                    {{ $dictamen->inspeccione->num_servicio}}
-                                    @php
-                                    $acta = null;
-                                    if ($pregunta->id_documento) {
-                                        // Obtiene acta específica
-                                        $acta = \App\Models\documentacion_url::where('id_empresa', $empresa->id_empresa)
-                                                ->where('id_documento', 69)
-                                                ->where('id_relacion', $dictamen->inspeccione->solicitud->id_solicitud)
-                                                ->value('url');
-                                    }
-                                    @endphp
-                                    @if($acta)
-                                        <a target="_blank" href="{{ asset('files/' . $cliente->numero_cliente . '/actas/' . $acta) }}">
-                                        <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                        </a>
-                                    @else
-                                        <span class="text-muted">Sin documento</span>
-                                    @endif
-                                @endif
-                            </td>
-
                             <td>
                                 <div class="resp">
                                     <select class="form-select form-select-sm" aria-label="Elige la respuesta"

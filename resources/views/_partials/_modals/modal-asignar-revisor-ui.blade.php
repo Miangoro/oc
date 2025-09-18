@@ -1,10 +1,3 @@
-{{-- <style>
-  /* Aplica cuando select2 no tiene opción seleccionada */
-  .select2-container--default.select2-empty .select2-selection--single {
-    background-color: #fff3cd52 !important; /* fondo amarillo claro */
-    border-color: #ffc107 !important; /* borde ámbar */
-  }
-</style> --}}
 
 <!-- Modal Asignar Revisor -->
 <div class="modal fade" id="asignarRevisorModal" tabindex="-1" aria-hidden="true">
