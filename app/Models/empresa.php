@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -18,8 +19,21 @@ class empresa extends Model
         'razon_social',
         'domicilio_fiscal',
         'tipo',
-        'cp'
+        'cp',
+        'id_usuario_registro'
       ];
+
+    protected static function boot()//registro automatico de usuario
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (Auth::check()) {
+                $model->id_usuario_registro = Auth::id();
+            }
+        });
+    }
+
 
       public function getLogName2(): string
       {

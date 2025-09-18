@@ -167,6 +167,7 @@
         @include('_partials._modals.modal-add-resultados-inspeccion')
         @include('_partials._modals.modal-export-excel-inspecciones')
 
+        @include('_partials/_modals/modal-asignar-revisor-ui')
 
 
         <!-- Modal -->

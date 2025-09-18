@@ -180,7 +180,7 @@ public function index(Request $request)
 
             if ($relacion) {
                 $fechaVigencia = $relacion->fecha_vigencia ?? null;
-                $num_dictamen = $relacion->num_dictamen ?? null;
+                $num_dictamen = $relacion->inspeccione->num_servicio ?? null;
                 $id_dictamen = $relacion->id_dictamen ?? null;
 
                 // Si es instalación, validar sub-tipo

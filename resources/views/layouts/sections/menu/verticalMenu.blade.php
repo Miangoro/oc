@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Helpers\MenuHelper;
 $configData = Helper::appClasses();
+use Illuminate\Support\Facades\Auth;
 @endphp
 
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
@@ -10,7 +11,11 @@ $configData = Helper::appClasses();
   @if(!isset($navbarFull))
   <div class="app-brand demo">
     <a href="{{url('/')}}" class="app-brand-link">
-      <img height="55px" src="{{ asset('assets/img/branding/logo_oc.png') }}" alt="">
+       @if(Auth::check() && Auth::user()->tipo == 2)
+      <img height="57px" src="{{ asset('assets/img/branding/logo_ui4.png') }}" alt="">
+      @else
+        <img height="55px" src="{{ asset('assets/img/branding/logo_oc.png') }}" alt="">
+      @endif
       <!--<span class="app-brand-text demo menu-text fw-semibold ms-2">{{config('variables.templateName')}}</span>-->
     </a>
 

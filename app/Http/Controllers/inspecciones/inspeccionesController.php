@@ -44,7 +44,7 @@ use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SolicitudesExport;
 use App\Exports\InspeccionesExport;
-
+use App\Models\RevisionDictamen;
 
 class inspeccionesController extends Controller
 {
@@ -69,8 +69,10 @@ class inspeccionesController extends Controller
           ->orderBy('id_solicitud', 'desc')
           ->get();
 
+        $inspectores = User::where('tipo', '=', '2')
+            ->where('estatus', 'Activo')
+            ->get(); // Obtener todos los organismos
 
-        $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
         return view('inspecciones.find_inspecciones_view', compact('solicitudesTipos','instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos', 'equipos','todasSolicitudes', 'solcitudesSinInspeccion'));
     }
 
@@ -1029,6 +1031,70 @@ public function eliminarActa($id_solicitud, $id_documento, $id)
 
     return response()->json(['message' => 'Documento eliminado correctamente.']);
 }
+
+
+
+///ASIGNAR REVISION
+/*
+public function storeRevisor(Request $request)
+{
+    $validated = $request->validate([
+        'personal' => 'required|integer|exists:users,id',
+        'id_inspeccion' => 'required|integer|exists:inspecciones,id_inspeccion',
+        'observaciones' => 'nullable|string|max:5000',
+    ]);
+
+    $revisor = new RevisionDictamen();
+    $revisor->id_revisor = $validated['personal'];
+    $revisor->id_dictamen = $validated['id_inspeccion']; // Se guarda como dictamen
+    $revisor->numero_revision = 1;
+    $revisor->observaciones = $validated['observaciones'] ?? null;
+    $revisor->save();
+
+        // Notificación
+        /*$user = User::find($idRevisor);
+        if ($user) {
+            $url_clic = $tipoRevisor == 1 ? "/add_revision/{$revisor->id_revision}" : "/add_revision_consejo/{$revisor->id_revision}";
+
+            $user->notify(new GeneralNotification([
+                'asunto' => 'Revisión de certificado ' . $certificado->num_certificado,
+                'title' => 'Revisión de certificado',
+                'message' => 'Se te ha asignado el certificado ' . $certificado->num_certificado,
+                'url' => $url_clic,
+                'nombreRevisor' => $user->name,
+                'emailRevisor' => $user->email,
+                'num_certificado' => $certificado->num_certificado,
+                'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
+                'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+                'razon_social' => $empresa->razon_social ?? 'Sin asignar',
+                'numero_cliente' => $numeroCliente ?? 'Sin asignar',
+                'tipo_certificado' => 'Certificado granel',
+                'observaciones' => $revisor->observaciones,
+            ]));
+        }
+        **
+
+    return response()->json(['message' => 'Revisor asignado correctamente.']); 
+}
+*/
+public function storeRevisor(Request $request)
+{
+    $validated = $request->validate([
+        'personal' => 'required|integer|exists:users,id',
+        'id_inspeccion' => 'required|integer|exists:inspecciones,id_inspeccion',
+        'observaciones' => 'nullable|string|max:5000',
+    ]);
+
+    RevisionDictamen::create([
+        'id_revisor' => $validated['personal'],
+        'id_dictamen' => $validated['id_inspeccion'],
+        'numero_revision' => 1,
+        'observaciones' => $validated['observaciones'] ?? null,
+    ]);
+
+    return response()->json(['message' => 'Revisor asignado correctamente.']);
+}
+
 
 
 

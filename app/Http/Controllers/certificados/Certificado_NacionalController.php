@@ -269,6 +269,9 @@ public function store(Request $request)
         'fecha_emision' => 'required|date',
         'fecha_vigencia' => 'nullable|date',
         'id_firmante' => 'required|exists:users,id',
+
+        'id_hologramas'  => 'nullable|array',
+        'old_hologramas' => 'nullable|string'
     ]);
 
     // Cargar solicitud con relaciones encadenadas
@@ -280,6 +283,23 @@ public function store(Request $request)
         return response()->json(['error' => 'No se encontró dictamen para el lote envasado.'], 404);
     }
 
+     // Armar estructura de hologramas
+    $idHologramas = [];
+
+    if (!empty($request->id_hologramas)) {
+        foreach ($request->id_hologramas as $item) {
+            // Divide el valor (id|inicio|final)
+            [$id, $inicio, $final] = explode('|', $item);
+
+            $idHologramas[] = [
+                'id' => $id,
+                'inicio' => $inicio,
+                'final' => $final,
+            ];
+        }
+    }
+
+
     // Crear un registro
     $new = new Certificado_Nacional();
     $new->id_solicitud = $validated['id_solicitud'];
@@ -289,6 +309,10 @@ public function store(Request $request)
     $new->fecha_emision = $validated['fecha_emision'];
     $new->fecha_vigencia = $validated['fecha_vigencia'];
     $new->id_firmante = $validated['id_firmante'];
+    // Guardar hologramas
+    $new->id_hologramas   = json_encode($idHologramas);
+    $new->old_hologramas = $validated['old_hologramas'] ?? null; 
+
     $new->save();
 
     return response()->json(['message' => 'Registrado correctamente.']);
@@ -327,6 +351,9 @@ public function edit($id_certificado)
             'fecha_emision' => $editar->fecha_emision,
             'fecha_vigencia' => $editar->fecha_vigencia,
             'id_firmante' => $editar->id_firmante,
+
+            'id_hologramas' => json_decode($editar->id_hologramas, true) ?? [],
+            'old_hologramas' => $editar->old_hologramas ?? '',
         ]);
     } catch (\Exception $e) {
         Log::error('Error al obtener', [
@@ -346,6 +373,9 @@ public function update(Request $request, $id_certificado)
         'fecha_emision' => 'required|date',
         'fecha_vigencia' => 'nullable|date',
         'id_firmante' => 'required|integer',
+
+        'id_hologramas'  => 'nullable|array',
+        'old_hologramas' => 'nullable|string'
     ]);
 
     try {
@@ -359,12 +389,26 @@ public function update(Request $request, $id_certificado)
             return response()->json(['error' => 'No se encontró dictamen para el lote envasado.'], 404);
         }
 
+        // Procesar hologramas (se guardan como JSON)
+        $hologramasProcesados = [];
+        foreach ($request->id_hologramas ?? [] as $valor) {
+            [$id, $inicio, $final] = explode('|', $valor);
+            $hologramasProcesados[] = [
+                'id'     => $id,
+                'inicio' => $inicio,
+                'final'  => $final,
+            ];
+        }
+
         $actualizar->id_solicitud = $request->id_solicitud;
         $actualizar->id_dictamen = $dictamen->id_dictamen_envasado;
         $actualizar->num_certificado = $request->num_certificado;
         $actualizar->fecha_emision = $request->fecha_emision;
         $actualizar->fecha_vigencia = $request->fecha_vigencia;
         $actualizar->id_firmante = $request->id_firmante;
+
+        $actualizar->id_hologramas  = json_encode($hologramasProcesados);
+        $actualizar->old_hologramas = $request->old_hologramas ?? '';
         $actualizar->save();
 
         return response()->json(['message' => 'Actualizado correctamente.']);

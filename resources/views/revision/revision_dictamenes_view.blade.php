@@ -171,7 +171,7 @@
 <!--Vista de la tabla-->
 <div class="card">
     <div class="card-header pb-0">
-        <h3 class="card-title mb-0">Revisión de dictamenes por parte de la unidad de Inspección</h3>
+        <h3 class="card-title mb-0">Revisión de actas por parte de la unidad de Inspección</h3>
     </div>
     <div class="card-datatable table-responsive">
         <table class="datatables-users table">
@@ -180,7 +180,7 @@
                     <th></th>
                     <th>#</th>
                     <th>Tipo</th>
-                    <th>Dictamen</th>
+                    <th>Acta</th>
                     <th>Revisor</th>
                     <th>Fecha asignación</th>
                     <th>Fecha revisión</th>

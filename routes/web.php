@@ -1066,6 +1066,9 @@ Route::middleware(['auth'])->controller(RevisionUIController::class)->group(func
 
     Route::get('/revision/obtener/{id}', 'edit_revision');
     Route::post('/revision/editar', 'editar')->name('editar-revision');
+
+    //asignar revision
+    Route::post('/revision/asignar-ui', 'storeRevisor')->name('asignarRevisor');
 });
 
 
