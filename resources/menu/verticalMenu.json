@@ -449,7 +449,7 @@
       "url": "/mensajes-personalizados",
       "icon": "menu-icon ri-chat-smile-2-fill",
       "slug": "mensajes-dashboard",
-      "can": "Visualizar imagenes carousel"
+      "can": "Visualizar mensajes"
     }
 
 

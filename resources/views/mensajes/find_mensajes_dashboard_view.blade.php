@@ -22,9 +22,9 @@
 <!-- Page Scripts -->
 @section('page-script')
     <script>
-        window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar imagenes carousel'));
-        window.puedeEditarElUsuario = @json(auth()->user()->can('Editar imagenes carousel'));
-        window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar imagenes carousel'));
+        window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar mensajes'));
+        window.puedeEditarElUsuario = @json(auth()->user()->can('Editar mensajes'));
+        window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar mensajes'));
     </script>
     @vite(['resources/js/mensajes.js'])
 @endsection
