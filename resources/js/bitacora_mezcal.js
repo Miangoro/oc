@@ -92,6 +92,7 @@ $(function () {
             var $certificado = full['folio_certificado'] ?? 'N/A';
             var $obs = (full['observaciones'] || '').trim();
             var $operacion = (full['operacion_adicional'] || '').trim();
+             var $id_usuario_registro = (full['id_usuario_registro'] || '').trim();
 
             let html =
               '<span class="fw-bold small">Fecha: </span>' +
@@ -135,6 +136,11 @@ $(function () {
               html +=
                 '<br><span class="fw-bold small">Observaciones: </span>' + '<span class="small">' + $obs + '</span>';
             }
+            if ($id_usuario_registro && $id_usuario_registro.toUpperCase() !== 'N/A') {
+              html +=
+                '<br><span class="fw-bold small">Registrado por: </span>' + '<span class="small">' + $id_usuario_registro + '</span>';
+            }
+
 
             return html;
           }

@@ -69,5 +69,9 @@ class BitacoraMezcal extends Model
         return $this->hasMany(LotesGranel::class, 'lote_original_id', 'id_lote_granel');
     }
 
+    public function registro()
+    {
+        return $this->belongsTo(User::class, 'id_usuario_registro','id');
+    }
 
 }

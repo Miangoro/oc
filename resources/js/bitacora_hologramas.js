@@ -240,13 +240,13 @@ $(function () {
               }
 
               // 👇 Solo permitir editar/eliminar si NO es tipo 2
-              if (!esUsuarioTipo2 && window.puedeEditarElUsuario) {
+              if (window.puedeEditarElUsuario) {
                 acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal"
                               class="dropdown-item edit-record waves-effect text-info">
                               <i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
               }
 
-              if (!esUsuarioTipo2 && window.puedeEliminarElUsuario) {
+              if (window.puedeEliminarElUsuario) {
                 acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger">
                               <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora </a>`;
               }

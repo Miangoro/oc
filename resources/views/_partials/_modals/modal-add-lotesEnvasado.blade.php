@@ -8,30 +8,30 @@
             <div class="modal-body p-8">
                 <form id="addNewLoteForm">
 
-                <div class="row">
-                    <div class="col-md-7">
-                        <div class="form-floating form-floating-outline mb-4">
-                            <select id="id_empresa" name="id_empresa" class="select2 form-select">
-                                <option value="">Selecciona cliente</option>
-                                @foreach ($clientes as $cliente)
-                                    <option value="{{ $cliente->id_empresa }}">
-                                        {{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }}
-                                        | {{ $cliente->razon_social }}</option>
-                                @endforeach
-                            </select>
-                            <label for="id_empresa">Cliente</label>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select id="id_empresa" name="id_empresa" class="select2 form-select">
+                                    <option value="">Selecciona cliente</option>
+                                    @foreach ($clientes as $cliente)
+                                        <option value="{{ $cliente->id_empresa }}">
+                                            {{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $cliente->razon_social }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_empresa">Cliente</label>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select id="id_empresa_destino" name="id_empresa_destino" class="select2 form-select">
+                                    <option value="" disabled selected>Selecciona la empresa destino</option>
+                                </select>
+                                <label>Empresa destino</label>
+                            </div>
                         </div>
                     </div>
-<div class="col-md-5">
-    <div class="form-floating form-floating-outline mb-4">
-        <select id="id_empresa_destino" name="id_empresa_destino" class="select2 form-select">
-            <option value="" disabled selected>Selecciona la empresa destino</option>
-        </select>
-        <label>Empresa destino</label>
-    </div>
-</div>
-                </div>
-                
+
 
                     <div class="form-floating form-floating-outline mb-5">
                         <input type="text" class="form-control" id="nombre"
@@ -59,7 +59,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="select2 form-select id_marca" id="id_marca" name="id_marca" aria-label="Marca">
+                                <select class="select2 form-select id_marca" id="id_marca" name="id_marca"
+                                    aria-label="Marca">
                                     <option value="" disabled selected>Selecciona una marca</option>
                                 </select>
                                 <label for="id_marca">Marca</label>
@@ -97,6 +98,44 @@
                             </div>
                         </div>
                     </div>
+                    {{-- <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px">
+                                    <button type="button" class="btn btn-primary btn-sm add-row">
+                                        <i class="ri-add-line"></i>
+                                    </button>
+                                </th>
+                                <th>Lote a granel</th>
+                                <th>Volumen en litros</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contenidoGraneles">
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-danger btn-sm remove-row" disabled>
+                                        <i class="ri-delete-bin-5-fill"></i>
+                                    </button>
+                                </th>
+                                <td>
+                                    <!-- 🔹 Contenedor fv-row -->
+                                    <div class="fv-row">
+                                        <select class="id_lote_granel form-control form-control-sm select2"
+                                            name="lotes[0][id_lote_granel]" id="id_lote_granel_0">
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <!-- 🔹 Contenedor fv-row -->
+                                    <div class="fv-row">
+                                        <input type="text" class="form-control form-control-sm"
+                                            name="lotes[0][volumen_parcial]" id="volumen_parcial_0">
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table> --}}
+
 
                     <table class="table table-bordered table-sm">
                         <thead>
