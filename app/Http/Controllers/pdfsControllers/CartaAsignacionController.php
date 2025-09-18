@@ -392,4 +392,10 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Bitácora De Hologramas.pdf');
     }
 
+    public function generarPdf()
+    {
+        $pdf = PDF::loadView('pdfs.pdf_bitacora_certificado_exportacion');
+        // O para abrir en el navegador:
+        return $pdf->stream('bitacora_certificado_.pdf');
+    }
 }

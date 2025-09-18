@@ -54,6 +54,7 @@ yarn-error.log
 /public/storage
 /storage/app/public/revisiones/*
  public/assets/img/carousel/*
+public/assets/img/carousel
 
 # Archivos temporales de Livewire
 /storage/app/livewire-tmp/

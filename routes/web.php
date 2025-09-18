@@ -1549,3 +1549,6 @@ Route::controller(MensajesController::class)->middleware(['auth'])->group(functi
 });
 
 Route::get('/mensajes-list', [MensajesController::class, 'index'])->middleware(['auth']);
+
+
+Route::get('/bitacora_certificado_export/pdf', [CartaAsignacionController::class, 'generarPdf'])->name('bitacora_certificado_export.pdf');

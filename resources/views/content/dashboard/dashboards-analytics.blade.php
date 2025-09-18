@@ -16,13 +16,15 @@
 @section('page-style')
     <!-- Page -->
     <style>
-      .hover-scale {
-          transition: transform 0.2s  ease-in-out; /* transición suave */
-      }
+        .hover-scale {
+            transition: transform 0.2s ease-in-out;
+            /* transición suave */
+        }
 
-      .hover-scale:hover {
-          transform: scale(1.03); /* se agranda un 5% */
-      }
+        .hover-scale:hover {
+            transform: scale(1.03);
+            /* se agranda un 5% */
+        }
     </style>
     @vite(['resources/assets/vendor/scss/pages/cards-statistics.scss', 'resources/assets/vendor/scss/pages/cards-analytics.scss', 'resources/assets/vendor/scss/pages/ui-carousel.scss'])
 @endsection
@@ -48,72 +50,72 @@
     <div class="row g-6">
         <!-- Gamification Card -->
         <!-- <div class="col-md-12 col-xxl-8">
-                                        <div class="card">
-                                          <div class="d-flex align-items-end row">
-                                            <div class="col-md-6 order-2 order-md-1">
-                                              <div class="card-body">
-                                                <h4 class="card-title mb-4">Bienvenid@ <span class="fw-bold">
-                                    @if (Auth::check())
+                                                <div class="card">
+                                                  <div class="d-flex align-items-end row">
+                                                    <div class="col-md-6 order-2 order-md-1">
+                                                      <div class="card-body">
+                                                        <h4 class="card-title mb-4">Bienvenid@ <span class="fw-bold">
+                                            @if (Auth::check())
     {{ Auth::user()->name }}
 @else
     John Doe
     @endif!
-                                    </span> 🎉</h4>
-                                                <p class="mb-0">Personal del organismo certificador cidam</p><br>
-                                                <a href="javascript:;" class="btn btn-primary">Ver pendientes</a>
-                                              </div>
-                                            </div>
-                                            <div class="col-md-6 text-center text-md-end order-1 order-md-2">
-                                              <div class="card-body pb-0 px-0 pt-2">
-                                                <img src="{{ asset('assets/img/illustrations/illustration-john-' . $configData['style'] . '.png') }}" height="186" class="scaleX-n1-rtl" alt="View Profile" data-app-light-img="illustrations/illustration-john-light.png" data-app-dark-img="illustrations/illustration-john-dark.png">
-                                                <img  height="186" class="scaleX-n1-rtl" alt="View Profile" src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/1.png') }}" >
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>-->
+                                            </span> 🎉</h4>
+                                                        <p class="mb-0">Personal del organismo certificador cidam</p><br>
+                                                        <a href="javascript:;" class="btn btn-primary">Ver pendientes</a>
+                                                      </div>
+                                                    </div>
+                                                    <div class="col-md-6 text-center text-md-end order-1 order-md-2">
+                                                      <div class="card-body pb-0 px-0 pt-2">
+                                                        <img src="{{ asset('assets/img/illustrations/illustration-john-' . $configData['style'] . '.png') }}" height="186" class="scaleX-n1-rtl" alt="View Profile" data-app-light-img="illustrations/illustration-john-light.png" data-app-dark-img="illustrations/illustration-john-dark.png">
+                                                        <img  height="186" class="scaleX-n1-rtl" alt="View Profile" src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/1.png') }}" >
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>-->
         <!--/ Gamification Card -->
 
         <!-- Statistics Total Order -->
         <!--  <div class="col-xxl-2 col-sm-6">
-                                        <div class="card h-100">
-                                          <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                                              <div class="avatar">
-                                                <div class="avatar-initial bg-label-primary rounded-3">
-                                                  <i class="ri-shopping-cart-2-line ri-24px"></i>
+                                                <div class="card h-100">
+                                                  <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                                                      <div class="avatar">
+                                                        <div class="avatar-initial bg-label-primary rounded-3">
+                                                          <i class="ri-shopping-cart-2-line ri-24px"></i>
+                                                        </div>
+                                                      </div>
+                                                      <div class="d-flex align-items-center">
+                                                        <p class="mb-0 text-success me-1">+22%</p>
+                                                        <i class="ri-arrow-up-s-line text-success"></i>
+                                                      </div>
+                                                    </div>
+                                                    <div class="card-info mt-5">
+                                                      <h5 class="mb-1">50</h5>
+                                                      <p>Certificados de exportación</p>
+                                                      <div class="badge bg-label-secondary rounded-pill">Último mes</div>
+                                                    </div>
+                                                  </div>
                                                 </div>
-                                              </div>
-                                              <div class="d-flex align-items-center">
-                                                <p class="mb-0 text-success me-1">+22%</p>
-                                                <i class="ri-arrow-up-s-line text-success"></i>
-                                              </div>
-                                            </div>
-                                            <div class="card-info mt-5">
-                                              <h5 class="mb-1">50</h5>
-                                              <p>Certificados de exportación</p>
-                                              <div class="badge bg-label-secondary rounded-pill">Último mes</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>-->
+                                              </div>-->
         <!--/ Statistics Total Order -->
 
         <!-- Sessions line chart -->
         <!--<div class="col-xxl-2 col-sm-6">
-                                        <div class="card h-100">
-                                          <div class="card-header pb-0">
-                                            <div class="d-flex align-items-center mb-1 flex-wrap">
-                                              <h5 class="mb-0 me-1">$38.5k</h5>
-                                              <p class="mb-0 text-success">+62%</p>
-                                            </div>
-                                            <span class="d-block card-subtitle">Sessions</span>
-                                          </div>
-                                          <div class="card-body">
-                                            <div id="sessions"></div>
-                                          </div>
-                                        </div>
-                                      </div>-->
+                                                <div class="card h-100">
+                                                  <div class="card-header pb-0">
+                                                    <div class="d-flex align-items-center mb-1 flex-wrap">
+                                                      <h5 class="mb-0 me-1">$38.5k</h5>
+                                                      <p class="mb-0 text-success">+62%</p>
+                                                    </div>
+                                                    <span class="d-block card-subtitle">Sessions</span>
+                                                  </div>
+                                                  <div class="card-body">
+                                                    <div id="sessions"></div>
+                                                  </div>
+                                                </div>
+                                              </div>-->
         <!--/ Sessions line chart -->
 
         <div class="row my-2">
@@ -143,99 +145,129 @@
                                     @endif
                                 </p>
 
-                                @if($maquiladora)
+                                @if ($maquiladora)
 
-                                    @foreach($maquiladora AS $maquiladoras)
-
-                                    @foreach($maquiladoras->maquiladora AS $soymaquilador)
-                                         Maquilador de {{ $soymaquilador->razon_social }} <br>
-                                     @endforeach
-
+                                    @foreach ($maquiladora as $maquiladoras)
+                                        @foreach ($maquiladoras->maquiladora as $soymaquilador)
+                                            Maquilador de {{ $soymaquilador->razon_social }} <br>
+                                        @endforeach
                                     @endforeach
                                 @endif
                             </div>
                         </div>
 
                         <div class="col-md-6 text-center d-none d-md-block p-2">
-                        <div class="row">
-                            @foreach($maquiladores as $maquilador)
-                                @foreach($maquilador->maquiladores as $m)
-                                    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                                        <div class="card text-center shadow border-0 h-100" style="font-size: 0.9rem;">
+                            <div class="row">
+                                @foreach ($maquiladores as $maquilador)
+                                    @foreach ($maquilador->maquiladores as $m)
+                                        <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                                            <div class="card text-center shadow border-0 h-100" style="font-size: 0.9rem;">
 
-                                            <!-- Encabezado -->
-                                            <div class="card-header text-white py-2" style="background-color:#053160; font-size: 0.85rem;">
-                                                {{ $m->razon_social }}
+                                                <!-- Encabezado -->
+                                                <div class="card-header text-white py-2"
+                                                    style="background-color:#053160; font-size: 0.85rem;">
+                                                    {{ $m->razon_social }}
+                                                </div>
+
+                                                <!-- Cuerpo -->
+                                                <div class="card-body p-2">
+                                                    <h6 class="card-title text-success"
+                                                        style="color:#30a86a !important; font-size: 0.85rem;">
+                                                        RFC: {{ $m->rfc }}
+                                                    </h6>
+                                                    <p class="card-text mb-1" style="font-size: 0.8rem;">
+                                                        <strong>Domicilio:</strong> {{ $m->domicilio_fiscal }}
+                                                    </p>
+                                                </div>
+
                                             </div>
-
-                                            <!-- Cuerpo -->
-                                            <div class="card-body p-2">
-                                                <h6 class="card-title text-success" style="color:#30a86a !important; font-size: 0.85rem;">
-                                                    RFC: {{ $m->rfc }}
-                                                </h6>
-                                                <p class="card-text mb-1" style="font-size: 0.8rem;">
-                                                    <strong>Domicilio:</strong> {{ $m->domicilio_fiscal }}
-                                                </p>
-                                            </div>
-
                                         </div>
-                                    </div>
+                                    @endforeach
                                 @endforeach
-                            @endforeach
-                        <!-- Mensajes del dashboard -->
-                      @foreach($mensajes as $mensaje)
-                          @if($mensaje->activo == 1)
-                              @if($mensaje->id_usuario_destino == auth()->id() || is_null($mensaje->id_usuario_destino))
+
+                                <!-- Mensajes del dashboard f0f8ff-->
+                                <!-- Mensajes del dashboard -->
+                                <div class="dashboard-messages d-flex justify-content-center align-items-center h-100 pe-5">
+                                    <div class="w-100 pe-5">
+                                        @foreach ($mensajes as $mensaje)
+                                            @if ($mensaje->activo == 1 && ($mensaje->id_usuario_destino == auth()->id() || is_null($mensaje->id_usuario_destino)))
+                                                <div class="message-card p-3 mb-2 rounded shadow-sm"
+                                                    style="min-height: 300px; background-color: #f4f8fc; border-left: 4px solid {{ $mensaje->tipo == 'danger' ? '#dc3545' : ($mensaje->tipo == 'success' ? '#28a745' : '#053160') }};">
+                                                    <div class="mb-2 py-1 px-2 text-center">
+                                                        <h4
+                                                            class="mb-1 {{ $mensaje->tipo_titulo != 'Normal' ? 'text-' . $mensaje->tipo_titulo : '' }}">
+                                                            <strong>{{ $mensaje->titulo }}</strong>
+                                                        </h4>
+                                                        <h5
+                                                            class="mb-0 {{ $mensaje->tipo != 'Normal' ? 'text-' . $mensaje->tipo : '' }}">
+                                                            {{ $mensaje->mensaje }}
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
+
+
+                                <!-- Mensajes del dashboard -->
+                                {{-- @foreach ($mensajes as $mensaje)
+                          @if ($mensaje->activo == 1)
+                              @if ($mensaje->id_usuario_destino == auth()->id() || is_null($mensaje->id_usuario_destino))
                                   <div class="mb-2 py-1 px-2">
-                                      {{-- Título --}}
+
                                       <h4 class="mb-1 {{ $mensaje->tipo_titulo != 'Normal' ? 'text-'.$mensaje->tipo_titulo : '' }}">
                                           <strong>{{ $mensaje->titulo }}</strong>
                                       </h4>
 
-                                      {{-- Mensaje --}}
+
                                       <h5 class="mb-0 {{ $mensaje->tipo != 'Normal' ? 'text-'.$mensaje->tipo : '' }}">
                                           {{ $mensaje->mensaje }}
                                       </h5>
                                   </div>
                               @endif
                           @endif
-                      @endforeach
+                      @endforeach --}}
 
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-3 text-center d-none d-md-block">
-                        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-                            <!-- Indicadores -->
-                            <div class="carousel-indicators">
-                                @foreach($imagenes as $index => $img)
-                                    <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="{{ $index }}"
+                        <div class="col-md-3 text-center d-none d-md-block">
+                            <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                                <!-- Indicadores -->
+                                <div class="carousel-indicators">
+                                    @foreach ($imagenes as $index => $img)
+                                        <button type="button" data-bs-target="#carouselExample"
+                                            data-bs-slide-to="{{ $index }}"
                                             class="{{ $index == 0 ? 'active' : '' }}"
                                             aria-current="{{ $index == 0 ? 'true' : '' }}"
                                             aria-label="Slide {{ $index + 1 }}"></button>
-                                @endforeach
-                            </div>
+                                    @endforeach
+                                </div>
 
-                            <!-- Slides -->
-                            <div class="carousel-inner">
-                                @foreach($imagenes as $index => $img)
-                                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                        <img class="d-block w-100" src="{{ asset($img->url) }}" alt="{{ $img->nombre }}">
-                                    </div>
-                                @endforeach
-                            </div>
+                                <!-- Slides -->
+                                <div class="carousel-inner">
+                                    @foreach ($imagenes as $index => $img)
+                                        <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                            <img class="d-block w-100" src="{{ asset($img->url) }}"
+                                                alt="{{ $img->nombre }}">
+                                        </div>
+                                    @endforeach
+                                </div>
 
-                            <!-- Controles -->
-                            <a class="carousel-control-prev" href="#carouselExample" role="button" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExample" role="button" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </a>
+                                <!-- Controles -->
+                                <a class="carousel-control-prev" href="#carouselExample" role="button"
+                                    data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExample" role="button"
+                                    data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </a>
+                            </div>
                         </div>
-                    </div>
 
                         <!-- Imagen decorativa -->
                         {{-- <div class="col-md-3 text-center d-none d-md-block">
@@ -455,11 +487,11 @@
                             </div>
                             <h6 class="mb-0 fw-normal">Certificados de exportación sin escaneado</h6>
                             <hr>
-                             <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                            <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
                                 data-bs-target="#modalactasSinActivarHologramas">
                                 <div class="avatar me-4">
                                     <span class="avatar-initial rounded-3 bg-label-danger">
-                                    <i class="ri-close-circle-line ri-24px"></i>
+                                        <i class="ri-close-circle-line ri-24px"></i>
                                     </span>
                                 </div>
                                 <h4 class="mb-0">{{ $actasSinActivarHologramas->count() }}</h4>
@@ -468,7 +500,7 @@
                             <hr>
                             <p class="mb-0">
                                 <!--<span class="me-1 fw-medium">-2.5%</span>
-                                                                                    <small class="text-muted">than last week</small>-->
+                                                                                                    <small class="text-muted">than last week</small>-->
                             </p>
                         </div>
                     </div>
@@ -481,13 +513,13 @@
                             <h5 class="card-title m-0 me-2">Inspecciones por inspector 2025</h5>
                             <div class="dropdown">
                                 <!-- <button class="btn text-body-secondary p-0" type="button" id="meetingSchedule" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                <i class="icon-base ri ri-more-2-line"></i>
-                                                              </button>
-                                                              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="meetingSchedule">
-                                                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
-                                                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
-                                                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
-                                                              </div>-->
+                                                                                <i class="icon-base ri ri-more-2-line"></i>
+                                                                              </button>
+                                                                              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="meetingSchedule">
+                                                                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
+                                                                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
+                                                                                <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
+                                                                              </div>-->
                             </div>
                         </div>
                         <div class="card-body">
@@ -504,7 +536,7 @@
                                                 <h6 class="mb-0">{{ $inspector['nombre'] }}</h6>
                                                 <small class="d-flex align-items-center">
                                                     <!-- <i class="icon-base ri ri-calendar-line icon-16px"></i>
-                                                                      <span class="ms-2">21 Jul | 08:20-10:30</span>-->
+                                                                                      <span class="ms-2">21 Jul | 08:20-10:30</span>-->
                                                 </small>
                                             </div>
                                             <div class="badge bg-label-primary rounded-pill">
@@ -543,26 +575,26 @@
 
             @can('Estadísticas ui')
                 <!-- Line Chart
-                                    <div class="col-6 mb-6">
-                                        <div class="card">
-                                            <div class="card-header d-flex justify-content-between">
-                                                <div>
-                                                    <h5 class="card-title mb-0">Servicios realizados por mes</h5>
-                                                    <div class="mb-0">
-                                                        <label for="selectAnio2" class="form-label">Selecciona un año:</label>
-                                                        <select id="selectAnio2" class="form-select w-auto">
-                                                            @for ($i = now()->year; $i >= 2022; $i--)
+                                                    <div class="col-6 mb-6">
+                                                        <div class="card">
+                                                            <div class="card-header d-flex justify-content-between">
+                                                                <div>
+                                                                    <h5 class="card-title mb-0">Servicios realizados por mes</h5>
+                                                                    <div class="mb-0">
+                                                                        <label for="selectAnio2" class="form-label">Selecciona un año:</label>
+                                                                        <select id="selectAnio2" class="form-select w-auto">
+                                                                            @for ($i = now()->year; $i >= 2022; $i--)
         <option value="{{ $i }}">{{ $i }}</option>
         @endfor
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <div id="lineChart2"></div>
-                                            </div>
-                                        </div>
-                                    </div> -->
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <div id="lineChart2"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
             @endcan
 
             @canany(['Estadísticas consejo', 'Estadísticas oc'])
@@ -923,10 +955,10 @@
                                                             class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a>
                                                 </th>
                                                 <!--<td>
-                                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                                Ver
-                                                            </a>
-                                                        </td>-->
+                                                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                                        Ver
+                                                                    </a>
+                                                                </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -980,10 +1012,10 @@
                                                             class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a>
                                                 </th>
                                                 <!--<td>
-                                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                                Ver
-                                                            </a>
-                                                        </td>-->
+                                                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                                        Ver
+                                                                    </a>
+                                                                </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -1054,10 +1086,10 @@
                                                             class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i></a>
                                                 </th>
                                                 <!--<td>
-                                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                                Ver
-                                                            </a>
-                                                        </td>-->
+                                                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                                        Ver
+                                                                    </a>
+                                                                </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -1110,10 +1142,10 @@
                                                 </td>
                                                 <td>{{ $solicitud->inspeccion->inspector->name ?? 'Sin asignar' }}</td>
                                                 <!--<td>
-                                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                                Ver
-                                                            </a>
-                                                        </td>-->
+                                                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                                        Ver
+                                                                    </a>
+                                                                </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -1163,10 +1195,10 @@
                                                 </td>
                                                 <td>{{ $solicitud->inspeccion->inspector->name ?? 'Sin asignar' }}</td>
                                                 <!--<td>
-                                                            <a href="" class="btn btn-sm btn-primary" target="_blank">
-                                                                Ver
-                                                            </a>
-                                                        </td>-->
+                                                                    <a href="" class="btn btn-sm btn-primary" target="_blank">
+                                                                        Ver
+                                                                    </a>
+                                                                </td>-->
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -1328,7 +1360,7 @@
             </div>
         </div>
 
-          <!-- Modal -->
+        <!-- Modal -->
         <div class="modal fade" id="modalactasSinActivarHologramas" tabindex="-1"
             aria-labelledby="modalCertificadosLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -1353,7 +1385,7 @@
                                         @foreach ($actasSinActivarHologramas as $solicitud)
                                             <tr>
                                                 <td>{{ $solicitud->folio ?? 'N/A' }}</td>
-                                                 <td>{!! $solicitud->inspeccion->num_servicio ?? "<span class='badge bg-danger'>Sin asignar</span>" !!}</td>
+                                                <td>{!! $solicitud->inspeccion->num_servicio ?? "<span class='badge bg-danger'>Sin asignar</span>" !!}</td>
                                                 <td>{{ $solicitud->empresa->razon_social ?? 'N/A' }}
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($solicitud->fecha_solicitud)->format('d/m/Y') }}
