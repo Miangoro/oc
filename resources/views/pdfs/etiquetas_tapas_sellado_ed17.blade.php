@@ -248,7 +248,7 @@
 
     <tr>
         <td colspan="2" class="verde">NOMBRE Y FIRMA DEL RESPONSABLE DE INSTALACIONES</td>
-        <td colspan="2">{{ $datos->solicitud->instalaciones->responsable ?? ''}}</td>
+        <td colspan="2">{{-- {{ $datos->solicitud->instalaciones->responsable ?? ''}} --}}</td>
         <td colspan="2" class="verde">NOMBRE Y FIRMA DEL TÉCNICO INSPECTOR</td>
         <td colspan="2">{{ $datos->inspector->name ?? ''}}</td>
     </tr>
@@ -374,7 +374,7 @@
     </tr>
 
     <tr>
-        <td colspan="2">{{ $datos->solicitud->instalaciones->responsable ?? ''}}</td>
+        <td colspan="2">{{-- {{ $datos->solicitud->instalaciones->responsable ?? ''}} --}}</td>
         <td style="border: none;"></td><!--ESPACIO-->
         <td colspan="2">{{ $datos->inspector->name ?? ''}}</td>
     </tr>

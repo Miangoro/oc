@@ -60,7 +60,7 @@
 
     <div class="card-header bg-menu-theme text-center py-3">
       <h5 class="mb-0 text-white">
-        Revisión de dictamen <br>
+        Revisión de acta <br>
         <span class="badge bg-warning text-dark"></span>
       </h5>
     </div>
@@ -90,12 +90,12 @@
             </div>
           </div>
 
-          <div class="mt-2">
+          {{-- <div class="mt-2">
             <span class="text-muted">Este certificado sustituye al:</span>
             <a target="_blank" href="" class="text-primary fw-bold"></a>
             <br>
             <span class="text-muted">Motivo: </span><strong> </strong>
-          </div>
+          </div> --}}
         </div>
 
         <!-- Cliente -->

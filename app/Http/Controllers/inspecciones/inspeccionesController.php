@@ -69,8 +69,10 @@ class inspeccionesController extends Controller
           ->orderBy('id_solicitud', 'desc')
           ->get();
 
+        $inspectores = User::where('tipo', '=', '2')
+            ->where('estatus', 'Activo')
+            ->get(); // Obtener todos los organismos
 
-        $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
         return view('inspecciones.find_inspecciones_view', compact('solicitudesTipos','instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos', 'equipos','todasSolicitudes', 'solcitudesSinInspeccion'));
     }
 
