@@ -92,27 +92,26 @@ $(function () {
           responsivePriority: 1,
           render: function (data, type, full, meta) {
             var fecha = full['fecha'] ?? 'N/A';
-            var loteGranel = full['lote_granel'] ?? 'N/A'; // o full['lote_granel'] si así se llama
-            var loteEnvasado = full['lote_envasado'] ?? 'N/A'; // asegúrate que venga en los datos
+            var loteGranel = full['lote_granel'] ?? 'N/A';
+            var loteEnvasado = full['lote_envasado'] ?? 'N/A';
             var folioFq = full['folio_fq'] ?? 'N/A';
+            var id_usuario_registro = (full['id_usuario_registro'] || '').trim();
 
-            return (
-              '<span class="fw-bold small">Fecha: </span><span class="small">' +
-              fecha +
-              '</span><br>' +
-              '<span class="fw-bold small">Lote a Granel: </span><span class="small">' +
-              loteGranel +
-              '</span><br>' +
-              '<span class="fw-bold small">Lote Envasado: </span><span class="small">' +
-              loteEnvasado +
-              '</span><br>' +
-              '<span class="fw-bold small">Folio FQ: </span><span class="small">' +
-              folioFq +
-              '</span>'
-            );
+            // Construimos el HTML primero
+            var html =
+              '<span class="fw-bold small">Fecha: </span><span class="small">' + fecha + '</span><br>' +
+              '<span class="fw-bold small">Granel: </span><span class="small">' + loteGranel + '</span><br>' +
+              '<span class="fw-bold small">Envasado: </span><span class="small">' + loteEnvasado + '</span><br>' +
+              '<span class="fw-bold small">FQ: </span><span class="small">' + folioFq + '</span>';
+
+            // Agregar usuario si existe
+            if (id_usuario_registro && id_usuario_registro.toUpperCase() !== 'N/A') {
+              html += '<br><span class="fw-bold small">Registrado por: </span><span class="small">' + id_usuario_registro + '</span>';
+            }
+
+            return html;
           }
         },
-
         {
           targets: 5,
           responsivePriority: 1,

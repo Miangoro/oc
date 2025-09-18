@@ -44,7 +44,7 @@ $(function () {
         { data: null }, // 0 -> # (control o vacío)
         { data: 'fake_id' }, // 1 -> ID
         { data: 'razon_social' }, // 2 -> Cliente (campo directo)
-        {data: 'id_instalacion'},
+        { data: 'id_instalacion' },
         { data: null }, // 3 -> Datos Iniciales (fecha + lote)
         { data: null }, // 4 -> Entradas
         { data: null }, // 5 -> Salidas
@@ -79,7 +79,7 @@ $(function () {
             return `<span>${$empresa}</span>`;
           }
         },
-         {
+        {
           targets: 3,
           responsivePriority: 1,
           render: function (data, type, full) {
@@ -96,8 +96,8 @@ $(function () {
             var $obs = full['observaciones'];
             var $tipo_operacion = full['tipo_operacion'];
             var $serie_inicial = (full['serie_inicial'] ?? '').trim();
-              var $num_sellos_inicial = full['num_sellos_inicial'] ?? 'N/A';
-
+            var $num_sellos_inicial = full['num_sellos_inicial'] ?? 'N/A';
+            var $id_usuario_registro = (full['id_usuario_registro'] || '').trim();
             let html = `
              <br><span class="fw-bold small">Serie Inicial:</span>
             <span class="small">${$serie_inicial || 'N/A'}</span>
@@ -121,6 +121,10 @@ $(function () {
         <br><span class="fw-bold small">Observaciones: </span>
         <span class="small">${$obs}</span>
       `;
+              if ($id_usuario_registro && $id_usuario_registro.toUpperCase() !== 'N/A') {
+                html +=
+                  '<br><span class="fw-bold small">Registrado por: </span>' + '<span class="small">' + $id_usuario_registro + '</span>';
+              }
             }
 
             return html;
@@ -166,32 +170,32 @@ $(function () {
         {
           targets: 7,
           responsivePriority: 1,
-         render: function (data, type, full, meta) {
+          render: function (data, type, full, meta) {
             var $serie_mermas = (full['serie_merma'] || '').trim();
             var $num_sellos_merma = (full['mermas'] ?? '').toString().trim();
             var $serie_final = (full['serie_final'] ?? 'N/A').trim();
             var $num_sellos_final = (full['num_sellos_final'] ?? 'N/A').trim();
 
             let html =
-                '<span class="fw-bold small">Serie Final: </span>' +
-                '<span class="small">' + $serie_final + '</span>' +
-                '<br><span class="fw-bold small">N° de sellos Final: </span>' +
-                '<span class="small">' + $num_sellos_final + '</span>';
+              '<span class="fw-bold small">Serie Final: </span>' +
+              '<span class="small">' + $serie_final + '</span>' +
+              '<br><span class="fw-bold small">N° de sellos Final: </span>' +
+              '<span class="small">' + $num_sellos_final + '</span>';
 
-          if ($serie_mermas !== '' && $serie_mermas !== '0') {
-                html +=
-                    '<br><span class="fw-bold small">Serie mermas: </span>' +
-                    '<span class="small">' + $serie_mermas + '</span>';
+            if ($serie_mermas !== '' && $serie_mermas !== '0') {
+              html +=
+                '<br><span class="fw-bold small">Serie mermas: </span>' +
+                '<span class="small">' + $serie_mermas + '</span>';
             }
 
             if ($num_sellos_merma !== '' && $num_sellos_merma !== '0') {
-                html +=
-                    '<br><span class="fw-bold small">N° de sellos Mermas: </span>' +
-                    '<span class="small">' + $num_sellos_merma + '</span>';
+              html +=
+                '<br><span class="fw-bold small">N° de sellos Mermas: </span>' +
+                '<span class="small">' + $num_sellos_merma + '</span>';
             }
 
             return html;
-        }
+          }
 
         },
         {
@@ -367,18 +371,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== ''
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -427,43 +431,43 @@ $(function () {
   });
 
   $(document).ready(function () {
-  function cargarInstalaciones() {
-    // Si es usuario tipo 3, usar instalaciones precargadas
-    if (window.tipoUsuario === 3) {
-      $('#filtroInstalacion').html(window.opcionesInstalacionesAutenticadas).trigger('change');
-      return;
-    }
-
-    let empresaId = $('#filtroEmpresa').val();
-    if (!empresaId) {
-      $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
-      return;
-    }
-
-    $.ajax({
-      url: '/getDatos/' + empresaId,
-      method: 'GET',
-      success: function (response) {
-        let opciones = '<option value="">-- Todas las Instalaciones --</option>';
-        if (response.instalaciones.length > 0) {
-          response.instalaciones.forEach(function (inst) {
-            let tipoLimpio = limpiarTipo(inst.tipo);
-            opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
-          });
-        } else {
-          opciones += '<option value="">Sin instalaciones registradas</option>';
-        }
-        $('#filtroInstalacion').html(opciones).trigger('change');
-      },
-      error: function () {
-        $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+    function cargarInstalaciones() {
+      // Si es usuario tipo 3, usar instalaciones precargadas
+      if (window.tipoUsuario === 3) {
+        $('#filtroInstalacion').html(window.opcionesInstalacionesAutenticadas).trigger('change');
+        return;
       }
-    });
-  }
 
-  cargarInstalaciones();
-  $('#filtroEmpresa').on('change', cargarInstalaciones);
-});
+      let empresaId = $('#filtroEmpresa').val();
+      if (!empresaId) {
+        $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
+        return;
+      }
+
+      $.ajax({
+        url: '/getDatos/' + empresaId,
+        method: 'GET',
+        success: function (response) {
+          let opciones = '<option value="">-- Todas las Instalaciones --</option>';
+          if (response.instalaciones.length > 0) {
+            response.instalaciones.forEach(function (inst) {
+              let tipoLimpio = limpiarTipo(inst.tipo);
+              opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
+            });
+          } else {
+            opciones += '<option value="">Sin instalaciones registradas</option>';
+          }
+          $('#filtroInstalacion').html(opciones).trigger('change');
+        },
+        error: function () {
+          $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+        }
+      });
+    }
+
+    cargarInstalaciones();
+    $('#filtroEmpresa').on('change', cargarInstalaciones);
+  });
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   $(document).on('click', '#verBitacoraBtn', function () {
     const empresaId = $('#filtroEmpresa').val();

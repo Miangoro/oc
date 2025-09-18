@@ -91,22 +91,30 @@ $(function () {
           targets: 4,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
-            var $volumen_inicial = full['volumen_inicial'] ?? 'N/A';
-            var $alcohol_inicial = full['alcohol_inicial'] ?? 'N/A';
-            var $num_recipientes = full['num_recipientes'] ?? 'N/A';
-            var $fecha = full['fecha'] ?? 'N/A';
-            var $id_lote_granel = full['nombre_lote'] ?? 'N/A';
-            var $folio_fq = full['folio_fq'] ?? 'N/A';
-            var $certificado = full['folio_certificado'] ?? 'N/A';
-            return `
-            <span class="fw-bold small">Volumen:</span> <span class="small">${$volumen_inicial} L</span>
-            <br><span class="fw-bold small">Alcohol:</span> <span class="small">${$alcohol_inicial} % Alc.</span>
-            <br><span class="fw-bold small">Recipientes:</span> <span class="small">${$num_recipientes}</span>
-            <br><span class="fw-bold small">Fecha: </span><span class="small">${$fecha}</span>
-            <br><span class="fw-bold small">Lote a Granel: </span><span class="small">${$id_lote_granel}</span>
-            <br><span class="fw-bold small">Folio FQ: </span><span class="small">${$folio_fq}</span>
-            <br><span class="fw-bold small">Certificado: </span><span class="small">${$certificado}</span>
-          `;
+            const volumen = full['volumen_inicial'] ?? 'N/A';
+            const alcohol = full['alcohol_inicial'] ?? 'N/A';
+            const numRecipientes = full['num_recipientes'] ?? 'N/A';
+            const fecha = full['fecha'] ?? 'N/A';
+            const loteGranel = full['nombre_lote'] ?? 'N/A';
+            const folioFq = full['folio_fq'] ?? 'N/A';
+            const certificado = full['folio_certificado'] ?? 'N/A';
+            const usuarioRegistro = (full['id_usuario_registro'] || '').trim();
+
+            let html = `
+              <span class="fw-bold small">Volumen:</span> <span class="small">${volumen} L</span>
+              <br><span class="fw-bold small">Alcohol:</span> <span class="small">${alcohol} % Alc.</span>
+              <br><span class="fw-bold small">Recipientes:</span> <span class="small">${numRecipientes}</span>
+              <br><span class="fw-bold small">Fecha:</span> <span class="small">${fecha}</span>
+              <br><span class="fw-bold small">Lote a Granel:</span> <span class="small">${loteGranel}</span>
+              <br><span class="fw-bold small">Folio FQ:</span> <span class="small">${folioFq}</span>
+              <br><span class="fw-bold small">Certificado:</span> <span class="small">${certificado}</span>
+            `;
+
+            if (usuarioRegistro && usuarioRegistro.toUpperCase() !== 'N/A') {
+              html += `<br><span class="fw-bold small">Registrado por:</span> <span class="small">${usuarioRegistro}</span>`;
+            }
+
+            return html;
           }
         },
         {

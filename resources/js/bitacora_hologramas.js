@@ -97,7 +97,7 @@ $(function () {
             var $tipo_operacion = full['tipo_operacion'];
             var $serie_inicial = (full['serie_inicial'] ?? '').trim();
             var $num_sellos_inicial = full['num_sellos_inicial'] ?? 'N/A';
-
+            var $id_usuario_registro = (full['id_usuario_registro'] || '').trim();
 
             let html = `
             <br><span class="fw-bold small">Serie Inicial:</span>
@@ -124,6 +124,10 @@ $(function () {
         <br><span class="fw-bold small">Observaciones: </span>
         <span class="small">${$obs}</span>
       `;
+            }
+            if ($id_usuario_registro && $id_usuario_registro.toUpperCase() !== 'N/A') {
+              html +=
+                '<br><span class="fw-bold small">Registrado por: </span>' + '<span class="small">' + $id_usuario_registro + '</span>';
             }
 
             return html;

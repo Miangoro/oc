@@ -89,5 +89,9 @@ class BitacoraProductoTerminado extends Model
         return $this->belongsTo(instalaciones::class, 'id_instalacion','id_instalacion');
     }
 
+    public function registro()
+    {
+        return $this->belongsTo(User::class, 'id_usuario_registro','id');
+    }
 
 }

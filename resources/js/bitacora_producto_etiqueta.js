@@ -44,7 +44,7 @@ $(function () {
         { data: null }, // 0 -> # (control o vacío)
         { data: 'fake_id' }, // 1 -> ID
         { data: 'razon_social' }, // 2 -> Cliente (campo directo)
-        {data: 'id_instalacion'}, // 2.1 -> Instalación (campo directo)
+        { data: 'id_instalacion' }, // 2.1 -> Instalación (campo directo)
         { data: null }, // 3 -> Datos Iniciales (fecha + lote)
         { data: null }, // 4 -> Entradas
         { data: null }, // 5 -> Salidas
@@ -79,7 +79,7 @@ $(function () {
             return `<span>${$empresa}</span>`;
           }
         },
-           {
+        {
           targets: 3,
           responsivePriority: 1,
           render: function (data, type, full) {
@@ -91,25 +91,24 @@ $(function () {
           targets: 4,
           responsivePriority: 1,
           render: function (data, type, full, meta) {
-            var fecha = full['fecha'] ?? 'N/A';
-            var loteGranel = full['nombre_lote'] ?? 'N/A'; // o full['lote_granel'] si así se llama
-            var loteEnvasado = full['nombre_lote_envasado'] ?? 'N/A'; // asegúrate que venga en los datos
-            var folioFq = full['folio_fq'] ?? 'N/A';
+            const fecha = full['fecha'] ?? 'N/A';
+            const loteGranel = full['nombre_lote'] ?? 'N/A';
+            const loteEnvasado = full['nombre_lote_envasado'] ?? 'N/A';
+            const folioFq = full['folio_fq'] ?? 'N/A';
+            const usuarioRegistro = (full['id_usuario_registro'] || '').trim();
 
-            return (
-              '<span class="fw-bold small">Fecha: </span><span class="small">' +
-              fecha +
-              '</span><br>' +
-              '<span class="fw-bold small">Lote a Granel: </span><span class="small">' +
-              loteGranel +
-              '</span><br>' +
-              '<span class="fw-bold small">Lote Envasado: </span><span class="small">' +
-              loteEnvasado +
-              '</span><br>' +
-              '<span class="fw-bold small">Folio FQ: </span><span class="small">' +
-              folioFq +
-              '</span>'
-            );
+            let html = `
+      <span class="fw-bold small">Fecha: </span><span class="small">${fecha}</span><br>
+      <span class="fw-bold small">Lote a Granel: </span><span class="small">${loteGranel}</span><br>
+      <span class="fw-bold small">Lote Envasado: </span><span class="small">${loteEnvasado}</span><br>
+      <span class="fw-bold small">Folio FQ: </span><span class="small">${folioFq}</span>
+    `;
+
+            if (usuarioRegistro && usuarioRegistro.toUpperCase() !== 'N/A') {
+              html += `<br><span class="fw-bold small">Registrado por: </span><span class="small">${usuarioRegistro}</span>`;
+            }
+
+            return html;
           }
         },
 
@@ -312,7 +311,7 @@ $(function () {
             $(node).find('select').select2();
           }
         },
-  {
+        {
           className: 'dt-custom-select p-0 me-2 btn-outline-dark form-select-sm',
           text: '',
           init: function (api, node) {
@@ -355,18 +354,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== ''
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -418,44 +417,44 @@ $(function () {
   });
 
 
-$(document).ready(function () {
-  function cargarInstalaciones() {
-    // Si es usuario tipo 3, usar instalaciones precargadas
-    if (window.tipoUsuario === 3) {
-      $('#filtroInstalacion').html(window.opcionesInstalacionesAutenticadas).trigger('change');
-      return;
-    }
-
-    let empresaId = $('#filtroEmpresa').val();
-    if (!empresaId) {
-      $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
-      return;
-    }
-
-    $.ajax({
-      url: '/getDatos/' + empresaId,
-      method: 'GET',
-      success: function (response) {
-        let opciones = '<option value="">-- Todas las Instalaciones --</option>';
-        if (response.instalaciones.length > 0) {
-          response.instalaciones.forEach(function (inst) {
-            let tipoLimpio = limpiarTipo(inst.tipo);
-            opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
-          });
-        } else {
-          opciones += '<option value="">Sin instalaciones registradas</option>';
-        }
-        $('#filtroInstalacion').html(opciones).trigger('change');
-      },
-      error: function () {
-        $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+  $(document).ready(function () {
+    function cargarInstalaciones() {
+      // Si es usuario tipo 3, usar instalaciones precargadas
+      if (window.tipoUsuario === 3) {
+        $('#filtroInstalacion').html(window.opcionesInstalacionesAutenticadas).trigger('change');
+        return;
       }
-    });
-  }
 
-  cargarInstalaciones();
-  $('#filtroEmpresa').on('change', cargarInstalaciones);
-});
+      let empresaId = $('#filtroEmpresa').val();
+      if (!empresaId) {
+        $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
+        return;
+      }
+
+      $.ajax({
+        url: '/getDatos/' + empresaId,
+        method: 'GET',
+        success: function (response) {
+          let opciones = '<option value="">-- Todas las Instalaciones --</option>';
+          if (response.instalaciones.length > 0) {
+            response.instalaciones.forEach(function (inst) {
+              let tipoLimpio = limpiarTipo(inst.tipo);
+              opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
+            });
+          } else {
+            opciones += '<option value="">Sin instalaciones registradas</option>';
+          }
+          $('#filtroInstalacion').html(opciones).trigger('change');
+        },
+        error: function () {
+          $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+        }
+      });
+    }
+
+    cargarInstalaciones();
+    $('#filtroEmpresa').on('change', cargarInstalaciones);
+  });
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   $(document).on('click', '#verBitacoraBtn', function () {
@@ -476,7 +475,7 @@ $(document).ready(function () {
     }
 
     let urlPDF = `/BitacoraProductoEtiquetaPDF?empresa=${empresaId}`;
-if (instalacionId) {
+    if (instalacionId) {
       urlPDF += `&instalacion=${instalacionId}`;
     }
     urlPDF += `&t=${new Date().getTime()}`;
@@ -792,7 +791,7 @@ if (instalacionId) {
           $('#edit_tipo').val(bitacora.tipo);
           $('#edit_id_instalacion').data('selected', bitacora.id_instalacion);
           $('#edit_id_lote_granel').data('selected', bitacora.id_lote_granel);
-          $('#edit_id_lote_envasado').data('selected',bitacora.id_lote_envasado);
+          $('#edit_id_lote_envasado').data('selected', bitacora.id_lote_envasado);
           $('#edit_id_marca').data('selected', bitacora.id_marca).trigger('change');
           $('#edit_id_categoria').val(bitacora.id_categoria).trigger('change');
           $('#edit_id_clase').val(bitacora.id_clase).trigger('change');
@@ -1298,21 +1297,21 @@ if (instalacionId) {
     });
   });
 
-$(document).ready(function () {
-  // Al abrir el modal, carga graneles y marcas
-  $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
-    var empresa = $('#id_empresa').val();
-    if (empresa) {
-      obtenerGraneles(empresa);
-      cargarMarcas(); // también se puede pasar empresa si lo necesita
-    }
-  });
+  $(document).ready(function () {
+    // Al abrir el modal, carga graneles y marcas
+    $('#RegistrarBitacoraMezcal').on('shown.bs.modal', function () {
+      var empresa = $('#id_empresa').val();
+      if (empresa) {
+        obtenerGraneles(empresa);
+        cargarMarcas(); // también se puede pasar empresa si lo necesita
+      }
+    });
 
-  // Al cambiar empresa, recargar marcas
-  $('#id_empresa').on('change', function () {
-    cargarMarcas();
+    // Al cambiar empresa, recargar marcas
+    $('#id_empresa').on('change', function () {
+      cargarMarcas();
+    });
   });
-});
 
 
   function cargarMarcas() {
@@ -1335,7 +1334,7 @@ $(document).ready(function () {
         }
         $('#id_marca').html(Macontenido);
       },
-      error: function () {}
+      error: function () { }
     });
   }
 
@@ -1370,7 +1369,7 @@ $(document).ready(function () {
           $('#edit_id_marca').val('').trigger('change');
         }
       },
-      error: function () {}
+      error: function () { }
     });
   }
 

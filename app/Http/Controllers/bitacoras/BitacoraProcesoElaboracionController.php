@@ -256,6 +256,7 @@ class BitacoraProcesoElaboracionController extends Controller
               $nestedData['numero_pinas'] = $bitacora->numero_pinas ?? 'N/A';
               $nestedData['kg_maguey'] = $bitacora->kg_maguey ?? 'N/A';
               $nestedData['observaciones'] = $bitacora->observaciones ?? 'N/A';
+              $nestedData['id_usuario_registro'] = $bitacora->registro->name ?? 'N/A';
               $nestedData['action'] = '';
 
               $data[] = $nestedData;

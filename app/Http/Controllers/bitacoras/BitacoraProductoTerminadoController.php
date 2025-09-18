@@ -284,6 +284,7 @@ class BitacoraProductoTerminadoController extends Controller
                 // Extras
                 'observaciones' => $bitacora->observaciones ?? 'N/A',
                 'id_firmante' => $bitacora->id_firmante ?? 'N/A',
+                'id_usuario_registro'=> $bitacora->registro->name ?? 'N/A',
 
 
             ];

@@ -78,7 +78,10 @@ class BitacoraProcesoElaboracion extends Model
         return json_decode($this->id_tipo_maguey, true) ?: [];
     }
 
-
+    public function registro()
+    {
+        return $this->belongsTo(User::class, 'id_usuario_registro','id');
+    }
 
 
 

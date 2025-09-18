@@ -318,6 +318,7 @@ class BitacoraMezcalEnvasadorController extends Controller
 
                 'observaciones' => $bitacora->observaciones ?? 'N/A',
                 'firma_ui' => $bitacora->firma_ui ?? 'N/A',
+                'id_usuario_registro'=> $bitacora->registro->name ?? 'N/A',
             ];
             $data[] = $nestedData;
         }

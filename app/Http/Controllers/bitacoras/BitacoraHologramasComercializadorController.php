@@ -229,6 +229,7 @@ class BitacoraHologramasComercializadorController extends Controller
                 'firma_ui' => $bitacora->firma_ui ?? 'N/A',
 
                 'mermas' => $bitacora->num_sellos_merma ?? 'N/A',
+                'id_usuario_registro'=> $bitacora->registro->name ?? 'N/A',
             ];
             $data[] = $nestedData;
         }

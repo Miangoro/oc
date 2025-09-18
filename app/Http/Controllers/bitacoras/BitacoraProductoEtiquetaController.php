@@ -294,6 +294,7 @@ if (Auth::check() && Auth::user()->tipo == 3) {
 
                 // Tipos de agave (si quieres mostrar)
                 'tipos_agave' => $bitacora->tiposAgave->pluck('nombre')->implode(', ') ?? 'N/A',
+                'id_usuario_registro'=> $bitacora->registro->name ?? 'N/A',
             ];
             $data[] = $nestedData;
         }
