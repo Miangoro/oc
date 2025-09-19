@@ -125,7 +125,7 @@
                     class="rounded-circle me-3 border border-white shadow-sm"
                     width="50" height="50" style="object-fit: cover;">
                 <div>
-                    <p class="text-muted mb-0 small">Inspector que realizó la inspección</p>
+                    <p class="text-muted mb-0 small">Inspector que realizó el servicio</p>
                     <h6 class="mb-0 fw-semibold">{{ $datos->inspeccion->inspector->name ?? 'N/A' }}</h6>
                 </div>
             </div>
