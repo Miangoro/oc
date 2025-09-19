@@ -169,7 +169,7 @@
                     </div>
 
 
-                        <div class="col-md-5 text-center d-none d-md-block p-2">
+                        <div class="col-md-4 text-center d-none d-md-block p-2">
                             <div class="row">
                                 @foreach ($maquiladores as $maquilador)
                                     @foreach ($maquilador->maquiladores as $m)
@@ -245,7 +245,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4 text-center d-none d-md-block">
+                        <div class="col-md-5 text-center d-none d-md-block">
                             <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
                                 <!-- Indicadores -->
                                 <div class="carousel-indicators">
