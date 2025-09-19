@@ -51,50 +51,47 @@ public function UserManagement()
             8 => 'orden',
             9 => 'activo',
         ];
-        $search = [];
-
-        $totalData = mensajes_dashboard::count();
-
-        $totalFiltered = $totalData;
-
         $limit = $request->input('length');
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
+        $dir   = $request->input('order.0.dir');
+        $search = $request->input('search.value');
 
-        if (empty($request->input('search.value'))) {
-            $users = mensajes_dashboard::offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
+        // 👇 Filtro según si es admin o usuario normal
+        if (auth()->id() == 1) {
+            $query = mensajes_dashboard::query(); // Admin ve todos
         } else {
-            $search = $request->input('search.value');
-
-            $users = mensajes_dashboard::where('id', 'LIKE', "%{$search}%")
-                ->orWhere('mensaje', 'LIKE', "%{$search}%")
-                ->orWhere('titulo', 'LIKE', "%{$search}%")
-                ->orWhereHas('usuarioDestino', function ($sub) use ($search) {
-                          $sub->where('name', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('usuarioRegistro', function ($sub) use ($search) {
-                          $sub->where('name', 'LIKE', "%{$search}%");
-                      })
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-
-            $totalFiltered = mensajes_dashboard::where('id', 'LIKE', "%{$search}%")
-                ->orWhere('mensaje', 'LIKE', "%{$search}%")
-                ->orWhere('titulo', 'LIKE', "%{$search}%")
-                ->orWhereHas('usuarioDestino', function ($sub) use ($search) {
-                          $sub->where('name', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('usuarioRegistro', function ($sub) use ($search) {
-                          $sub->where('name', 'LIKE', "%{$search}%");
-                      })
-                ->count();
+            $query = mensajes_dashboard::where(function ($q) {
+                $q->where('id_usuario_destino', auth()->id())
+                  ->orWhereNull('id_usuario_destino') // mensajes globales
+                  ->orWhere('id_usuario_destino', 0);
+            });
         }
+
+        $totalData = $query->count();
+        $totalFiltered = $totalData;
+
+        // Si hay búsqueda
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'LIKE', "%{$search}%")
+                  ->orWhere('mensaje', 'LIKE', "%{$search}%")
+                  ->orWhere('titulo', 'LIKE', "%{$search}%")
+                  ->orWhereHas('usuarioDestino', function ($sub) use ($search) {
+                      $sub->where('name', 'LIKE', "%{$search}%");
+                  })
+                  ->orWhereHas('usuarioRegistro', function ($sub) use ($search) {
+                      $sub->where('name', 'LIKE', "%{$search}%");
+                  });
+            });
+
+            $totalFiltered = $query->count();
+        }
+
+        $users = $query->offset($start)
+                      ->limit($limit)
+                      ->orderBy($order, $dir)
+                      ->get();
 
         $data = [];
 
