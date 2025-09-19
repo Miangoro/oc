@@ -639,10 +639,20 @@ public function agregarResultados(Request $request)
                     $existe = RevisionDictamen::where('id_inspeccion', $inspeccion->id_inspeccion)->exists();
                         if (!$existe) {
                             // Selecciona un revisor aleatorio tipo 2 y activo
-                            $revisor = User::where('tipo', 2)
+                            /*$revisor = User::where('tipo', 2)
+                                    ->where('estatus', 'Activo')
+                                    ->where('id', '<>', $inspeccion->id_inspector) //excluye al inspector actual
+                                    ->inRandomOrder()
+                                    ->first();*/
+                            $excluirId = $inspeccion->id_inspector;
+                            $revisor = User::where(function ($query) use ($excluirId) {
+                                    $query->where('tipo', 2)
                                         ->where('estatus', 'Activo')
-                                        ->inRandomOrder()
-                                        ->first();
+                                        ->where('id', '<>', $excluirId);
+                                })
+                                ->orWhereIn('id', [319, 335])
+                                ->inRandomOrder()
+                                ->first();
 
                             RevisionDictamen::create([
                                 'id_inspeccion'   => $inspeccion->id_inspeccion,
