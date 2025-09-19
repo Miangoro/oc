@@ -807,6 +807,7 @@ Route::middleware(['auth'])->controller(getFuncionesController::class)->group(fu
     Route::get('/getDatos2/{lote_granel}', 'getDatos2')->name('getDatos2');
     Route::get('/getDatosSolicitud/{id_solicitud}', 'getDatosSolicitud')->name('getDatosSolicitud');
     Route::get('/obtenerDocumentosClientes/{id_documento}/{id_cliente}', 'obtenerDocumentosClientes')->name('obtenerDocumentosClientes');
+    Route::get('/getDatosBitacora/{empresa}', 'getDatosBitacora')->name('getDatosBitacora');
 });
 
 

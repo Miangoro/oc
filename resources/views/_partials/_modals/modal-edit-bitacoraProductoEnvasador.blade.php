@@ -428,7 +428,7 @@ function obtenerInstalacionEdit() {
     if (empresa !== "" && empresa !== null && empresa !== undefined) {
 
         $.ajax({
-            url: '/getDatos/' + empresa,
+            url: '/getDatosBitacora/' + empresa,
             method: 'GET',
             success: function(response) {
                 var contenido = '<option value="" disabled>Seleccione una instalación</option>';

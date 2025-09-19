@@ -18,6 +18,7 @@ use App\Models\Dictamen_Envasado;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class getFuncionesController extends Controller
 {
@@ -166,6 +167,61 @@ class getFuncionesController extends Controller
             'lotes_granel' => $loteGranel
         ]);
     }
+
+    public function getDatosBitacora(empresa $empresa)
+{
+    // Obtener las marcas de la empresa
+    $marcas = $empresa->todasLasMarcas()->get();
+
+    // Maquiladoras relacionadas
+    $idsMaquiladoras = maquiladores_model::where('id_maquiladora', $empresa->id_empresa)
+        ->pluck('id_maquilador')
+        ->toArray();
+
+    $idsEmpresas = array_merge([$empresa->id_empresa], $idsMaquiladoras);
+
+    // ========================================================
+    // FILTRAR INSTALACIONES POR USUARIO LOGUEADO
+    // ========================================================
+    $instalacionesQuery = instalaciones::whereIn('id_empresa', $idsEmpresas);
+
+    // Si no es admin, limitar a las instalaciones del usuario
+    if (Auth::check() && Auth::user()->tipo != 1) {
+        $idsPermitidos = is_array(Auth::user()->id_instalacion)
+            ? Auth::user()->id_instalacion
+            : [Auth::user()->id_instalacion];
+
+        $instalacionesQuery->whereIn('id_instalacion', $idsPermitidos);
+    }
+
+    $instalacionesConMaqui = $instalacionesQuery->get();
+
+    return response()->json([
+        // 👇 Aquí también podrías aplicar el filtro, si tu método ya devuelve todas
+        'instalaciones' => $instalacionesConMaqui,
+
+        'instalacionesConMaqui' => $instalacionesConMaqui,
+        'lotes_granel' => $empresa->todos_lotes_granel(),
+        'marcas' => $marcas,
+        'guias' => $empresa->guias(),
+        'predios' => $empresa->predios(),
+        'predio_plantacion' => $empresa->predio_plantacion(),
+        'direcciones' => $empresa->direcciones(),
+
+        'lotes_envasado' => lotes_envasado::whereIn('id_empresa', $idsEmpresas)
+            ->with('lotes_envasado_granel.lotes_granel', 'dictamenEnvasado')
+            ->orderByDesc('id_lote_envasado')
+            ->get(),
+
+        'direcciones_destino' => Destinos::where("id_empresa", $empresa->id_empresa)
+            ->where('tipo_direccion', 1)
+            ->get(),
+
+        'instalaciones_envasadora' => instalaciones::where('tipo', 'like', '%Envasadora%')
+            ->whereIn('id_empresa', $idsEmpresas)
+            ->get(),
+    ]);
+}
 
     /*public function getDictamenesEnvasado($id_empresa)
     {

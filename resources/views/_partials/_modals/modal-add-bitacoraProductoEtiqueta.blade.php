@@ -382,7 +382,7 @@
     function obtenerGraneles(empresa) {
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
             $.ajax({
-                url: '/getDatos/' + empresa,
+                url: '/getDatosBitacora/' + empresa,
                 method: 'GET',
                 success: function(response) {
                     var contenido =
@@ -462,7 +462,22 @@
                     // Setear valores para los campos individuales
                     $('#volumen_inicial').val(response.lotes_granel.volumen_restante);
                     $('#alcohol_inicial').val(response.lotes_granel.cont_alc);
-                    $('#folio_fq').val(response.lotes_granel.folio_fq);
+                    $('#id_categoria').val(response.lotes_granel.id_categoria).trigger('change');
+                    $('#id_clase').val(response.lotes_granel.id_clase).trigger('change');
+                     $('#id_tipo').val('');
+                   if (Array.isArray(response.tipo)) {
+                    response.tipo.forEach(t => {
+                        $('#id_tipo').append(
+                            $('<option>', {
+                                value: t.id_tipo,
+                                text: `${t.nombre} (${t.cientifico})`,
+                                selected: true // si deseas marcarlo automáticamente
+                            })
+                        );
+                    });
+                }
+
+                  $('#id_tipo').trigger('change');
                 },
                 error: function() {
                     console.error('Error al obtener datos de graneles');
@@ -472,6 +487,9 @@
             $('#volumen_inicial').val('');
             $('#alcohol_inicial').val('');
             $('#folio_fq').val('');
+            $('#id_categoria').val('').trigger('change');
+            $('#id_clase').val('').trigger('change');
+            $('#id_tipo').val('').trigger('change');
         }
     }
 </script>

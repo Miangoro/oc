@@ -259,7 +259,7 @@
     function obtenerGraneles(empresa) {
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
             $.ajax({
-                url: '/getDatos/' + empresa,
+                url: '/getDatosBitacora/' + empresa,
                 method: 'GET',
                 success: function(response) {
                     var contenido = "";
