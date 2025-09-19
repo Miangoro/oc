@@ -100,7 +100,13 @@ public function index(Request $request)
         ->join('empresa', 'empresa.id_empresa', '=', 'guias.id_empresa')
         ->leftJoin('predios', 'predios.id_predio', '=', 'guias.id_predio')
         ->when($empresaId, fn($q) => $q->where('guias.id_empresa', $empresaId))
-        ->groupBy('run_folio');
+        ->groupBy('run_folio'); 
+    // --- Query base ---
+    /*$query = Guias::with(['empresa', 'predios', 'predio_plantacion'])
+        ->when($empresaId, fn($q) => $q->where('id_empresa', $empresaId));
+
+    $totalData = $query->count();*/
+
 
 
     // --------- Filtros de búsqueda ---------
@@ -111,6 +117,7 @@ public function index(Request $request)
             ->orWhere('empresa.razon_social', 'LIKE', "%{$searchValue}%")
             ->orWhere('predios.nombre_predio', 'LIKE', "%{$searchValue}%")
             ->orWhere('predios.num_predio', 'LIKE', "%{$searchValue}%");
+            //->orWhereHas('empresa', fn($q) => $q->where('razon_social', 'LIKE', "%{$searchValue}%"));
         });
 
         $totalFiltered = $query->get()->count();
@@ -152,25 +159,27 @@ public function index(Request $request)
                     ->first();
 
                 $nestedData = [
+                    /*
                     'documento_guia' => $documentoGuia?->url
                         ? asset("files/{$numero_cliente}/{$documentoGuia->url}") : null,
 
                     'documento_art' => $documentoArt?->url
                         ? asset("files/{$numero_cliente}/{$documentoArt->url}") : null,
-
+                    */
                     'id_guia' => $user->id_guia,
-                    'id_plantacion' => $user->id_plantacion,
-                    'fake_id' => ++$ids,
+                    //'id_plantacion' => $user->id_plantacion,
+                    //'fake_id' => ++$ids,
                     'folio' => $user->folio,
                     'run_folio' => $user->run_folio,
-                    'razon_social' => $user->razon_social ?? 'No encontrado',
+                    'razon_social' => $user->empresa->razon_social ?? 'No encontrado',
                     'numero_cliente' => $numero_cliente, // Asignar numero_cliente
                     'id_predio' => '<b>'.$user->num_predio.'</b><br>'.$user->nombre_predio,
                     'numero_plantas' => $user->numero_plantas,
                     'num_anterior' => $user->num_anterior,
                     'num_comercializadas' => $user->num_comercializadas,
                     'mermas_plantas' => $user->mermas_plantas,
-                    'id_art' => $user->id_art,
+                    'numero_guias' => $user->numero_guias,
+                    /*'id_art' => $user->id_art,
                     'kg_magey' => $user->kg_magey,
                     'no_lote_pedido' => $user->no_lote_pedido,
                     'fecha_corte' => $user->fecha_corte,
@@ -178,8 +187,8 @@ public function index(Request $request)
                     'nombre_cliente' => $user->nombre_cliente,
                     'no_cliente' => $user->no_cliente,
                     'fecha_ingreso' => $user->fecha_ingreso,
-                    'domicilio' => $user->domicilio,
-                    'numero_guias' => $user->numero_guias,
+                    'domicilio' => $user->domicilio,*/
+                    
                 ];
                 $data[] = $nestedData;
             }
