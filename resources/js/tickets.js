@@ -106,7 +106,7 @@ $(function () {
 
             if (status === 'pendiente') colorClass = 'warning';
             else if (status === 'abierto') colorClass = 'success';
-            else if (status === 'cerrado') colorClass = 'danger';
+            else if (status === 'cerrado') colorClass = 'dark';
 
             return `<span class="badge rounded-pill bg-${colorClass} text-white">${data}</span>`;
           }

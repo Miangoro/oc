@@ -810,7 +810,6 @@ Route::middleware(['auth'])->controller(getFuncionesController::class)->group(fu
     Route::get('/getDatosBitacora/{empresa}', 'getDatosBitacora')->name('getDatosBitacora');
 });
 
-
 //------------------- GUIAS DE TRASLADO-------------------
 Route::middleware(['auth'])->controller(GuiasController::class)->group(function () {
     Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('traslado-guias')->middleware(['auth']);
@@ -828,10 +827,11 @@ Route::middleware(['auth'])->controller(GuiasController::class)->group(function 
     //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
 
     //DOCUMENTOS GUIA Y ART
-    Route::post('/guias/subir_documento', 'subirDocGuias')->name('guias.subir_documento');
     Route::get('/guias/mostrar_documento/{id_guia}/{id_documento}', 'mostrarDocGuias');
+    Route::post('/guias/subir_documento', 'subirDocGuias')->name('guias.subir_documento');
     Route::delete('/guias/borrar_documento/{id_guia}/{id_documento}', 'borrarDocGuias');
 });
+
 
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos')->middleware(['auth']);
@@ -1061,14 +1061,10 @@ Route::middleware(['auth'])->controller(RevisionUIController::class)->group(func
 
     Route::get('/revision/ver/{id}', 'add_revision');
     Route::post('/revision/registrar', 'registrar')->name('registrar-revision');
-
-
-    //Route::get('/revisor/obtener-respuestas/{id}', 'obtenerRespuestas');
-
     Route::get('/revision/obtener/{id}', 'edit_revision');
     Route::post('/revision/editar', 'editar')->name('editar-revision');
 
-    //asignar revision
+    //asignar revision automatica
     Route::post('/revision/asignar-ui', 'storeRevisor')->name('asignarRevisor');
 });
 

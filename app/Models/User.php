@@ -102,6 +102,11 @@ class User extends Authenticatable
         return $this->hasMany(instalaciones::class, 'id_instalacion', 'id_instalacion');
     }
 
+        public function contacto()
+    {
+        return $this->hasOne(User::class, 'id','id_contacto');
+    }
+
 
 
 
