@@ -665,7 +665,7 @@ public function agregarResultados(Request $request)
                             ]);
                     // Notificación
                     //$inspector = User::find($revisor->id);
-                    $usuario = User::find(1);
+                    $usuario = User::find($revisor->id);
                     if ($usuario) {
                         //$url_clic = $tipoRevisor == 1 ? "/add_revision/{$revisor->id_revision}" : "/add_revision_consejo/{$revisor->id_revision}";
                         $url_clic = "/revision/ver/{$revision->id_revision}";
