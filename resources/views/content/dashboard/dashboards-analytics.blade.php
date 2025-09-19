@@ -124,52 +124,52 @@
                     <div class="row g-0 align-items-center">
                         <!-- Texto de bienvenida -->
                         <div class="col-md-3 p-3">
-    <div class="card shadow-sm border-0 rounded-3">
-        <div class="card-body text-center">
+                        <div class="card shadow-sm border-0 rounded-3">
+                            <div class="card-body text-center">
 
-            <h4 class="mb-3 text-primary fw-bold">
-               Bienvenido a la nueva plataforma
-            </h4>
+                                <h4 class="mb-3 text-primary fw-bold">
+                                Bienvenido a la nueva plataforma
+                                </h4>
 
-            <h5 class="mb-2 text-dark fw-semibold">
-                @if (Auth::check())
-                    {{ Auth::user()->name }}
-                @else
-                    <span class="text-muted">Sin usuario logeado</span>
-                @endif
-            </h5>
+                                <h5 class="mb-2 text-dark fw-semibold">
+                                    @if (Auth::check())
+                                        {{ Auth::user()->name }}
+                                    @else
+                                        <span class="text-muted">Sin usuario logeado</span>
+                                    @endif
+                                </h5>
 
-            <p class="mb-3 fs-6 fw-bold text-danger">
-                @if (Auth::check() && Auth::user()->puesto)
-                    {{ Auth::user()->puesto }}
-                @elseif(Auth::check() && Auth::user()->empresa)
-                    {{ Auth::user()->empresa->razon_social }}
-                @else
-                    Miembro del consejo
-                @endif
-            </p>
+                                <p class="mb-3 fs-6 fw-bold text-danger">
+                                    @if (Auth::check() && Auth::user()->puesto)
+                                        {{ Auth::user()->puesto }}
+                                    @elseif(Auth::check() && Auth::user()->empresa)
+                                        {{ Auth::user()->empresa->razon_social }}
+                                    @else
+                                        Miembro del consejo
+                                    @endif
+                                </p>
 
-            @if ($maquiladora)
-                <hr class="my-3">
-                <h6 class="fw-bold text-secondary mb-2">Maquilador de:</h6>
-                <ul class="list-unstyled mb-0">
-                    @foreach ($maquiladora as $maquiladoras)
-                        @foreach ($maquiladoras->maquiladora as $soymaquilador)
-                            <li class="mb-1">
-                                <i class="material-icons align-middle text-primary" style="font-size:18px;">business</i>
-                                {{ $soymaquilador->razon_social }}
-                            </li>
-                        @endforeach
-                    @endforeach
-                </ul>
-            @endif
+                                @if ($maquiladora)
+                                    <hr class="my-3">
+                                    <h6 class="fw-bold text-secondary mb-2">Maquilador de:</h6>
+                                    <ul class="list-unstyled mb-0">
+                                        @foreach ($maquiladora as $maquiladoras)
+                                            @foreach ($maquiladoras->maquiladora as $soymaquilador)
+                                                <li class="mb-1">
+                                                    <i class="material-icons align-middle text-primary" style="font-size:18px;">business</i>
+                                                    {{ $soymaquilador->razon_social }}
+                                                </li>
+                                            @endforeach
+                                        @endforeach
+                                    </ul>
+                                @endif
 
-        </div>
-    </div>
-</div>
+                            </div>
+                        </div>
+                    </div>
 
 
-                        <div class="col-md-6 text-center d-none d-md-block p-2">
+                        <div class="col-md-5 text-center d-none d-md-block p-2">
                             <div class="row">
                                 @foreach ($maquiladores as $maquilador)
                                     @foreach ($maquilador->maquiladores as $m)
@@ -245,7 +245,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 text-center d-none d-md-block">
+                        <div class="col-md-4 text-center d-none d-md-block">
                             <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
                                 <!-- Indicadores -->
                                 <div class="carousel-indicators">
