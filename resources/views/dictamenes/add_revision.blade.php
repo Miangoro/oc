@@ -74,28 +74,6 @@
           <h5 class="fw-semibold">
           {{ $tipo }}
           </h5>
-          {{-- @if($revision->tipo_dictamen == 4 && $dictamen->inspeccione->solicitud->lotesEnvasadoDesdeJson()->count() > 1)
-            <span class="badge bg-info">Combinado</span>
-          @endif
-          @if($revision->es_correccion == 'si')
-            <span class="badge bg-danger">Es corrección</span>
-          @endif 
-          
-          <div class="mt-3">
-            <p class="text-muted mb-1">Observaciones de la asignación:</p>
-            <div class="d-flex align-items-center gap-2 mb-1">
-              <a href="/storage/revisiones/" target="_blank">
-                <i class="ri-file-pdf-2-fill text-danger ri-24px"></i>
-              </a>
-            </div>
-          </div>
-
-          {{-- <div class="mt-2">
-            <span class="text-muted">Este certificado sustituye al:</span>
-            <a target="_blank" href="" class="text-primary fw-bold"></a>
-            <br>
-            <span class="text-muted">Motivo: </span><strong> </strong>
-          </div> --}}
 
           <div class="mt-4">
               <p class="text-muted mb-1">Acta</p>
@@ -137,7 +115,7 @@
                         <i class="ri-file-pdf-2-fill text-primary ri-24px cursor-pointer"></i>
                     </a>
                     @if($index < $evidencias->count() - 1)
-                        ,
+                      <!--espacio-->
                     @endif
                 @endforeach
             </div>
@@ -161,29 +139,35 @@
             </div>
           </div>
 
-          <!-- PDF ACTA -->
-          {{-- <div class="mt-4">
-            <p class="text-muted mb-1">Acta</p>
-            <span class="fw-semibold"> </span>
-    @php    
-      $empresa = $revision->inspeccion->solicitud->empresa;
-      $cliente = $empresa?->empresaNumClientes->firstWhere( 'numero_cliente', '!=', null );
-      $acta = \App\Models\Documentacion_url::where('id_empresa', $empresa->id_empresa)
-            ->where('id_documento', 69)
-            ->where('id_relacion', $revision->inspeccion->solicitud->id_solicitud)
-            ->value('url');
-    @endphp
-            {{-- <a href="{{ $url ?? '#' }}" target="_blank"> --}
-            <a href="{{ asset('files/' . $cliente->numero_cliente . '/actas/' . $acta) }}" target="_blank">
-              <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-            </a>
-          </div> --}}
+          <!-- Inspector -->
+          <div class="mt-2">
+            <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
+                <img src="{{ asset('storage/' . $revision->inspeccion->inspector->profile_photo_path) }}"
+                    alt="Foto consejo"
+                    class="rounded-circle me-3 border border-white shadow-sm"
+                    width="50" height="50" style="object-fit: cover;">
+                <div>
+                    <p class="text-muted mb-0 small">Inspector que realizó el servicio</p>
+                    <h6 class="mb-0 fw-semibold">{{ $revision->inspeccion->inspector->name ?? 'N/A' }}</h6>
+                </div>
+            </div>
+          </div>
         </div>
 
       </div>
     </div>
+
+    <!-- Sección documentación extra -->
+    <div class="card pt-2">
+        <div class="mt-5">
+            <div id="contenedor-documentos" class="mt-3"></div>
+        </div>
+    </div>
+
+
   </div>
 </div>
+
 
 
 <!-- FORMULARIO -->
@@ -283,3 +267,68 @@
 </form>
 
 @endsection
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    let id_solicitud = @json($id_solicitud);
+
+    if (id_solicitud) {
+        $.ajax({
+            url: '/getDocumentosSolicitud/' + id_solicitud,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    let html = `<table class="table table-bordered table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th colspan="2" class="text-center fw-semibold text-white">
+                                                Documentación previa de la solicitud
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>`;
+
+                    // Certificados granel
+                    if (response.url_certificado.length > 0) {
+                        response.url_certificado.forEach(url => {
+                            html += `
+                                <tr>
+                                    <td>Certificado de granel</td>
+                                    <td>
+                                        <a href="/files/${response.numero_cliente_lote}/certificados_granel/${url}" target="_blank">
+                                            <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                        </a>
+                                    </td>
+                                </tr>`;
+                        });
+                    }
+
+                    // FQs
+                    if (response.fqs.length > 0) {
+                        response.fqs.forEach(fq => {
+                            html += `
+                                <tr>
+                                    <td>${fq.nombre_documento}</td>
+                                    <td>
+                                        <a href="/files/${response.numero_cliente_lote}/fqs/${fq.url}" target="_blank">
+                                            <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                        </a>
+                                    </td>
+                                </tr>`;
+                        });
+                    }
+
+                    html += `</tbody></table>`;
+                    $('#contenedor-documentos').html(html);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error AJAX:', error);
+                $('#contenedor-documentos').html('<p class="text-muted">No se pudo cargar la documentación previa.</p>');
+            }
+        });
+    }
+});
+</script>

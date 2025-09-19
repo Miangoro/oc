@@ -227,8 +227,12 @@ public function add_revision($id)
     //$url = '/solicitud_de_servicio/' .$revision->inspeccion->solicitud->id_solicitud;
 
     $preguntas = preguntas_revision_dictamen::where('tipo_revisor', 1)->get();
+
+    ///
+    // obtengo id_solicitud desde la relación inspeccion -> solicitud
+    $id_solicitud = $revision->inspeccion->id_solicitud ?? null;
    
-    return view('dictamenes.add_revision', compact('revision', 'tipo', 'preguntas'));
+    return view('dictamenes.add_revision', compact('revision', 'tipo', 'preguntas', 'id_solicitud'));
 }
 ///REGISTRAR REVISION
 public function registrar(Request $request)
@@ -346,8 +350,14 @@ public function edit_revision($id)
 
     $tipo = $tipoSolicitud[$datos->tipo_solicitud ?? 0] ?? 'Desconocido';
 
+    $preguntas = preguntas_revision_dictamen::where('tipo_revisor', 1)->get();
 
-    return view('dictamenes.edit_revision', compact('datos', 'preguntas', 'tipo', 'respuestas_map'));
+    ///
+    // obtengo id_solicitud desde la relación inspeccion -> solicitud
+    $id_solicitud = $datos->inspeccion->id_solicitud ?? null;
+
+
+    return view('dictamenes.edit_revision', compact('datos', 'preguntas', 'tipo', 'respuestas_map', 'id_solicitud'));
 }
 ///EDITAR REVISION
 public function editar(Request $request)
