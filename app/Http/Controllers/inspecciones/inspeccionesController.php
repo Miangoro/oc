@@ -654,7 +654,7 @@ public function agregarResultados(Request $request)
                                 ->inRandomOrder()
                                 ->first();
 
-                            RevisionDictamen::create([
+                            $revision = RevisionDictamen::create([
                                 'id_inspeccion'   => $inspeccion->id_inspeccion,
                                 'tipo_revision'   => 1,
                                 'id_revisor'      => $revisor?->id ?? 0,
@@ -664,26 +664,28 @@ public function agregarResultados(Request $request)
                                 'tipo_solicitud'  => $sol->id_tipo ?? 0,
                             ]);
                     // Notificación
-                    /*$user = User::find($idRevisor);
-                    if ($user) {
-                        $url_clic = $tipoRevisor == 1 ? "/add_revision/{$revisor->id_revision}" : "/add_revision_consejo/{$revisor->id_revision}";
+                    //$inspector = User::find($revisor->id);
+                    $usuario = User::find(1);
+                    if ($usuario) {
+                        //$url_clic = $tipoRevisor == 1 ? "/add_revision/{$revisor->id_revision}" : "/add_revision_consejo/{$revisor->id_revision}";
+                        $url_clic = "/revision/ver/{$revision->id_revision}";
 
-                        $user->notify(new GeneralNotification([
-                            'asunto' => 'Revisión de certificado ' . $certificado->num_certificado,
-                            'title' => 'Revisión de certificado',
-                            'message' => 'Se te ha asignado el certificado ' . $certificado->num_certificado,
+                        $usuario->notify(new GeneralNotification([
+                            //'asunto' => 'Revisión de acta de servicio',
+                            'title' =>  'Revisión de actas ',
+                            'message' => 'Se te ha asignado el acta '.$inspeccion->num_servicio,
                             'url' => $url_clic,
-                            'nombreRevisor' => $user->name,
-                            'emailRevisor' => $user->email,
+                            /*'nombreRevisor' => $usuario->name,
+                            'emailRevisor' => $usuario->email,
                             'num_certificado' => $certificado->num_certificado,
                             'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
                             'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
                             'razon_social' => $empresa->razon_social ?? 'Sin asignar',
                             'numero_cliente' => $numeroCliente ?? 'Sin asignar',
                             'tipo_certificado' => 'Certificado granel',
-                            'observaciones' => $revisor->observaciones,
+                            'observaciones' => $revisor->observaciones,*/
                         ]));
-                    }*/
+                    }
                         }
                     }
                     
