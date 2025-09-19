@@ -64,7 +64,8 @@
             <th>Cliente</th>
             <th>Folio</th>
             <th>Folio de solicitud</th>
-            <th>Cantidad guias</th>
+            {{-- <th>Cantidad guias</th> --}}
+            <th>Guias</th>
             <th>Plantas actuales</th>
             <th>No. anterior</th>
             <th>Comercializadas</th>
@@ -111,8 +112,9 @@
             <div class="d-flex mt-6 justify-content-center">
                 <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
                     Registrar</button>
-                <button id="btnCancelModal" type="reset" class="btn btn-secondary waves-effect waves-light" data-bs-dismiss="modal" aria-label="Close">
-                  <i class="ri-arrow-go-back-line"> </i> Regresar</button>
+                {{-- <button id="btnCancelModal" type="reset" class="btn btn-secondary waves-effect waves-light" data-bs-dismiss="modal" aria-label="Close">
+                  <i class="ri-arrow-go-back-line"> </i> Regresar</button> --}}
+                  <button type="reset" class="btn btn-secondary waves-effect waves-light" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </form>
       </div>

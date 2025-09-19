@@ -70,13 +70,13 @@ public function index(Request $request)
 
     $limit = $request->input('length');
     $start = $request->input('start');
+    $dir = $request->input('order.0.dir');
     $orderColumnIndex = $request->input('order.0.column');
     $order = $columns[$orderColumnIndex] ?? 'id_guia';
-    $dir = $request->input('order.0.dir');
     $searchValue = $request->input('search.value');
 
     // --------- Query base para contar total de folios únicos ---------
-    $queryBase = Guias::select('run_folio')
+    /*$queryBase = Guias::select('run_folio')
         ->when($empresaId, fn($q) => $q->where('id_empresa', $empresaId))
         ->groupBy('run_folio');
 
@@ -100,12 +100,12 @@ public function index(Request $request)
         ->join('empresa', 'empresa.id_empresa', '=', 'guias.id_empresa')
         ->leftJoin('predios', 'predios.id_predio', '=', 'guias.id_predio')
         ->when($empresaId, fn($q) => $q->where('guias.id_empresa', $empresaId))
-        ->groupBy('run_folio'); 
+        ->groupBy('run_folio'); ANTERIOR*/
     // --- Query base ---
-    /*$query = Guias::with(['empresa', 'predios', 'predio_plantacion'])
+    $query = Guias::with(['empresa', 'predios', 'predio_plantacion'])
         ->when($empresaId, fn($q) => $q->where('id_empresa', $empresaId));
 
-    $totalData = $query->count();*/
+    $totalData = $query->count();
 
 
 
@@ -114,10 +114,12 @@ public function index(Request $request)
         $query->where(function ($q) use ($searchValue) {
             $q->where('run_folio', 'LIKE', "%{$searchValue}%")
             //->orWhere('guias.folio', 'LIKE', "%{$searchValue}%")
-            ->orWhere('empresa.razon_social', 'LIKE', "%{$searchValue}%")
+            /*->orWhere('empresa.razon_social', 'LIKE', "%{$searchValue}%")
             ->orWhere('predios.nombre_predio', 'LIKE', "%{$searchValue}%")
-            ->orWhere('predios.num_predio', 'LIKE', "%{$searchValue}%");
-            //->orWhereHas('empresa', fn($q) => $q->where('razon_social', 'LIKE', "%{$searchValue}%"));
+            ->orWhere('predios.num_predio', 'LIKE', "%{$searchValue}%");*/
+            ->orWhereHas('predios', fn($q) => $q->where('nombre_predio', 'LIKE', "%{$searchValue}%"))
+            ->orWhereHas('predios', fn($q) => $q->where('num_predio', 'LIKE', "%{$searchValue}%"))
+            ->orWhereHas('empresa', fn($q) => $q->where('razon_social', 'LIKE', "%{$searchValue}%"));
         });
 
         $totalFiltered = $query->get()->count();
@@ -173,7 +175,7 @@ public function index(Request $request)
                     'run_folio' => $user->run_folio,
                     'razon_social' => $user->empresa->razon_social ?? 'No encontrado',
                     'numero_cliente' => $numero_cliente, // Asignar numero_cliente
-                    'id_predio' => '<b>'.$user->num_predio.'</b><br>'.$user->nombre_predio,
+                    'id_predio' => '<b>'.$user->predios->num_predio.'</b><br>'.$user->predios->nombre_predio,
                     'numero_plantas' => $user->numero_plantas,
                     'num_anterior' => $user->num_anterior,
                     'num_comercializadas' => $user->num_comercializadas,
@@ -376,11 +378,16 @@ public function store(Request $request)
 
 
     // Método para OBTENER SOLICITUD GUIA por AGRUPACION
-    public function edit($id_run_folio)
+    /*public function edit($id_run_folio)
     {
         $guia = guias::findOrFail($id_run_folio);
         return response()->json($guia);
-    }
+    } ANTERIOR*/
+public function edit($id_guia)
+{
+    $guia = Guias::findOrFail($id_guia);
+    return response()->json($guia);
+}
     //Metodo EDITAR GUIAS (POR UNA Y UNA)
     public function editGuias($run_folio)
     {
@@ -442,7 +449,8 @@ public function store(Request $request)
 
     return response()->json(['success' => 'Guías actualizadas correctamente']);
 }*/
-public function update(Request $request, $id)
+
+/*public function update(Request $request, $id)
 {
     $guia = Guias::findOrFail($id);
     $runFolio = $guia->run_folio;
@@ -507,7 +515,7 @@ public function update(Request $request, $id)
                 $plantacionNueva->num_plantas = $request->plantas;
                 $plantacionNueva->save();
             }
-        }*/
+        }**
     // Descontar plantas en la plantación
     $plantacionNueva = predio_plantacion::find($guia->id_plantacion);
     if ($plantacionNueva) {
@@ -517,6 +525,49 @@ public function update(Request $request, $id)
 
 
     return response()->json(['success' => 'Guías actualizadas correctamente']);
+} ANTERIOR*/
+public function update(Request $request, $id)
+{
+    $guia = Guias::findOrFail($id);
+
+    $diferencia = $guia->num_anterior - $request->anterior;
+
+    // Restaurar plantas en la plantación anterior
+    $plantacionAnterior = predio_plantacion::find($guia->id_plantacion);
+    if ($plantacionAnterior) {
+        $plantacionAnterior->num_plantas += $diferencia;
+        if ($plantacionAnterior->num_plantas < 0) {
+            $plantacionAnterior->num_plantas = 0;
+        }
+        $plantacionAnterior->save();
+    }
+
+    // Actualizar SOLO la guía seleccionada
+    $guia->update([
+        'num_anterior' => $request->anterior,
+        'num_comercializadas' => $request->comercializadas,
+        'mermas_plantas' => $request->mermas,
+        'numero_plantas' => $request->plantas,
+        'edad' => $request->edad,
+        'art' => $request->art,
+        'kg_maguey' => $request->kg_maguey,
+        'no_lote_pedido' => $request->no_lote_pedido,
+        'fecha_corte' => $request->fecha_corte,
+        'observaciones' => $request->observaciones,
+        'nombre_cliente' => $request->nombre_cliente,
+        'no_cliente' => $request->no_cliente,
+        'fecha_ingreso' => $request->fecha_ingreso,
+        'domicilio' => $request->domicilio,
+    ]);
+
+    // Ajustar número de plantas en la plantación
+    $plantacionNueva = predio_plantacion::find($guia->id_plantacion);
+    if ($plantacionNueva) {
+        $plantacionNueva->num_plantas = $request->plantas;
+        $plantacionNueva->save();
+    }
+
+    return response()->json(['success' => 'Guía actualizada correctamente']);
 }
 
 

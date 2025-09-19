@@ -54,7 +54,7 @@ if (dt_user_table.length) {
         },
         { data: 'folio' },
         { data: 'run_folio' },
-        { data: 'numero_guias' },
+        { data: 'numero_guias' },//5
         { data: 'numero_plantas' },
         { data: 'num_anterior' },
         { data: 'num_comercializadas' },
@@ -73,6 +73,16 @@ if (dt_user_table.length) {
           responsivePriority: 2,
           render: function (data, type, full, meta) {
             return '';
+          }
+        },
+        {
+          targets: 5,
+          searchable: false,
+          orderable: false,
+          render: function (data, type, full, meta) {
+            return `
+            <i data-id="${full['id_guia']}" class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdfGuia"  data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>
+            `;
           }
         },
 
@@ -118,9 +128,11 @@ if (dt_user_table.length) {
           orderable: false,
           render: function (data, type, full, meta) {
           let acciones = '';
-            
+            /*GUIAS ANTERIOR
               acciones += `<a data-id="${full['run_folio']}" data-bs-toggle="modal" data-bs-target="#verGuiasRegistardas" href="javascript:;" class="dropdown-item ver-registros"><i class="ri-id-card-line ri-20px text-primary"></i> Ver guías</a>`;
-            
+            */
+            acciones += `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#ModalSubirPDF" href="javascript:;" class="dropdown-item subirPDF"><i class="ri-book-marked-line ri-20px text-primary"></i> Adjuntar PDF</a>`;
+
             if (window.puedeEditarElUsuario) {
       /*acciones += `<a data-id="${full['run_folio']}" data-bs-toggle="modal" data-bs-target="#ModalEditSolGuias" href="javascript:;" class="dropdown-item editSolGuias"><i class="ri-edit-box-line ri-20px text-info"></i> Editar solicitud de guía</a>`;*/
       acciones += `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias" href="javascript:;" class="dropdown-item edit-guia"> <i class="ri-edit-box-line ri-20px text-info"> </i> Llenar solicitud de guía</a>`;
@@ -691,7 +703,6 @@ $(document).on('click', '.edit-guia', function () {
     });
 });
 
-  
 
   //ACTUALIZAR Guias y validacion
   const editGuiaForm = document.getElementById('editGuiaForm');
@@ -777,6 +788,7 @@ $(document).on('click', '.edit-guia', function () {
       }
     });
 });
+
 /*
 ///EDITAR SOL DE GUIAS
 $(function () {
