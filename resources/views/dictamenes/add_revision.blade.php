@@ -103,7 +103,7 @@
             @php    
               $empresa = $revision->inspeccion->solicitud->empresa;
               $cliente = $empresa?->empresaNumClientes->firstWhere( 'numero_cliente', '!=', null );
-              $acta = \App\Models\documentacion_url::where('id_empresa', $empresa->id_empresa)
+              $acta = \App\Models\Documentacion_url::where('id_empresa', $empresa->id_empresa)
                     ->where('id_documento', 69)
                     ->where('id_relacion', $revision->inspeccion->solicitud->id_solicitud)
                     ->value('url');
@@ -147,7 +147,7 @@
     @php    
       $empresa = $revision->inspeccion->solicitud->empresa;
       $cliente = $empresa?->empresaNumClientes->firstWhere( 'numero_cliente', '!=', null );
-      $acta = \App\Models\documentacion_url::where('id_empresa', $empresa->id_empresa)
+      $acta = \App\Models\Documentacion_url::where('id_empresa', $empresa->id_empresa)
             ->where('id_documento', 69)
             ->where('id_relacion', $revision->inspeccion->solicitud->id_solicitud)
             ->value('url');
@@ -206,7 +206,7 @@
                       $acta = null;
                       if ($pregunta->id_documento) {
                         // Obtiene acta específica
-                        $acta = \App\Models\documentacion_url::where('id_empresa', $empresa->id_empresa)
+                        $acta = \App\Models\Documentacion_url::where('id_empresa', $empresa->id_empresa)
                                 ->where('id_documento', 69)
                                 ->where('id_relacion', $revision->inspeccion->solicitud->id_solicitud)
                                 ->value('url');

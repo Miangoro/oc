@@ -60,7 +60,7 @@
             @php    
               $empresa = $datos->inspeccion->solicitud->empresa;
               $cliente = $empresa?->empresaNumClientes->firstWhere( 'numero_cliente', '!=', null );
-              $acta = \App\Models\documentacion_url::where('id_empresa', $empresa->id_empresa)
+              $acta = \App\Models\Documentacion_url::where('id_empresa', $empresa->id_empresa)
                     ->where('id_documento', 69)
                     ->where('id_relacion', $datos->inspeccion->solicitud->id_solicitud)
                     ->value('url');
@@ -85,11 +85,13 @@
             <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white shadow-sm" style="font-size: 0.75rem;">
               <i class="ri-star-fill"></i> Revisor
             </div>
-            <img src="" alt="Foto revisor"
+            <img src="{{ asset('storage/' .$datos->user->profile_photo_path) }}" alt="Foto revisor"
               class="rounded-circle border border-3 border-white shadow-sm me-3"
               width="60" height="60" style="object-fit: cover;">
             <div>
-              <h6 class="mb-0 fw-bold text-primary" style="font-size: 1.1rem;"></h6>
+              <h6 class="mb-0 fw-bold text-primary" style="font-size: 1.1rem;">
+                {{ $datos->user->name ?? 'N/A' }}
+              </h6>
               <p class="mb-0 text-muted small">Responsable de esta revisión</p>
             </div>
           </div>
