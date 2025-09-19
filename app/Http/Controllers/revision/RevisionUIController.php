@@ -227,8 +227,12 @@ public function add_revision($id)
     //$url = '/solicitud_de_servicio/' .$revision->inspeccion->solicitud->id_solicitud;
 
     $preguntas = preguntas_revision_dictamen::where('tipo_revisor', 1)->get();
+
+    ///
+    // obtengo id_solicitud desde la relación inspeccion -> solicitud
+    $id_solicitud = $revision->inspeccion->id_solicitud ?? null;
    
-    return view('dictamenes.add_revision', compact('revision', 'tipo', 'preguntas'));
+    return view('dictamenes.add_revision', compact('revision', 'tipo', 'preguntas', 'id_solicitud'));
 }
 ///REGISTRAR REVISION
 public function registrar(Request $request)

@@ -93,7 +93,7 @@
                         <i class="ri-file-pdf-2-fill text-primary ri-24px cursor-pointer"></i>
                     </a>
                     @if($index < $evidencias->count() - 1)
-                        ,
+                      <!--espacio-->
                     @endif
                 @endforeach
             </div>
@@ -117,6 +117,19 @@
             </div>
           </div>
 
+          <!-- Inspector Columna extra -->
+          <div class="mt-2">
+            <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
+                <img src="{{ asset('storage/' . $datos->inspeccion->inspector->profile_photo_path) }}"
+                    alt="Foto consejo"
+                    class="rounded-circle me-3 border border-white shadow-sm"
+                    width="50" height="50" style="object-fit: cover;">
+                <div>
+                    <p class="text-muted mb-0 small">Inspector que realizó la inspección</p>
+                    <h6 class="mb-0 fw-semibold">{{ $datos->inspeccion->inspector->name ?? 'N/A' }}</h6>
+                </div>
+            </div>
+          </div>
         </div>
 
       </div>
