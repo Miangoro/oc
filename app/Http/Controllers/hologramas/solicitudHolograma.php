@@ -14,6 +14,8 @@ use App\Models\tipos;
 use App\Models\categorias;
 use App\Models\clases;
 use App\Models\Documentacion_url;
+use App\Models\User;
+use App\Notifications\GeneralNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -265,6 +267,26 @@ class solicitudHolograma extends Controller
         // Guardar el nuevo registro en la base de datos
         $holograma->save();
         // Retornar una respuesta JSON indicando éxito
+
+        ///Notificacion 
+        $user =  Auth::user(); // el usuario que hace la solicitud
+        $contacto = Auth::user()->contacto;
+
+        $data1 = [
+            'title' => 'Nueva solicitud',
+            'message' => $holograma->folio . " Entrega de hologramas",
+            'url' => 'hologramas/solicitud',
+        ];
+
+        if ($contacto) {
+                $contacto->notify(new GeneralNotification($data1));
+        }else{
+                $users = User::whereIn('id', [4, 3, 7, 320,319])->get(); 
+                foreach ($users as $user) {
+                $user->notify(new GeneralNotification($data1));
+            }
+        }
+
         return response()->json(['success' => 'Solicitud de Hologramas registrada correctamente']);
     }
 

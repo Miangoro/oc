@@ -571,18 +571,25 @@ public function storeVigilanciaProduccion(Request $request)
               }
           }
 
-          // Notificar
-          $users = User::whereIn('id', [4, 2, 3, 7])->get();
+          ///Notificacion 
+        $user =  Auth::user(); // el usuario que hace la solicitud
+        $contacto = Auth::user()->contacto;
 
-          $data1 = [
-              'title' => 'Nuevo registro de solicitud',
-              'message' => $VigilanciaProdu->folio . " " . $VigilanciaProdu->tipo_solicitud->tipo,
-              'url' => 'solicitudes-historial',
-          ];
+        $data1 = [
+            'title' => 'Nueva solicitud',
+            'message' => $VigilanciaProdu->folio . " " . $VigilanciaProdu->tipo_solicitud->tipo,
+            'url' => 'solicitudes-historial',
+        ];
 
-          foreach ($users as $user) {
-              $user->notify(new GeneralNotification($data1));
-          }
+        if ($contacto) {
+                $contacto->notify(new GeneralNotification($data1));
+        }else{
+                $users = User::whereIn('id', [4, 3, 7, 320,319])->get(); 
+                foreach ($users as $user) {
+                $user->notify(new GeneralNotification($data1));
+            }
+        }
+      
 
           DB::commit();
 
@@ -618,19 +625,24 @@ public function storeEmisionCertificadoVentaNacional(Request $request)
 
         $emisionCertificado->save();
 
-        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
+        ///Notificacion 
+        $user =  Auth::user(); // el usuario que hace la solicitud
+        $contacto = Auth::user()->contacto;
 
-        // Notificación 1
-        $data1 = [
-            'title' => 'Nuevo registro de solicitud',
-            'message' => $emisionCertificado->folio . " " . $emisionCertificado->tipo_solicitud->tipo,
-            'url' => 'solicitudes-historial',
-        ];
+          $data1 = [
+              'title' => 'Nueva solicitud',
+              'message' => $emisionCertificado->folio . " " . $emisionCertificado->tipo_solicitud->tipo,
+              'url' => 'solicitudes-historial',
+          ];
 
-        // Iterar sobre cada usuario y enviar la notificación
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
-        }
+            if ($contacto) {
+                    $contacto->notify(new GeneralNotification($data1));
+            }else{
+                    $users = User::whereIn('id', [4, 3, 7, 320,319])->get(); 
+                    foreach ($users as $user) {
+                    $user->notify(new GeneralNotification($data1));
+                }
+            }
         
     return response()->json(['message' => 'Emision de certificado venta nacional registrada exitosamente']);
 }
@@ -669,18 +681,23 @@ public function storeMuestreoLote(Request $request)
 
         $MuestreoLote->save();
 
-        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
+        ///Notificacion 
+        $user =  Auth::user(); // el usuario que hace la solicitud
+        $contacto = Auth::user()->contacto;
 
-        // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nueva solicitud',
             'message' => $MuestreoLote->folio . " " . $MuestreoLote->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
 
-        // Iterar sobre cada usuario y enviar la notificación
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
+        if ($contacto) {
+                $contacto->notify(new GeneralNotification($data1));
+        }else{
+                $users = User::whereIn('id', [4, 3, 7, 320,319])->get(); 
+                foreach ($users as $user) {
+                $user->notify(new GeneralNotification($data1));
+            }
         }
 
     return response()->json(['message' => 'Solcitud de Muestreo registrado exitosamente']);
@@ -758,19 +775,25 @@ public function storeVigilanciaTraslado(Request $request)
         $bitacora->save();*/
 
 
-        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
+        ///Notificacion 
+       
+        $user =  Auth::user(); // el usuario que hace la solicitud
+        $contacto = Auth::user()->contacto;
 
-        // Notificación 1
-        $data1 = [
-            'title' => 'Nuevo registro de solicitud',
-            'message' => $VigilanciaTras->folio . " " . $VigilanciaTras->tipo_solicitud->tipo,
-            'url' => 'solicitudes-historial',
-        ];
+          $data1 = [
+              'title' => 'Nueva solicitud',
+              'message' => $VigilanciaTras->folio . " " . $VigilanciaTras->tipo_solicitud->tipo,
+              'url' => 'solicitudes-historial',
+          ];
 
-        // Iterar sobre cada usuario y enviar la notificación
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
-        }
+            if ($contacto) {
+                    $contacto->notify(new GeneralNotification($data1));
+            }else{
+                    $users = User::whereIn('id', [4, 3, 7, 320,319])->get(); 
+                    foreach ($users as $user) {
+                    $user->notify(new GeneralNotification($data1));
+                }
+            }
 
     return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
 }
@@ -797,19 +820,26 @@ public function storeInspeccionEnvasado(Request $request)
 
         $InspeccionEnva->save();
 
-        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
+      
 
         // Notificación 1
-        $data1 = [
-            'title' => 'Nuevo registro de solicitud',
-            'message' => $InspeccionEnva->folio . " " . $InspeccionEnva->tipo_solicitud->tipo,
-            'url' => 'solicitudes-historial',
-        ];
+        $user =  Auth::user(); // el usuario que hace la solicitud
+        $contacto = Auth::user()->contacto;
 
-        // Iterar sobre cada usuario y enviar la notificación
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
-        }
+          $data1 = [
+              'title' => 'Nueva solicitud',
+              'message' => $InspeccionEnva->folio . " " . $InspeccionEnva->tipo_solicitud->tipo,
+              'url' => 'solicitudes-historial',
+          ];
+
+            if ($contacto) {
+                    $contacto->notify(new GeneralNotification($data1));
+            }else{
+                    $users = User::whereIn('id', [4, 3, 7, 320,319])->get(); 
+                    foreach ($users as $user) {
+                    $user->notify(new GeneralNotification($data1));
+                }
+            }
 
     return response()->json(['message' => 'Inpeccion de envasado de lote registrada exitosamente']);
 }
@@ -848,19 +878,25 @@ public function storeInspeccionBarricada(Request $request)
 
         $InspeccionBarri->save();
 
-        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
 
         // Notificación 1
-        $data1 = [
-            'title' => 'Nuevo registro de solicitud',
-            'message' => $InspeccionBarri->folio . " " . $InspeccionBarri->tipo_solicitud->tipo,
-            'url' => 'solicitudes-historial',
-        ];
+       $user =  Auth::user(); // el usuario que hace la solicitud
+        $contacto = Auth::user()->contacto;
 
-        // Iterar sobre cada usuario y enviar la notificación
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
-        }
+          $data1 = [
+              'title' => 'Nueva solicitud',
+              'message' => $InspeccionBarri->folio . " " . $InspeccionBarri->tipo_solicitud->tipo,
+              'url' => 'solicitudes-historial',
+          ];
+
+            if ($contacto) {
+                    $contacto->notify(new GeneralNotification($data1));
+            }else{
+                    $users = User::whereIn('id', [4, 3, 7, 320,319])->get(); 
+                    foreach ($users as $user) {
+                    $user->notify(new GeneralNotification($data1));
+                }
+            }
 
     return response()->json(['message' => 'Inspeccion ingreso a barrica de lote registrada exitosamente']);
 }
@@ -898,19 +934,24 @@ public function storeInspeccionBarricadaLiberacion(Request $request)
 
         $BarricadaLib->save();
 
-        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
+        //Notificacion
+        $user =  Auth::user(); // el usuario que hace la solicitud
+        $contacto = Auth::user()->contacto;
 
-        // Notificación 1
-        $data1 = [
-            'title' => 'Nuevo registro de solicitud',
-            'message' => $BarricadaLib->folio . " " . $BarricadaLib->tipo_solicitud->tipo,
-            'url' => 'solicitudes-historial',
-        ];
+          $data1 = [
+              'title' => 'Nueva solicitud',
+              'message' => $BarricadaLib->folio . " " . $BarricadaLib->tipo_solicitud->tipo,
+              'url' => 'solicitudes-historial',
+          ];
 
-        // Iterar sobre cada usuario y enviar la notificación
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
-        }
+            if ($contacto) {
+                    $contacto->notify(new GeneralNotification($data1));
+            }else{
+                    $users = User::whereIn('id', [4, 3, 7, 320,319])->get(); 
+                    foreach ($users as $user) {
+                    $user->notify(new GeneralNotification($data1));
+                }
+            }
 
     return response()->json(['message' => 'Inspeccion liberacion a barrica de lote registrada exitosamente']);
 }
@@ -949,15 +990,24 @@ public function registrarSolicitudGeoreferenciacion(Request $request)
         $solicitud->save();
 
         ///Notificacion 
-        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
-        $data1 = [
-            'title' => 'Nuevo registro de solicitud',
-            'message' => $solicitud->folio . " " . $solicitud->tipo_solicitud->tipo,
-            'url' => 'solicitudes-historial',
-        ];
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
-        }
+       
+        $user =  Auth::user(); // el usuario que hace la solicitud
+        $contacto = Auth::user()->contacto;
+
+          $data1 = [
+              'title' => 'Nueva solicitud',
+              'message' => $solicitud->folio . " " . $solicitud->tipo_solicitud->tipo,
+              'url' => 'solicitudes-historial',
+          ];
+
+            if ($contacto) {
+                    $contacto->notify(new GeneralNotification($data1));
+            }else{
+                    $users = User::whereIn('id', [4, 3, 7, 320,319])->get(); 
+                    foreach ($users as $user) {
+                    $user->notify(new GeneralNotification($data1));
+                }
+            }
 
     return response()->json(['success' => 'Solicitud registrada correctamente']);
 }
@@ -990,14 +1040,23 @@ public function registrarSolicitudMuestreoAgave(Request $request)
         $solicitud->save();
 
 
-        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
+        ///Notificacion 
+        $user =  Auth::user(); // el usuario que hace la solicitud
+        $contacto = Auth::user()->contacto;
+
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nueva solicitud',
             'message' => $solicitud->folio . " " . $solicitud->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
+
+        if ($contacto) {
+                $contacto->notify(new GeneralNotification($data1));
+        }else{
+                $users = User::whereIn('id', [4, 3, 7, 320,319])->get(); 
+                foreach ($users as $user) {
+                $user->notify(new GeneralNotification($data1));
+            }
         }
 
     return response()->json(['success' => 'Solicitud registrada correctamente']);
@@ -1034,19 +1093,23 @@ public function store(Request $request)
 
         $solicitud->save();
 
-        // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
-        $users = User::whereIn('id', [4, 2, 3, 7])->get(); // IDs de los usuarios
+        ///Notificacion 
+        $user =  Auth::user(); // el usuario que hace la solicitud
+        $contacto = Auth::user()->contacto;
 
-        // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nueva solicitud',
             'message' => $solicitud->folio . " " . $solicitud->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
 
-        // Iterar sobre cada usuario y enviar la notificación
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
+        if ($contacto) {
+                $contacto->notify(new GeneralNotification($data1));
+        }else{
+                $users = User::whereIn('id', [4, 3, 7, 320,319])->get(); 
+                foreach ($users as $user) {
+                $user->notify(new GeneralNotification($data1));
+            }
         }
 
         // Retornar una respuesta JSON indicando éxito
