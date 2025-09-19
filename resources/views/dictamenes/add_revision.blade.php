@@ -70,16 +70,16 @@
 
         <!-- Tipo de dictamen -->
         <div class="col-md-4">
-          <p class="text-muted mb-1">Tipo de dictamen</p>
+          <p class="text-muted mb-1">Tipo de solicitud</p>
           <h5 class="fw-semibold">
           {{ $tipo }}
           </h5>
-          @if($revision->tipo_dictamen == 4 && $dictamen->inspeccione->solicitud->lotesEnvasadoDesdeJson()->count() > 1)
+          {{-- @if($revision->tipo_dictamen == 4 && $dictamen->inspeccione->solicitud->lotesEnvasadoDesdeJson()->count() > 1)
             <span class="badge bg-info">Combinado</span>
           @endif
           @if($revision->es_correccion == 'si')
             <span class="badge bg-danger">Es corrección</span>
-          @endif
+          @endif 
           
           <div class="mt-3">
             <p class="text-muted mb-1">Observaciones de la asignación:</p>
@@ -96,13 +96,30 @@
             <br>
             <span class="text-muted">Motivo: </span><strong> </strong>
           </div> --}}
+
+          <div class="mt-4">
+                <p class="text-muted mb-1">Acta</p>
+                <span class="fw-semibold"> </span>
+            @php    
+              $empresa = $revision->inspeccion->solicitud->empresa;
+              $cliente = $empresa?->empresaNumClientes->firstWhere( 'numero_cliente', '!=', null );
+              $acta = \App\Models\Documentacion_url::where('id_empresa', $empresa->id_empresa)
+                    ->where('id_documento', 69)
+                    ->where('id_relacion', $revision->inspeccion->solicitud->id_solicitud)
+                    ->value('url');
+            @endphp
+                {{-- <a href="{{ $url ?? '#' }}" target="_blank"> --}}
+                <a href="{{ asset('files/' . $cliente->numero_cliente . '/actas/' . $acta) }}" target="_blank">
+                  <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                </a>
+            </div>
         </div>
 
         <!-- Cliente -->
         <div class="col-md-4">
           <p class="text-muted mb-1">Cliente</p>
           <h5 class="fw-semibold">
-            {{ $dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+            {{ $revision->inspeccion->solicitud->empresa->razon_social ?? 'N/A' }}
           </h5>
         </div>
 
@@ -112,23 +129,34 @@
             <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white shadow-sm" style="font-size: 0.75rem;">
               <i class="ri-star-fill"></i> Revisor
             </div>
-            <img src="" alt="Foto revisor"
+            <img src="{{ asset('storage/' .$revision->user->profile_photo_path) }}" alt="Foto revisor"
               class="rounded-circle border border-3 border-white shadow-sm me-3"
               width="60" height="60" style="object-fit: cover;">
             <div>
-              <h6 class="mb-0 fw-bold text-primary" style="font-size: 1.1rem;"></h6>
+              <h6 class="mb-0 fw-bold text-primary" style="font-size: 1.1rem;">
+                {{ $revision->user->name ?? 'N/A' }}
+              </h6>
               <p class="mb-0 text-muted small">Responsable de esta revisión</p>
             </div>
           </div>
 
-          <!-- PDF Dictamen -->
-          <div class="mt-4">
-            <p class="text-muted mb-1">Dictamen</p>
-            <span class="fw-semibold">{{$dictamen->num_dictamen}}</span>
-            <a href="{{ $url ?? '#' }}" target="_blank">
+          <!-- PDF ACTA -->
+          {{-- <div class="mt-4">
+            <p class="text-muted mb-1">Acta</p>
+            <span class="fw-semibold"> </span>
+    @php    
+      $empresa = $revision->inspeccion->solicitud->empresa;
+      $cliente = $empresa?->empresaNumClientes->firstWhere( 'numero_cliente', '!=', null );
+      $acta = \App\Models\Documentacion_url::where('id_empresa', $empresa->id_empresa)
+            ->where('id_documento', 69)
+            ->where('id_relacion', $revision->inspeccion->solicitud->id_solicitud)
+            ->value('url');
+    @endphp
+            {{-- <a href="{{ $url ?? '#' }}" target="_blank"> --}
+            <a href="{{ asset('files/' . $cliente->numero_cliente . '/actas/' . $acta) }}" target="_blank">
               <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
             </a>
-          </div>
+          </div> --}}
         </div>
 
       </div>
@@ -150,7 +178,7 @@
               <tr>
                 <th>#</th>
                 <th>Pregunta</th>
-                <th>Documento</th>
+                {{-- <th>Documento</th> --}}
                 <th>Respuesta</th>
                 <th>Observaciones</th>
               </tr>
@@ -158,7 +186,7 @@
             <tbody>
               
               @php    
-                $empresa = $dictamen->inspeccione->solicitud->empresa;
+                $empresa = $revision->inspeccion->solicitud->empresa;
                 $cliente = $empresa?->empresaNumClientes->firstWhere( 'numero_cliente', '!=', null );
               @endphp
               @foreach ($preguntas as $index => $pregunta)
@@ -171,16 +199,16 @@
                   </td>
 
                   <!--COLUMNA DOCUMENTO-->
-                  <td>
+                  {{-- <td>
                     @if($pregunta->filtro == 'acta')
-                      {{ $dictamen->inspeccione->num_servicio}}
+                      {{ $revision->inspeccion->num_servicio}}
                     @php
                       $acta = null;
                       if ($pregunta->id_documento) {
                         // Obtiene acta específica
-                        $acta = \App\Models\documentacion_url::where('id_empresa', $empresa->id_empresa)
+                        $acta = \App\Models\Documentacion_url::where('id_empresa', $empresa->id_empresa)
                                 ->where('id_documento', 69)
-                                ->where('id_relacion', $dictamen->inspeccione->solicitud->id_solicitud)
+                                ->where('id_relacion', $revision->inspeccion->solicitud->id_solicitud)
                                 ->value('url');
                       }
                     @endphp
@@ -192,7 +220,7 @@
                           <span class="text-muted">Sin documento</span>
                       @endif
                     @endif
-                  </td>
+                  </td> --}}
 
                   <td>
                     <div class="resp">

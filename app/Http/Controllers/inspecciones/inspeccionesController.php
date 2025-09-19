@@ -609,7 +609,9 @@ public function asignarInspector(Request $request)
     }
 
 
-    public function agregarResultados(Request $request)
+
+//SUBIR DOCUMENTOS DE INSPECCION
+public function agregarResultados(Request $request)
 {
     $sol = solicitudesModel::find($request->id_solicitud);
     $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $sol->empresa->id_empresa)->first();
@@ -624,11 +626,62 @@ public function asignarInspector(Request $request)
             if ($request->id_solicitud) {
                 $documentacion_url = null;
 
+                //si hay "ACTA"
                 if ($request->id_documento[$index] == 69) {
                     $documentacion_url = Documentacion_url::where('id_relacion', $request->id_solicitud)
                         ->where('id_documento', 69)
                         ->first();
-                }
+
+                    /// ASIGNAR REVISION AUTOMATICA
+                    if ($sol->inspeccion) { // Verifica que exista la inspección
+                        $inspeccion = $sol->inspeccion;
+                    // Verifica si ya existe una revisión para esta inspección
+                    $existe = RevisionDictamen::where('id_inspeccion', $inspeccion->id_inspeccion)->exists();
+                        if (!$existe) {
+                            // Selecciona un revisor aleatorio tipo 2 y activo
+                            /*$revisor = User::where('tipo', 2)
+                                    ->where('estatus', 'Activo')
+                                    ->where('id', '<>', $inspeccion->id_inspector) //excluye al inspector actual
+                                    ->inRandomOrder()
+                                    ->first();*/
+                            $excluirId = $inspeccion->id_inspector;
+                            $revisor = User::where(function ($query) use ($excluirId) {
+                                    $query->where('tipo', 2)
+                                        ->where('estatus', 'Activo')
+                                        ->where('id', '<>', $excluirId);
+                                })
+                                ->orWhereIn('id', [319, 335])
+                                ->inRandomOrder()
+                                ->first();
+
+                            $revision = RevisionDictamen::create([
+                                'id_inspeccion'   => $inspeccion->id_inspeccion,
+                                'tipo_revision'   => 1,
+                                'id_revisor'      => $revisor?->id ?? 0,
+                                'numero_revision' => 1,
+                                'es_correccion'   => 'no',
+                                //'decision'       => 'Pendiente',
+                                'tipo_solicitud'  => $sol->id_tipo ?? 0,
+                            ]);
+                            
+                            // Notificación
+                            $usuario = User::find($revisor->id);
+                            if ($usuario) {
+                                //$url_clic = $tipoRevisor == 1 ? "/add_revision/{$revisor->id_revision}" : "/add_revision_consejo/{$revisor->id_revision}";
+                                $url_clic = "/revision/ver/{$revision->id_revision}";
+
+                                $usuario->notify(new GeneralNotification([
+                                    //'asunto' => 'Revisión de acta de servicio',
+                                    'title' =>  'Revisión de actas ',
+                                    'message' => 'Se te ha asignado el acta '.$inspeccion->num_servicio,
+                                    'url' => $url_clic,
+                                ]));
+                            }
+                        }
+                    }
+                    
+                }//fin acta
+                
 
                 if ($documentacion_url) {
                     $existingFilePath = 'uploads/' . $numeroCliente . '/actas/' . $documentacion_url->url;
@@ -1034,66 +1087,8 @@ public function eliminarActa($id_solicitud, $id_documento, $id)
 
 
 
-///ASIGNAR REVISION
-/*
-public function storeRevisor(Request $request)
-{
-    $validated = $request->validate([
-        'personal' => 'required|integer|exists:users,id',
-        'id_inspeccion' => 'required|integer|exists:inspecciones,id_inspeccion',
-        'observaciones' => 'nullable|string|max:5000',
-    ]);
 
-    $revisor = new RevisionDictamen();
-    $revisor->id_revisor = $validated['personal'];
-    $revisor->id_dictamen = $validated['id_inspeccion']; // Se guarda como dictamen
-    $revisor->numero_revision = 1;
-    $revisor->observaciones = $validated['observaciones'] ?? null;
-    $revisor->save();
 
-        // Notificación
-        /*$user = User::find($idRevisor);
-        if ($user) {
-            $url_clic = $tipoRevisor == 1 ? "/add_revision/{$revisor->id_revision}" : "/add_revision_consejo/{$revisor->id_revision}";
-
-            $user->notify(new GeneralNotification([
-                'asunto' => 'Revisión de certificado ' . $certificado->num_certificado,
-                'title' => 'Revisión de certificado',
-                'message' => 'Se te ha asignado el certificado ' . $certificado->num_certificado,
-                'url' => $url_clic,
-                'nombreRevisor' => $user->name,
-                'emailRevisor' => $user->email,
-                'num_certificado' => $certificado->num_certificado,
-                'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
-                'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-                'razon_social' => $empresa->razon_social ?? 'Sin asignar',
-                'numero_cliente' => $numeroCliente ?? 'Sin asignar',
-                'tipo_certificado' => 'Certificado granel',
-                'observaciones' => $revisor->observaciones,
-            ]));
-        }
-        **
-
-    return response()->json(['message' => 'Revisor asignado correctamente.']); 
-}
-*/
-public function storeRevisor(Request $request)
-{
-    $validated = $request->validate([
-        'personal' => 'required|integer|exists:users,id',
-        'id_inspeccion' => 'required|integer|exists:inspecciones,id_inspeccion',
-        'observaciones' => 'nullable|string|max:5000',
-    ]);
-
-    RevisionDictamen::create([
-        'id_revisor' => $validated['personal'],
-        'id_dictamen' => $validated['id_inspeccion'],
-        'numero_revision' => 1,
-        'observaciones' => $validated['observaciones'] ?? null,
-    ]);
-
-    return response()->json(['message' => 'Revisor asignado correctamente.']);
-}
 
 
 

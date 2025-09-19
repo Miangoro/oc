@@ -24,13 +24,6 @@ class RevisionUIController extends Controller
             ->get();
         ///Preguntas
         $preguntasInstalacion = preguntas_revision_dictamen::where('tipo_revisor', 1)
-            ->where('tipo_dictamen', 1)
-            ->get();
-        $preguntasGranel = preguntas_revision_dictamen::where('tipo_revisor', 1)
-            ->where('tipo_dictamen', 2)
-            ->get();
-        $preguntasExportacion = preguntas_revision_dictamen::where('tipo_revisor', 1)
-            ->where('tipo_dictamen', 3)
             ->get();
 
         return view('revision.revision_dictamenes_view', compact('revisor'));
@@ -44,10 +37,12 @@ public function index(Request $request)
     DB::statement("SET lc_time_names = 'es_ES'");//Forzar idioma español para meses
     $columns = [
         1 => 'id_revision',
-        2 => 'id_dictamen',
-        3 => 'num_dictamen',
-        4 => 'observaciones',
-        5 => 'decision'
+        2 => 'id_inspeccion',
+        3 => 'num_servicio',
+        4 => 'id_revisor',
+        5 => '',//fecha asignacion
+        6 => 'decision',//estatus
+        7 => ''//opciobnes
     ];
 
     $limit = $request->input('length');
@@ -58,12 +53,8 @@ public function index(Request $request)
     $search = $request->input('search.value');
 
 
-    $query = RevisionDictamen::with([
-            'dictamenInstalacion',
-            'dictamenGranel',
-            'dictamenEnvasado',
-            'dictamenExportacion'
-        ])->where('tipo_revision', 1); // Solo revisiones de OC
+    $query = RevisionDictamen::with('inspeccion')
+        ->where('tipo_revision', 1);
 
 
     // Si no es admin(ID especial) solo ve sus revisiones
@@ -86,20 +77,27 @@ public function index(Request $request)
         ]);
 
         // Buscar coincidencia de nombres a valores numéricos de tipo dictamen
-        $tiposDictamen = [// Palabras clave -> valor de tipo_dictamen
-            'productor'      => 1,
-            'envasador'      => 1,
-            'comercializador'=> 1,
-            'bodega'         => 1,
-            'maduracion'     => 1,
-            'gran'         => 2,
-            'env'       => 3,
-            'expo'    => 4,
+        $tipoSolicitud = [
+            1  => 'Muestreo de agave (ART)',
+            2  => 'Vigilancia en producción de lote',
+            3  => 'Muestreo de lote a granel',
+            4  => 'Vigilancia en el traslado del lote',
+            5  => 'Inspección de envasado',
+            6  => 'Muestreo de lote envasado',
+            7  => 'Inspección ingreso a barrica/ contenedor de vidrio',
+            8  => 'Liberación de producto terminado nacional',
+            9  => 'Inspección de liberación a barrica/contenedor de vidrio',
+            10 => 'Georreferenciación',
+            11 => 'Pedidos para exportación',
+            12 => 'Emisión de certificado NOM a granel',
+            13 => 'Emisión de certificado venta nacional',
+            14 => 'Dictaminación de instalaciones',
+            15 => 'Revisión de etiquetas',
         ];
 
         // Buscar coincidencia con nombre
         $tipoDictamen = null;
-        foreach ($tiposDictamen as $clave => $valor) {
+        foreach ($tipoSolicitud as $clave => $valor) {
             if (strpos($searchNormalized, $clave) !== false) {
                 $tipoDictamen = $valor;
                 break; // en cuanto encuentre coincidencia, detenemos
@@ -109,10 +107,7 @@ public function index(Request $request)
         // Aplicar la búsqueda
         $query->where(function ($q) use ($search, $tipoDictamen) {
             // Buscar por número de dictamen en distintos modelos
-            $q->orWhereHas('dictamenInstalacion', fn($q) => $q->where('num_dictamen', 'LIKE', "%{$search}%"))
-            ->orWhereHas('dictamenGranel', fn($q) => $q->where('num_dictamen', 'LIKE', "%{$search}%"))
-            ->orWhereHas('dictamenEnvasado', fn($q) => $q->where('num_dictamen', 'LIKE', "%{$search}%"))
-            ->orWhereHas('dictamenExportacion', fn($q) => $q->where('num_dictamen', 'LIKE', "%{$search}%"))
+            $q->orWhereHas('inspeccion', fn($q) => $q->where('num_servicio', 'LIKE', "%{$search}%"))
             
             // Buscar por nombre del revisor
             ->orWhereHas('user', fn($q) => $q->where('name', 'LIKE', "%{$search}%"))
@@ -123,7 +118,7 @@ public function index(Request $request)
             
             // Filtrar por tipo de dictamen si se detectó una palabra clave
             if (!is_null($tipoDictamen)) {
-                $q->orWhere('tipo_dictamen', $tipoDictamen);
+                $q->orWhere('tipo_solicitud', $tipoDictamen);
             }
 
         });
@@ -148,65 +143,45 @@ public function index(Request $request)
 
         $nameRevisor = $revisor->user->name ?? null;
 
-        // Mapeo de tipos de dictamen → modelo + etiqueta
-        $tipos = [
-            1 => ['modelo' => 'dictamenInstalacion',
-                'etiquetas' => [
-                    1 => 'Instalaciones de productor',
-                    2 => 'Instalaciones de envasador',
-                    3 => 'Instalaciones de comercializador',
-                    4 => 'Instalaciones de almacén y bodega',
-                    5 => 'Instalaciones de área de maduración',
-                ],
-            ],
-            2 => ['modelo' => 'dictamenGranel',
-                'etiqueta' => 'Granel',
-                ],
-            3 => ['modelo' => 'dictamenEnvasado', 
-                'etiqueta' => 'Envasado',
-                ],
-            4 => ['modelo' => 'dictamenExportacion',
-                'etiqueta' => 'Exportación',
-                ],
+        // Mapeo de tipos de solicitud
+        $tipoSolicitud = [
+            1  => ['label' => 'Muestreo de agave (ART)', 'class' => 'success'],
+            2  => ['label' => 'Vigilancia en producción de lote', 'class' => 'warning text-dark'],
+            3  => ['label' => 'Muestreo de lote a granel', 'class' => 'dark'],
+            4  => ['label' => 'Vigilancia en el traslado del lote', 'class' => 'secondary'],
+            5  => ['label' => 'Inspección de envasado', 'class' => 'info text-dark'],
+            6  => ['label' => 'Muestreo de lote envasado', 'class' => 'info text-dark'],
+            7  => ['label' => 'Inspección ingreso a barrica/ contenedor de vidrio', 'class' => 'danger'],
+            8  => ['label' => 'Liberación de producto terminado nacional', 'class' => 'success'],
+            9  => ['label' => 'Inspección de liberación a barrica/contenedor de vidrio', 'class' => 'success'],
+            10 => ['label' => 'Georreferenciación', 'class' => 'primary'],
+            11 => ['label' => 'Pedidos para exportación', 'class' => 'primary'],
+            12 => ['label' => 'Emisión de certificado NOM a granel', 'class' => 'dark'],
+            13 => ['label' => 'Emisión de certificado venta nacional', 'class' => 'success'],
+            14 => ['label' => 'Dictaminación de instalaciones', 'class' => 'danger'],
+            15 => ['label' => 'Revisión de etiquetas', 'class' => 'light text-dark'],
         ];
 
-        $tipoDictamen = $revisor->tipo_dictamen;
-        $tipoCertificado = "No encontrado";
-        $fechaVigencia = $num_dictamen = $id_dictamen = null;
+        $tipoInfo = $tipoSolicitud[$revisor->tipo_solicitud] ?? ['label' => 'No encontrado', 'class' => 'light text-dark'];
 
-        if (isset($tipos[$tipoDictamen])) {
-            $modelo = $tipos[$tipoDictamen]['modelo'];
-            $relacion = $revisor->$modelo ?? null;
 
-            if ($relacion) {
-                $fechaVigencia = $relacion->fecha_vigencia ?? null;
-                $num_dictamen = $relacion->inspeccione->num_servicio ?? null;
-                $id_dictamen = $relacion->id_dictamen ?? null;
-
-                // Si es instalación, validar sub-tipo
-                if ($tipoDictamen === 1) {
-                    $subTipo = $relacion->tipo_dictamen ?? null;
-                    $tipoCertificado = $tipos[1]['etiquetas'][$subTipo] ?? "No encontrado";
-                } else {
-                    $tipoCertificado = $tipos[$tipoDictamen]['etiqueta'] ?? "No encontrado";
-                }
-            }
-        }
-
+        $fechaVigencia   = null;
+        $num_servicio    = $revisor->inspeccion->num_servicio ?? null;
+        $id_inspeccion   = $revisor->id_inspeccion ?? null;
         return [
             'fake_id' => ++$start,
             'id_revision' => $revisor->id_revision,
             'id_revisor' => $nameRevisor,
             'observaciones' => $revisor->observaciones,
-            'num_dictamen' => $num_dictamen,
-            'id_dictamen' => $id_dictamen,
-            'tipo_dictamen' => $tipoDictamen,
+            'num_servicio' => $num_servicio,
+            'id_dictamen' => $id_inspeccion,
             'fecha_vigencia' => Helpers::formatearFecha($fechaVigencia),
             'created_at' => Helpers::formatearFechaHora($revisor->created_at),
             'updated_at' => Helpers::formatearFechaHora($revisor->updated_at),
             'decision' => $revisor->decision,
             'num_revision' => $revisor->numero_revision,
-            'tipo_revision' => $tipoCertificado,
+            'tipo_revision' => $tipoInfo['label'],//tipo solicitud
+            'badge_class'   => $tipoInfo['class'],
         ];
     });
 
@@ -228,50 +203,46 @@ public function add_revision($id)
     $revision = RevisionDictamen::findOrFail($id);//espera exista registro
     
     // Obtiene dictamen según tipo_dictamen
-    $dictamen = $revision->dictamen;
-        if ($revision->tipo_dictamen == 1) { //Instalaciones
-            switch ($dictamen->tipo_dictamen) {
-                case 1:
-                    $tipo = 'Instalaciones de productor';
-                    $url = "/dictamen_productor/" . $dictamen->id_dictamen;
-                    break;
-                case 2:
-                    $tipo = 'Instalaciones de envasador';
-                    $url = "/dictamen_envasador/" . $dictamen->id_dictamen;
-                    break;
-                case 3:
-                    $tipo = 'Instalaciones de comercializador';
-                    $url = "/dictamen_comercializador/" . $dictamen->id_dictamen;
-                    break;
-                case 4:
-                    $tipo = 'Instalaciones de almacén y bodega';
-                    $url = "/dictamen_almacen/" . $dictamen->id_dictamen;
-                    break;
-                case 5:
-                    $tipo = 'Instalaciones de área de maduración';
-                    $url = "/dictamen_maduracion/" . $dictamen->id_dictamen;
-                    break;
-                default:
-                    $tipo = 'Desconocido';
-            }
-        } elseif ($revision->tipo_dictamen == 2) { //Granel
-            $url = "/dictamen_granel/" . $dictamen->id_dictamen;
-            $tipo = "Granel";
-        } elseif ($revision->tipo_dictamen == 3) { //envasado
-            $url = "/dictamen_envasado/" . $dictamen->id_dictamen;
-            $tipo = "Envasado";
-        } elseif ($revision->tipo_dictamen == 4) { //exportacion
-            $url = "/dictamen_exportacion/" . $dictamen->id_dictamen;
-            $tipo = "Exportación";
-        }
+    $tipoSolicitud = [
+            1  => 'Muestreo de agave (ART)',
+            2  => 'Vigilancia en producción de lote',
+            3  => 'Muestreo de lote a granel',
+            4  => 'Vigilancia en el traslado del lote',
+            5  => 'Inspección de envasado',
+            6  => 'Muestreo de lote envasado',
+            7  => 'Inspección ingreso a barrica/ contenedor de vidrio',
+            8  => 'Liberación de producto terminado nacional',
+            9  => 'Inspección de liberación a barrica/contenedor de vidrio',
+            10 => 'Georreferenciación',
+            11 => 'Pedidos para exportación',
+            12 => 'Emisión de certificado NOM a granel',
+            13 => 'Emisión de certificado venta nacional',
+            14 => 'Dictaminación de instalaciones',
+            15 => 'Revisión de etiquetas',
+        ];
+
+
+    $tipo = $tipoSolicitud[$revision->tipo_solicitud ?? 0] ?? 'Desconocido';
+    //$url = '/solicitud_de_servicio/' .$revision->inspeccion->solicitud->id_solicitud;
 
     $preguntas = preguntas_revision_dictamen::where('tipo_revisor', 1)->get();
    
-    return view('dictamenes.add_revision', compact('revision', 'dictamen', 'tipo', 'url', 'preguntas'));
+    return view('dictamenes.add_revision', compact('revision', 'tipo', 'preguntas'));
 }
 ///REGISTRAR REVISION
 public function registrar(Request $request)
 {
+    /*
+    RevisionDictamen::create([
+        'id_inspeccion'   => $inspeccion->id_inspeccion,
+        'tipo_revision'   => 1,
+        'id_revisor'      => $revisor?->id ?? 0,
+        'numero_revision' => 1,
+        'es_correccion'   => 'no',
+        //'decision'       => 'Pendiente',
+        'tipo_solicitud'  => $sol->id_tipo ?? 0,
+    ]);
+    */
     $request->validate([
         'id_revision' => 'required|integer',
         'respuesta' => 'required|array',
@@ -279,23 +250,27 @@ public function registrar(Request $request)
         'id_pregunta' => 'required|array',
     ]);
 
-    $revisor = RevisionDictamen::where('id_revision', $request->id_revision)->first();
+    /*$revisor = RevisionDictamen::where('id_revision', $request->id_revision)->first();
+    if (!$revisor) {
+        return response()->json(['message' => 'El registro no fue encontrado.'], 404);
+    }*/
+    $revisor = RevisionDictamen::find($request->id_revision);
     if (!$revisor) {
         return response()->json(['message' => 'El registro no fue encontrado.'], 404);
     }
 
+
     // Obtener el historial de respuestas como array
     $historialRespuestas = $revisor->respuestas ?? [];
-
     // Asegurarse de que es un array, por si viene como JSON string
     if (is_string($historialRespuestas)) {
         $historialRespuestas = json_decode($historialRespuestas, true);
     }
 
+
     // Definir número de revisión
     $numRevision = count($historialRespuestas) + 1;
     $revisionKey = "Revision $numRevision";
-
 
 
     $nuevoRegistro = [];
@@ -316,6 +291,7 @@ public function registrar(Request $request)
         ];
     }
 
+
     // Guardar respuestas en formato JSON (Laravel lo maneja automáticamente)
     $historialRespuestas[$revisionKey] = $nuevoRegistro;
     $revisor->fill([
@@ -332,30 +308,6 @@ public function registrar(Request $request)
 
 
 
-/*public function obtenerRespuestas($id)
-{
-    
-        $revisor = RevisionDictamen::where('id_revision', $id)->first();
-
-        if (!$revisor) {
-            return response()->json(['message' => 'El registro no fue encontrado.'], 404);
-        }
-
-        // Decodificar respuestas
-        $historialRespuestas = json_decode($revisor->respuestas, true);
-
-        // Verificar si es un array válido
-        $ultimaRevision = is_array($historialRespuestas) ? end($historialRespuestas) : null;
-        $decision = $revisor->decision;
-
-
-        // Respuesta con datos o vacío si no hay historial
-        return response()->json([
-            'message' => 'Datos de la revisión más actual recuperados exitosamente.',
-            'respuestas' => $ultimaRevision,
-            'decision' => $decision,
-        ], 200);
-}*/
 ///OBTENER REVISION
 public function edit_revision($id)
 {
@@ -371,48 +323,30 @@ public function edit_revision($id)
     // Crear un array indexado por id_pregunta para fácil acceso
     $respuestas_map = collect($respuestas_revision)->keyBy('id_pregunta');
 
-    $id_dictamen = $datos->tipo_dictamen ?? '';
-
 
     // Obtiene dictamen según tipo_dictamen
-    $dictamen = $datos->dictamen;
-        if ($datos->tipo_dictamen == 1) { //Instalaciones
-            switch ($dictamen->tipo_dictamen) {
-                case 1:
-                    $tipo = 'Instalaciones de productor';
-                    $url = "/dictamen_productor/" . $dictamen->id_dictamen;
-                    break;
-                case 2:
-                    $tipo = 'Instalaciones de envasador';
-                    $url = "/dictamen_envasador/" . $dictamen->id_dictamen;
-                    break;
-                case 3:
-                    $tipo = 'Instalaciones de comercializador';
-                    $url = "/dictamen_comercializador/" . $dictamen->id_dictamen;
-                    break;
-                case 4:
-                    $tipo = 'Instalaciones de almacén y bodega';
-                    $url = "/dictamen_almacen/" . $dictamen->id_dictamen;
-                    break;
-                case 5:
-                    $tipo = 'Instalaciones de área de maduración';
-                    $url = "/dictamen_maduracion/" . $dictamen->id_dictamen;
-                    break;
-                default:
-                    $tipo = 'Desconocido';
-            }
-        } elseif ($datos->tipo_dictamen == 2) { //Granel
-            $url = "/dictamen_granel/" . $dictamen->id_dictamen;
-            $tipo = "Granel";
-        } elseif ($datos->tipo_dictamen == 3) { //envasado
-            $url = "/dictamen_envasado/" . $dictamen->id_dictamen;
-            $tipo = "Envasado";
-        } elseif ($datos->tipo_dictamen == 4) { //exportacion
-            $url = "/dictamen_exportacion/" . $dictamen->id_dictamen;
-            $tipo = "Exportación";
-        }
+    $tipoSolicitud = [
+            1  => 'Muestreo de agave (ART)',
+            2  => 'Vigilancia en producción de lote',
+            3  => 'Muestreo de lote a granel',
+            4  => 'Vigilancia en el traslado del lote',
+            5  => 'Inspección de envasado',
+            6  => 'Muestreo de lote envasado',
+            7  => 'Inspección ingreso a barrica/ contenedor de vidrio',
+            8  => 'Liberación de producto terminado nacional',
+            9  => 'Inspección de liberación a barrica/contenedor de vidrio',
+            10 => 'Georreferenciación',
+            11 => 'Pedidos para exportación',
+            12 => 'Emisión de certificado NOM a granel',
+            13 => 'Emisión de certificado venta nacional',
+            14 => 'Dictaminación de instalaciones',
+            15 => 'Revisión de etiquetas',
+        ];
 
-    return view('dictamenes.edit_revision', compact('datos', 'dictamen', 'preguntas', 'url', 'tipo', 'respuestas_map'));
+    $tipo = $tipoSolicitud[$datos->tipo_solicitud ?? 0] ?? 'Desconocido';
+
+
+    return view('dictamenes.edit_revision', compact('datos', 'preguntas', 'tipo', 'respuestas_map'));
 }
 ///EDITAR REVISION
 public function editar(Request $request)
