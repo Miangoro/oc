@@ -633,7 +633,7 @@ public function agregarResultados(Request $request)
                         ->first();
 
                     /// ASIGNAR REVISION AUTOMATICA
-                    if ($sol->inspeccion) { // Verifica que exista inspección
+                    if ($sol->inspeccion) { // Verifica que exista la inspección
                         $inspeccion = $sol->inspeccion;
                     // Verifica si ya existe una revisión para esta inspección
                     $existe = RevisionDictamen::where('id_inspeccion', $inspeccion->id_inspeccion)->exists();
@@ -663,29 +663,20 @@ public function agregarResultados(Request $request)
                                 //'decision'       => 'Pendiente',
                                 'tipo_solicitud'  => $sol->id_tipo ?? 0,
                             ]);
-                    // Notificación
-                    //$inspector = User::find($revisor->id);
-                    $usuario = User::find($revisor->id);
-                    if ($usuario) {
-                        //$url_clic = $tipoRevisor == 1 ? "/add_revision/{$revisor->id_revision}" : "/add_revision_consejo/{$revisor->id_revision}";
-                        $url_clic = "/revision/ver/{$revision->id_revision}";
+                            
+                            // Notificación
+                            $usuario = User::find($revisor->id);
+                            if ($usuario) {
+                                //$url_clic = $tipoRevisor == 1 ? "/add_revision/{$revisor->id_revision}" : "/add_revision_consejo/{$revisor->id_revision}";
+                                $url_clic = "/revision/ver/{$revision->id_revision}";
 
-                        $usuario->notify(new GeneralNotification([
-                            //'asunto' => 'Revisión de acta de servicio',
-                            'title' =>  'Revisión de actas ',
-                            'message' => 'Se te ha asignado el acta '.$inspeccion->num_servicio,
-                            'url' => $url_clic,
-                            /*'nombreRevisor' => $usuario->name,
-                            'emailRevisor' => $usuario->email,
-                            'num_certificado' => $certificado->num_certificado,
-                            'fecha_emision' => Helpers::formatearFecha($certificado->fecha_emision),
-                            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-                            'razon_social' => $empresa->razon_social ?? 'Sin asignar',
-                            'numero_cliente' => $numeroCliente ?? 'Sin asignar',
-                            'tipo_certificado' => 'Certificado granel',
-                            'observaciones' => $revisor->observaciones,*/
-                        ]));
-                    }
+                                $usuario->notify(new GeneralNotification([
+                                    //'asunto' => 'Revisión de acta de servicio',
+                                    'title' =>  'Revisión de actas ',
+                                    'message' => 'Se te ha asignado el acta '.$inspeccion->num_servicio,
+                                    'url' => $url_clic,
+                                ]));
+                            }
                         }
                     }
                     
