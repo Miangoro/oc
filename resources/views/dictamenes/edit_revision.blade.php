@@ -134,6 +134,14 @@
 
       </div>
     </div>
+
+    <!-- Sección documentación extra -->
+    <div class="card pt-2">
+        <div class="mt-5">
+            <div id="contenedor-documentos" class="mt-3"></div>
+        </div>
+    </div>
+
   </div>
 </div>
 
@@ -219,3 +227,68 @@
 
 
 @endsection
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    let id_solicitud = @json($id_solicitud);
+
+    if (id_solicitud) {
+        $.ajax({
+            url: '/getDocumentosSolicitud/' + id_solicitud,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    let html = `<table class="table table-bordered table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th colspan="2" class="text-center fw-semibold text-white">
+                                                Documentación previa de la solicitud
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>`;
+
+                    // Certificados granel
+                    if (response.url_certificado.length > 0) {
+                        response.url_certificado.forEach(url => {
+                            html += `
+                                <tr>
+                                    <td>Certificado de granel</td>
+                                    <td>
+                                        <a href="/files/${response.numero_cliente_lote}/certificados_granel/${url}" target="_blank">
+                                            <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                        </a>
+                                    </td>
+                                </tr>`;
+                        });
+                    }
+
+                    // FQs
+                    if (response.fqs.length > 0) {
+                        response.fqs.forEach(fq => {
+                            html += `
+                                <tr>
+                                    <td>${fq.nombre_documento}</td>
+                                    <td>
+                                        <a href="/files/${response.numero_cliente_lote}/fqs/${fq.url}" target="_blank">
+                                            <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                        </a>
+                                    </td>
+                                </tr>`;
+                        });
+                    }
+
+                    html += `</tbody></table>`;
+                    $('#contenedor-documentos').html(html);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error AJAX:', error);
+                $('#contenedor-documentos').html('<p class="text-muted">No se pudo cargar la documentación previa.</p>');
+            }
+        });
+    }
+});
+</script>

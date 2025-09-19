@@ -350,8 +350,14 @@ public function edit_revision($id)
 
     $tipo = $tipoSolicitud[$datos->tipo_solicitud ?? 0] ?? 'Desconocido';
 
+    $preguntas = preguntas_revision_dictamen::where('tipo_revisor', 1)->get();
 
-    return view('dictamenes.edit_revision', compact('datos', 'preguntas', 'tipo', 'respuestas_map'));
+    ///
+    // obtengo id_solicitud desde la relación inspeccion -> solicitud
+    $id_solicitud = $datos->inspeccion->id_solicitud ?? null;
+
+
+    return view('dictamenes.edit_revision', compact('datos', 'preguntas', 'tipo', 'respuestas_map', 'id_solicitud'));
 }
 ///EDITAR REVISION
 public function editar(Request $request)
