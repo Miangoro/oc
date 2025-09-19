@@ -167,10 +167,8 @@ class getFuncionesController extends Controller
             'lotes_granel' => $loteGranel
         ]);
     }
-
-    public function getDatosBitacora(empresa $empresa)
+public function getDatosBitacora(empresa $empresa)
 {
-    // Obtener las marcas de la empresa
     $marcas = $empresa->todasLasMarcas()->get();
 
     // Maquiladoras relacionadas
@@ -181,12 +179,11 @@ class getFuncionesController extends Controller
     $idsEmpresas = array_merge([$empresa->id_empresa], $idsMaquiladoras);
 
     // ========================================================
-    // FILTRAR INSTALACIONES POR USUARIO LOGUEADO
+    // FILTRAR INSTALACIONES SOLO SI EL USUARIO ES TIPO 3
     // ========================================================
     $instalacionesQuery = instalaciones::whereIn('id_empresa', $idsEmpresas);
 
-    // Si no es admin, limitar a las instalaciones del usuario
-    if (Auth::check() && Auth::user()->tipo != 1) {
+    if (Auth::check() && Auth::user()->tipo == 3) {
         $idsPermitidos = is_array(Auth::user()->id_instalacion)
             ? Auth::user()->id_instalacion
             : [Auth::user()->id_instalacion];
@@ -197,9 +194,7 @@ class getFuncionesController extends Controller
     $instalacionesConMaqui = $instalacionesQuery->get();
 
     return response()->json([
-        // 👇 Aquí también podrías aplicar el filtro, si tu método ya devuelve todas
         'instalaciones' => $instalacionesConMaqui,
-
         'instalacionesConMaqui' => $instalacionesConMaqui,
         'lotes_granel' => $empresa->todos_lotes_granel(),
         'marcas' => $marcas,
@@ -222,6 +217,7 @@ class getFuncionesController extends Controller
             ->get(),
     ]);
 }
+
 
     /*public function getDictamenesEnvasado($id_empresa)
     {

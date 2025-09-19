@@ -554,7 +554,7 @@ Route::middleware('auth')->controller(CartaAsignacionController::class)->group(f
     Route::get('/certificado_envasador_mezcal', [CartaAsignacionController::class, 'certificadoenv'])->name('certificado_envasador_mezcal')->middleware(['auth']);
     Route::get('/certificado_productor_mezcal', [CartaAsignacionController::class, 'certificadoprod'])->name('certificado_productor_mezcal')->middleware(['auth']);
 });
-
+    Route::get('/pdf_bitacora_revision_certificado_instalacion_052', [CartaAsignacionController::class, 'pdf_bitacora_revision_certificado_instalacion_052'])->name('pdf_bitacora_revision_certificado_instalacion_052')->middleware(['auth']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/solicitudinfo_cliente/{id}', [clientesProspectoController::class, 'info'])->name('solicitud_cliente');
