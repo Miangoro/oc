@@ -123,7 +123,7 @@
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="row g-0 align-items-center">
                         <!-- Texto de bienvenida -->
-                        <div class="col-md-4 p-3">
+                        <div class="col-md-3 p-3">
     <div class="card shadow-sm border-0 rounded-3">
         <div class="card-body text-center">
 
