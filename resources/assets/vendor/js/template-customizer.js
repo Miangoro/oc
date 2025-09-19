@@ -29,7 +29,7 @@ const DEFAULT_TEXT_DIR = document.documentElement.getAttribute('dir') === 'rtl'
 const DEFAULT_MENU_COLLAPSED = !!cl.contains('layout-menu-collapsed')
 const DEFAULT_SHOW_DROPDOWN_ON_HOVER = true
 const DEFAULT_NAVBAR_FIXED = layoutNavbarVar
-const DEFAULT_CONTENT_LAYOUT = cl.contains('layout-wide') ? 'wide' : 'compact'
+const DEFAULT_CONTENT_LAYOUT = cl.contains('layout-wide') ? 'wide' : 'wide'
 const DEFAULT_FOOTER_FIXED = !!cl.contains('layout-footer-fixed')
 
 let headerType
@@ -1291,11 +1291,11 @@ TemplateCustomizer.HEADER_TYPES = [
 TemplateCustomizer.CONTENT = [
   {
     name: 'compact',
-    title: 'Compact'
+    title: 'Compacto'
   },
   {
     name: 'wide',
-    title: 'Wide'
+    title: 'Ancho'
   }
 ]
 
@@ -1314,17 +1314,17 @@ TemplateCustomizer.DIRECTIONS = [
 // Theme setting language
 TemplateCustomizer.LANGUAGES = {
   en: {
-    panel_header: 'Template Customizer',
-    panel_sub_header: 'Customize and preview in real time',
-    theming_header: 'Theming',
-    style_label: 'Style (Mode)',
-    theme_label: 'Themes',
-    layout_header: 'Layout',
-    layout_label: 'Menu (Navigation)',
-    layout_header_label: 'Header Types',
-    content_label: 'Content',
-    layout_navbar_label: 'Navbar Type',
-    direction_label: 'Direction'
+    panel_header: 'Personalizador de Plantillas',
+    panel_sub_header: 'Personaliza y previsualiza en tiempo real',
+    theming_header: 'Tematización',
+    style_label: 'Estilo (Modo)',
+    theme_label: 'Temas',
+    layout_header: 'Diseño',
+    layout_label: 'Menú (Navegación)',
+    layout_header_label: 'Tipos de Encabezado',
+    content_label: 'Contenido',
+    layout_navbar_label: 'Tipo de Barra de Navegación',
+    direction_label: 'Dirección'
   },
   fr: {
     panel_header: 'Modèle De Personnalisation',
