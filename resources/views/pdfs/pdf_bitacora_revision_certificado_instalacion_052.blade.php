@@ -180,6 +180,7 @@
         .espacio_letras td {
             padding-top: 1px;
             padding-bottom: 1px;
+            text-align: left;
         }
 
         .underline {
@@ -225,7 +226,7 @@
     </table>
     <br>
 
-    <table style="width: 395px" class="espacio_letras">
+    <table style="width: 395px;" class="espacio_letras">
         <tr>
             <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 250px;">Requisitos documentales
                 <br>
@@ -358,14 +359,15 @@
                 Derivado de la revisión minuciosa y con la documentación completa entregada de manera
                 digital por personal del OC CIDAM se revisa que el certificado cumple con cada uno de los
                 requisitos mencionados en este documento, por consiguiente, se toma la decisión para (otorgar o denegar)
-                la certificación de producto. <br> Responsable de Revisión (Nombre, Puesto, firma):
+                la certificación de producto. <br> <span class="negrita">Responsable de Revisión (Nombre, Puesto, firma):</span>
                 <div style="padding: 30px"></div>
 
             </td>
         </tr>
     </table>
-    <div style="margin-bottom: 15px">
-        <p style="font-size: 11px; margin-top: 20px; text-align: center;  font-family: 'Century Gothic';">Este documento
+    <div style="position: fixed; bottom: 25px; left: 0; width: 100%; padding: 5px 0; z-index: 1000;">
+    <p style="font-size: 11px; text-align: center; font-family: 'Century Gothic'; margin: 0;">
+          Este documento
             es propiedad del Centro de
             Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser <br>
             distribuido externamente sin la autorización escrita del Director Ejecutivo.</p>
