@@ -60,15 +60,15 @@
 
     <div class="card-header bg-menu-theme text-center py-3">
       <h5 class="mb-0 text-white">
-        Revisión de acta <br>
-        <span class="badge bg-warning text-dark"></span>
+        Revisión del acta <br>
+        <span class="badge bg-warning text-dark">{{ $revision->inspeccion->num_servicio ?? 'N/A' }}</span>
       </h5>
     </div>
 
     <div class="card-body p-4">
       <div class="row gy-3">
 
-        <!-- Tipo de dictamen -->
+        <!-- tipo solicitud Columna 1 -->
         <div class="col-md-4">
           <p class="text-muted mb-1">Tipo de solicitud</p>
           <h5 class="fw-semibold">
@@ -98,32 +98,53 @@
           </div> --}}
 
           <div class="mt-4">
-                <p class="text-muted mb-1">Acta</p>
-                <span class="fw-semibold"> </span>
+              <p class="text-muted mb-1">Acta</p>
+              <span class="fw-semibold"> </span>
             @php    
               $empresa = $revision->inspeccion->solicitud->empresa;
               $cliente = $empresa?->empresaNumClientes->firstWhere( 'numero_cliente', '!=', null );
+              // Acta (tipo 69)
               $acta = \App\Models\Documentacion_url::where('id_empresa', $empresa->id_empresa)
                     ->where('id_documento', 69)
                     ->where('id_relacion', $revision->inspeccion->solicitud->id_solicitud)
                     ->value('url');
+              // Evidencias (tipo 70)
+              $evidencias = \App\Models\Documentacion_url::where('id_empresa', $empresa->id_empresa)
+                  ->where('id_documento', 70)
+                  ->where('id_relacion', $revision->inspeccion->solicitud->id_solicitud)
+                  ->pluck('url');
             @endphp
-                {{-- <a href="{{ $url ?? '#' }}" target="_blank"> --}}
+                {{-- ACTA --}}
                 <a href="{{ asset('files/' . $cliente->numero_cliente . '/actas/' . $acta) }}" target="_blank">
                   <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                 </a>
-            </div>
+          </div>
         </div>
 
-        <!-- Cliente -->
+        <!-- Cliente Columna 2 -->
         <div class="col-md-4">
           <p class="text-muted mb-1">Cliente</p>
           <h5 class="fw-semibold">
             {{ $revision->inspeccion->solicitud->empresa->razon_social ?? 'N/A' }}
           </h5>
+
+            {{-- Evidencias --}}
+            @if($evidencias->isNotEmpty())
+            <div class="mt-4">
+                <p class="text-muted mb-1">Evidencias</p>
+                @foreach($evidencias as $index => $evidencia)
+                    <a href="{{ asset('files/' . $cliente->numero_cliente . '/actas/' . $evidencia) }}" target="_blank">
+                        <i class="ri-file-pdf-2-fill text-primary ri-24px cursor-pointer"></i>
+                    </a>
+                    @if($index < $evidencias->count() - 1)
+                        ,
+                    @endif
+                @endforeach
+            </div>
+            @endif
         </div>
 
-        <!-- Revisor -->
+        <!-- Revisor Columna 3 -->
         <div class="col-md-4">
           <div class="d-flex align-items-center border border-primary rounded-4 p-3 shadow-lg bg-white position-relative" style="background: linear-gradient(135deg, #e3f2fd, #ffffff);">
             <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary text-white shadow-sm" style="font-size: 0.75rem;">
