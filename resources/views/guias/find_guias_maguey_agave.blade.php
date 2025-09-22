@@ -40,6 +40,7 @@
 <script>
   window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar guías de traslado'));
   window.puedeEditarElUsuario = @json(auth()->user()->can('Editar guías de traslado'));
+  window.puedeSubirPdf = @json(auth()->user()->can('Subir archivos escaneados'));
   window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar guías de traslado'));
 </script>
 @vite(['resources/js/guias_maguey_agave.js'])
@@ -66,11 +67,12 @@
             <th>Folio de solicitud</th>
             {{-- <th>Cantidad guias</th> --}}
             <th>Guias</th>
-            <th>Plantas actuales</th>
+            {{--<th>Plantas actuales</th>
             <th>No. anterior</th>
             <th>Comercializadas</th>
-            <th>No. mermas</th>
-            {{-- <th>Doc. Adjuntos</th> --}}
+            <th>No. mermas</th> --}}
+            <th>Caracteristicas</th>
+            <th>Doc. Adjuntos</th>
             <th>Acciones</th>
           </tr>
         </thead>

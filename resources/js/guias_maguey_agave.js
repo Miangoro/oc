@@ -7,7 +7,7 @@ $(function () {
   // Si tiene permiso, agregas el botón
   if (puedeAgregarElUsuario) {
     buttons.push({
-      text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nueva solicitud de guía de traslado</span>',
+      text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nueva guía de traslado</span>',
       className: 'add-new btn btn-primary waves-effect waves-light',
       attr: {
         'data-bs-toggle': 'modal',
@@ -41,10 +41,8 @@ if (dt_user_table.length) {
       columns: [
         // columns according to JSON
         { data: '' },
-        //{ data: 'id_guia' },
         { data: 'id_predio'},
-        {
-          data: null, // Se usará null porque combinaremos varios valores
+        { data: null, // Se usará null porque combinaremos varios valores
           render: function (data, type, row) {
             return `
               <strong>${data.numero_cliente}</strong><br>
@@ -54,16 +52,22 @@ if (dt_user_table.length) {
         },
         { data: 'folio' },
         { data: 'run_folio' },
-        { data: 'numero_guias' },//5
-        { data: 'numero_plantas' },
+        { data: 'id_guia' },//5
+        /* { data: 'numero_plantas' },
         { data: 'num_anterior' },
         { data: 'num_comercializadas' },
-        { data: 'mermas_plantas' },
-        //{ data: '' },//archivos adjuntos
+        { data: 'mermas_plantas' }, */
+
+        { data: null,
+          render: function (data, type, row) {
+            return `<small>${data.caracteristicas}</small>`;
+          }
+        },
+        { data: '' },//archivos adjuntos
         { data: 'action' }
       ],
       columnDefs: [
-        { orderable: false, targets: [0,1,2,3,5,6,7,8,9] },//solo ordenamos RUN-FOLIO
+        { orderable: false, targets: [0,1,2,3,5,6,7,8] },//solo ordenamos RUN-FOLIO
         {
           // For Responsive
           targets: 0,
@@ -94,15 +98,15 @@ if (dt_user_table.length) {
             return `<span>${full.fake_id}</span>`;
           }
         }, */
-        /*{
-          targets: 11,
+        {
+          targets: 7,
           render: function (data, type, full, meta) {
             let documentos = '';
 
             if (full['documento_guia']) {
               documentos += `
                 <small>Guía escaneada:</small> <a href="${full['documento_guia']}" target="_blank" title="Ver Guía">
-                  <i class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer"></i>
+                  <i class="ri-file-pdf-2-fill text-success ri-28px cursor-pointer"></i>
                 </a> <br>`;
             } else {
               documentos += `<span class="text-muted small">Sin guía escaneada</span>`;
@@ -111,7 +115,7 @@ if (dt_user_table.length) {
             if (full['documento_art']) {
               documentos += `
                 <small>Resultados ART:</small> <a href="${full['documento_art']}" target="_blank" title="Ver Resultados Art">
-                  <i class="ri-file-pdf-2-fill text-danger ri-28px"></i>
+                  <i class="ri-file-pdf-2-fill text-success ri-28px"></i>
                 </a>`;
             } else {
               documentos += `<br><span class="text-muted small">Sin resultados art</span>`;
@@ -119,7 +123,7 @@ if (dt_user_table.length) {
 
             return documentos;
           }
-        },*/
+        },
         {
           // Actions
           targets: -1,
@@ -127,19 +131,21 @@ if (dt_user_table.length) {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-          let acciones = '';
+            let acciones = '';
             /*GUIAS ANTERIOR
               acciones += `<a data-id="${full['run_folio']}" data-bs-toggle="modal" data-bs-target="#verGuiasRegistardas" href="javascript:;" class="dropdown-item ver-registros"><i class="ri-id-card-line ri-20px text-primary"></i> Ver guías</a>`;
             */
-            acciones += `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#ModalSubirPDF" href="javascript:;" class="dropdown-item subirPDF"><i class="ri-book-marked-line ri-20px text-primary"></i> Adjuntar PDF</a>`;
-
             if (window.puedeEditarElUsuario) {
       /*acciones += `<a data-id="${full['run_folio']}" data-bs-toggle="modal" data-bs-target="#ModalEditSolGuias" href="javascript:;" class="dropdown-item editSolGuias"><i class="ri-edit-box-line ri-20px text-info"></i> Editar solicitud de guía</a>`;*/
-      acciones += `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias" href="javascript:;" class="dropdown-item edit-guia"> <i class="ri-edit-box-line ri-20px text-info"> </i> Llenar solicitud de guía</a>`;
-              }
+              acciones += `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias" href="javascript:;" class="dropdown-item edit-guia"> <i class="ri-edit-box-line ri-20px text-info"> </i> Llenar guía de traslado</a>`;
+            }
+
+            if ( window.puedeSubirPdf ) {
+              acciones += `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#ModalSubirPDF" href="javascript:;" class="dropdown-item subirPDF"><i class="ri-book-marked-line ri-20px text-primary"></i> Adjuntar PDF</a>`;
+            }
       
             if (window.puedeEliminarElUsuario) {
-              acciones += `<a data-id="${full['id_guia']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar solicitud de guía</a>`;
+              acciones += `<a data-id="${full['id_guia']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar guía de traslado</a>`;
             }
             // Si no hay acciones, no retornar el dropdown
             if (!acciones.trim()) {
@@ -163,7 +169,7 @@ if (dt_user_table.length) {
           }
         }
       ],
-      order: [[1, 'desc']],
+      order: [[5, 'desc']],
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
         '<"me-5 ms-n2"f>' +
@@ -1241,7 +1247,7 @@ $(function () {
         $('#ModalSubirPDF').modal('hide');
         $('#formSubirPDF')[0].reset();
         $('#docActual').empty();
-        dataTable.ajax.reload(null, false); // Si usas datatables
+        dt_user.ajax.reload(null, false); // Si usas datatables
       },
       error: function (xhr) {
 

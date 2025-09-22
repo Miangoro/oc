@@ -56,16 +56,18 @@ public function index(Request $request)
     }
 
     $columns = [
-        1 => 'id_guia',
+        1 => 'id_predio',
         2 => 'razon_social',
         3 => 'folio',
         4 => 'run_folio',
-        5 => 'numero_guias',
-        6 => 'numero_plantas',
+        5 => 'id_guia',
+        /*6 => 'numero_plantas',
         7 => 'num_anterior',
         8 => 'num_comercializadas',
-        9 => 'mermas_plantas',
-        10 => ''
+        9 => 'mermas_plantas',*/
+        6 => '',//caracteristicas
+        7 => '',//archivos escaneados
+        8 => ''
     ];
 
     $limit = $request->input('length');
@@ -114,6 +116,7 @@ public function index(Request $request)
         $query->where(function ($q) use ($searchValue) {
             $q->where('run_folio', 'LIKE', "%{$searchValue}%")
             //->orWhere('guias.folio', 'LIKE', "%{$searchValue}%")
+            ->orWhere('folio', 'LIKE', "%{$searchValue}%")
             /*->orWhere('empresa.razon_social', 'LIKE', "%{$searchValue}%")
             ->orWhere('predios.nombre_predio', 'LIKE', "%{$searchValue}%")
             ->orWhere('predios.num_predio', 'LIKE', "%{$searchValue}%");*/
@@ -144,44 +147,40 @@ public function index(Request $request)
                     ->whereNotNull('numero_cliente')
                     ->value('numero_cliente');
 
-                // Nombre y Número de empresa
-               // $empresa = $user->empresa ?? null;
-
-                /*$numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                    ? $empresa->empresaNumClientes->first(fn($item) =>
-                        $item->empresa_id === $empresa->id && !empty($item->numero_cliente)
-                    )?->numero_cliente ?? 'No encontrado' : 'N/A';*/
-
                 $documentoGuia = Documentacion_url::where('id_relacion', $user->id_guia)
                     ->where('id_documento', 71)
                     ->first();
-
                 $documentoArt = Documentacion_url::where('id_relacion', $user->id_guia)
                     ->where('id_documento', 132)
                     ->first();
 
                 $nestedData = [
-                    /*
+                    //'fake_id' => ++$ids,
                     'documento_guia' => $documentoGuia?->url
-                        ? asset("files/{$numero_cliente}/{$documentoGuia->url}") : null,
+                        ? asset("files/{$numero_cliente}/guias/{$documentoGuia->url}") : null,
 
                     'documento_art' => $documentoArt?->url
-                        ? asset("files/{$numero_cliente}/{$documentoArt->url}") : null,
-                    */
+                        ? asset("files/{$numero_cliente}/guias/{$documentoArt->url}") : null,
+                    
                     'id_guia' => $user->id_guia,
                     //'id_plantacion' => $user->id_plantacion,
-                    //'fake_id' => ++$ids,
                     'folio' => $user->folio,
                     'run_folio' => $user->run_folio,
                     'razon_social' => $user->empresa->razon_social ?? 'No encontrado',
                     'numero_cliente' => $numero_cliente, // Asignar numero_cliente
                     'id_predio' => '<b>'.$user->predios->num_predio.'</b><br>'.$user->predios->nombre_predio,
-                    'numero_plantas' => $user->numero_plantas,
+                    
+                    'caracteristicas' => 
+                        "<b>Plantas actuales: </b>" .$user->numero_plantas."<br>".
+                        "<b>No. anterior: </b>" .$user->num_anterior."<br>".
+                        "<b>Comercializadas: </b>" .$user->num_comercializadas."<br>".
+                        "<b>Mesmas: </b>" .$user->mermas_plantas,
+                    /*'numero_plantas' => $user->numero_plantas,
                     'num_anterior' => $user->num_anterior,
                     'num_comercializadas' => $user->num_comercializadas,
                     'mermas_plantas' => $user->mermas_plantas,
                     'numero_guias' => $user->numero_guias,
-                    /*'id_art' => $user->id_art,
+                    'id_art' => $user->id_art,
                     'kg_magey' => $user->kg_magey,
                     'no_lote_pedido' => $user->no_lote_pedido,
                     'fecha_corte' => $user->fecha_corte,
@@ -190,7 +189,6 @@ public function index(Request $request)
                     'no_cliente' => $user->no_cliente,
                     'fecha_ingreso' => $user->fecha_ingreso,
                     'domicilio' => $user->domicilio,*/
-                    
                 ];
                 $data[] = $nestedData;
             }
@@ -198,7 +196,8 @@ public function index(Request $request)
 
         return response()->json([
             'draw' => intval($request->input('draw')),
-            'recordsTotal' => intval($totalData),
+            //'recordsTotal' => intval($totalData),
+            'recordsTotal' => $empresaId ? intval($totalFiltered) : intval($totalData),//total oculto a clientes
             'recordsFiltered' => intval($totalFiltered),
             'code' => 200,
             'data' => $data,
@@ -211,11 +210,10 @@ public function index(Request $request)
 public function destroy($id_guia)
 {
     $guia = Guias::findOrFail($id_guia);
-    $run_folio = $guia->run_folio;
 
+    /*$run_folio = $guia->run_folio;
     // Obtener todas las guías con ese run_folio
     $guias = Guias::where('run_folio', $run_folio)->get();
-
     foreach ($guias as $guia) {
         // Buscar documentos con ID 71(guía) o 132(resultados ART)
         $documentos = Documentacion_url::where('id_relacion', $guia->id_guia)
@@ -237,7 +235,29 @@ public function destroy($id_guia)
 
         // Eliminar la guía
         $guia->delete();
+    } ANTERIOR*/
+
+    // Buscar documentos con ID 71(guía) o 132(resultados ART)
+    $documentos = Documentacion_url::where('id_relacion', $guia->id_guia)
+        ->whereIn('id_documento', [71, 132])
+        ->get();
+
+    foreach ($documentos as $doc) {
+        // Construir ruta física
+        $numeroCliente = $guia->empresa->empresaNumClientes->first()?->numero_cliente;
+        $rutaArchivo = 'uploads/' . $numeroCliente . '/guias/' . $doc->url;
+
+        // Eliminar archivo físico si existe
+        if ($doc->url && Storage::disk('public')->exists($rutaArchivo)) {
+            Storage::disk('public')->delete($rutaArchivo);
+        }
+
+        // Eliminar registro en tabla documentacion_url
+        $doc->delete();
     }
+
+    // Eliminar solo esta guía
+    $guia->delete();
 
     return response()->json(['success' => 'Guías y documentos con mismo run_folio eliminados correctamente.']);
 }
@@ -374,30 +394,19 @@ public function store(Request $request)
 
 
 
-
-
-
-    // Método para OBTENER SOLICITUD GUIA por AGRUPACION
-    /*public function edit($id_run_folio)
-    {
-        $guia = guias::findOrFail($id_run_folio);
-        return response()->json($guia);
-    } ANTERIOR*/
+///OBTENER DATOS
+// Método para OBTENER SOLICITUD GUIA por AGRUPACION
+/*public function edit($id_run_folio)
+{
+    $guia = guias::findOrFail($id_run_folio);
+    return response()->json($guia);
+} ANTERIOR*/
 public function edit($id_guia)
 {
     $guia = Guias::findOrFail($id_guia);
     return response()->json($guia);
 }
-    //Metodo EDITAR GUIAS (POR UNA Y UNA)
-    public function editGuias($run_folio)
-    {
-        $guias = Guias::where('run_folio', $run_folio)
-            ->with('empresa') // Suponiendo que `razon_social` está en la tabla `empresas`
-            ->get();
-        return response()->json($guias);
-    }
-
-// Método para ACTUALIZAR una guía existente
+///ACTUALIZAR
 /*public function update(Request $request, $id)
 {
     //Buscar la guía para obtener el run_folio
@@ -572,6 +581,16 @@ public function update(Request $request, $id)
 
 
 
+//Metodo EDITAR GUIAS (POR UNA Y UNA) (cuando se agrupa el zip)
+public function editGuias($run_folio)
+{
+    $guias = Guias::where('run_folio', $run_folio)
+        ->with('empresa') // Suponiendo que `razon_social` está en la tabla `empresas`
+        ->get();
+    return response()->json($guias);
+}
+
+
 
 
 ///SUBIR DOCUMENTOS GUIA Y ART
@@ -633,7 +652,6 @@ public function subirDocGuias(Request $request)
             }
         }
     }
-
 
     return response()->json(['message' => 'Documento actualizado correctamente.']);
 }
