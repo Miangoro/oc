@@ -130,8 +130,21 @@
 
     @php
         use Illuminate\Support\Facades\Storage;
+        use Carbon\Carbon;
+        use App\Models\User;
         $firma = $contacto->firma ?? null;
         $firmaPath = $firma ? 'firmas/' . $firma : null;
+
+        $fechaRegistro = Carbon::parse($datos[0]->created_at);
+         // límite 15 de julio del mismo año
+        $fechaLimite = Carbon::create(2025, 7, 16);
+        // Regla especial
+        
+        if ($contacto->id == 320 && $fechaRegistro<$fechaLimite) {
+            $contacto = User::find(2) ?? $contacto;
+            $firma = $contacto->firma ?? null;
+            $firmaPath = $firma ? 'firmas/' . $firma : null;
+        }
     @endphp
 
     @if ($firma && Storage::disk('public')->exists($firmaPath))
