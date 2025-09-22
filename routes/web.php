@@ -1560,6 +1560,9 @@ Route::controller(DocumentosReferenciaController::class)->middleware(['auth'])->
     Route::get('/documentos-referencia/{id}/edit', 'edit');
     Route::put('/documentos-referencia/{id}', 'update');
     Route::delete('/documentos-referencia/{id}', 'destroy');
+    // web.php
+Route::get('/documentos-referencia/{id}/historial', 'historial');
+
 });
 
 Route::get('/documentos-referencia-list', [DocumentosReferenciaController::class, 'index'])->middleware(['auth']);

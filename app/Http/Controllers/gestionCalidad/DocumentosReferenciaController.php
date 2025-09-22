@@ -185,6 +185,16 @@ public function destroy($id)
       }
   }
 
+// DocumentosReferenciaController.php
+public function historial($id)
+{
+    $historial = documentos_calidad_historial::where('id_doc_calidad', $id)->get();
+
+    return response()->json([
+        'data' => $historial
+    ]);
+}
+
 
 //funcion para llenar el campo del formulario
     public function edit($id_clase)

@@ -137,10 +137,7 @@ $(function () {
           targets: 6,
           render: function (data, type, full, meta) {
             return `
-              <button
-                type="button"
-                class="btn btn-sm btn-warning ver-versiones"
-                data-id="${full.id_doc_calidad}">
+              <button class="btn btn-sm btn-info ver-versiones" data-id="${full.id_doc_calidad}" type="button">
                 Ver versiones
               </button>
             `;
@@ -272,8 +269,57 @@ $(function () {
 
 $('.datatables-users').on('click', '.ver-versiones', function() {
   let idDoc = $(this).data('id');
-  // Aquí puedes abrir un modal o llamar AJAX para mostrar las versiones del documento
-  console.log('Ver versiones del documento ID:', idDoc);
+
+  // Abrir modal
+  $('#modalEditDoc').modal('show');
+
+  // Limpiar contenido previo
+  $('#modalEditDoc .modal-body').html('<p>Cargando historial...</p>');
+
+  // Llamada AJAX para traer el historial
+  $.ajax({
+    url: `/documentos-referencia/${idDoc}/historial`, // Crear esta ruta
+    type: 'GET',
+    success: function(response) {
+      let html = `
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Edición</th>
+              <th>Identificación</th>
+              <th>Fecha</th>
+              <th>Estatus</th>
+              <th>Archivo</th>
+              <th>Modificó</th>
+              <th>Revisó</th>
+              <th>Aprobó</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      response.data.forEach(item => {
+        html += `
+          <tr>
+            <td>${item.edicion}</td>
+            <td>${item.identificacion}</td>
+            <td>${item.fecha_edicion}</td>
+            <td>${item.estatus}</td>
+            <td><a href="${item.archivo}" target="_blank">Ver archivo</a></td>
+            <td>${item.modifico}</td>
+            <td>${item.reviso}</td>
+            <td>${item.aprobo}</td>
+          </tr>
+        `;
+      });
+
+      html += `</tbody></table>`;
+      $('#modalEditDoc .modal-body').html(html);
+    },
+    error: function(err) {
+      $('#modalEditDoc .modal-body').html('<p class="text-danger">No se pudo cargar el historial.</p>');
+    }
+  });
 });
 
 
