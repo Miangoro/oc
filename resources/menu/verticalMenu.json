@@ -450,8 +450,50 @@
       "icon": "menu-icon ri-chat-smile-2-fill",
       "slug": "mensajes-dashboard",
       "can": "Visualizar mensajes"
+    },
+    {
+      "name": "Sistema de gestión de calidad",
+      "icon": "menu-icon ri-folder-settings-fill",
+      "slug": "calidad-dashboard",
+      "can": "Visualizar Sistema de gestión de calidad",
+      "submenu": [
+        {
+          "name": "Documentos de referencia",
+          "url": "/documentos-referencia",
+          "icon": "menu-icon ri-file-paper-2-line",
+          "slug": "documentos-referencia",
+          "can": "Visualizar Sistema de gestión de calidad"
+        },
+        {
+          "name": "Procedimientos",
+          "url": "/documentos-referencia",
+          "icon": "menu-icon ri-file-list-3-line",
+          "slug": "procedimientos",
+          "can": "Visualizar Sistema de gestión de calidad"
+        },
+        {
+          "name": "Lista Maestra",
+          "url": "/documentos-referencia",
+          "icon": "menu-icon ri-list-check-2",
+          "slug": "lista-maestra",
+          "can": "Visualizar Sistema de gestión de calidad"
+        },
+        {
+          "name": "Manuales, Políticas, Organigrama y otros",
+          "url": "/documentos-referencia",
+          "icon": "menu-icon ri-booklet-line",
+          "slug": "manuales-politicas",
+          "can": "Visualizar Sistema de gestión de calidad"
+        },
+        {
+          "name": "Registros",
+          "url": "/documentos-referencia",
+          "icon": "menu-icon ri-archive-drawer-line",
+          "slug": "registros",
+          "can": "Visualizar Sistema de gestión de calidad"
+        }
+      ]
     }
-
 
 
 

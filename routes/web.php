@@ -247,7 +247,7 @@ use App\Http\Controllers\permisos\rolesController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\ticketsController;
 use App\Http\Controllers\mensajes\MensajesController;
-
+use App\Http\Controllers\gestionCalidad\DocumentosReferenciaController;
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/', function () {
@@ -1561,3 +1561,18 @@ Route::get('/mensajes-list', [MensajesController::class, 'index'])->middleware([
 
 
 Route::get('/bitacora_certificado_export/pdf', [CartaAsignacionController::class, 'generarPdf'])->name('bitacora_certificado_export.pdf');
+
+
+// Sistema de gestión de calidad - Documentos de referencia
+Route::controller(DocumentosReferenciaController::class)->middleware(['auth'])->group(function () {
+    Route::get('/documentos-referencia','UserManagement')->name('documentos-referencia');
+    Route::post('/documentos-referencia-upload',  'store')->name('documentos-referencia.upload');
+    Route::get('/documentos-referencia/{id}/edit', 'edit');
+    Route::put('/documentos-referencia/{id}', 'update');
+    Route::delete('/documentos-referencia/{id}', 'destroy');
+    // web.php
+Route::get('/documentos-referencia/{id}/historial', 'historial');
+
+});
+
+Route::get('/documentos-referencia-list', [DocumentosReferenciaController::class, 'index'])->middleware(['auth']);
