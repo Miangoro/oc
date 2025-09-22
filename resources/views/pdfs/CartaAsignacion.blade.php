@@ -163,7 +163,7 @@
                 <img style="position: absolute; left: 55%;" height="130px" width="180px" src="{{ public_path('img_pdf/Sello oc.png') }}" alt="sello"> --}}
                 <img style="margin-top: 2%; margin-bottom: -2%;"  height="60px"
                 src="{{ public_path('storage/' . $firmaPath) }}">
-                <img style="position: absolute; left: 55%; margin-top: -4%;"" height="130px" width="180px" src="{{ public_path('img_pdf/Sello oc.png') }}" alt="sello">
+                <img style="position: absolute; left: 55%; margin-top: -5%;"" height="130px" width="180px" src="{{ public_path('img_pdf/Sello oc.png') }}" alt="sello">
             @endif
             <br>
             <u>{{$contacto->name ?? 'No encontrado'}}</u><br>
