@@ -348,21 +348,21 @@
         <tbody>
             <tr>
                 <td class="td-margins"
-                    style="width: 243px; font-weight: bold; font-size: 12px; padding-right: 4px; padding-left: 1px; padding-top: 7px; padding-bottom: 7px;">
+                    style="width: 243px; font-weight: bold; font-size: 12px; padding-right: 4px; padding-left: 1px; padding-top: 6px; padding-bottom: 6px;">
                     <strong>Marcas:</strong>
                 </td>
                 <td class="td-margins"
-                    style="text-align: left; padding-left: 12px; margin-left: 5px; padding-top: 7px; padding-bottom: 7px;">
+                    style="font-size: 12px; text-align: left; padding-left: 12px; margin-left: 5px; padding-top: 6px; padding-bottom: 6px;">
                     {{ $marcas }}
                 </td>
             </tr>
             <tr>
                 <td class="td-margins"
-                    style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 7px;padding-bottom: 7px;">
+                    style="font-weight: bold; font-size: 12px;padding-right: 4px;padding-left: 1px;padding-top: 6px;padding-bottom: 6px;">
                     Domicilio de la unidad de comercialización y/o almacén:
                 </td>
                 <td class="td-margins"
-                    style="text-align: left; padding-left: 12px; margin-left: 5px; padding-top: 7px; padding-bottom: 7px;">
+                    style="text-align: left; padding-left: 12px; margin-left: 5px; padding-top: 6px; padding-bottom: 6px;">
                     {{ $domicilio_unidad }}
                 </td>
             </tr>
