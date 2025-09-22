@@ -40,6 +40,7 @@
 <script>
   window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar guías de traslado'));
   window.puedeEditarElUsuario = @json(auth()->user()->can('Editar guías de traslado'));
+  window.puedeSubirGuiaEscaneada = @json(auth()->user()->can('Subir guía escaneada'));
   window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar guías de traslado'));
 </script>
 @vite(['resources/js/guias_maguey_agave.js'])
@@ -64,12 +65,14 @@
             <th>Cliente</th>
             <th>Folio</th>
             <th>Folio de solicitud</th>
-            <th>Cantidad guias</th>
-            <th>Plantas actuales</th>
+            {{-- <th>Cantidad guias</th> --}}
+            <th>Guias</th>
+            {{--<th>Plantas actuales</th>
             <th>No. anterior</th>
             <th>Comercializadas</th>
-            <th>No. mermas</th>
-            {{-- <th>Doc. Adjuntos</th> --}}
+            <th>No. mermas</th> --}}
+            <th>Caracteristicas</th>
+            <th>Doc. Adjuntos</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -111,8 +114,9 @@
             <div class="d-flex mt-6 justify-content-center">
                 <button type="submit" class="btn btn-primary me-2"><i class="ri-add-line"></i>
                     Registrar</button>
-                <button id="btnCancelModal" type="reset" class="btn btn-secondary waves-effect waves-light" data-bs-dismiss="modal" aria-label="Close">
-                  <i class="ri-arrow-go-back-line"> </i> Regresar</button>
+                {{-- <button id="btnCancelModal" type="reset" class="btn btn-secondary waves-effect waves-light" data-bs-dismiss="modal" aria-label="Close">
+                  <i class="ri-arrow-go-back-line"> </i> Regresar</button> --}}
+                  <button type="reset" class="btn btn-secondary waves-effect waves-light" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </form>
       </div>
