@@ -404,4 +404,12 @@ class CartaAsignacionController extends Controller
         // O para abrir en el navegador:
         return $pdf->stream('pdf_bitacora_revision_certificado_instalacion_052.pdf');
     }
+    public function pdf_bitacora_de_revisión_de_certificado_venta_nacional()
+    {
+        $pdf = PDF::loadView('pdfs.pdf_bitacora_de_revisión_de_certificado_venta_nacional');
+        // O para abrir en el navegador:
+        return $pdf->stream('pdf_bitacora_de_revisión_de_certificado_venta_nacional.pdf');
+    }
+
+
 }
