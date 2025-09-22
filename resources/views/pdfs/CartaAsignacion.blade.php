@@ -79,7 +79,7 @@
         .Atentamente p {
             font-size: 16px;
             text-align: center;
-            /*line-height: 0.8;*/
+            line-height: 0.8;
         }
     </style>
 </head>
