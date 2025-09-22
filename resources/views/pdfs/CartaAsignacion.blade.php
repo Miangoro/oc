@@ -75,6 +75,12 @@
         .content {
             margin-left: 20rem; /* Adjust this value as needed to ensure enough space on the right */
         }
+
+        .Atentamente p {
+            font-size: 16px;
+            text-align: center;
+            /*line-height: 0.8;*/
+        }
     </style>
 </head>
 
@@ -130,20 +136,37 @@
 
     @php
         use Illuminate\Support\Facades\Storage;
+        use Carbon\Carbon;
+        use App\Models\User;
         $firma = $contacto->firma ?? null;
         $firmaPath = $firma ? 'firmas/' . $firma : null;
+
+        $fechaRegistro = Carbon::parse($datos[0]->created_at);
+         // límite 15 de julio del mismo año
+        $fechaLimite = Carbon::create(2025, 7, 16);
+        // Regla especial
+        if ($contacto->id == 320 && $fechaRegistro<$fechaLimite) {
+            $contacto = User::find(2) ?? $contacto;
+            $firma = $contacto->firma ?? null;
+            $firmaPath = $firma ? 'firmas/' . $firma : null;
+        }
     @endphp
 
-    @if ($firma && Storage::disk('public')->exists($firmaPath))
-        <img style="position: absolute; left: 37%; margin-top: 4%; " height="60px"
-        src="{{ public_path('storage/' . $firmaPath) }}">
-        <img style="position: absolute; left: 55%;" height="130px" width="180px" src="{{ public_path('img_pdf/Sello oc.png') }}" alt="sello">
-    @endif
+    
 
-    <div style="font-size: 16px; text-align: center; margin-top: 10px;">
-        <p>Atentamente. <br><br><br>
-
-            <u>{{$contacto->name ?? 'No encontrado'}}</u><br><br>
+    {{-- <div style="font-size: 16px; text-align: center; margin-top: 10px;"> --}}
+    <div class="Atentamente">
+        <p>Atentamente. <br>
+            @if ($firma && Storage::disk('public')->exists($firmaPath))
+                {{-- <img style="position: absolute; left: 37%; margin-top: 4%; " height="60px"
+                src="{{ public_path('storage/' . $firmaPath) }}">
+                <img style="position: absolute; left: 55%;" height="130px" width="180px" src="{{ public_path('img_pdf/Sello oc.png') }}" alt="sello"> --}}
+                <img style="margin-top: 2%; margin-bottom: -2%;"  height="60px"
+                src="{{ public_path('storage/' . $firmaPath) }}">
+                <img style="position: absolute; left: 55%; margin-top: -5%;"" height="130px" width="180px" src="{{ public_path('img_pdf/Sello oc.png') }}" alt="sello">
+            @endif
+            <br>
+            <u>{{$contacto->name ?? 'No encontrado'}}</u><br>
             {{$contacto->puesto ?? 'No encontrado'}}
         </p>
     </div>
