@@ -140,7 +140,7 @@ if (dt_user_table.length) {
               acciones += `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias" href="javascript:;" class="dropdown-item edit-guia"> <i class="ri-edit-box-line ri-20px text-info"> </i> Llenar guía de traslado</a>`;
             }
 
-            if ( window.puedeSubirPdf ) {
+            if ( window.puedeSubirGuiaEscaneada ) {
               acciones += `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#ModalSubirPDF" href="javascript:;" class="dropdown-item subirPDF"><i class="ri-book-marked-line ri-20px text-primary"></i> Adjuntar PDF</a>`;
             }
       

@@ -40,7 +40,7 @@
 <script>
   window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar guías de traslado'));
   window.puedeEditarElUsuario = @json(auth()->user()->can('Editar guías de traslado'));
-  window.puedeSubirPdf = @json(auth()->user()->can('Subir archivos escaneados'));
+  window.puedeSubirGuiaEscaneada = @json(auth()->user()->can('Subir guía escaneada'));
   window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar guías de traslado'));
 </script>
 @vite(['resources/js/guias_maguey_agave.js'])
