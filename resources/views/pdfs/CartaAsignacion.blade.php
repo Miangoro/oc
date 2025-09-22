@@ -75,6 +75,12 @@
         .content {
             margin-left: 20rem; /* Adjust this value as needed to ensure enough space on the right */
         }
+
+        .Atentamente p {
+            font-size: 16px;
+            text-align: center;
+            /*line-height: 0.8;*/
+        }
     </style>
 </head>
 
@@ -148,7 +154,8 @@
 
     
 
-    <div style="font-size: 16px; text-align: center; margin-top: 10px;">
+    {{-- <div style="font-size: 16px; text-align: center; margin-top: 10px;"> --}}
+    <div class="Atentamente">
         <p>Atentamente. <br><br><br>
             @if ($firma && Storage::disk('public')->exists($firmaPath))
                 <img style="position: absolute; left: 37%; margin-top: 4%; " height="60px"
