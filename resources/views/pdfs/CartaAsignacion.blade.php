@@ -139,7 +139,6 @@
          // límite 15 de julio del mismo año
         $fechaLimite = Carbon::create(2025, 7, 16);
         // Regla especial
-        
         if ($contacto->id == 320 && $fechaRegistro<$fechaLimite) {
             $contacto = User::find(2) ?? $contacto;
             $firma = $contacto->firma ?? null;
@@ -147,14 +146,15 @@
         }
     @endphp
 
-    @if ($firma && Storage::disk('public')->exists($firmaPath))
-        <img style="position: absolute; left: 37%; margin-top: 4%; " height="60px"
-        src="{{ public_path('storage/' . $firmaPath) }}">
-        <img style="position: absolute; left: 55%;" height="130px" width="180px" src="{{ public_path('img_pdf/Sello oc.png') }}" alt="sello">
-    @endif
+    
 
     <div style="font-size: 16px; text-align: center; margin-top: 10px;">
         <p>Atentamente. <br><br><br>
+            @if ($firma && Storage::disk('public')->exists($firmaPath))
+                <img style="position: absolute; left: 37%; margin-top: 4%; " height="60px"
+                src="{{ public_path('storage/' . $firmaPath) }}">
+                <img style="position: absolute; left: 55%;" height="130px" width="180px" src="{{ public_path('img_pdf/Sello oc.png') }}" alt="sello">
+            @endif
 
             <u>{{$contacto->name ?? 'No encontrado'}}</u><br><br>
             {{$contacto->puesto ?? 'No encontrado'}}
