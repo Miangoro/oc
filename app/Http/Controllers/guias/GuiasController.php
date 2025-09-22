@@ -22,6 +22,9 @@ use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Support\Facades\Auth;//sesion iniciada
 use Illuminate\Support\Facades\Storage;
+//Clase para exportar
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\GuiasExport;
 
 
 class GuiasController  extends Controller
@@ -202,6 +205,15 @@ public function index(Request $request)
             'code' => 200,
             'data' => $data,
         ]);
+}
+
+
+
+///FUNCION EXPORTAR EXCEL
+public function exportar(Request $request)
+{
+    $filtros = $request->only(['id_empresa', 'anio', 'mes']);
+    return Excel::download(new GuiasExport($filtros), '.xlsx');
 }
 
 

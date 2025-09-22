@@ -69,7 +69,6 @@ class PrediosController extends Controller
     }
 
 
-
 public function index(Request $request)
 {
     $columns = [
@@ -295,6 +294,10 @@ public function index(Request $request)
             'data' => $data,
         ]);
 }
+
+
+
+
 
 
         // Función para eliminar un predio

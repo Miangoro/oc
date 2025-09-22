@@ -369,7 +369,8 @@ $(function () {
         }
       },
       // Buttons with Dropdown
-      buttons: buttons,
+      buttons: buttons,//boton de agregar
+      
       // For responsive popup
       responsive: {
         details: {
@@ -404,6 +405,9 @@ $(function () {
       }
     });
   }
+
+
+
 
   var dt_user_table = $('.datatables-users'),
     select2Elements = $('.select2'),

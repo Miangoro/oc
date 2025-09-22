@@ -130,6 +130,8 @@
 @include('_partials/_modals/modal-add-guias-agave')
 
 @include('_partials/_modals/modal-ver-guias-registardas')
+
+@include('_partials/_modals/modal-export-excel-guias')
 <!-- /Modal -->
 
 
