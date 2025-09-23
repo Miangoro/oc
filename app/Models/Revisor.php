@@ -49,6 +49,11 @@ class Revisor extends Model
         return $this->belongsTo(Certificado_Exportacion::class, 'id_certificado', 'id_certificado');
     }
 
+    public function certificadoNacional()
+    {
+        return $this->belongsTo(Certificado_Nacional::class, 'id_certificado', 'id_certificado');
+    }
+
     public function getCertificadoAttribute()
     {
         switch ($this->tipo_certificado) {
@@ -58,6 +63,8 @@ class Revisor extends Model
                 return $this->certificadoGranel;
             case 3:
                 return $this->certificadoExportacion;
+            case 4:
+                return $this->certificadoNacional;
             default:
                 return null;
         }

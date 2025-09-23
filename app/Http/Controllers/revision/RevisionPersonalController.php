@@ -29,7 +29,7 @@ class RevisionPersonalController extends Controller
         $EstadisticasInstalaciones = $this->calcularCertificados($userId, 1); // Estadisticas Instalaciones
         $EstadisticasGranel = $this->calcularCertificados($userId, 2); // Estadisticas Granel
 
-        $revisorQuery = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where('tipo_revision', 1); // Tipo Revisor
+        $revisorQuery = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion','certificadoNacional')->where('tipo_revision', 1); // Tipo Revisor
         if ($userId != 1) {
             $revisorQuery->where('id_revisor', $userId);
         }
@@ -179,6 +179,10 @@ class RevisionPersonalController extends Controller
             }
             if ($revisor->tipo_certificado == 3) {
                 $tipoCertificado = 'Exportación';
+            }
+
+              if ($revisor->tipo_certificado == 4) {
+                $tipoCertificado = 'Nacional';
             }
 
 
@@ -419,10 +423,11 @@ class RevisionPersonalController extends Controller
         if ($datos->certificado->certificadoReexpedido()) {
             $preguntasQuery->whereBetween('id_pregunta', [854, 860]);
         }else{
-             $preguntasQuery->where('id_pregunta', '<',851);
+             $preguntasQuery->where('id_pregunta', '<',851)->Orwhere('id_pregunta', '>',870);
         }
 
         $preguntas = $preguntasQuery->get();
+       
      
 
         $revisor_consejo = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where('id_certificado',$datos->id_certificado)->where('tipo_revision',2)->where('tipo_certificado', $datos->tipo_certificado)->first();
@@ -460,6 +465,9 @@ class RevisionPersonalController extends Controller
         } elseif ($datos->tipo_certificado == 3) { //Exportación
             $url = "/certificado_exportacion/" . $datos->id_certificado;
             $tipo = "Exportación";
+        }elseif ($datos->tipo_certificado == 4) { //Nacional
+            $url = "/certificado_venta_nacional/" . $datos->id_certificado;
+            $tipo = "Venta nacional";
         }
 
         $certificadoEscaneado = '';
@@ -603,6 +611,11 @@ class RevisionPersonalController extends Controller
         if ($datos->tipo_certificado == 3) { //Exportación
             $url = "/certificado_exportacion/" . $datos->id_certificado;
             $tipo = "Exportación";
+        }
+        
+        if ($datos->tipo_certificado == 4) { //Nacional
+            $url = "/certificado_venta_nacional/" . $datos->id_certificado;
+            $tipo = "Venta nacional";
         }
 
          $certificadoEscaneado = '';
@@ -756,6 +769,14 @@ class RevisionPersonalController extends Controller
             $tipo_certificado = "Exportación";
         }
 
+       // if ($revisor->tipo_certificado == 4) { //nacional
+
+          //  $vista_bitacora = "pdfs.pdf_bitacora_de_revisión_de_certificado_venta_nacional";
+        //}else{
+            $vista_bitacora = "pdfs.pdf_bitacora_revision_personal";
+        //}
+
+
 
 
 
@@ -789,7 +810,7 @@ class RevisionPersonalController extends Controller
             'preguntas' => $preguntasConRespuestas
         ];
 
-        $pdf = Pdf::loadView('pdfs.pdf_bitacora_revision_personal', $pdfData)
+        $pdf = Pdf::loadView($vista_bitacora, $pdfData)
             ->setPaper('letter'); // Define tamaño carta
 
         return $pdf->stream('Bitácora de revisión documental.pdf');

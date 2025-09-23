@@ -74,5 +74,14 @@ class Certificado_Nacional extends Model
     }
 
 
+        public function certificadoReexpedido()
+    {
+        $datos = json_decode($this->observaciones, true);
+        if (isset($datos['id_sustituye'])) {
+            return Certificados::find($datos['id_sustituye']);
+        }
+        return null;
+    }
+
 
 }
