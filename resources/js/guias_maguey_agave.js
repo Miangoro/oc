@@ -193,7 +193,18 @@ if (dt_user_table.length) {
         }
       },
       // Buttons with Dropdown
-      buttons: buttons,
+      buttons: [
+          {//EXPORTAR EXCEL
+            text: '<i class="ri-file-excel-2-fill ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
+            className: 'btn btn-success waves-effect waves-light me-2',
+            attr: {
+              'data-bs-toggle': 'modal',
+              'data-bs-dismiss': 'modal',
+              'data-bs-target': '#exportarExcel',
+            }
+          },
+          buttons//boton de agregar
+      ],
       // For responsive popup
       responsive: {
         details: {
@@ -229,6 +240,87 @@ if (dt_user_table.length) {
       }
     });
 }
+
+
+
+
+///EXPORTAR EXCEL
+$(document).ready(function () {
+
+  // Botón "Generar"
+  $('#generarReporte').on('click', function () {
+    const form = $('#reporteForm');
+    const formData = form.serialize();
+    //let exportUrl = rutasExportacion.certificadoGranel;
+    let exportUrl = $('#reporteForm').attr('action'); // toma la URL del formulario
+
+    Swal.fire({
+      icon: 'info',
+      title: 'Generando Reporte...',
+      text: 'Por favor espera mientras se genera el reporte.',
+      didOpen: () => Swal.showLoading(),
+      customClass: {
+        confirmButton: false
+      }
+    });
+
+    $.ajax({
+      url: exportUrl,
+      type: 'GET',
+      data: formData,
+      xhrFields: {
+        responseType: 'blob'
+      },
+      success: function (response) {
+          const today = new Date();
+          const yyyy = today.getFullYear();
+          const mm = String(today.getMonth() + 1).padStart(2, '0');
+          const dd = String(today.getDate()).padStart(2, '0');
+          const fecha = `${yyyy}_${mm}_${dd}`;
+
+
+          const link = document.createElement('a');
+          const url = window.URL.createObjectURL(response);
+          link.href = url;
+          link.download = `reporte_guias_${fecha}.xlsx`;
+          link.click();
+          window.URL.revokeObjectURL(url);
+
+          $('#exportarExcel').modal('hide');
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'El reporte se generó exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+          });
+      },
+      error: function (xhr, status, error) {
+          console.error('Error al generar el reporte:', error);
+          $('#exportarExcel').modal('hide');
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Ocurrió un error al generar el reporte.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+      }
+    });
+  });
+
+  // Reset filtros
+  $('#restablecerFiltros').on('click', function () {
+    $('#reporteForm')[0].reset();
+    $('.select2').val('').trigger('change');
+    console.log('Filtros restablecidos.');
+  });
+  
+});
+
 
 
 

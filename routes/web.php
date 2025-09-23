@@ -725,22 +725,29 @@ Route::get('domicilios/edit/{id_instalacion}', [DomiciliosController::class, 'ed
 Route::put('instalaciones/{id_instalacion}', [DomiciliosController::class, 'update'])->middleware(['auth']);
 Route::get('/getDocumentosPorInstalacion', [DomiciliosController::class, 'getDocumentosPorInstalacion'])->middleware(['auth']);
 
-//Domicilio predios
-Route::get('/domicilios/predios', [PrediosController::class, 'UserManagement'])->name('domicilios-predios')->middleware(['auth']);
-Route::resource('/predios-list', PrediosController::class)->middleware(['auth']);
-Route::delete('/predios-list/{id_predio}', [PrediosController::class, 'destroy'])->name('predios-list.destroy')->middleware(['auth']);
-Route::post('/predios-register/store', [PrediosController::class, 'store'])->name('predios-register.store')->middleware(['auth']);
-Route::get('/domicilios-predios/{id_predio}/edit', [PrediosController::class, 'edit'])->name('domicilios-predios.edit')->middleware(['auth']);
-Route::post('/domicilios-predios/{id_predio}', [PrediosController::class, 'update'])->name('domicilios-predios.update')->middleware(['auth']);
-Route::post('/domicilios-predios/{id_predio}/inspeccion', [PrediosController::class, 'inspeccion'])->name('domicilios-predios.inspeccion')->middleware(['auth']);
-Route::post('/domicilios-predios/{id_predio}/inspeccion-update', [PrediosController::class, 'inspeccion_update'])->name('domicilios-predios.inspeccion-update')->middleware(['auth']);
-Route::get('/domicilios-predios/{id_predio}/edit-inspeccion', [PrediosController::class, 'editInspeccion'])->name('domicilios-predios.edit-inspeccion')->middleware(['auth']);
-Route::get('/pre-registro_predios/{id_predio}', [prediosController::class, 'PdfPreRegistroPredios'])->name('pre-registro_predios')->middleware(['auth']);
-Route::get('/inspeccion_geo_referenciacion/{id_predio}', [prediosController::class, 'PDFInspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion')->middleware(['auth']);
-Route::get('/Registro_de_Predios_Maguey_Agave/{id_predio}', [prediosController::class, 'PDFRegistroPredios'])->name('PDF_Registro_Predios')->middleware(['auth']);
-Route::post('/registro-Predio/{id_predio}', [PrediosController::class, 'registroPredio'])->name('registro-predios.registroPredio')->middleware(['auth']);
-Route::post('/edit-registro-Predio/{id_predio}', [PrediosController::class, 'editRegistroPredio'])->name('registro-predios.editRegistroPredio')->middleware(['auth']);
-Route::get('/solicitudServicio/{id_predio}', [PrediosController::class, 'pdf_solicitud_servicios_070'])->middleware(['auth']);
+
+//-------------------DOMIDILIOS PREDIOS-------------------
+Route::middleware(['auth'])->controller(PrediosController::class)->group(function () {
+    Route::get('/domicilios/predios', 'UserManagement')->name('domicilios-predios');
+    Route::resource('/predios-list', PrediosController::class);
+    
+    Route::delete('/predios-list/{id_predio}', [PrediosController::class, 'destroy'])->name('predios-list.destroy');
+    Route::post('/predios-register/store', [PrediosController::class, 'store'])->name('predios-register.store');
+    Route::get('/domicilios-predios/{id_predio}/edit', [PrediosController::class, 'edit'])->name('domicilios-predios.edit');
+    Route::post('/domicilios-predios/{id_predio}', [PrediosController::class, 'update'])->name('domicilios-predios.update');
+    Route::post('/domicilios-predios/{id_predio}/inspeccion', [PrediosController::class, 'inspeccion'])->name('domicilios-predios.inspeccion');
+    Route::post('/domicilios-predios/{id_predio}/inspeccion-update', [PrediosController::class, 'inspeccion_update'])->name('domicilios-predios.inspeccion-update');
+    Route::get('/domicilios-predios/{id_predio}/edit-inspeccion', [PrediosController::class, 'editInspeccion'])->name('domicilios-predios.edit-inspeccion');
+//estos llevan minisculas
+    Route::get('/pre-registro_predios/{id_predio}', [prediosController::class, 'PdfPreRegistroPredios'])->name('pre-registro_predios');
+    Route::get('/inspeccion_geo_referenciacion/{id_predio}', [prediosController::class, 'PDFInspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion');
+    Route::get('/Registro_de_Predios_Maguey_Agave/{id_predio}', [prediosController::class, 'PDFRegistroPredios'])->name('PDF_Registro_Predios');
+//
+    Route::post('/registro-Predio/{id_predio}', [PrediosController::class, 'registroPredio'])->name('registro-predios.registroPredio');
+    Route::post('/edit-registro-Predio/{id_predio}', [PrediosController::class, 'editRegistroPredio'])->name('registro-predios.editRegistroPredio');
+    Route::get('/solicitudServicio/{id_predio}', [PrediosController::class, 'pdf_solicitud_servicios_070']);
+});
+
 
 //Domicilio Destinos
 Route::middleware(['auth'])->controller(DestinosController::class)->group(function () {
@@ -832,6 +839,8 @@ Route::middleware(['auth'])->controller(GuiasController::class)->group(function 
     Route::get('/guias/mostrar_documento/{id_guia}/{id_documento}', 'mostrarDocGuias');
     Route::post('/guias/subir_documento', 'subirDocGuias')->name('guias.subir_documento');
     Route::delete('/guias/borrar_documento/{id_guia}/{id_documento}', 'borrarDocGuias');
+
+    Route::get('/guias/exportar', 'exportar')->name('guias.exportar');
 });
 
 
@@ -1059,7 +1068,8 @@ Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group
 //-------------------REVISION UNIDAD DE INSPECCION-------------------
 Route::middleware(['auth'])->controller(RevisionUIController::class)->group(function () {
     Route::get('/revision/unidad_inspeccion', 'UserManagement')->name('UI-revision');
-    Route::resource('/revision-ui-list', RevisionUIController::class);
+    Route::resource('/revision-ui-list', RevisionUIController::class);//forma 1
+    //Route::resource('/revision-ui-list', RevisionUIController::class)->middleware(['auth']);FORMA2
 
     Route::get('/revision/ver/{id}', 'add_revision');
     Route::post('/revision/registrar', 'registrar')->name('registrar-revision');

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\preguntas_revision_dictamen;
 use App\Models\RevisionDictamen;
+use App\Notifications\GeneralNotification;
 
 use App\Helpers\Helpers;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -307,6 +308,22 @@ public function registrar(Request $request)
     $revisor->save();
 
 
+        // Notificación si es negativa
+        if (!$todasLasRespuestasSonC) {
+            $inspector = $revisor->inspeccion->inspector;
+
+            if ($inspector) {
+                $url_clic = "/revision/obtener/{$revisor->id_revision}";
+
+                $inspector->notify(new GeneralNotification([
+                    'title'   => 'Revisión de acta NEGATIVA',
+                    'message' => 'La revisión del acta ' .$revisor->inspeccion->num_servicio. ' ha sido negativa.',
+                    'url'     => $url_clic,
+                ]));
+            }
+        }
+
+
     return response()->json(['message' => 'Respuestas y decisión registradas exitosamente.'], 201);
 }
 
@@ -317,14 +334,16 @@ public function registrar(Request $request)
 public function edit_revision($id)
 {
     $datos = RevisionDictamen::findOrFail($id);
+
+    // Verificar que el usuario logueado sea el revisor asignado
+    /*if ($datos->id_revisor != Auth::id()) {
+        abort(403, 'No tienes permisos para editar esta revisión.');
+    }*/
+
     $preguntasQuery = preguntas_revision_dictamen::where('tipo_revisor', 1);
-
-
     $preguntas = $preguntasQuery->get();
-
     $respuestas_json = json_decode($datos->respuestas, true); // Convierte el campo JSON a array PHP
     $respuestas_revision = $respuestas_json['Revision '.$datos->numero_revision] ?? []; // O la clave correspondiente
-
     // Crear un array indexado por id_pregunta para fácil acceso
     $respuestas_map = collect($respuestas_revision)->keyBy('id_pregunta');
 
@@ -373,6 +392,11 @@ public function editar(Request $request)
         $revisor = RevisionDictamen::where('id_revision', $request->id_revision)->first();
         if (!$revisor) {
             return response()->json(['message' => 'El registro no fue encontrado.'], 404);
+        }
+
+        // Validar que administrador o revisor asignado puedan editar
+        if (Auth::id() != 1 && $revisor->id_revisor != Auth::id()) {
+            return response()->json(['message' => 'No tienes permisos para editar esta revisión.'], 403);
         }
 
         // Obtener el historial de respuestas como array
