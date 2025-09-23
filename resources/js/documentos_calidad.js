@@ -981,5 +981,109 @@ $(function () {
     });
   });
 
+$(document).ready(function () {
+    // Guardamos todos los usuarios en un array desde los options originales
+    var usuarios = [];
+    $('#doc_reviso option[data-tipo]').each(function () {
+        usuarios.push({
+            id: $(this).val(),
+            nombre: $(this).text(),
+            tipo: $(this).data('tipo')
+        });
+    });
+
+    $('#area').on('change', function () {
+        var selectedArea = $(this).val(); // 1 = OC, 2 = UI
+        var tipo = selectedArea == '1' ? 'OC' : (selectedArea == '2' ? 'UI' : '');
+
+        // Limpiar opciones de usuarios pero conservar las dos primeras opciones
+        $('#doc_reviso, #doc_aprobo').each(function () {
+            $(this).find('option').not(':lt(2)').remove();
+        });
+
+        // Agregar usuarios según el tipo a ambos selects
+        usuarios.forEach(function (user) {
+            if (user.tipo == tipo) {
+                $('#doc_reviso').append(`<option value="${user.id}" data-tipo="${user.tipo}">${user.nombre}</option>`);
+                $('#doc_aprobo').append(`<option value="${user.id}" data-tipo="${user.tipo}">${user.nombre}</option>`);
+            }
+        });
+
+        // Refrescar Select2 y seleccionar la opción por defecto
+        $('#doc_reviso, #doc_aprobo').val('').trigger('change');
+    });
+});
+
+
+
+$(document).ready(function () {
+    // Guardamos todos los usuarios en un array desde los options originales
+    var usuariosEdit = [];
+    $('#edit_reviso option').each(function () {
+        var tipo = $(this).data('tipo') || '';
+        usuariosEdit.push({
+            id: $(this).val(),
+            nombre: $(this).text(),
+            tipo: tipo
+        });
+    });
+
+    $('#edit_area').on('change', function () {
+        var selectedArea = $(this).val(); // 1 = OC, 2 = UI
+        var tipo = selectedArea == '1' ? 'OC' : (selectedArea == '2' ? 'UI' : '');
+
+        // Limpiar opciones pero conservar las dos primeras
+        $('#edit_reviso, #edit_aprobo').each(function () {
+            $(this).find('option').not(':lt(2)').remove();
+        });
+
+        // Agregar usuarios filtrados por tipo
+        usuariosEdit.forEach(function (user) {
+            if (user.tipo == tipo) {
+                $('#edit_reviso').append(`<option value="${user.id}" data-tipo="${user.tipo}">${user.nombre}</option>`);
+                $('#edit_aprobo').append(`<option value="${user.id}" data-tipo="${user.tipo}">${user.nombre}</option>`);
+            }
+        });
+
+        // Refrescar Select2 y seleccionar opción por defecto
+        $('#edit_reviso, #edit_aprobo').val('').trigger('change');
+    });
+});
+
+
+$(document).ready(function () {
+    // Guardamos todos los usuarios en un array desde los options originales
+    var usuariosEditHist = [];
+    $('#edit_edit_reviso option').each(function () {
+        var tipo = $(this).data('tipo') || '';
+        usuariosEditHist.push({
+            id: $(this).val(),
+            nombre: $(this).text(),
+            tipo: tipo
+        });
+    });
+
+    $('#edit_edit_area').on('change', function () {
+        var selectedArea = $(this).val(); // 1 = OC, 2 = UI
+        var tipo = selectedArea == '1' ? 'OC' : (selectedArea == '2' ? 'UI' : '');
+
+        // Limpiar opciones pero conservar las dos primeras
+        $('#edit_edit_reviso, #edit_edit_aprobo').each(function () {
+            $(this).find('option').not(':lt(2)').remove();
+        });
+
+        // Agregar usuarios filtrados por tipo
+        usuariosEditHist.forEach(function (user) {
+            if (user.tipo == tipo) {
+                $('#edit_edit_reviso').append(`<option value="${user.id}" data-tipo="${user.tipo}">${user.nombre}</option>`);
+                $('#edit_edit_aprobo').append(`<option value="${user.id}" data-tipo="${user.tipo}">${user.nombre}</option>`);
+            }
+        });
+
+        // Refrescar Select2 y seleccionar opción por defecto
+        $('#edit_edit_reviso, #edit_edit_aprobo').val('').trigger('change');
+    });
+});
+
 
 });

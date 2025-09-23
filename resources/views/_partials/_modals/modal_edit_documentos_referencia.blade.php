@@ -73,8 +73,8 @@
                                        <div class="form-floating form-floating-outline">
                                            <select class="form-select" id="edit_area" name="area">
                                                <option value="">Seleccione el área</option>
-                                               <option value="1">UI</option>
-                                               <option value="2">OC</option>
+                                              <option value="1">OC</option>
+                                                <option value="2">UI</option>
                                            </select>
                                            <label for="Área">Área</label>
                                        </div>
@@ -139,7 +139,8 @@
                                                <option value="">Seleccione un usuario</option>
                                                <option value="0">Sin asignar</option>
                                                @foreach ($usuarios as $usuario)
-                                                   <option value="{{ $usuario->id }}">
+                                                   <option value="{{ $usuario->id }}"
+                                                     data-tipo="{{ $usuario->tipo == 1 ? 'OC' : 'UI' }}">
                                                        {{ $usuario->name }} ({{ $usuario->puesto }})
                                                    </option>
                                                @endforeach
@@ -156,7 +157,8 @@
                                                <option value="">Seleccione un usuario</option>
                                                <option value="0">Sin asignar</option>
                                                @foreach ($usuarios as $usuario)
-                                                   <option value="{{ $usuario->id }}">
+                                                   <option value="{{ $usuario->id }}"
+                                                     data-tipo="{{ $usuario->tipo == 1 ? 'OC' : 'UI' }}">
                                                        {{ $usuario->name }} ({{ $usuario->puesto }})
                                                    </option>
                                                @endforeach
@@ -234,8 +236,8 @@
                                        <div class="form-floating form-floating-outline">
                                            <select class="form-select" id="edit_edit_area" name="area">
                                                <option value="">Seleccione el área</option>
-                                               <option value="1">UI</option>
-                                               <option value="2">OC</option>
+                                               <option value="1">OC</option>
+                                                <option value="2">UI</option>
                                            </select>
                                            <label for="Área">Área</label>
                                        </div>
@@ -300,7 +302,8 @@
                                                <option value="">Seleccione un usuario</option>
                                                <option value="0">Sin asignar</option>
                                                @foreach ($usuarios as $usuario)
-                                                   <option value="{{ $usuario->id }}">
+                                                   <option value="{{ $usuario->id }}"
+                                                     data-tipo="{{ $usuario->tipo == 1 ? 'OC' : 'UI' }}">
                                                        {{ $usuario->name }} ({{ $usuario->puesto }})
                                                    </option>
                                                @endforeach
@@ -317,7 +320,8 @@
                                                <option value="">Seleccione un usuario</option>
                                                <option value="0">Sin asignar</option>
                                                @foreach ($usuarios as $usuario)
-                                                   <option value="{{ $usuario->id }}">
+                                                   <option value="{{ $usuario->id }}"
+                                                     data-tipo="{{ $usuario->tipo == 1 ? 'OC' : 'UI' }}">
                                                        {{ $usuario->name }} ({{ $usuario->puesto }})
                                                    </option>
                                                @endforeach
