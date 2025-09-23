@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\TranslatableActivityLog;
+use Illuminate\Support\Collection;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Certificado_Nacional extends Model
