@@ -705,6 +705,14 @@
 
                     <span>Cantidad de Cajas:</span> {{ $caracteristicas['cantidad_cajas'] ?? '-' }} <br>
                     <span>Cantidad de Botellas:</span> {{ $caracteristicas['cantidad_botellas'] ?? '-' }}
+                @elseif ($exportacion === 'X')
+                    @php
+                        $caracteristicas = json_decode($datos->caracteristicas, true);
+                        $detalles = $caracteristicas['detalles'] ?? [];
+                    @endphp
+
+                    <span>Cantidad de Botellas: {{ $detalles[0]['cantidad_botellas']  ?? 'No definido' }}</span><br>
+                    <span>Cantidad de Cajas: {{ $detalles[0]['cantidad_cajas']  ?? 'No definido' }}</span>
                 @else
                     <p>---------------</p>
                 @endif
