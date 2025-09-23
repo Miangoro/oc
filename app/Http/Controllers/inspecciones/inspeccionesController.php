@@ -635,52 +635,62 @@ public function agregarResultados(Request $request)
                     /// ASIGNAR REVISION AUTOMATICA
                     if ($sol->inspeccion) { // Verifica que exista la inspección
                         $inspeccion = $sol->inspeccion;
-                    // Verifica si ya existe una revisión para esta inspección
-                    $existe = RevisionDictamen::where('id_inspeccion', $inspeccion->id_inspeccion)->exists();
-                        if (!$existe) {
-                            // Selecciona un revisor aleatorio tipo 2 y activo
-                            /*$revisor = User::where('tipo', 2)
-                                    ->where('estatus', 'Activo')
-                                    ->where('id', '<>', $inspeccion->id_inspector) //excluye al inspector actual
-                                    ->inRandomOrder()
-                                    ->first();*/
-                            $excluirId = $inspeccion->id_inspector;
-                            $revisor = User::where(function ($query) use ($excluirId) {
-                                    $query->where('tipo', 2)
-                                        ->where('estatus', 'Activo')
-                                        ->where('id', '<>', $excluirId);
-                                })
-                                ->orWhereIn('id', [319, 335])
-                                ->inRandomOrder()
-                                ->first();
+                    
+                    // Revisar si ya existe una revisión Pendiente o positiva para esta inspección
+                    $revisionExistente = RevisionDictamen::where('id_inspeccion', $inspeccion->id_inspeccion)
+                        ->whereIn('decision', ['Pendiente', 'positiva'])
+                        ->first();
 
-                            $revision = RevisionDictamen::create([
-                                'id_inspeccion'   => $inspeccion->id_inspeccion,
-                                'tipo_revision'   => 1,
-                                'id_revisor'      => $revisor?->id ?? 0,
-                                'numero_revision' => 1,
-                                'es_correccion'   => 'no',
-                                //'decision'       => 'Pendiente',
-                                'tipo_solicitud'  => $sol->id_tipo ?? 0,
-                            ]);
-                            
-                            // Notificación
-                            $usuario = User::find($revisor->id);
-                            if ($usuario) {
-                                //$url_clic = $tipoRevisor == 1 ? "/add_revision/{$revisor->id_revision}" : "/add_revision_consejo/{$revisor->id_revision}";
-                                $url_clic = "/revision/ver/{$revision->id_revision}";
+                    // Revisar si hay alguna revisión de inspección con el mismo num_servicio
+                    $revisionMismoServicio = RevisionDictamen::whereHas('inspeccion', function ($q) use ($inspeccion) {
+                        $q->where('num_servicio', $inspeccion->num_servicio);
+                    })->first();
 
-                                $usuario->notify(new GeneralNotification([
-                                    //'asunto' => 'Revisión de acta de servicio',
-                                    'title' =>  'Revisión de actas ',
-                                    'message' => 'Se te ha asignado el acta '.$inspeccion->num_servicio,
-                                    'url' => $url_clic,
-                                ]));
-                            }
+                    // Asigna revisión automática si:
+                //NO hay revisión Pendiente/positiva. Y no hay revisión de inspección con mismo num_servicio
+                    if (!$revisionExistente && !$revisionMismoServicio) {
+
+                        // Buscar la última revisión existente (para calcular número_revision y corrección)
+                        $ultimaRevision = RevisionDictamen::where('id_inspeccion', $inspeccion->id_inspeccion)
+                            ->orderByDesc('numero_revision')
+                            ->first();
+
+                        $nuevoNumeroRevision = $ultimaRevision ? $ultimaRevision->numero_revision + 1 : 1;
+                        $esCorreccion = $ultimaRevision ? 'si' : 'no';
+
+                        // Selecciona un revisor aleatorio tipo 2 y activo, excepto el inspector
+                        $excluirId = $inspeccion->id_inspector;
+                        $revisor = User::where('tipo', 2)
+                            ->where('estatus', 'Activo')
+                            ->where('id', '<>', $excluirId)
+                            ->orWhereIn('id', [319, 335])
+                            ->inRandomOrder()
+                            ->first();
+
+                        // Crear la revisión automática
+                        $revision = RevisionDictamen::create([
+                            'tipo_revision'   => 1,
+                            'id_revisor'      => $revisor?->id ?? 0,
+                            'id_inspeccion'   => $inspeccion->id_inspeccion,
+                            'numero_revision' => $nuevoNumeroRevision,
+                            'es_correccion'   => $esCorreccion,
+                            'tipo_solicitud'  => $sol->id_tipo ?? 0,
+                        ]);
+
+                        // Notificación al revisor
+                        if ($revisor) {
+                            $url_clic = "/revision/ver/{$revision->id_revision}";
+                            $titulo = 'Revisión de acta' .($esCorreccion === 'si' ? ' CORRECCIÓN' : '');
+
+                            $revisor->notify(new GeneralNotification([
+                                'title'   => $titulo,
+                                'message' => 'Se te ha asignado el acta ' .$inspeccion->num_servicio,
+                                'url'     => $url_clic,
+                            ]));
                         }
                     }
-                    
-                }//fin acta
+                    }//fin revision automatica
+                } // fin acta
                 
 
                 if ($documentacion_url) {
