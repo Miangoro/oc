@@ -730,7 +730,7 @@ Route::get('/getDocumentosPorInstalacion', [DomiciliosController::class, 'getDoc
 Route::middleware(['auth'])->controller(PrediosController::class)->group(function () {
     Route::get('/domicilios/predios', 'UserManagement')->name('domicilios-predios');
     Route::resource('/predios-list', PrediosController::class);
-    
+
     Route::delete('/predios-list/{id_predio}', [PrediosController::class, 'destroy'])->name('predios-list.destroy');
     Route::post('/predios-register/store', [PrediosController::class, 'store'])->name('predios-register.store');
     Route::get('/domicilios-predios/{id_predio}/edit', [PrediosController::class, 'edit'])->name('domicilios-predios.edit');
@@ -1571,7 +1571,9 @@ Route::controller(DocumentosReferenciaController::class)->middleware(['auth'])->
     Route::post('/documentos-referencia/{id}', 'update');
     Route::delete('/documentos-referencia/{id}', 'destroy');
     // web.php
-Route::get('/documentos-referencia/{id}/historial', 'historial');
+    Route::get('/documentos-referencia/{id}/historial', 'historial');
+    Route::get('/documentos-referencia-historial/{id}/edit', 'editHistorial');
+    Route::post('/documentos-referencia-historial/{id}', 'updateHistorial');
 
 });
 

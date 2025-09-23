@@ -245,6 +245,7 @@ public function historial($id)
           $documento->modifico       = $request->modifico;
           $documento->reviso         = $request->reviso;
           $documento->aprobo         = $request->aprobo;
+          $documento->id_usuario_registro  = Auth::id();
           $documento->save();
 
           // Registrar nueva versión en historial
@@ -273,6 +274,66 @@ public function historial($id)
       }
   }
 
+  public function editHistorial($id)
+  {
+        try {
+            $historial = documentos_calidad_historial::findOrFail($id);
+            return response()->json($historial);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'No se pudo obtener el historial',
+                'message' => $e->getMessage()
+            ], 404);
+        }
+  }
+
+  public function updateHistorial(Request $request, $id)
+  {
+      $request->validate([
+          'nombre' => 'required|string|max:255',
+          'identificacion' => 'required|string|max:100',
+          'area' => 'required|integer',
+          'edicion' => 'required|string|max:50',
+          'fecha_edicion' => 'required|date',
+          'estatus' => 'required|string|max:50',
+          'modifico' => 'required|string|max:255',
+          'reviso' => 'required|integer',
+          'aprobo' => 'required|integer',
+          'archivo' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:5120',
+      ]);
+
+      try {
+          $historial = documentos_calidad_historial::findOrFail($id);
+
+          // Actualizar campos
+          $historial->nombre = $request->nombre;
+          $historial->identificacion = $request->identificacion;
+          $historial->area = $request->area;
+          $historial->tipo = 1;
+          $historial->edicion = $request->edicion;
+          $historial->fecha_edicion = $request->fecha_edicion;
+          $historial->estatus = $request->estatus;
+          $historial->modifico = $request->modifico;
+          $historial->reviso = $request->reviso;
+          $historial->aprobo = $request->aprobo;
+
+          // Si hay archivo nuevo
+          if ($request->hasFile('archivo')) {
+              $archivoPath = $request->file('archivo')->store('documentos_referencia', 'public');
+              $historial->archivo = $archivoPath;
+          }
+
+          $historial->save();
+
+          return response()->json(['success' => 'Historial actualizado correctamente']);
+
+      } catch (\Exception $e) {
+          return response()->json([
+              'error' => 'Error al actualizar el historial',
+              'message' => $e->getMessage()
+          ], 500);
+      }
+  }
 
 
 

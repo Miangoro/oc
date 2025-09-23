@@ -35,11 +35,11 @@
                                     <div class="col-md-3">
                                         <div class="form-floating form-floating-outline">
                                             <select class="form-select" id="area" name="area">
-                                                <option value="">Seleccione el tipo</option>
+                                                <option value="">Seleccione el área</option>
                                                 <option value="1">UI</option>
                                                 <option value="2">OC</option>
                                             </select>
-                                            <label for="Area">Area</label>
+                                            <label for="Área">Área</label>
                                         </div>
                                     </div>
 
@@ -98,6 +98,7 @@
                                         <div class="form-floating form-floating-outline">
                                             <select class="select2 form-select" id="doc_reviso" name="reviso" required>
                                                 <option value="">Seleccione un usuario</option>
+                                                <option value="0">Sin asignar</option>
                                                 @foreach ($usuarios as $usuario)
                                                     <option value="{{ $usuario->id }}">
                                                         {{ $usuario->name }} ({{ $usuario->puesto }})
@@ -113,6 +114,7 @@
                                         <div class="form-floating form-floating-outline">
                                             <select class="select2 form-select" id="doc_aprobo" name="aprobo" required>
                                                 <option value="">Seleccione un usuario</option>
+                                                <option value="0">Sin asignar</option>
                                                 @foreach ($usuarios as $usuario)
                                                     <option value="{{ $usuario->id }}">
                                                         {{ $usuario->name }} ({{ $usuario->puesto }})

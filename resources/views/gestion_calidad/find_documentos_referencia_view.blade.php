@@ -50,34 +50,6 @@
         </div>
 
 
-
-
-        <!-- Offcanvas para editar -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="editClase">
-            <div class="offcanvas-header border-bottom">
-                <h5 class="offcanvas-title">Editar Clase</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                    aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body mx-0 flex-grow-0 h-100">
-                @csrf
-                <form class="edit-class-form pt-0" id="editClassForm" method="POST">
-                    <input type="hidden" name="id_clase" id="edit_clase_id" value="">
-                    <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="edit_clase_nombre"
-                            placeholder="Nombre de la clase" name="edit_clase" aria-label="clase" required>
-                        <label for="edit_clase_nombre">Nombre de la clase</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary me-sm-3 me-1">Confirmar</button>
-                    <button type="button" class="btn btn-outline-secondary"
-                        data-bs-dismiss="offcanvas">Cancelar</button>
-                </form>
-            </div>
-        </div>
-
-
-
-
     </div>
 
     <!-- Modal -->
