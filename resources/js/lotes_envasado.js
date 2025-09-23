@@ -145,7 +145,7 @@ $(function () {
           orderable: false,
           render: function (data, type, row) {
             var volumen_total = '';
-            var volumen_total = '';
+            var vol_restante = '';
 
             if (row.volumen_total != 'N/A') {
               volumen_total =
@@ -153,10 +153,10 @@ $(function () {
                 row.volumen_total +
                 ' </span>';
             }
-            if (row.volumen_total != 'N/A') {
-              volumen_total =
+            if (row.vol_restante != 'N/A') {
+              vol_restante =
                 '<br><span class="fw-bold text-dark small">Volumen restante:</span><span class="small"> ' +
-                row.volumen_total +
+                row.vol_restante +
                 ' </span>';
             }
 
@@ -165,7 +165,7 @@ $(function () {
               row.volumen_total +
               ' Litros' +
               '</span><br><span class="fw-bold text-dark small">Restante:</span><span class="small"> ' +
-              row.volumen_total +
+              row.vol_restante +
               ' Litros'
             );
           }
