@@ -120,9 +120,9 @@ public function index(Request $request)
 
 
         $query = lotes_envasado::with([
-                'empresa.empresaNumClientes', 
-                'marca', 
-                'Instalaciones', 
+                'empresa.empresaNumClientes',
+                'marca',
+                'Instalaciones',
                 'lotes_envasado_granel'
             ]); // Cargar relaciones necesarias
 
@@ -168,7 +168,7 @@ public function index(Request $request)
         ->limit($limit)
         ->orderBy($order, $dir)
         ->get();
-/*    
+/*
     $limit = $request->input('length');
     $start = $request->input('start');
     $orderColumnIndex = $request->input('order.0.column');
@@ -237,7 +237,7 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                 $sku = json_decode($user->sku, true); // Decodifica el JSON en un array
                 $inicial = isset($sku['inicial']) ? $sku['inicial'] : 0; // Obtén el valor de 'inicial' del JSON
                 $nuevo = isset($sku['nuevo']) ? $sku['nuevo'] : 0; // Obtén el valor de 'inicial' del JSON
-                $cantt_botellas = isset($sku['cantt_botellas']) ? $sku['cantt_botellas'] : $user->cant_botellas;
+                $cantt_botellas = isset($sku['cantt_botellas']) ? $sku['cantt_botellas'] : $user->cant_bot_restantes;
                 $nombres_lote = lotes_envasado_granel::where('id_lote_envasado', $user->id_lote_envasado)
                     ->with('loteGranel') // Carga la relación
                     ->get()
@@ -258,6 +258,7 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                     'unidad' => $user->unidad,
                     'destino_lote' => $user->destino_lote,
                     'volumen_total' => $user->volumen_total,
+                    'vol_restante' => $user->vol_restante,
                     'lugar_envasado' => $user->Instalaciones->direccion_completa ?? '',
                     'sku' => $user->sku,
                     'inicial' => $inicial,

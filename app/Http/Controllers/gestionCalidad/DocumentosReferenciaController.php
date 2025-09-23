@@ -37,8 +37,7 @@ class DocumentosReferenciaController extends Controller
 
         $search = [];
 
-        $totalData = documentos_calidad::count();
-
+        $totalData = documentos_calidad::where('tipo', 1)->count();
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -47,24 +46,32 @@ class DocumentosReferenciaController extends Controller
         $dir = $request->input('order.0.dir');
 
         if (empty($request->input('search.value'))) {
-            $users = documentos_calidad::offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-        } else {
-            $search = $request->input('search.value');
+              // 🔥 Solo traer tipo = 1
+              $users = documentos_calidad::where('tipo', 1)
+                  ->offset($start)
+                  ->limit($limit)
+                  ->orderBy($order, $dir)
+                  ->get();
+          } else {
+              $search = $request->input('search.value');
 
-            $users = documentos_calidad::where('id_doc_calidad', 'LIKE', "%{$search}%")
-                ->orWhere('nombre', 'LIKE', "%{$search}%")
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
+              $users = documentos_calidad::where('tipo', 1)
+                  ->where(function ($query) use ($search) {
+                      $query->where('id_doc_calidad', 'LIKE', "%{$search}%")
+                            ->orWhere('nombre', 'LIKE', "%{$search}%");
+                  })
+                  ->offset($start)
+                  ->limit($limit)
+                  ->orderBy($order, $dir)
+                  ->get();
 
-            $totalFiltered = documentos_calidad::where('id_doc_calidad', 'LIKE', "%{$search}%")
-                ->orWhere('nombre', 'LIKE', "%{$search}%")
-                ->count();
-        }
+              $totalFiltered = documentos_calidad::where('tipo', 1)
+                  ->where(function ($query) use ($search) {
+                      $query->where('id_doc_calidad', 'LIKE', "%{$search}%")
+                            ->orWhere('nombre', 'LIKE', "%{$search}%");
+                  })
+                  ->count();
+          }
 
         $data = [];
 
