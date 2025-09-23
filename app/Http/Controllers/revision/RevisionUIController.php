@@ -238,7 +238,6 @@ public function add_revision($id)
 ///REGISTRAR REVISION
 public function registrar(Request $request)
 {
-
     $request->validate([
         'id_revision' => 'required|integer',
         'respuesta' => 'required|array',

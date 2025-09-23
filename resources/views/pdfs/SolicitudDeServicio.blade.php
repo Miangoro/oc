@@ -139,7 +139,7 @@
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="padding-top: 1px; padding-bottom: 1px;">Domicilio Fiscal:</td>
-            <td colspan="4">{{ $datos->empresa->domicilio_fiscal }}</td>
+            <td colspan="4">{{ $datos->empresa->domicilio_fiscal }} C.P. {{ $datos->empresa->cp }}</td>
             <td class="con-negra" rowspan="2" style="width: 90px; padding: 4px" colspan="3">
                 Dirección de destino:<br><br> Empresa de destino:
             </td>
