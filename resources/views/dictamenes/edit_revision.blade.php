@@ -50,7 +50,11 @@
 
         <!-- tipo solicitud Columna 1 -->
         <div class="col-md-4">
-          <p class="text-muted mb-1">Tipo de solicitud</p>
+          <p class="text-muted mb-1">Tipo de solicitud
+            @if ($datos->es_correccion === 'si')
+              <span class="badge bg-danger" style="margin-top: -10px; margin-left: 5px">Es corrección</span>
+            @endif
+          </p>
           <h5 class="fw-semibold">
           {{ $tipo }}
           </h5>
@@ -253,6 +257,17 @@ document.addEventListener('DOMContentLoaded', function () {
                                         </tr>
                                     </thead>
                                     <tbody>`;
+
+                    // Solicitud de servicio
+                    html += `
+                        <tr>
+                            <td>Solicitud de servicios</td>
+                            <td>
+                                <a href="/solicitud_de_servicio/${id_solicitud}" target="_blank">
+                                    <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                </a>
+                            </td>
+                        </tr>`;
 
                     // Certificados granel
                     if (response.url_certificado.length > 0) {

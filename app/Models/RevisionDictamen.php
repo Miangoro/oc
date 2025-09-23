@@ -6,6 +6,7 @@ use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Support\Facades\Auth;
 
 class RevisionDictamen extends Model
 {
@@ -26,8 +27,21 @@ class RevisionDictamen extends Model
         'id_aprobador',
         'aprobacion',
         'fecha_aprobacion',
-        'tipo_solicitud'
+        'tipo_solicitud',
+        'id_usuario_registro'
     ];
+
+    protected static function boot()//registro automatico de usuario
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (Auth::check()) {
+                $model->id_usuario_registro = Auth::id();
+            }
+        });
+    }
+
 
     public function getLogName2(): string
     {
