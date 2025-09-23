@@ -83,5 +83,21 @@ class Certificado_Nacional extends Model
         return null;
     }
 
+     public function hologramas(): Collection
+    {
+        $hologramasData = json_decode($this->id_hologramas, true);
+
+        if (!$hologramasData || !is_array($hologramasData)) {
+            return collect();
+        }
+
+        $ids = collect($hologramasData)->pluck('id')->filter()->unique()->toArray();
+
+        // 👇 Incluye la relación
+        return activarHologramasModelo::with('solicitudHolograma')
+            ->whereIn('id', $ids)
+            ->get();
+    }
+
 
 }
