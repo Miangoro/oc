@@ -55,8 +55,8 @@
                                     <!-- Fecha -->
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="date" class="form-control" id="doc_fecha" name="fecha_edicion"
-                                                required>
+                                            <input type="text" class="form-control flatpickr"  id="doc_fecha" name="fecha_edicion"
+                                                placeholder="aaaa-mm-dd">
                                             <label for="doc_fecha">Fecha de edición</label>
                                         </div>
                                     </div>

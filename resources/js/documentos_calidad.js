@@ -81,30 +81,25 @@ $(function () {
           }
         },
         {
-          // User full name
           targets: 2,
-          responsivePriority: 4,
+          className: 'text-center',
+          searchable: false,
+          orderable: false,
           render: function (data, type, full, meta) {
-            var $name = full['archvio'];
-
-            // For Avatar badge
-            var stateNum = Math.floor(Math.random() * 6);
-            var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
-            var $state = states[stateNum];
-
-            // Creates full output for row
-            var $row_output =
-              '<div class="d-flex justify-content-start align-items-center user-name">' +
-              '<div class="avatar-wrapper">' +
-              '</div>' +
-              '</div>' +
-              '<div class="d-flex flex-column">' +
-              '<span class="fw-medium">' +
-              $name +
-              '</span>' +
-              '</div>' +
-              '</div>';
-            return $row_output;
+            var archivo = full['archivo']; // ruta del archivo en DB
+            if (archivo && archivo !== '') {
+              return `
+                <i class="ri-file-pdf-2-fill text-danger ri-40px PDFDocFind cursor-pointer"
+                  data-bs-target="#mostrarPdf" data-bs-toggle="modal"
+                  data-bs-dismiss="modal"
+                  data-nombre="${full['nombre']}"
+                  data-url="/storage/${archivo}"
+                  data-id="${full['id_doc_calidad']}"
+                  data-archivo="${archivo}"></i>
+              `;
+            } else {
+              return '<i class="ri-file-pdf-2-fill ri-32px icon-no-pdf text-muted"></i>'; // Ícono gris deshabilitado
+            }
           }
         },
         {
@@ -137,7 +132,7 @@ $(function () {
           targets: 6,
           render: function (data, type, full, meta) {
             return `
-              <button class="btn btn-sm btn-info ver-versiones" data-id="${full.id_doc_calidad}" type="button">
+              <button class="btn btn-sm btn-warning ver-versiones" data-id="${full.id_doc_calidad}" type="button">
                 Ver versiones
               </button>
             `;
@@ -153,7 +148,7 @@ $(function () {
             let acciones = '';
 
             if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id_doc_calidad']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Agregar nueva revisión </a>`;
+              acciones += `<a data-id="${full['id_doc_calidad']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Agregar nueva revisión </a>`;
             }
             if (window.puedeEliminarElUsuario) {
               acciones += `<a data-id="${full['id_doc_calidad']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar documento</a>`;
@@ -267,61 +262,113 @@ $(function () {
 
   initializeSelect2(select2Elements);
 
-$('.datatables-users').on('click', '.ver-versiones', function() {
+$(document).ready(function () {
+  flatpickr(".flatpickr", {
+      dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
+      enableTime: false,   // Desactiva la  hora
+      allowInput: true,    // Permite al usuario escribir la fecha manualmente
+      locale: "es",        // idioma a español
+  });
+});
+
+ $('.datatables-users').on('click', '.ver-versiones', function () {
   let idDoc = $(this).data('id');
 
   // Abrir modal
   $('#modalEditDoc').modal('show');
 
-  // Limpiar contenido previo
-  $('#modalEditDoc .modal-body').html('<p>Cargando historial...</p>');
+  // Mostrar loader
+  $("#cargando").show();
+  $("#historialContent").html('');
 
-  // Llamada AJAX para traer el historial
+  // Llamada AJAX
   $.ajax({
-    url: `/documentos-referencia/${idDoc}/historial`, // Crear esta ruta
+    url: `/documentos-referencia/${idDoc}/historial`,
     type: 'GET',
-    success: function(response) {
+    success: function (response) {
+      $("#cargando").hide();
+
+      if (response.data.length === 0) {
+        $('#historialContent').html('<p>No hay versiones registradas.</p>');
+        return;
+      }
+
       let html = `
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Edición</th>
-              <th>Identificación</th>
-              <th>Fecha</th>
-              <th>Estatus</th>
-              <th>Archivo</th>
-              <th>Modificó</th>
-              <th>Revisó</th>
-              <th>Aprobó</th>
-            </tr>
-          </thead>
-          <tbody>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Archivo</th>
+                <th>Identificación</th>
+                <th>Nombre del documento</th>
+                <th>Estatus</th>
+                <th>Versiones</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
       `;
 
-      response.data.forEach(item => {
+      response.data.forEach((item, index) => {
         html += `
           <tr>
-            <td>${item.edicion}</td>
+            <td>${index + 1}</td>
+            <td>
+              ${item.archivo
+                ? `<i class="ri-file-pdf-2-fill text-danger ri-40px PDFDocFind cursor-pointer"
+                      data-nombre="${item.nombre}"
+                      data-url="/storage/${item.archivo}">
+                   </i>`
+                : `<i class="ri-file-pdf-2-fill ri-24px icon-no-pdf"></i>`}
+            </td>
             <td>${item.identificacion}</td>
-            <td>${item.fecha_edicion}</td>
+            <td>${item.nombre}</td>
             <td>${item.estatus}</td>
-            <td><a href="${item.archivo}" target="_blank">Ver archivo</a></td>
-            <td>${item.modifico}</td>
-            <td>${item.reviso}</td>
-            <td>${item.aprobo}</td>
+            <td>${item.edicion}</td>
+            <td>
+              <button class="btn btn-sm btn-info edit-version" data-id="${item.id}">
+                <i class="ri-edit-box-line ri-20px me-1"></i> Editar
+              </button>
+            </td>
           </tr>
         `;
       });
 
-      html += `</tbody></table>`;
-      $('#modalEditDoc .modal-body').html(html);
+      html += `</tbody></table></div>`;
+      $('#historialContent').html(html);
     },
-    error: function(err) {
-      $('#modalEditDoc .modal-body').html('<p class="text-danger">No se pudo cargar el historial.</p>');
+    error: function () {
+      $("#cargando").hide();
+      $('#historialContent').html('<p class="text-danger">No se pudo cargar el historial.</p>');
     }
   });
 });
 
+  //FORMATO PDF REGISTRO DE PREDIO
+  $(document).on('click', '.PDFDocFind', function () {
+    var registro = $(this).data('nombre');
+    var pdfUrl = $(this).data('url'); // <- Aquí tomas la URL directamente
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+
+    //Cargar el PDF con el ID
+    iframe.attr('src', pdfUrl);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+    $("#NewPestana").attr('href', pdfUrl).show();
+    $("#titulo_modal").text(registro);
+    $("#subtitulo_modal").empty();
+
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
+  });
 
   $(function () {
     // Configuración de CSRF para Laravel
@@ -459,105 +506,124 @@ $('.datatables-users').on('click', '.ver-versiones', function() {
     });
   });
 
-// Delete Record
-$(document).on('click', '.delete-record', function () {
+  // Delete Record
+  $(document).on('click', '.delete-record', function () {
     var id_doc = $(this).data('id'); // Obtener el ID del documento
     var dtrModal = $('.dtr-bs-modal.show');
 
     // Ocultar modal responsivo en pantalla pequeña si está abierto
     if (dtrModal.length) {
-        dtrModal.modal('hide');
+      dtrModal.modal('hide');
     }
 
     // SweetAlert para confirmar la eliminación
     Swal.fire({
-        title: '¿Está seguro?',
-        text: 'No podrá revertir esta acción',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
-        customClass: {
-            confirmButton: 'btn btn-primary me-3',
-            cancelButton: 'btn btn-label-secondary'
-        },
-        buttonsStyling: false
+      title: '¿Está seguro?',
+      text: 'No podrá revertir esta acción',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-primary me-3',
+        cancelButton: 'btn btn-label-secondary'
+      },
+      buttonsStyling: false
     }).then(function (result) {
-        if (result.isConfirmed) {
-            // Enviar solicitud DELETE al servidor
-            $.ajax({
-                type: 'DELETE',
-                url: `${baseUrl}documentos-referencia/${id_doc}`,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function () {
-                    // Actualizar la tabla después de eliminar el registro
-                    dt_user.draw();
+      if (result.isConfirmed) {
+        // Enviar solicitud DELETE al servidor
+        $.ajax({
+          type: 'DELETE',
+          url: `${baseUrl}documentos-referencia/${id_doc}`,
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function () {
+            // Actualizar la tabla después de eliminar el registro
+            dt_user.draw();
 
-                    // Mostrar SweetAlert de éxito
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Eliminado!',
-                        text: 'El documento ha sido eliminado correctamente',
-                        customClass: {
-                            confirmButton: 'btn btn-success'
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.log(error);
-
-                    // Mostrar SweetAlert de error
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo eliminar el documento. Inténtalo de nuevo más tarde.',
-                        footer: `<pre>${error.responseText}</pre>`,
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                }
-            });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            // Acción cancelada, mostrar mensaje informativo
+            // Mostrar SweetAlert de éxito
             Swal.fire({
-                title: 'Cancelado',
-                text: 'La eliminación del documento ha sido cancelada',
-                icon: 'info',
-                customClass: {
-                    confirmButton: 'btn btn-primary'
-                }
+              icon: 'success',
+              title: '¡Eliminado!',
+              text: 'El documento ha sido eliminado correctamente',
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
             });
-        }
+          },
+          error: function (error) {
+            console.log(error);
+
+            // Mostrar SweetAlert de error
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo eliminar el documento. Inténtalo de nuevo más tarde.',
+              footer: `<pre>${error.responseText}</pre>`,
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Acción cancelada, mostrar mensaje informativo
+        Swal.fire({
+          title: 'Cancelado',
+          text: 'La eliminación del documento ha sido cancelada',
+          icon: 'info',
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      }
     });
-});
+  });
 
 
   //editar un campo de la tabla
   $(document).ready(function () {
     // Abrir el modal y cargar datos para editar
-    $('.datatables-users').on('click', '.edit-record', function () {
-      var id_clase = $(this).data('id');
-      // Realizar la solicitud AJAX para obtener los datos de la clase
-      $.get('/clases-list/' + id_clase + '/edit', function (data) {
-        // Rellenar el formulario con los datos obtenidos
-        $('#edit_clase_id').val(data.id_clase);
-        $('#edit_clase_nombre').val(data.clase);
-        // Mostrar el modal de edición
-        $('#editClase').offcanvas('show');
-      }).fail(function () {
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al obtener los datos de la clase',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
+      $('.datatables-users').on('click', '.edit-record', function () {
+    var id_doc = $(this).data('id');
+
+    $.get('/documentos-referencia/' + id_doc + '/edit', function (data) {
+      // Inputs
+      $('#edit_id_doc_calidad').val(data.id_doc_calidad);
+      $('#edit_nombre').val(data.nombre);
+      $('#edit_identificacion').val(data.identificacion);
+      $('#edit_area').val(data.area).trigger('change'); // para select
+      $('#edit_edicion').val(data.edicion);
+      /* $('#edit_fecha_edicion').val(data.fecha_edicion); */
+      $('#edit_fecha_edicion').val(moment(data.fecha_edicion).format('YYYY-MM-DD'));
+      $('#edit_estatus').val(data.estatus).trigger('change');
+
+      // archivo (si ya existe)
+      if (data.archivo) {
+        $("#edit_archivo").removeAttr("required"); // no forzar cargar de nuevo
+        $("#edit_archivo").after(
+          `<small class="text-muted">Archivo actual: <a href="/storage/${data.archivo}" target="_blank">Ver PDF</a></small>`
+        );
+      }
+
+      $('#edit_modifico').val(data.modifico);
+      $('#edit_reviso').val(data.reviso).trigger('change');
+      $('#edit_aprobo').val(data.aprobo).trigger('change');
+
+      // Mostrar el modal
+      $('#modalEditHistorial').modal('show');
+    }).fail(function () {
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos del documento',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
       });
     });
+  });
 
     $(function () {
       // Configuración de CSRF para Laravel
@@ -568,17 +634,82 @@ $(document).on('click', '.delete-record', function () {
       });
 
       // Inicializar FormValidation para el formulario de edición
-      const form = document.getElementById('editClassForm');
+      const form = document.getElementById('formEditHistorial');
       const fv = FormValidation.formValidation(form, {
         fields: {
-          edit_clase: {
-            // Ajusta los nombres según tu formulario
-            validators: {
-              notEmpty: {
-                message: 'Por favor ingrese el nombre de la clase.'
-              }
+                nombre: {
+          // Ajusta el nombre del campo según el formulario
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el nombre del documento.'
             }
           }
+        },
+        identificacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la identificación.'
+            }
+          }
+        },
+        edicion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la edición.'
+            }
+          }
+        },
+        fecha_edicion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la fecha de edición.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'La fecha no es válida (formato: AAAA-MM-DD).'
+            }
+          }
+        },
+        estatus: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione el estatus.'
+            }
+          }
+        },
+        archivo: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un archivo.'
+            },
+            file: {
+              extension: 'pdf,doc,docx,xls,xlsx,png,jpg,jpeg',
+              type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/png,image/jpeg',
+              message: 'Solo se permiten archivos PDF, Word, Excel o imágenes.'
+            }
+          }
+        },
+        modifico: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese quién modificó.'
+            }
+          }
+        },
+        reviso: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese quién revisó.'
+            }
+          }
+        },
+        aprobo: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese quién aprobó.'
+            }
+          }
+        }
         },
         plugins: {
           trigger: new FormValidation.plugins.Trigger(),
@@ -591,15 +722,20 @@ $(document).on('click', '.delete-record', function () {
           autoFocus: new FormValidation.plugins.AutoFocus()
         }
       }).on('core.form.valid', function () {
-        var formData = $(form).serialize();
-        var id_clase = $('#edit_clase_id').val();
+        var formData = new FormData(form);
+        var id_doc = $('#edit_id_doc_calidad').val();
         $.ajax({
-          url: '/clases-list/' + id_clase,
+          url: '/documentos-referencia/' + id_doc,
           type: 'POST',
           data: formData,
+          processData: false, // IMPORTANTE: No procesar los datos
+          contentType: false, // IMPORTANTE: Dejar que jQuery gestione el content-type
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+         },
           success: function (response) {
-            $('#editClase').offcanvas('hide');
-            $('#editClassForm')[0].reset();
+            $('#modalEditHistorial').modal('hide');
+            $('#formEditHistorial')[0].reset();
             $('.datatables-users').DataTable().ajax.reload();
             Swal.fire({
               icon: 'success',
@@ -624,4 +760,6 @@ $(document).on('click', '.delete-record', function () {
       });
     });
   });
+
+
 });

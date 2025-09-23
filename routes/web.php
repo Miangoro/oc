@@ -1558,7 +1558,7 @@ Route::controller(DocumentosReferenciaController::class)->middleware(['auth'])->
     Route::get('/documentos-referencia','UserManagement')->name('documentos-referencia');
     Route::post('/documentos-referencia-upload',  'store')->name('documentos-referencia.upload');
     Route::get('/documentos-referencia/{id}/edit', 'edit');
-    Route::put('/documentos-referencia/{id}', 'update');
+    Route::post('/documentos-referencia/{id}', 'update');
     Route::delete('/documentos-referencia/{id}', 'destroy');
     // web.php
 Route::get('/documentos-referencia/{id}/historial', 'historial');

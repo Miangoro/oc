@@ -163,6 +163,7 @@ public function destroy($id)
           $historial = new documentos_calidad_historial();
           $historial->id_doc_calidad = $documento->id_doc_calidad;
           $historial->tipo        = 1;
+          $historial->area           = $documento->area;
           $historial->nombre         = $documento->nombre;
           $historial->identificacion = $documento->identificacion;
           $historial->edicion        = $documento->edicion;
@@ -197,31 +198,82 @@ public function historial($id)
 
 
 //funcion para llenar el campo del formulario
-    public function edit($id_clase)
+    public function edit($id_doc)
     {
         try {
-            $clase = clases::findOrFail($id_clase);
-            return response()->json($clase);
+            $doc = documentos_calidad::findOrFail($id_doc);
+            return response()->json($doc);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener la clase'], 500);
+            return response()->json(['error' => 'Error al obtener el documento'], 500);
         }
     }
 
     // Función para actualizar una clase existente
-    public function update(Request $request, $id_clase)
-{
-    $request->validate([
-        'edit_clase' => 'required|string|max:255',
-    ]);
+  public function update(Request $request, $id)
+  {
+      $request->validate([
+          'nombre'         => 'required|string|max:255',
+          'identificacion' => 'required|string|max:100',
+          'area'           => 'required|integer',
+          'edicion'        => 'required|string|max:50',
+          'fecha_edicion'  => 'required|date',
+          'estatus'        => 'required|string|max:50',
+          'modifico'       => 'required|string|max:255',
+          'reviso'         => 'required|integer',
+          'aprobo'         => 'required|integer',
+          'archivo'        => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:5120',
+      ]);
 
-    try {
-        $clase = clases::findOrFail($id_clase);
-        $clase->clase = $request->edit_clase;
-        $clase->save();
+      try {
+          // Buscar documento existente
+          $documento = documentos_calidad::findOrFail($id);
 
-        return response()->json(['success' => 'Clase actualizada correctamente']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al actualizar la clase'], 500);
-    }
-}
+          // Guardar archivo si se sube uno nuevo
+          if ($request->hasFile('archivo')) {
+              $archivoPath = $request->file('archivo')->store('documentos_referencia', 'public');
+              $documento->archivo = $archivoPath;
+          }
+
+          // Actualizar campos del documento
+          $documento->nombre         = $request->nombre;
+          $documento->identificacion = $request->identificacion;
+          $documento->tipo = 1;
+          $documento->area           = $request->area;
+          $documento->edicion        = $request->edicion;
+          $documento->fecha_edicion  = $request->fecha_edicion;
+          $documento->estatus        = $request->estatus;
+          $documento->modifico       = $request->modifico;
+          $documento->reviso         = $request->reviso;
+          $documento->aprobo         = $request->aprobo;
+          $documento->save();
+
+          // Registrar nueva versión en historial
+          $historial = new documentos_calidad_historial();
+          $historial->id_doc_calidad       = $documento->id_doc_calidad;
+          $historial->tipo                 = 1;
+          $historial->nombre               = $documento->nombre;
+          $historial->identificacion       = $documento->identificacion;
+          $historial->edicion              = $documento->edicion;
+          $historial->fecha_edicion        = $documento->fecha_edicion;
+          $historial->estatus              = $documento->estatus;
+          $historial->archivo              = $documento->archivo;
+          $historial->modifico             = $documento->modifico;
+          $historial->reviso               = $documento->reviso;
+          $historial->aprobo               = $documento->aprobo;
+          $historial->id_usuario_registro  = Auth::id();
+          $historial->save();
+
+          return response()->json(['success' => 'Nueva versión registrada correctamente']);
+
+      } catch (\Exception $e) {
+          return response()->json([
+              'error'   => 'Error al actualizar el documento',
+              'message' => $e->getMessage()
+          ], 500);
+      }
+  }
+
+
+
+
 }
