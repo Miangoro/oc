@@ -346,7 +346,7 @@ if (dt_user_table.length) {
 
             if (window.puedeAsignarRevisorCertificadoVentaNacional) {
               acciones += `
-                <a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal"
+                <a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal"
                   class="dropdown-item waves-effect text-dark">
                   <i class="text-warning ri-user-search-fill"></i> Asignar revisor
                 </a>`;
