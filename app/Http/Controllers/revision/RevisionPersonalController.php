@@ -423,7 +423,7 @@ class RevisionPersonalController extends Controller
         if ($datos->certificado->certificadoReexpedido()) {
             $preguntasQuery->whereBetween('id_pregunta', [854, 860]);
         }else{
-             $preguntasQuery->where('id_pregunta', '<',851)->Orwhere('id_pregunta', '>',870);
+             $preguntasQuery->where('id_pregunta', '<',851)->where('id_pregunta', '>',868);
         }
 
         $preguntas = $preguntasQuery->get();
