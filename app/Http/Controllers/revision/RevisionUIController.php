@@ -238,17 +238,7 @@ public function add_revision($id)
 ///REGISTRAR REVISION
 public function registrar(Request $request)
 {
-    /*
-    RevisionDictamen::create([
-        'id_inspeccion'   => $inspeccion->id_inspeccion,
-        'tipo_revision'   => 1,
-        'id_revisor'      => $revisor?->id ?? 0,
-        'numero_revision' => 1,
-        'es_correccion'   => 'no',
-        //'decision'       => 'Pendiente',
-        'tipo_solicitud'  => $sol->id_tipo ?? 0,
-    ]);
-    */
+
     $request->validate([
         'id_revision' => 'required|integer',
         'respuesta' => 'required|array',

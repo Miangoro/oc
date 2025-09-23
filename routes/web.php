@@ -1451,7 +1451,10 @@ Route::middleware(['auth'])->controller(Certificado_NacionalController::class)->
     //Reexpedir
     Route::post('reexpedir', 'reexpedir')->name('reexpedir-cer-nac');
     //Asignar revisor
+    //Route::post('asignar_revisor_nacional', 'storeRevisor')->name('asignarRevisor-cer-nac');
     Route::post('asignar_revisor_nacional', 'storeRevisor')->name('asignarRevisor-cer-nac');
+    Route::get('/obtener-revision-nacional/{id_certificado}', 'obtenerRevision');
+    Route::delete('/eliminar-doc-revision-nacional/{id_certificado}', 'eliminarDocumentoRevision');
 
     //revisiones
     /*Route::post('/asignar-revisor/nacional', [Certificado_NacionalController::class, 'storeRevisor'])->name('asignarRevisor-nacional');
