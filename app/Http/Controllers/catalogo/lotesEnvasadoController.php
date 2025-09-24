@@ -517,7 +517,11 @@ public function update(Request $request)
             }
 
             lotes_envasado_granel::where('id_lote_envasado', $lotes->id_lote_envasado)->delete();
-
+          // Validar solo si vienen esos campos en el request
+          $validated = $request->validate([
+              'vol_restante' => 'nullable|numeric|min:0',
+              'cant_bot_restantes' => 'nullable|integer|min:0',
+          ]);
             // Actualizar los campos del lote envasado
             $lotes->id_empresa = $request->edit_cliente;
 
@@ -533,8 +537,15 @@ public function update(Request $request)
             $lotes->sku = json_encode($skuData);
             // Guardar los cambios en la base de datos
             /* $lotes->save(); */
-
             $lotes->id_marca = $request->edit_marca;
+           // Asignar solo si existen en $validated
+            if (isset($validated['vol_restante'])) {
+                $lotes->vol_restante = $validated['vol_restante'];
+            }
+
+            if (isset($validated['cant_bot_restantes'])) {
+                $lotes->cant_bot_restantes = $validated['cant_bot_restantes'];
+            }
             $lotes->destino_lote = $request->edit_destino_lote;
             $lotes->cant_botellas = $request->edit_cant_botellas;
             $lotes->presentacion = $request->edit_presentacion;
