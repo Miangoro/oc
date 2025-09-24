@@ -1058,6 +1058,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                     @php 
                                                         $hologramas = $datos->certificado->hologramas();
                                                         $tipoHolograma = 'sin solicitud';
+                                                        dd($hologramas);
 
                                                         // Tomar el primer tipo válido si hay varios
                                                         foreach ($hologramas as $holograma) {
