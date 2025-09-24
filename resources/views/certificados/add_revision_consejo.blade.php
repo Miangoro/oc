@@ -18,6 +18,8 @@
 
 @php
     use App\Helpers\Helpers;
+    use App\Models\activarHologramasModelo;
+    use App\Models\solicitudHolograma;
 @endphp
 
 <style>
@@ -419,8 +421,8 @@
                                                         class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                 </a>
                                             </td>
-                                        @elseif($pregunta->filtro == 'domicilioEnvasado')
-                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa ?? 'N/A' }}
+                                          @elseif($pregunta->filtro == 'domicilioEnvasado')
+                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa ?? $datos->certificado->dictamen->inspeccion->solicitud->instalacion->direccion_completa }}
                                             </td>
                                         @elseif($pregunta->filtro == 'pais')
                                             <td>C.P.:
@@ -1172,6 +1174,36 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
 
                                                                 $rangoFolios[] = $linkInicio . ' a ' . $linkFinal;
                                                             }
+                                                        }
+                                                        if($tipo_certificado == 'Venta nacional'){
+
+                                                                $activacion = activarHologramasModelo::find($hologramas[0]->id);
+
+                                                                $solic = $activacion
+                                                                    ? solicitudHolograma::find($activacion->id_solicitud)
+                                                                    : null;
+
+                                                                $numero_cliente = $solic?->empresa?->empresaNumClientes
+                                                                    ->filter(fn ($cliente) => !empty($cliente->numero_cliente))
+                                                                    ->first()?->numero_cliente ?? 'Sin asignar';
+
+                                                                $rangoFolios = []; // Asegúrate de inicializar el array
+
+                                                                foreach ($hologramasData as $rango) {
+                                                                    $folioInicial = str_pad($rango['inicio'], 7, '0', STR_PAD_LEFT);
+                                                                    $folioFinal   = str_pad($rango['final'], 7, '0', STR_PAD_LEFT);
+
+                                                                    $linkInicio = '<a target="_blank" href="/holograma/' .
+                                                                        $numero_cliente . '-' . $tipoHolograma . $folioMarca . $folioInicial . '">' .
+                                                                        $numero_cliente . '-' . $tipoHolograma . $folioMarca . $folioInicial . '</a>';
+
+                                                                    $linkFinal = '<a target="_blank" href="/holograma/' .
+                                                                        $numero_cliente . '-' . $tipoHolograma . $folioMarca . $folioFinal . '">' .
+                                                                        $numero_cliente . '-' . $tipoHolograma . $folioMarca . $folioFinal . '</a>';
+
+                                                                    $rangoFolios[] = $linkInicio . ' a ' . $linkFinal;
+                                                                }
+
                                                         }
                                                     @endphp
 

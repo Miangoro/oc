@@ -18,6 +18,8 @@
 
 @php
     use App\Helpers\Helpers;
+    use App\Models\activarHologramasModelo;
+    use App\Models\solicitudHolograma;
 @endphp
 
 <style>

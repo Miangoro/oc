@@ -417,16 +417,22 @@ class RevisionConsejoController extends Controller
 
     public function add_revision_consejo($id_revision)
     {
-        $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
+        $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion','certificadoNacional')->where("id_revision", $id_revision)->first();
         $preguntasQuery = preguntas_revision::where('tipo_revisor', 2)
         ->where('tipo_certificado', $datos->tipo_certificado)
         ->where('orden', $datos->numero_revision == 1 ? 0 : 1);
 
-        if ($datos->certificado->certificadoReexpedido()) {
-            $preguntasQuery->where('id_pregunta', '>=', 860);
-        }else{
-             $preguntasQuery->where('id_pregunta', '<',851);
-        }
+  
+
+        
+            if ($datos->certificado->certificadoReexpedido()) {
+                $preguntasQuery->whereBetween('id_pregunta', [860, 868]);
+            } else {
+                $preguntasQuery->where(function ($q) {
+                    $q->where('id_pregunta', '<', 851)
+                    ->orWhere('id_pregunta', '>', 885);
+                });
+            }
         $preguntas = $preguntasQuery->get();
 
 
@@ -469,7 +475,7 @@ class RevisionConsejoController extends Controller
 
         }elseif ($datos->tipo_certificado == 4) {
                 $url = "/certificado_venta_nacional/" . $datos->id_certificado;
-                $tipo = 'Nacional';
+                $tipo = 'Venta nacional';
         }
 
         return view('certificados.add_revision_consejo', compact('datos', 'preguntas', 'url', 'tipo','revisor_personal'));
@@ -603,6 +609,10 @@ class RevisionConsejoController extends Controller
         if ($datos->tipo_certificado == 3) { //Exportación
             $url = "/certificado_exportacion/" . $datos->id_certificado;
             $tipo = "Exportación";
+        }
+        if ($datos->tipo_certificado == 4) {
+                $url = "/certificado_venta_nacional/" . $datos->id_certificado;
+                $tipo = 'Venta nacional';
         }
         return view('certificados.edit_revision_consejo', compact('datos', 'preguntas', 'url', 'tipo', 'respuestas_map'));
     }

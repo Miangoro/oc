@@ -417,19 +417,19 @@ class RevisionPersonalController extends Controller
 
     public function add_revision($id_revision)
     {
-        $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
-     $preguntasQuery = preguntas_revision::where('tipo_revisor', 1)
-    ->where('tipo_certificado', $datos->tipo_certificado)
-    ->where('orden', ($datos->numero_revision == 1 ? 0 : 1)); // paréntesis
+        $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion','certificadoNacional')->where("id_revision", $id_revision)->first();
+        $preguntasQuery = preguntas_revision::where('tipo_revisor', 1)
+        ->where('tipo_certificado', $datos->tipo_certificado)
+        ->where('orden', ($datos->numero_revision == 1 ? 0 : 1)); // paréntesis
 
-        if ($datos->certificado->certificadoReexpedido()) {
-            $preguntasQuery->whereBetween('id_pregunta', [854, 860]);
-        } else {
-            $preguntasQuery->where(function ($q) {
-                $q->where('id_pregunta', '<', 851)
-                ->orWhere('id_pregunta', '>', 868);
-            });
-        }
+            if ($datos->certificado->certificadoReexpedido()) {
+                $preguntasQuery->whereBetween('id_pregunta', [854, 860]);
+            } else {
+                $preguntasQuery->where(function ($q) {
+                    $q->where('id_pregunta', '<', 851)
+                    ->orWhere('id_pregunta', '>', 868);
+                });
+            }
 
         $preguntas = $preguntasQuery->get();
 
@@ -558,14 +558,19 @@ class RevisionPersonalController extends Controller
     public function edit_revision($id_revision)
     {
 
-        $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')->where("id_revision", $id_revision)->first();
+        $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion','certificadoNacional')->where("id_revision", $id_revision)->first();
        $preguntasQuery = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', $datos->tipo_certificado)->where('orden', $datos->numero_revision == 1 ? 0 : 1);
 
-        if ($datos->certificado->certificadoReexpedido()) {
-            $preguntasQuery->whereBetween('id_pregunta', [854, 860]);
-        }else{
-             $preguntasQuery->where('id_pregunta', '<',851);
-        }
+         if ($datos->certificado->certificadoReexpedido()) {
+                $preguntasQuery->whereBetween('id_pregunta', [854, 860]);
+            } else {
+                $preguntasQuery->where(function ($q) {
+                    $q->where('id_pregunta', '<', 851)
+                    ->orWhere('id_pregunta', '>', 868);
+                });
+            }
+
+        $preguntas = $preguntasQuery->get();
 
         $preguntas = $preguntasQuery->get();
 
