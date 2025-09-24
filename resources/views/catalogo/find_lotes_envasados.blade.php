@@ -17,6 +17,7 @@
   window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar lotes envasados'));
   window.puedeEditarElUsuario = @json(auth()->user()->can('Editar lotes envasados'));
   window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar lotes envasados'));
+  window.puedeVerElUsuario = @json(auth()->user()->can('Modificar botellas/volumen restante envasado'));
 </script>
     @vite(['resources/js/lotes_envasado.js'])
 @endsection

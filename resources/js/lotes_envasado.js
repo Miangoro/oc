@@ -891,7 +891,10 @@ $.ajaxSetup({
   });
 
 
-
+  if (!window.puedeVerElUsuario) {
+    $('#edit_volumen_restante_mod').closest('.row').hide(); // oculta toda la fila
+    $('#edit_cant_botellas_restante_mod').closest('.row').hide(); // oculta toda la fila
+  }
 
 
 $(document).ready(function () {//funcion general edit
@@ -923,7 +926,12 @@ $(document).on('click', '.edit-record', function () {
       $('#edit_cont_alc_envasado').val(data.cont_alc_envasado);
       $('#edit_id_etiqueta').data('selected', data.id_etiqueta).trigger('change');
       $('#edit_marca').data('selected', data.id_marca).trigger('change');
-
+      if (window.puedeVerElUsuario && $('#edit_vol_restante').length > 0) {
+              $('#edit_vol_restante').val(data.vol_restante);
+      }
+      if (window.puedeVerElUsuario && $('#edit_cant_bot_restantes').length > 0) {
+              $('#edit_cant_bot_restantes').val(data.cant_bot_restantes);
+      }
       // Limpiar contenido previo de lotes de envasado de granel
       $('#edit_contenidoGraneles').empty();
 

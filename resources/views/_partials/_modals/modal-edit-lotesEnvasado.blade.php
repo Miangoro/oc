@@ -169,6 +169,28 @@
                             </div>
                         </div>
                     </div>
+
+                    {{-- solo para los adminsitradores --}}
+                    @can('Modificar botellas/volumen restante envasado')
+                        <div class="row">
+                            <div class="col-md-4" id="edit_volumen_restante_mod">
+                                <div class="form-floating form-floating-outline mb-6">
+                                    <input class="form-control" type="number" step="0.01"
+                                        placeholder="Volumen restante" id="edit_vol_restante" name="vol_restante" />
+                                    <label for="edit_vol_restante">Volumen restante</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4" id="edit_cant_botellas_restante_mod">
+                                <div class="form-floating form-floating-outline mb-6">
+                                    <input class="form-control" type="number" placeholder="Ingrese un valor"
+                                        id="edit_cant_bot_restantes" name="cant_bot_restantes" min="0" />
+                                    <label for="cant_bot_restantes">Cantidad de botellas restantes</label>
+                                </div>
+                            </div>
+                        </div>
+                    @endcan
+
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline">
