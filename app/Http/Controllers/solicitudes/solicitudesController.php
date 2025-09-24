@@ -735,6 +735,13 @@ public function storeVigilanciaTraslado(Request $request)
 
         $VigilanciaTras->save();
 
+        // --- Actualizar volumen_restante del lote ---
+        $lote = LotesGranel::find($request->id_lote_granel_traslado);
+        if ($lote) {
+            $lote->volumen_restante = $request->id_vol_res; // usar el sobrante calculado
+            $lote->save();
+        }
+
         // Crear nuevo registro en la Bitácora de Mezcal
       /*  $bitacora = new BitacoraMezcal();
         $bitacora->fecha = now(); // o $request->fecha_visita si aplica

@@ -289,7 +289,7 @@
                     }
                     $('#analisis_traslado').val(response.lotes_granel.folio_fq);
                     $('#volumen_traslado').val(response.lotes_granel.cont_alc);
-                    $('#id_vol_actual').val(response.lotes_granel.volumen);
+                    $('#id_vol_actual').val(response.lotes_granel.volumen_restante);
 
                 },
                 error: function() {

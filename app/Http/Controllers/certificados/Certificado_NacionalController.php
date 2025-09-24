@@ -202,12 +202,12 @@ public function index(Request $request)
             $nestedData['num_servicio'] = $certificado->dictamen->inspeccion->num_servicio ?? 'No encontrado';
             $nestedData['folio_solicitud'] = $certificado->dictamen->inspeccion->solicitud->folio ?? 'No encontrado';
             //Nombre y Numero empresa
-            $empresa = $certificado->dictamen->inspeccion->solicitud->empresa ?? null;
+            $empresa = $certificado->solicitud->empresa ?? null;
             $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
                 ? $empresa->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa
                 ->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado' : 'N/A';
             $nestedData['numero_cliente'] = $numero_cliente;
-            $nestedData['razon_social'] = $certificado->dictamen->inspeccion->solicitud->empresa->razon_social ?? 'No encontrado';
+            $nestedData['razon_social'] = $certificado->solicitud->empresa->razon_social ?? 'No encontrado';
             //Revisiones
             $nestedData['revisor_personal'] = $certificado->revisorPersonal->user->name ?? null;
             $nestedData['numero_revision_personal'] = $certificado->revisorPersonal->numero_revision ?? null;
