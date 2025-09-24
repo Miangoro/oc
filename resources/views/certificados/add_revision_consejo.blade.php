@@ -938,6 +938,10 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                     $urlDom = '/files/'.$numeroCliente."/".$url;*/
                                                     $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa
                                                         ?? $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->empresa;
+
+                                                    if ($tipo_certificado == 'Venta nacional'){
+                                                         $empresa = $datos->certificado->solicitud->empresa;
+                                                    }
                                                     $empresa2 = $empresa; // Ya está null si no existe, no hace falta if
 
                                                     $numeroCliente = $empresa2?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
