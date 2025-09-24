@@ -1095,7 +1095,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                         }
 
                                                             foreach ($hologramasData as $rango) {
-                                                               dd($hologramas['id']);
+                                                               dd($hologramas);
                                                                 $activacion = activarHologramasModelo::find(reset($hologramas['id']));
                                                                 $solic = $activacion ? solicitudHolograma::find($activacion->id_solicitud) : null;
                                                                  $numero_cliente = $solic?->empresa?->empresaNumClientes
