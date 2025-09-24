@@ -577,34 +577,36 @@ $(function () {
           targets: 6,
           orderable: 0,
           render: function (data, type, full, meta) {
-            let $decision = full['decision'];
-            let $colorDesicion;
-            let $nombreDesicion;
-            let num_revision = '';
+            let decision = full['decision'];
+            let colorDecision;
+            let nombreDecision;
+            let num_revision = full['num_revision'];
 
-
-            if(full['num_revision'] == 1){
-              num_revision = 'Primera';
-            }else{
-               num_revision = 'Segunda';
+            // Convertir número de revisión a texto
+            let revisionTexto;
+            switch (num_revision) {
+                case 1: revisionTexto = 'Primera'; break;
+                case 2: revisionTexto = 'Segunda'; break;
+                case 3: revisionTexto = 'Tercera'; break;
+                case 4: revisionTexto = 'Cuarta'; break;
+                default: revisionTexto = num_revision + 'ª'; // Para cualquier número mayor
             }
 
-            switch ($decision) {
-              case "positiva":
-                $nombreDesicion = num_revision +' Revisión positiva';
-                $colorDesicion = 'primary';
-              break;
-
-              case "negativa":
-                $nombreDesicion = num_revision + ' Revisión negativa';
-                $colorDesicion = 'danger';
-              break;
-              default:
-                $nombreDesicion = num_revision + ' Revisión pendiente';
-                $colorDesicion = 'warning';
+            switch (decision) {
+                case "positiva":
+                    nombreDecision = revisionTexto + ' Revisión positiva';
+                    colorDecision = 'primary';
+                    break;
+                case "negativa":
+                    nombreDecision = revisionTexto + ' Revisión negativa';
+                    colorDecision = 'danger';
+                    break;
+                default:
+                    nombreDecision = revisionTexto + ' Revisión pendiente';
+                    colorDecision = 'warning';
             }
 
-            return `<span class="badge rounded-pill bg-${$colorDesicion}">${$nombreDesicion}</span>`;
+            return `<span class="badge rounded-pill bg-${colorDecision}">${nombreDecision}</span>`;
           }
         },
         {

@@ -442,6 +442,21 @@ public function index(Request $request)
                 $nestedData['renovacion'] = $caracteristicas['renovacion'] ?? 'N/A';
 
 
+                //REVISION DEL ACTA
+                $idInspeccion = $solicitud->inspeccion->id_inspeccion ?? null;
+
+                $ultimaRevision = $idInspeccion 
+                    ? RevisionDictamen::where('id_inspeccion', $idInspeccion)
+                        ->orderByDesc('numero_revision')
+                        ->first()
+                    : null;
+
+                $nestedData['ultima_revision'] = $ultimaRevision ? [
+                    'numero_revision' => $ultimaRevision->numero_revision,
+                    'decision'        => $ultimaRevision->decision,
+                    ] : null;
+
+
 
                 $data[] = $nestedData;
             }
@@ -633,62 +648,71 @@ public function agregarResultados(Request $request)
                         ->first();
 
                     /// ASIGNAR REVISION AUTOMATICA
-                    if ($sol->inspeccion) { // Verifica que exista la inspección
+                    if ($sol->inspeccion && $sol->id_tipo != 8) { // Verifica que exista la inspección
                         $inspeccion = $sol->inspeccion;
                     
-                    // Revisar si ya existe una revisión Pendiente o positiva para esta inspección
-                    $revisionExistente = RevisionDictamen::where('id_inspeccion', $inspeccion->id_inspeccion)
-                        ->whereIn('decision', ['Pendiente', 'positiva'])
-                        ->first();
-
-                    // Revisar si hay alguna revisión de inspección con el mismo num_servicio
-                    $revisionMismoServicio = RevisionDictamen::whereHas('inspeccion', function ($q) use ($inspeccion) {
-                        $q->where('num_servicio', $inspeccion->num_servicio);
-                    })->first();
-
-                    // Asigna revisión automática si:
-                //NO hay revisión Pendiente/positiva. Y no hay revisión de inspección con mismo num_servicio
-                    if (!$revisionExistente && !$revisionMismoServicio) {
-
-                        // Buscar la última revisión existente (para calcular número_revision y corrección)
+                        // Buscar la última revisión de esta inspección
                         $ultimaRevision = RevisionDictamen::where('id_inspeccion', $inspeccion->id_inspeccion)
                             ->orderByDesc('numero_revision')
                             ->first();
 
-                        $nuevoNumeroRevision = $ultimaRevision ? $ultimaRevision->numero_revision + 1 : 1;
-                        $esCorreccion = $ultimaRevision ? 'si' : 'no';
+                        $asignarRevision = false;
+                        $esCorreccion = 'no';
+                        $nuevoNumeroRevision = 1;
+                        $revisorId = null;
 
-                        // Selecciona un revisor aleatorio tipo 2 y activo, excepto el inspector
-                        $excluirId = $inspeccion->id_inspector;
-                        $revisor = User::where('tipo', 2)
-                            ->where('estatus', 'Activo')
-                            ->where('id', '<>', $excluirId)
-                            ->orWhereIn('id', [319, 335])
-                            ->inRandomOrder()
-                            ->first();
+                        // Primera revisión
+                        if (!$ultimaRevision) { 
+                            $asignarRevision = true;
+                            $esCorreccion = 'no';
+                            $nuevoNumeroRevision = 1;
 
-                        // Crear la revisión automática
-                        $revision = RevisionDictamen::create([
-                            'tipo_revision'   => 1,
-                            'id_revisor'      => $revisor?->id ?? 0,
-                            'id_inspeccion'   => $inspeccion->id_inspeccion,
-                            'numero_revision' => $nuevoNumeroRevision,
-                            'es_correccion'   => $esCorreccion,
-                            'tipo_solicitud'  => $sol->id_tipo ?? 0,
-                        ]);
+                            // Selecciona revisor aleatorio tipo 2 activo, excepto el inspector
+                            $excluirId = $inspeccion->id_inspector;
+                            $revisor = User::where('tipo', 2)
+                                ->where('estatus', 'Activo')
+                                ->where('id', '<>', $excluirId)
+                                ->orWhereIn('id', [319, 335, 344])
+                                ->inRandomOrder()
+                                ->first();
 
-                        // Notificación al revisor
-                        if ($revisor) {
-                            $url_clic = "/revision/ver/{$revision->id_revision}";
-                            $titulo = 'Revisión de acta' .($esCorreccion === 'si' ? ' CORRECCIÓN' : '');
+                            $revisorId = $revisor?->id ?? 0;
 
-                            $revisor->notify(new GeneralNotification([
-                                'title'   => $titulo,
-                                'message' => 'Se te ha asignado el acta ' .$inspeccion->num_servicio,
-                                'url'     => $url_clic,
-                            ]));
+                        // Corrección
+                        } elseif ($ultimaRevision->decision === 'negativa') {
+                            $asignarRevision = true;
+                            $esCorreccion = 'si';
+                            $nuevoNumeroRevision = $ultimaRevision->numero_revision + 1;
+
+                            // Usar el mismo revisor que registró la negativa
+                            $revisorId = $ultimaRevision->id_revisor;
                         }
-                    }
+                        // Si la última revisión es Pendiente o Positiva → no se asigna nada
+
+                        if ($asignarRevision) {
+                            // Crear la revisión automática
+                            $revision = RevisionDictamen::create([
+                                'tipo_revision'   => 1,
+                                'id_revisor'      => $revisorId ?? 0,
+                                'id_inspeccion'   => $inspeccion->id_inspeccion,
+                                'numero_revision' => $nuevoNumeroRevision,
+                                'es_correccion'   => $esCorreccion,
+                                'tipo_solicitud'  => $sol->id_tipo ?? 0,
+                            ]);
+
+                            // Notificación al revisor
+                            if ($revisorId) {
+                                $url_clic = "/revision/ver/{$revision->id_revision}";
+                                $titulo = 'Revisión de acta' . ($esCorreccion === 'si' ? ' CORRECCIÓN' : '');
+
+                                $revisor = User::find($revisorId);
+                                $revisor->notify(new GeneralNotification([
+                                    'title'   => $titulo,
+                                    'message' => 'Se te ha asignado el acta ' . $inspeccion->num_servicio,
+                                    'url'     => $url_clic,
+                                ]));
+                            }
+                        }
                     }//fin revision automatica
                 } // fin acta
                 

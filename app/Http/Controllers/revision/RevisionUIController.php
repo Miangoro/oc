@@ -238,7 +238,6 @@ public function add_revision($id)
 ///REGISTRAR REVISION
 public function registrar(Request $request)
 {
-
     $request->validate([
         'id_revision' => 'required|integer',
         'respuesta' => 'required|array',
@@ -246,16 +245,12 @@ public function registrar(Request $request)
         'id_pregunta' => 'required|array',
     ]);
 
-    /*$revisor = RevisionDictamen::where('id_revision', $request->id_revision)->first();
-    if (!$revisor) {
-        return response()->json(['message' => 'El registro no fue encontrado.'], 404);
-    }*/
     $revisor = RevisionDictamen::find($request->id_revision);
     if (!$revisor) {
         return response()->json(['message' => 'El registro no fue encontrado.'], 404);
     }
 
-
+/*
     // Obtener el historial de respuestas como array
     $historialRespuestas = $revisor->respuestas ?? [];
     // Asegurarse de que es un array, por si viene como JSON string
@@ -267,7 +262,7 @@ public function registrar(Request $request)
     // Definir número de revisión
     $numRevision = count($historialRespuestas) + 1;
     $revisionKey = "Revision $numRevision";
-
+*/
 
     $nuevoRegistro = [];
     $todasLasRespuestasSonC = true;
@@ -289,9 +284,9 @@ public function registrar(Request $request)
 
 
     // Guardar respuestas en formato JSON (Laravel lo maneja automáticamente)
-    $historialRespuestas[$revisionKey] = $nuevoRegistro;
+    //$historialRespuestas[$revisionKey] = $nuevoRegistro;
     $revisor->fill([
-        'respuestas' => $historialRespuestas,
+        'respuestas' => $nuevoRegistro,
         'decision' => $todasLasRespuestasSonC ? 'positiva' : 'negativa',
     ]);
 
@@ -330,12 +325,12 @@ public function edit_revision($id)
         abort(403, 'No tienes permisos para editar esta revisión.');
     }*/
 
-    $preguntasQuery = preguntas_revision_dictamen::where('tipo_revisor', 1);
-    $preguntas = $preguntasQuery->get();
+    $preguntas = preguntas_revision_dictamen::where('tipo_revisor', 1)->get();
+
     $respuestas_json = json_decode($datos->respuestas, true); // Convierte el campo JSON a array PHP
-    $respuestas_revision = $respuestas_json['Revision '.$datos->numero_revision] ?? []; // O la clave correspondiente
+    //$respuestas_revision = $respuestas_json['Revision '.$datos->numero_revision] ?? []; // O la clave correspondiente
     // Crear un array indexado por id_pregunta para fácil acceso
-    $respuestas_map = collect($respuestas_revision)->keyBy('id_pregunta');
+    $respuestas_map = collect($respuestas_json)->keyBy('id_pregunta');
 
 
     // Obtiene dictamen según tipo_dictamen
@@ -359,12 +354,8 @@ public function edit_revision($id)
 
     $tipo = $tipoSolicitud[$datos->tipo_solicitud ?? 0] ?? 'Desconocido';
 
-    $preguntas = preguntas_revision_dictamen::where('tipo_revisor', 1)->get();
-
-    ///
     // obtengo id_solicitud desde la relación inspeccion -> solicitud
     $id_solicitud = $datos->inspeccion->id_solicitud ?? null;
-
 
     return view('dictamenes.edit_revision', compact('datos', 'preguntas', 'tipo', 'respuestas_map', 'id_solicitud'));
 }
@@ -379,7 +370,7 @@ public function editar(Request $request)
           // Número de la revisión a editar
         ]);
 
-        $revisor = RevisionDictamen::where('id_revision', $request->id_revision)->first();
+        $revisor = RevisionDictamen::find($request->id_revision);
         if (!$revisor) {
             return response()->json(['message' => 'El registro no fue encontrado.'], 404);
         }
@@ -390,7 +381,7 @@ public function editar(Request $request)
         }
 
         // Obtener el historial de respuestas como array
-        $historialRespuestas = $revisor->respuestas ?? [];
+        /*$historialRespuestas = $revisor->respuestas ?? [];
 
         // Asegurarse de que es un array, por si viene como JSON string
         if (is_string($historialRespuestas)) {
@@ -402,7 +393,7 @@ public function editar(Request $request)
         // Verificar que la revisión exista
         if (!array_key_exists($revisionKey, $historialRespuestas)) {
             return response()->json(['message' => "La $revisionKey no existe."], 404);
-        }
+        }*/
 
         $nuevoRegistro = [];
         $todasLasRespuestasSonC = true;
@@ -423,10 +414,10 @@ public function editar(Request $request)
         }
 
         // Actualizar la revisión específica
-        $historialRespuestas[$revisionKey] = $nuevoRegistro;
+        //$historialRespuestas[$revisionKey] = $nuevoRegistro;
 
         $revisor->fill([
-            'respuestas' => $historialRespuestas,
+            'respuestas' => $nuevoRegistro,
             'decision' => $todasLasRespuestasSonC ? 'positiva' : 'negativa',
         ]);
 

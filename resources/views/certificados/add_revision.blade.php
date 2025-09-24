@@ -20,6 +20,11 @@
     use App\Helpers\Helpers;
 @endphp
 
+ @php
+         use App\Models\activarHologramasModelo;
+        use App\Models\solicitudHolograma;
+@endphp
+
 <style>
     td {
         padding: 0.04rem !important;
@@ -305,6 +310,9 @@
                                                 {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }} 
                                                  C.P. {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
                                             </td>
+                                         @elseif($pregunta->filtro == 'cp')
+                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
+                                            </td>
                                         @elseif($pregunta->filtro == 'solicitud_exportacion')
                                             <td>
                                                 <a target="_blank"
@@ -314,7 +322,7 @@
                                                 </a>
                                             </td>
                                         @elseif($pregunta->filtro == 'domicilioEnvasado')
-                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa ?? 'N/A' }}
+                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa ?? $datos->certificado->dictamen->inspeccion->solicitud->instalacion->direccion_completa }}
                                             </td>
                                         @elseif($pregunta->filtro == 'pais')
                                             @php
@@ -1048,6 +1056,8 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                 @endif
                                             </td>
                                              @elseif($pregunta->filtro == 'datos_holograma')
+
+                                            
                                             <td>
                                                 {!! $observacionesConEnlaces !!}
 
@@ -1055,6 +1065,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                     @php 
                                                         $hologramas = $datos->certificado->hologramas();
                                                         $tipoHolograma = 'sin solicitud';
+                                                      
 
                                                         // Tomar el primer tipo válido si hay varios
                                                         foreach ($hologramas as $holograma) {
@@ -1064,6 +1075,8 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
 
                                                         $hologramasData = json_decode($datos->certificado->id_hologramas, true);
                                                         $rangoFolios = [];
+
+                                                         
 
                                                         $numero_cliente = $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes
                                                             ->filter(fn($cliente) => !empty($cliente->numero_cliente))
@@ -1086,6 +1099,37 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
 
                                                                 $rangoFolios[] = $linkInicio . ' a ' . $linkFinal;
                                                             }
+                                                        }
+
+                                                     if($tipo_certificado == 'Venta nacional'){
+
+                                                                $activacion = activarHologramasModelo::find($hologramas[0]->id);
+
+                                                                $solic = $activacion
+                                                                    ? solicitudHolograma::find($activacion->id_solicitud)
+                                                                    : null;
+
+                                                                $numero_cliente = $solic?->empresa?->empresaNumClientes
+                                                                    ->filter(fn ($cliente) => !empty($cliente->numero_cliente))
+                                                                    ->first()?->numero_cliente ?? 'Sin asignar';
+
+                                                                $rangoFolios = []; // Asegúrate de inicializar el array
+
+                                                                foreach ($hologramasData as $rango) {
+                                                                    $folioInicial = str_pad($rango['inicio'], 7, '0', STR_PAD_LEFT);
+                                                                    $folioFinal   = str_pad($rango['final'], 7, '0', STR_PAD_LEFT);
+
+                                                                    $linkInicio = '<a target="_blank" href="/holograma/' .
+                                                                        $numero_cliente . '-' . $tipoHolograma . $folioMarca . $folioInicial . '">' .
+                                                                        $numero_cliente . '-' . $tipoHolograma . $folioMarca . $folioInicial . '</a>';
+
+                                                                    $linkFinal = '<a target="_blank" href="/holograma/' .
+                                                                        $numero_cliente . '-' . $tipoHolograma . $folioMarca . $folioFinal . '">' .
+                                                                        $numero_cliente . '-' . $tipoHolograma . $folioMarca . $folioFinal . '</a>';
+
+                                                                    $rangoFolios[] = $linkInicio . ' a ' . $linkFinal;
+                                                                }
+
                                                         }
                                                     @endphp
 

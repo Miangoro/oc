@@ -139,7 +139,7 @@
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="padding-top: 1px; padding-bottom: 1px;">Domicilio Fiscal:</td>
-            <td colspan="4">{{ $datos->empresa->domicilio_fiscal }}</td>
+            <td colspan="4">{{ $datos->empresa->domicilio_fiscal }} C.P. {{ $datos->empresa->cp }}</td>
             <td class="con-negra" rowspan="2" style="width: 90px; padding: 4px" colspan="3">
                 Dirección de destino:<br><br> Empresa de destino:
             </td>
@@ -705,6 +705,14 @@
 
                     <span>Cantidad de Cajas:</span> {{ $caracteristicas['cantidad_cajas'] ?? '-' }} <br>
                     <span>Cantidad de Botellas:</span> {{ $caracteristicas['cantidad_botellas'] ?? '-' }}
+                @elseif ($exportacion === 'X')
+                    @php
+                        $caracteristicas = json_decode($datos->caracteristicas, true);
+                        $detalles = $caracteristicas['detalles'] ?? [];
+                    @endphp
+
+                    <span>Cantidad de Botellas: {{ $detalles[0]['cantidad_botellas']  ?? 'No definido' }}</span><br>
+                    <span>Cantidad de Cajas: {{ $detalles[0]['cantidad_cajas']  ?? 'No definido' }}</span>
                 @else
                     <p>---------------</p>
                 @endif

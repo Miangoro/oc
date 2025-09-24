@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\TranslatableActivityLog;
+use Illuminate\Support\Collection;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Certificado_Nacional extends Model
@@ -82,6 +83,28 @@ class Certificado_Nacional extends Model
         }
         return null;
     }
+
+public function hologramas(): Collection
+{
+    $hologramasData = json_decode($this->id_hologramas, true);
+
+    if (!is_array($hologramasData)) {
+        return collect();
+    }
+
+    // Asegura que sean enteros y únicos
+    $ids = collect($hologramasData)
+        ->pluck('id')
+        ->map(fn($v) => (int) $v)
+        ->filter()
+        ->unique()
+        ->toArray();
+
+    return activarHologramasModelo::with('solicitudHolograma.marcas.empresa')
+        ->whereIn('id', $ids)
+        ->get();
+}
+
 
 
 }

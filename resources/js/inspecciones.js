@@ -372,6 +372,32 @@ $(function () {
             }
           }
 
+          // REVISION ACTA
+          const ultimaRevision = full['ultima_revision'];
+          let badgeColor, badgeTexto;
+
+          if (!ultimaRevision) {
+              badgeColor = 'secondary';
+              badgeTexto = 'Sin revisión';
+          } else {
+              switch (ultimaRevision.decision) {
+                  case 'positiva':
+                      badgeColor = 'primary';
+                      badgeTexto = 'Revisión positiva';
+                      break;
+                  case 'negativa':
+                      badgeColor = 'danger';
+                      badgeTexto = 'Revisión negativa';
+                      break;
+                  default:
+                      badgeColor = 'warning';
+                      badgeTexto = 'Revisión pendiente';
+              }
+          }
+
+          html += `<span class="badge rounded-pill bg-${badgeColor} ms-1">${badgeTexto}</span>`;
+
+          
           return html;
         }
       },
