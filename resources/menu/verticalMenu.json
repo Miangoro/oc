@@ -472,30 +472,30 @@
         },
         {
           "name": "Procedimientos",
-          "url": "/documentos-referencia",
+          "url": "/documentos-procedimientos",
           "icon": "menu-icon ri-file-list-3-line",
           "slug": "documentos-procedimientos",
           "can": "Visualizar Sistema de gestión de calidad"
         },
         {
           "name": "Lista Maestra",
-          "url": "/documentos-referencia",
+          "url": "/documentos-lista-maestra",
           "icon": "menu-icon ri-list-check-2",
           "slug": "documentos-lista-maestra",
           "can": "Visualizar Sistema de gestión de calidad"
         },
         {
           "name": "Manuales, Políticas, Organigrama y otros",
-          "url": "/documentos-referencia",
+          "url": "/documentos-manuales",
           "icon": "menu-icon ri-booklet-line",
           "slug": "documentos-manuales-politicas",
           "can": "Visualizar Sistema de gestión de calidad"
         },
         {
           "name": "Registros",
-          "url": "/documentos-referencia",
+          "url": "/documentos-registro",
           "icon": "menu-icon ri-archive-drawer-line",
-          "slug": "documentos-registros",
+          "slug": "documentos-registro",
           "can": "Visualizar Sistema de gestión de calidad"
         }
       ]

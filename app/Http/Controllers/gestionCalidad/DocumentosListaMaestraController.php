@@ -9,14 +9,15 @@ use App\Models\User;
 use App\Models\documentos_calidad;
 use App\Models\documentos_calidad_historial;
 
-class DocumentosReferenciaController extends Controller
+class DocumentosListaMaestraController extends Controller
 {
     //
+        //
       public function UserManagement()
     {
         $tipo_usuario =  Auth::user()->name;
         $usuarios = User::where('tipo', '!=', 3)->get();
-        return view('gestion_calidad.find_documentos_referencia_view', compact('tipo_usuario', 'usuarios'));
+        return view('gestion_calidad.find_documentos_lista_maestra_view', compact('tipo_usuario', 'usuarios'));
     }
 
     public function index(Request $request)
@@ -28,7 +29,7 @@ class DocumentosReferenciaController extends Controller
             3 => 'identificacion',
             4 => 'nombre',
             5 => 'estatus',
-            /*  */
+            6 => 'edicion',
             7 => 'area',
             8 => 'modifico',
             9 => 'reviso',
@@ -38,7 +39,7 @@ class DocumentosReferenciaController extends Controller
 
         $search = [];
 
-        $totalData = documentos_calidad::where('tipo', 1)->count();
+        $totalData = documentos_calidad::where('tipo', 3)->count();
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -47,8 +48,8 @@ class DocumentosReferenciaController extends Controller
         $dir = $request->input('order.0.dir');
 
         if (empty($request->input('search.value'))) {
-              // 🔥 Solo traer tipo = 1
-              $users = documentos_calidad::where('tipo', 1)
+              // 🔥 Solo traer tipo = 3
+              $users = documentos_calidad::where('tipo', 3)
                   ->offset($start)
                   ->limit($limit)
                   ->orderBy($order, $dir)
@@ -56,7 +57,7 @@ class DocumentosReferenciaController extends Controller
           } else {
               $search = $request->input('search.value');
 
-              $users = documentos_calidad::where('tipo', 1)
+              $users = documentos_calidad::where('tipo', 3)
                   ->where(function ($query) use ($search) {
                       $query->where('id_doc_calidad', 'LIKE', "%{$search}%")
                             ->orWhere('nombre', 'LIKE', "%{$search}%");
@@ -66,7 +67,7 @@ class DocumentosReferenciaController extends Controller
                   ->orderBy($order, $dir)
                   ->get();
 
-              $totalFiltered = documentos_calidad::where('tipo', 1)
+              $totalFiltered = documentos_calidad::where('tipo', 3)
                   ->where(function ($query) use ($search) {
                       $query->where('id_doc_calidad', 'LIKE', "%{$search}%")
                             ->orWhere('nombre', 'LIKE', "%{$search}%");
@@ -86,6 +87,7 @@ class DocumentosReferenciaController extends Controller
                 $nestedData['identificacion'] = $user->identificacion;
                 $nestedData['estatus'] = $user->estatus;
                 $nestedData['archivo'] = $user->archivo;
+                $nestedData['edicion'] = $user->edicion;
                  $versiones = documentos_calidad_historial::where('id_doc_calidad', $user->id_doc_calidad)->count();
                 $nestedData['versiones'] = $versiones;
                 $data[] = $nestedData;
@@ -157,7 +159,7 @@ public function destroy($id)
           $documento->nombre         = $request->nombre;
           $documento->identificacion = $request->identificacion;
           $documento->area           = $request->area;
-          $documento->tipo           = 1;
+          $documento->tipo           = 3;
           $documento->edicion        = $request->edicion;
           $documento->fecha_edicion  = $request->fecha_edicion;
           $documento->estatus        = $request->estatus;
@@ -171,7 +173,7 @@ public function destroy($id)
           // Guardar en historial
           $historial = new documentos_calidad_historial();
           $historial->id_doc_calidad = $documento->id_doc_calidad;
-          $historial->tipo        = 1;
+          $historial->tipo        = 3;
           $historial->area           = $documento->area;
           $historial->nombre         = $documento->nombre;
           $historial->identificacion = $documento->identificacion;
@@ -246,7 +248,7 @@ public function historial($id)
           // Actualizar campos del documento
           $documento->nombre         = $request->nombre;
           $documento->identificacion = $request->identificacion;
-          $documento->tipo = 1;
+          $documento->tipo = 3;
           $documento->area           = $request->area;
           $documento->edicion        = $request->edicion;
           $documento->fecha_edicion  = $request->fecha_edicion;
@@ -260,7 +262,7 @@ public function historial($id)
           // Registrar nueva versión en historial
           $historial = new documentos_calidad_historial();
           $historial->id_doc_calidad       = $documento->id_doc_calidad;
-          $historial->tipo                 = 1;
+          $historial->tipo                 = 3;
           $historial->nombre               = $documento->nombre;
           $historial->area           = $documento->area;
           $historial->identificacion       = $documento->identificacion;
@@ -319,7 +321,7 @@ public function historial($id)
           $historial->nombre = $request->nombre;
           $historial->identificacion = $request->identificacion;
           $historial->area = $request->area;
-          $historial->tipo = 1;
+          $historial->tipo = 3;
           $historial->edicion = $request->edicion;
           $historial->fecha_edicion = $request->fecha_edicion;
           $historial->estatus = $request->estatus;
@@ -344,7 +346,4 @@ public function historial($id)
           ], 500);
       }
   }
-
-
-
 }

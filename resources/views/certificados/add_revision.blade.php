@@ -128,7 +128,11 @@
                 <div class="col-md-4">
                     <p class="text-muted mb-1">Cliente</p>
                     <h5 class="fw-semibold">
-                        {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @if ($tipo_certificado !== 'Venta nacional')
+                            {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @else
+                             {{ $datos->certificado->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @endif
                     </h5>
                 </div>
 
@@ -153,24 +157,24 @@
                     </div>
                 </div>
 
-@if (!empty($revisor_consejo) && !empty($revisor_consejo->user))
-    <!-- Consejo -->
-    <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
-        <img src="{{ asset('storage/' . $revisor_consejo->user->profile_photo_path) }}"
-            alt="Foto consejo"
-            class="rounded-circle me-3 border border-white shadow-sm"
-            width="50" height="50" style="object-fit: cover;">
-        <div>
-            <p class="text-muted mb-0 small">Consejo</p>
-            <h6 class="mb-0 fw-semibold">{{ $revisor_consejo->user->name ?? 'N/A' }}</h6>
-        </div>
-    </div>
-@else
-    <div class="alert alert-warning d-flex align-items-center gap-2 p-2 rounded-3 shadow-sm">
-        <i class="ri-alert-line text-warning fs-5"></i>
-        <span class="small">No se ha asignado revisor del consejo aún.</span>
-    </div>
-@endif
+                @if (!empty($revisor_consejo) && !empty($revisor_consejo->user))
+                    <!-- Consejo -->
+                    <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
+                        <img src="{{ asset('storage/' . $revisor_consejo->user->profile_photo_path) }}"
+                            alt="Foto consejo"
+                            class="rounded-circle me-3 border border-white shadow-sm"
+                            width="50" height="50" style="object-fit: cover;">
+                        <div>
+                            <p class="text-muted mb-0 small">Consejo</p>
+                            <h6 class="mb-0 fw-semibold">{{ $revisor_consejo->user->name ?? 'N/A' }}</h6>
+                        </div>
+                    </div>
+                @else
+                    <div class="alert alert-warning d-flex align-items-center gap-2 p-2 rounded-3 shadow-sm">
+                        <i class="ri-alert-line text-warning fs-5"></i>
+                        <span class="small">No se ha asignado revisor del consejo aún.</span>
+                    </div>
+                @endif
 
 
 
@@ -222,6 +226,9 @@
                                             @php
                                                 $empresa =
                                                     $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa;
+                                                 if ($tipo_certificado == 'Venta nacional'){
+                                                         $empresa = $datos->certificado->solicitud->empresa;
+                                                    }
                                                 $cliente = $empresa?->empresaNumClientes?->firstWhere(
                                                     'numero_cliente',
                                                     '!=',
@@ -275,6 +282,9 @@
                                                     @php    
                                                     $empresa =
                                                     $datos->certificado->dictamen->inspeccione->solicitud->empresa;
+                                                    if ($tipo_certificado == 'Venta nacional'){
+                                                         $empresa = $datos->certificado->solicitud->empresa;
+                                                    }
                                                         $idUsoDom = 83;
                                                         $cliente = $empresa?->empresaNumClientes->firstWhere(
                                                             'numero_cliente',
@@ -304,6 +314,32 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'direccion_fiscal')
                                             <td>
+                                                @if ($tipo_certificado == 'Venta nacional')
+                                                 @php
+                                                $empresa = $datos->certificado->solicitud->empresa;
+
+                                                    if ($tipo_certificado == 'Venta nacional'){
+                                                         $empresa = $datos->certificado->solicitud->empresa;
+                                                    }
+
+                                                $idConstanciaFiscal = 76;
+                                                $cliente = $empresa?->empresaNumClientes->firstWhere(
+                                                    'numero_cliente',
+                                                    '!=',
+                                                    null,
+                                                );
+                                                $documento = $datos->obtenerDocumentosClientes(
+                                                    $idConstanciaFiscal,
+                                                    $empresa->id_empresa,
+                                                );
+                                            @endphp
+                                                    <a target="_blank"
+                                                        href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                
+                                                @endif
                                                 @if($tipo_certificado !== 'Venta nacional')
                                                 {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }} 
                                                  C.P. {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
@@ -312,7 +348,7 @@
                                                  @endif
                                             </td>
                                          @elseif($pregunta->filtro == 'cp')
-                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
+                                            <td>{{ $datos->certificado->solicitud->empresa->cp ?? 'No registrado' }} 
                                             </td>
                                         @elseif($pregunta->filtro == 'solicitud_exportacion')
                                             <td>
@@ -803,7 +839,13 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                     $urlDom = '/files/'.$numeroCliente."/".$url;*/
                                                     $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa
                                                         ?? $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->empresa;
+
+                                                    if ($tipo_certificado == 'Venta nacional'){
+                                                         $empresa = $datos->certificado->solicitud->empresa;
+                                                    }
+                                                    
                                                     $empresa2 = $empresa; // Ya está null si no existe, no hace falta if
+
 
                                                     $numeroCliente = $empresa2?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
                                                     $url = null;
@@ -839,7 +881,13 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                     $urlDom = '/files/'.$numeroCliente."/".$url;*/
                                                     $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa
                                                         ?? $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->empresa;
-                                                    $empresa2 = $empresa; // Ya está null si no existe, no hace falta if
+                                                    
+
+                                                    if ($tipo_certificado == 'Venta nacional'){
+                                                         $empresa = $datos->certificado->solicitud->empresa;
+                                                    }
+
+                                                     $empresa2 = $empresa; 
 
                                                     $numeroCliente = $empresa2?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
                                                     $url = null;
@@ -1085,6 +1133,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
 
                                                         $folioMarca = $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->marca->folio;
 
+                                                        
                                                         foreach ($hologramasData as $folio => $info) {
                                                             if (!isset($info['rangos'])) continue;
 
@@ -1115,6 +1164,8 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                                     ->first()?->numero_cliente ?? 'Sin asignar';
 
                                                                 $rangoFolios = []; // Asegúrate de inicializar el array
+
+                                                                 $folioMarca = $solic->marcas->folio;
 
                                                                 foreach ($hologramasData as $rango) {
                                                                     $folioInicial = str_pad($rango['inicio'], 7, '0', STR_PAD_LEFT);

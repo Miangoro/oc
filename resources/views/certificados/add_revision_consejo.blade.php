@@ -128,7 +128,11 @@
                 <div class="col-md-4">
                     <p class="text-muted mb-1">Cliente</p>
                     <h5 class="fw-semibold">
-                        {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @if ($tipo_certificado !== 'Venta nacional')
+                            {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @else
+                             {{ $datos->certificado->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @endif
                     </h5>
                 </div>
 
@@ -372,8 +376,12 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'direccion_fiscal')
                                             @php
-                                                $empresa =
-                                                    $datos->certificado->dictamen->inspeccione->solicitud->empresa;
+                                                $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa;
+
+                                                    if ($tipo_certificado == 'Venta nacional'){
+                                                         $empresa = $datos->certificado->solicitud->empresa;
+                                                    }
+
                                                 $idConstanciaFiscal = 76;
                                                 $cliente = $empresa?->empresaNumClientes->firstWhere(
                                                     'numero_cliente',
@@ -407,7 +415,7 @@
                                                 @endif
                                             </td>
                                          @elseif($pregunta->filtro == 'cp')
-                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
+                                            <td>{{ $datos->certificado->solicitud->empresa->cp ?? 'No registrado' }} 
                                             </td>
                                         @elseif($pregunta->filtro == 'solicitud_certificado_exportac')
                                             @php
@@ -930,6 +938,10 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                     $urlDom = '/files/'.$numeroCliente."/".$url;*/
                                                     $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa
                                                         ?? $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->empresa;
+
+                                                    if ($tipo_certificado == 'Venta nacional'){
+                                                         $empresa = $datos->certificado->solicitud->empresa;
+                                                    }
                                                     $empresa2 = $empresa; // Ya está null si no existe, no hace falta if
 
                                                     $numeroCliente = $empresa2?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
@@ -1166,6 +1178,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
 
                                                         $folioMarca = $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->marca->folio;
 
+                                                       
                                                         foreach ($hologramasData as $folio => $info) {
                                                             if (!isset($info['rangos'])) continue;
 
@@ -1195,6 +1208,8 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                                     ->first()?->numero_cliente ?? 'Sin asignar';
 
                                                                 $rangoFolios = []; // Asegúrate de inicializar el array
+
+                                                                 $folioMarca = $solic->marcas->folio;
 
                                                                 foreach ($hologramasData as $rango) {
                                                                     $folioInicial = str_pad($rango['inicio'], 7, '0', STR_PAD_LEFT);

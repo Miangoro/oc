@@ -46,7 +46,7 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'documentos-referencia-list'
+        url: baseUrl + 'documentos-lista-maestra-list'
       },
       columns: [
         // columns according to JSON
@@ -137,11 +137,7 @@ $(function () {
           orderable: false,
           targets: 6,
           render: function (data, type, full, meta) {
-            return `
-              <button class="btn btn-sm btn-warning ver-versiones" data-id="${full.id_doc_calidad}" type="button">
-                Ver versiones
-              </button>
-            `;
+           return `<span>${full.edicion}</span>`;
           }
         },
         {
@@ -153,9 +149,9 @@ $(function () {
           render: function (data, type, full, meta) {
             let acciones = '';
 
-            if (window.puedeEditarElUsuario) {
+            /* if (window.puedeEditarElUsuario) {
               acciones += `<a data-id="${full['id_doc_calidad']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Agregar nueva revisión </a>`;
-            }
+            } */
             if (window.puedeEliminarElUsuario) {
               acciones += `<a data-id="${full['id_doc_calidad']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar documento</a>`;
             }
@@ -289,7 +285,7 @@ $(function () {
 
     // Llamada AJAX
     $.ajax({
-      url: `/documentos-referencia/${idDoc}/historial`,
+      url: `/documentos-lista-maestra/${idDoc}/historial`,
       type: 'GET',
       success: function (response) {
         $("#cargando").hide();
@@ -489,7 +485,7 @@ $(function () {
       $('#loadingDoc').removeClass('d-none');
 
       $.ajax({
-        url: '/documentos-referencia-upload',
+        url: '/documentos-lista-maestra-upload',
         type: 'POST',
         data: formData,
         processData: false, // IMPORTANTE: No procesar los datos
@@ -559,7 +555,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}documentos-referencia/${id_doc}`,
+          url: `${baseUrl}documentos-lista-maestra/${id_doc}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -613,7 +609,7 @@ $(function () {
     $('.datatables-users').on('click', '.edit-record', function () {
       var id_doc = $(this).data('id');
 
-      $.get('/documentos-referencia/' + id_doc + '/edit', function (data) {
+      $.get('/documentos-lista-maestra/' + id_doc + '/edit', function (data) {
         // Inputs
         $('#edit_id_doc_calidad').val(data.id_doc_calidad);
         $('#edit_nombre').val(data.nombre);
@@ -762,7 +758,7 @@ $(function () {
 
         var id_doc = $('#edit_id_doc_calidad').val();
         $.ajax({
-          url: '/documentos-referencia/' + id_doc,
+          url: '/documentos-lista-maestra/' + id_doc,
           type: 'POST',
           data: formData,
           processData: false, // IMPORTANTE: No procesar los datos
@@ -803,8 +799,9 @@ $(function () {
         });
       });
       $('#edit_reviso, #edit_aprobo').on('change', function () {
-      fv.revalidateField($(this).attr('name'));
-    });
+        fv.revalidateField($(this).attr('name'));
+      });
+
     });
   });
 
@@ -817,7 +814,7 @@ $(function () {
     $(document).on('click', '.edit-record-historial', function () {
       var id_doc = $(this).data('id');
 
-      $.get('/documentos-referencia-historial/' + id_doc + '/edit', function (data) {
+      $.get('/documentos-lista-maestra-historial/' + id_doc + '/edit', function (data) {
         // Inputs
         $('#edit_id').val(data.id);
         $('#edit_edit_nombre').val(data.nombre);
@@ -967,7 +964,7 @@ $(function () {
         var formData = new FormData(form);
         var id_doc = $('#edit_id').val();
         $.ajax({
-          url: '/documentos-referencia-historial/' + id_doc,
+          url: '/documentos-lista-maestra-historial/' + id_doc,
           type: 'POST',
           data: formData,
           processData: false, // IMPORTANTE: No procesar los datos
@@ -1001,8 +998,9 @@ $(function () {
         });
       });
       $('#edit_edit_reviso, #edit_edit_aprobo').on('change', function () {
-      fv.revalidateField($(this).attr('name'));
-    });
+        fv.revalidateField($(this).attr('name'));
+      });
+
     });
   });
 

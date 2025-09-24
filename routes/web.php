@@ -249,6 +249,11 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\ticketsController;
 use App\Http\Controllers\mensajes\MensajesController;
 use App\Http\Controllers\gestionCalidad\DocumentosReferenciaController;
+use App\Http\Controllers\gestionCalidad\DocumentosProcedimientosController;
+use App\Http\Controllers\gestionCalidad\DocumentosListaMaestraController;
+use App\Http\Controllers\gestionCalidad\DocumentosManualesController;
+use App\Http\Controllers\gestionCalidad\DocumentosRegistroController;
+
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/', function () {
@@ -557,7 +562,7 @@ Route::middleware('auth')->controller(CartaAsignacionController::class)->group(f
     Route::get('/certificado_productor_mezcal', [CartaAsignacionController::class, 'certificadoprod'])->name('certificado_productor_mezcal')->middleware(['auth']);
 });
     Route::get('/pdf_bitacora_revision_certificado_instalacion_052', [CartaAsignacionController::class, 'pdf_bitacora_revision_certificado_instalacion_052'])->name('pdf_bitacora_revision_certificado_instalacion_052')->middleware(['auth']);
-   
+
 
 
 Route::middleware('auth')->group(function () {
@@ -1589,3 +1594,74 @@ Route::controller(DocumentosReferenciaController::class)->middleware(['auth'])->
 });
 
 Route::get('/documentos-referencia-list', [DocumentosReferenciaController::class, 'index'])->middleware(['auth']);
+
+
+
+// Sistema de gestión de calidad - Documentos de procedimientos
+Route::controller(DocumentosProcedimientosController::class)->middleware(['auth'])->group(function () {
+  Route::get('/documentos-procedimientos','UserManagement')->name('documentos-procedimientos');
+  Route::post('/documentos-procedimientos-upload',  'store')->name('documentos-procedimientos.upload');
+  Route::get('/documentos-procedimientos/{id}/edit', 'edit');
+  Route::post('/documentos-procedimientos/{id}', 'update');
+  Route::delete('/documentos-procedimientos/{id}', 'destroy');
+  // web.php
+  Route::get('/documentos-procedimientos/{id}/historial', 'historial');
+  Route::get('/documentos-procedimientos-historial/{id}/edit', 'editHistorial');
+  Route::post('/documentos-procedimientos-historial/{id}', 'updateHistorial');
+
+});
+
+Route::get('/documentos-procedimientos-list', [DocumentosProcedimientosController::class, 'index'])->middleware(['auth']);
+
+
+// Sistema de gestión de calidad - Documentos de lista-maestra
+Route::controller(DocumentosListaMaestraController::class)->middleware(['auth'])->group(function () {
+  Route::get('/documentos-lista-maestra','UserManagement')->name('documentos-lista-maestra');
+  Route::post('/documentos-lista-maestra-upload',  'store')->name('documentos-lista-maestra.upload');
+  Route::get('/documentos-lista-maestra/{id}/edit', 'edit');
+  Route::post('/documentos-lista-maestra/{id}', 'update');
+  Route::delete('/documentos-lista-maestra/{id}', 'destroy');
+  // web.php
+  Route::get('/documentos-lista-maestra/{id}/historial', 'historial');
+  Route::get('/documentos-lista-maestra-historial/{id}/edit', 'editHistorial');
+  Route::post('/documentos-lista-maestra-historial/{id}', 'updateHistorial');
+
+});
+
+Route::get('/documentos-lista-maestra-list', [DocumentosListaMaestraController::class, 'index'])->middleware(['auth']);
+
+
+
+// Sistema de gestión de calidad - Documentos de manuales
+Route::controller(DocumentosManualesController::class)->middleware(['auth'])->group(function () {
+  Route::get('/documentos-manuales','UserManagement')->name('documentos-manuales-politicas');
+  Route::post('/documentos-manuales-upload',  'store')->name('documentos-manuales.upload');
+  Route::get('/documentos-manuales/{id}/edit', 'edit');
+  Route::post('/documentos-manuales/{id}', 'update');
+  Route::delete('/documentos-manuales/{id}', 'destroy');
+  // web.php
+  Route::get('/documentos-manuales/{id}/historial', 'historial');
+  Route::get('/documentos-manuales-historial/{id}/edit', 'editHistorial');
+  Route::post('/documentos-manuales-historial/{id}', 'updateHistorial');
+
+});
+
+Route::get('/documentos-manuales-list', [DocumentosManualesController::class, 'index'])->middleware(['auth']);
+
+
+// Sistema de gestión de calidad - Documentos de registro
+Route::controller(DocumentosRegistroController::class)->middleware(['auth'])->group(function () {
+  Route::get('/documentos-registro','UserManagement')->name('documentos-registro');
+  Route::post('/documentos-registro-upload',  'store')->name('documentos-registro.upload');
+  Route::get('/documentos-registro/{id}/edit', 'edit');
+  Route::post('/documentos-registro/{id}', 'update');
+  Route::delete('/documentos-registro/{id}', 'destroy');
+  // web.php
+  Route::get('/documentos-registro/{id}/historial', 'historial');
+  Route::get('/documentos-registro-historial/{id}/edit', 'editHistorial');
+  Route::post('/documentos-registro-historial/{id}', 'updateHistorial');
+
+});
+
+Route::get('/documentos-registro-list', [DocumentosRegistroController::class, 'index'])->middleware(['auth']);
+

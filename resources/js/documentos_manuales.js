@@ -46,7 +46,7 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'documentos-referencia-list'
+        url: baseUrl + 'documentos-manuales-list'
       },
       columns: [
         // columns according to JSON
@@ -137,6 +137,14 @@ $(function () {
           orderable: false,
           targets: 6,
           render: function (data, type, full, meta) {
+           return `<span>${full.edicion}</span>`;
+          }
+        },
+        {
+          searchable: false,
+          orderable: false,
+          targets: 7,
+          render: function (data, type, full, meta) {
             return `
               <button class="btn btn-sm btn-warning ver-versiones" data-id="${full.id_doc_calidad}" type="button">
                 Ver versiones
@@ -146,7 +154,7 @@ $(function () {
         },
         {
           // Actions botones de eliminar y actualizar(editar)
-          targets: 7,
+          targets: 8,
           title: 'Acciones',
           searchable: false,
           orderable: false,
@@ -289,7 +297,7 @@ $(function () {
 
     // Llamada AJAX
     $.ajax({
-      url: `/documentos-referencia/${idDoc}/historial`,
+      url: `/documentos-manuales/${idDoc}/historial`,
       type: 'GET',
       success: function (response) {
         $("#cargando").hide();
@@ -489,7 +497,7 @@ $(function () {
       $('#loadingDoc').removeClass('d-none');
 
       $.ajax({
-        url: '/documentos-referencia-upload',
+        url: '/documentos-manuales-upload',
         type: 'POST',
         data: formData,
         processData: false, // IMPORTANTE: No procesar los datos
@@ -526,6 +534,7 @@ $(function () {
         }
       });
     });
+    // Inicializar select2 y revalidar el campo cuando cambie
     $('#doc_reviso, #doc_aprobo').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
@@ -559,7 +568,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}documentos-referencia/${id_doc}`,
+          url: `${baseUrl}documentos-manuales/${id_doc}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -613,7 +622,7 @@ $(function () {
     $('.datatables-users').on('click', '.edit-record', function () {
       var id_doc = $(this).data('id');
 
-      $.get('/documentos-referencia/' + id_doc + '/edit', function (data) {
+      $.get('/documentos-manuales/' + id_doc + '/edit', function (data) {
         // Inputs
         $('#edit_id_doc_calidad').val(data.id_doc_calidad);
         $('#edit_nombre').val(data.nombre);
@@ -762,7 +771,7 @@ $(function () {
 
         var id_doc = $('#edit_id_doc_calidad').val();
         $.ajax({
-          url: '/documentos-referencia/' + id_doc,
+          url: '/documentos-manuales/' + id_doc,
           type: 'POST',
           data: formData,
           processData: false, // IMPORTANTE: No procesar los datos
@@ -803,8 +812,9 @@ $(function () {
         });
       });
       $('#edit_reviso, #edit_aprobo').on('change', function () {
-      fv.revalidateField($(this).attr('name'));
-    });
+        fv.revalidateField($(this).attr('name'));
+      });
+
     });
   });
 
@@ -817,7 +827,7 @@ $(function () {
     $(document).on('click', '.edit-record-historial', function () {
       var id_doc = $(this).data('id');
 
-      $.get('/documentos-referencia-historial/' + id_doc + '/edit', function (data) {
+      $.get('/documentos-manuales-historial/' + id_doc + '/edit', function (data) {
         // Inputs
         $('#edit_id').val(data.id);
         $('#edit_edit_nombre').val(data.nombre);
@@ -967,7 +977,7 @@ $(function () {
         var formData = new FormData(form);
         var id_doc = $('#edit_id').val();
         $.ajax({
-          url: '/documentos-referencia-historial/' + id_doc,
+          url: '/documentos-manuales-historial/' + id_doc,
           type: 'POST',
           data: formData,
           processData: false, // IMPORTANTE: No procesar los datos
@@ -992,7 +1002,7 @@ $(function () {
             Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              text: 'Error al actualizar la clase',
+              text: 'Error al actualizar el documento',
               customClass: {
                 confirmButton: 'btn btn-danger'
               }
@@ -1001,8 +1011,9 @@ $(function () {
         });
       });
       $('#edit_edit_reviso, #edit_edit_aprobo').on('change', function () {
-      fv.revalidateField($(this).attr('name'));
-    });
+        fv.revalidateField($(this).attr('name'));
+      });
+
     });
   });
 

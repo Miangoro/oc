@@ -46,12 +46,12 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'documentos-referencia-list'
+        url: baseUrl + 'documentos-registro-list'
       },
       columns: [
         // columns according to JSON
         { data: '' }, //0
-        { data: 'id_doc_calidad' }, // 1
+        { data: 'id_registro' }, // 1
         { data: 'archivo' }, // 2
         { data: 'identificacion' }, // 3
         { data: 'nombre' }, // 4
@@ -92,7 +92,7 @@ $(function () {
                   data-bs-dismiss="modal"
                   data-nombre="${full['nombre']}"
                   data-url="/storage/${archivo}"
-                  data-id="${full['id_doc_calidad']}"
+                  data-id="${full['id_registro']}"
                   data-archivo="${archivo}"></i>
               `;
             } else {
@@ -137,8 +137,16 @@ $(function () {
           orderable: false,
           targets: 6,
           render: function (data, type, full, meta) {
+           return `<span>${full.edicion}</span>`;
+          }
+        },
+        {
+          searchable: false,
+          orderable: false,
+          targets: 7,
+          render: function (data, type, full, meta) {
             return `
-              <button class="btn btn-sm btn-warning ver-versiones" data-id="${full.id_doc_calidad}" type="button">
+              <button class="btn btn-sm btn-warning ver-versiones" data-id="${full.id_registro}" type="button">
                 Ver versiones
               </button>
             `;
@@ -146,7 +154,7 @@ $(function () {
         },
         {
           // Actions botones de eliminar y actualizar(editar)
-          targets: 7,
+          targets: 8,
           title: 'Acciones',
           searchable: false,
           orderable: false,
@@ -154,10 +162,10 @@ $(function () {
             let acciones = '';
 
             if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id_doc_calidad']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Agregar nueva revisión </a>`;
+              acciones += `<a data-id="${full['id_registro']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Agregar nueva revisión </a>`;
             }
             if (window.puedeEliminarElUsuario) {
-              acciones += `<a data-id="${full['id_doc_calidad']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar documento</a>`;
+              acciones += `<a data-id="${full['id_registro']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar documento</a>`;
             }
             // Si no hay acciones, no retornar el dropdown
             if (!acciones.trim()) {
@@ -289,7 +297,7 @@ $(function () {
 
     // Llamada AJAX
     $.ajax({
-      url: `/documentos-referencia/${idDoc}/historial`,
+      url: `/documentos-registro/${idDoc}/historial`,
       type: 'GET',
       success: function (response) {
         $("#cargando").hide();
@@ -413,6 +421,13 @@ $(function () {
             }
           }
         },
+        id_procedimiento:{
+            validators: {
+              notEmpty: {
+                message: 'Por favor seleccione el procedimiento'
+              }
+            }
+          },
         edicion: {
           validators: {
             notEmpty: {
@@ -489,7 +504,7 @@ $(function () {
       $('#loadingDoc').removeClass('d-none');
 
       $.ajax({
-        url: '/documentos-referencia-upload',
+        url: '/documentos-registro-upload',
         type: 'POST',
         data: formData,
         processData: false, // IMPORTANTE: No procesar los datos
@@ -526,9 +541,11 @@ $(function () {
         }
       });
     });
+    // Inicializar select2 y revalidar el campo cuando cambie
     $('#doc_reviso, #doc_aprobo').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
+
   });
 
   // Delete Record
@@ -559,7 +576,7 @@ $(function () {
         // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}documentos-referencia/${id_doc}`,
+          url: `${baseUrl}documentos-registro/${id_doc}`,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -604,6 +621,7 @@ $(function () {
         });
       }
     });
+
   });
 
 
@@ -613,14 +631,14 @@ $(function () {
     $('.datatables-users').on('click', '.edit-record', function () {
       var id_doc = $(this).data('id');
 
-      $.get('/documentos-referencia/' + id_doc + '/edit', function (data) {
+      $.get('/documentos-registro/' + id_doc + '/edit', function (data) {
         // Inputs
-        $('#edit_id_doc_calidad').val(data.id_doc_calidad);
+        $('#edit_id_registro').val(data.id_registro);
         $('#edit_nombre').val(data.nombre);
         $('#edit_identificacion').val(data.identificacion);
         $('#edit_area').val(data.area).trigger('change'); // para select
         $('#edit_edicion').val(data.edicion);
-        /* $('#edit_fecha_edicion').val(data.fecha_edicion); */
+        $('#edit_id_procedimiento').val(data.id_procedimiento).trigger('change');
         $('#edit_fecha_edicion').val(moment(data.fecha_edicion).format('YYYY-MM-DD'));
         $('#edit_estatus').val(data.estatus).trigger('change');
 
@@ -676,6 +694,13 @@ $(function () {
             validators: {
               notEmpty: {
                 message: 'Por favor ingrese la identificación.'
+              }
+            }
+          },
+          id_procedimiento:{
+            validators: {
+              notEmpty: {
+                message: 'Por favor seleccione el procedimiento'
               }
             }
           },
@@ -760,9 +785,9 @@ $(function () {
         $('#btnEditDoc').addClass('d-none');
         $('#loadingEdit').removeClass('d-none');
 
-        var id_doc = $('#edit_id_doc_calidad').val();
+        var id_doc = $('#edit_id_registro').val();
         $.ajax({
-          url: '/documentos-referencia/' + id_doc,
+          url: '/documentos-registro/' + id_doc,
           type: 'POST',
           data: formData,
           processData: false, // IMPORTANTE: No procesar los datos
@@ -802,9 +827,11 @@ $(function () {
           }
         });
       });
+          // Inicializar select2 y revalidar el campo cuando cambie
       $('#edit_reviso, #edit_aprobo').on('change', function () {
-      fv.revalidateField($(this).attr('name'));
-    });
+        fv.revalidateField($(this).attr('name'));
+      });
+
     });
   });
 
@@ -817,7 +844,7 @@ $(function () {
     $(document).on('click', '.edit-record-historial', function () {
       var id_doc = $(this).data('id');
 
-      $.get('/documentos-referencia-historial/' + id_doc + '/edit', function (data) {
+      $.get('/documentos-registro-historial/' + id_doc + '/edit', function (data) {
         // Inputs
         $('#edit_id').val(data.id);
         $('#edit_edit_nombre').val(data.nombre);
@@ -825,6 +852,7 @@ $(function () {
         $('#edit_edit_area').val(data.area).trigger('change'); // para select
         $('#edit_edit_edicion').val(data.edicion);
         /* $('#edit_fecha_edicion').val(data.fecha_edicion); */
+        $('#edit_edit_id_procedimiento').val(data.id_procedimiento).trigger('change');
         $('#edit_edit_fecha_edicion').val(moment(data.fecha_edicion).format('YYYY-MM-DD'));
         $('#edit_edit_estatus').val(data.estatus).trigger('change');
 
@@ -884,6 +912,13 @@ $(function () {
             validators: {
               notEmpty: {
                 message: 'Por favor ingrese la identificación.'
+              }
+            }
+          },
+          id_procedimiento:{
+            validators: {
+              notEmpty: {
+                message: 'Por favor seleccione el procedimiento'
               }
             }
           },
@@ -967,7 +1002,7 @@ $(function () {
         var formData = new FormData(form);
         var id_doc = $('#edit_id').val();
         $.ajax({
-          url: '/documentos-referencia-historial/' + id_doc,
+          url: '/documentos-registro-historial/' + id_doc,
           type: 'POST',
           data: formData,
           processData: false, // IMPORTANTE: No procesar los datos
@@ -1001,8 +1036,9 @@ $(function () {
         });
       });
       $('#edit_edit_reviso, #edit_edit_aprobo').on('change', function () {
-      fv.revalidateField($(this).attr('name'));
-    });
+        fv.revalidateField($(this).attr('name'));
+      });
+
     });
   });
 
