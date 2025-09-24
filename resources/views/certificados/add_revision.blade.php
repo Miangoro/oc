@@ -311,7 +311,7 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'direccion_fiscal')
                                             <td>
-                                                @if ($cliente && $documento && $tipo_certificado == 'Venta nacional')
+                                                @if ($documento && $tipo_certificado == 'Venta nacional')
                                                     <a target="_blank"
                                                         href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
                                                         <i
