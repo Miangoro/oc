@@ -20,6 +20,11 @@
     use App\Helpers\Helpers;
 @endphp
 
+ @php
+         use App\Models\activarHologramasModelo;
+use App\Models\solicitudHolograma;
+                                             @endphp
+
 <style>
     td {
         padding: 0.04rem !important;
@@ -1052,10 +1057,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                             </td>
                                              @elseif($pregunta->filtro == 'datos_holograma')
 
-                                             @php
-         use App\Models\activarHologramasModelo;
-use App\Models\solicitudHolograma;
-                                             @endphp
+                                            
                                             <td>
                                                 {!! $observacionesConEnlaces !!}
 
