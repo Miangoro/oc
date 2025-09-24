@@ -1069,7 +1069,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                         $hologramasData = json_decode($datos->certificado->id_hologramas, true);
                                                         $rangoFolios = [];
 
-                                                          dd($hologramasData);
+                                                         
 
                                                         $numero_cliente = $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes
                                                             ->filter(fn($cliente) => !empty($cliente->numero_cliente))
@@ -1092,6 +1092,23 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
 
                                                                 $rangoFolios[] = $linkInicio . ' a ' . $linkFinal;
                                                             }
+                                                        }
+
+                                                            foreach ($hologramasData as $rango) {
+                                                            
+
+                                                           
+                                                                $folioInicial = str_pad($rango['inicio'], 7, '0', STR_PAD_LEFT);
+                                                                $folioFinal = str_pad($rango['final'], 7, '0', STR_PAD_LEFT);
+
+                                                                $linkInicio = '<a target="_blank" href="/holograma/' . $numero_cliente . '-' .  $tipoHolograma . $folioMarca . $folioInicial . '">' .
+                                                                            $numero_cliente . '-' .  $tipoHolograma . $folioMarca . $folioInicial . '</a>';
+
+                                                                $linkFinal = '<a target="_blank" href="/holograma/' . $numero_cliente . '-' .  $tipoHolograma . $folioMarca . $folioFinal . '">' .
+                                                                            $numero_cliente . '-' .  $tipoHolograma . $folioMarca . $folioFinal . '</a>';
+
+                                                                $rangoFolios[] = $linkInicio . ' a ' . $linkFinal;
+                                                            
                                                         }
                                                     @endphp
 
