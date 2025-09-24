@@ -22,6 +22,7 @@ class DocumentosReferenciaController extends Controller
     public function index(Request $request)
     {
         $columns = [
+            0 => 'id_doc_calidad',
             1 => 'tipo',
             2 => 'archivo',
             3 => 'identificacion',
@@ -140,7 +141,8 @@ public function destroy($id)
           'modifico'       => 'required|string|max:255',
           'reviso'         => 'required|integer',
           'aprobo'         => 'required|integer',
-          'archivo'        => 'required|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:5120',
+          'archivo' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:12288',
+
       ]);
 
       try {

@@ -40,7 +40,7 @@
 
                    <!-- Header -->
                    <div class="modal-header bg-primary pb-4">
-                       <h5 class="modal-title text-white" id="modalEditHistorialLabel">Registrar Documentos de
+                       <h5 class="modal-title text-white" id="modalEditHistorialLabel">Registrar nueva revisión de documentos de
                            referencia</h5>
                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                    </div>
@@ -176,10 +176,10 @@
                            <div class="d-flex justify-content-center mt-3">
                                <button disabled class="btn btn-primary me-2 d-none" type="button" id="loadingEdit">
                                    <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
-                                   Actualizando...
+                                   Registrando...
                                </button>
                                <button type="submit" class="btn btn-primary me-2" id="btnEditDoc">
-                                   <i class="ri-add-line me-1"></i> Editar
+                                   <i class="ri-pencil-fill me-1"></i> Registrar
                                </button>
                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
                                    <i class="ri-close-line me-1"></i> Cancelar
@@ -195,7 +195,7 @@
 
 
 
-              <!-- Modal editar historial Documento -->
+      <!-- Modal editar historial Documento -->
        <div class="modal fade" id="modalEditHistorialEdit" tabindex="-1" aria-labelledby="modalEditHistorialEditLabel"
            aria-hidden="true">
            <div class="modal-dialog modal-xl">
@@ -342,7 +342,7 @@
                                    Actualizando...
                                </button>
                                <button type="submit" class="btn btn-primary me-2" id="btnEditHistorial">
-                                   <i class="ri-add-line me-1"></i> Editar
+                                   <i class="ri-pencil-fill me-1"></i> Editar
                                </button>
                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
                                    <i class="ri-close-line me-1"></i> Cancelar
