@@ -227,17 +227,17 @@
     <table>
         <tr>
             <td class="letra-fondo" style="text-align: left; width: 50px;" colspan="3">Razón social del cliente:</td>
-            <td class="leftLetter" colspan="3" style="width: 200px;"></td>
+            <td class="leftLetter" colspan="3" style="width: 200px;">{{ $razon_social }}</td>
         </tr>
         <tr>
             <td class="letra-fondo" style="text-align: left;  width: 50px; height: 30px;" colspan="2">No. Cliente:</td>
-            <td colspan="2"></td>
+            <td colspan="2">{{ $numero_cliente }}</td>
             <td class="letra-fondo" style="text-align: left; width: 120px;">Fecha de revisión:</td>
-            <td style="width: 150px;"></td>
+            <td style="width: 150px;">{{ $fecha }}</td>
         </tr>
         <tr>
             <td class="letra-fondo" style="text-align: left; height: 30px;" colspan="2">No. de Certificado:</td>
-            <td colspan="2"></td>
+            <td colspan="2">{{ $num_certificado }}</td>
             <td colspan="2" class="td-no-border"></td>
         </tr>
     </table>

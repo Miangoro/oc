@@ -107,7 +107,7 @@
                         <p class="mt-2"><strong>Observaciones:</strong> {{ $observaciones }}</p>
                     @endif
 
-                    @if (!empty($revisor_personal->evidencias))
+                     @if ($tipo_certificado !== 'Venta nacional' && $datos->evidencias->isNotEmpty())
                         <div class="mt-3">
                             <p class="text-muted mb-1">Evidencias:</p>
                             @foreach ($revisor_personal->evidencias as $evidencia)
