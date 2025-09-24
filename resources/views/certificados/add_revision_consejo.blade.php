@@ -107,7 +107,7 @@
                         <p class="mt-2"><strong>Observaciones:</strong> {{ $observaciones }}</p>
                     @endif
 
-                    @if (!empty($revisor_personal->evidencias))
+                     @if ($tipo_certificado !== 'Venta nacional' && $datos->evidencias->isNotEmpty())
                         <div class="mt-3">
                             <p class="text-muted mb-1">Evidencias:</p>
                             @foreach ($revisor_personal->evidencias as $evidencia)
@@ -128,7 +128,11 @@
                 <div class="col-md-4">
                     <p class="text-muted mb-1">Cliente</p>
                     <h5 class="fw-semibold">
-                        {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @if ($tipo_certificado !== 'Venta nacional')
+                            {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @else
+                             {{ $datos->certificado->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @endif
                     </h5>
                 </div>
 
@@ -398,12 +402,16 @@
                                                 
                                                 @endif
                                                 {{-- Mostrar dirección fiscal siempre --}}
+                                                 @if($tipo_certificado !== 'Venta nacional')
                                                 {{ $empresa->domicilio_fiscal ?? 'N/A' }}
                                                 <br>País: México
                                                 <br>C.P: {{ $empresa->cp ?? 'N/A' }}
+                                                @else
+                                                     {{ $datos->certificado->solicitud->empresa->domicilio_fiscal }}
+                                                @endif
                                             </td>
                                          @elseif($pregunta->filtro == 'cp')
-                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
+                                            <td>{{ $datos->certificado->solicitud->empresa->cp ?? 'No registrado' }} 
                                             </td>
                                         @elseif($pregunta->filtro == 'solicitud_certificado_exportac')
                                             @php

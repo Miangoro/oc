@@ -104,6 +104,7 @@ class Revisor extends Model
         {
             return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_certificado')->where('id_documento',133);
         }
+        
     public function certificado()
     {
         // Por defecto busca en certificadoNormal (ajusta si quieres otro comportamiento)

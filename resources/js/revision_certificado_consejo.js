@@ -613,6 +613,10 @@ $(function () {
       var url_pdf = '../pdf_bitacora_revision_certificado_exportacion/' + id_revisor;
     }
 
+       if (tipoRevision === 'Nacional') {
+      var url_pdf = '../pdf_bitacora_revision_certificado_venta_nacional/' + id_revisor;
+    }
+
     console.log('URL del PDF:', url_pdf);
 
     // Configurar encabezados del modal

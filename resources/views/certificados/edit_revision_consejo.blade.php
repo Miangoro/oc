@@ -109,8 +109,13 @@
                     </div>
                     <div>
                         <p class="text-muted mb-1">Cliente</p>
-                        <h5 class="fw-semibold mb-2">
-                            {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</h5>
+                       <h5 class="fw-semibold">
+                        @if ($tipo_certificado !== 'Venta nacional')
+                            {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @else
+                             {{ $datos->certificado->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @endif
+                    </h5>
                     </div>
                     <div>
                         <p class="text-muted mb-1">Revisor</p>
@@ -363,10 +368,10 @@
                                                 {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}
                                                 País: México</td>
                                             {{--                                         @elseif($pregunta->filtro == 'pais_origen')
-                                            <td><b>México</b></td>
+                                            <td><b>México</b></td>--}}
                                         @elseif($pregunta->filtro == 'cp')
-                                            <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'N/A' }}</b>
-                                            </td> --}}
+                                            <td><b>{{ $datos->certificado->solicitud->empresa->cp ?? 'N/A' }}</b>
+                                            </td> 
                                         @elseif($pregunta->filtro == 'destinatario')
                                             <td>
                                                 {{ $datos->certificado->dictamen->inspeccione->solicitud->direccion_destino->destinatario ?? 'N/A' }}

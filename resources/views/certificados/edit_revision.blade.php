@@ -120,7 +120,12 @@
                     <div>
                         <p class="text-muted mb-1">Cliente</p>
                         <h5 class="fw-semibold mb-2">
-                            {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</h5>
+                             @if ($tipo_certificado !== 'Venta nacional')
+                            {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @else
+                             {{ $datos->certificado->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @endif
+                         </h5>
                     </div>
                     <div>
                         <p class="text-muted mb-1">Revisor</p>
@@ -256,7 +261,7 @@
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }}
                                             </td>
                                          @elseif($pregunta->filtro == 'cp')
-                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
+                                            <td>{{ $datos->certificado->solicitud->empresa->cp ?? 'No registrado' }} 
                                             </td>
                                         @elseif($pregunta->filtro == 'solicitud_exportacion')
                                             <td>

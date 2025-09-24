@@ -106,8 +106,8 @@
                     @if (!empty($observaciones) && !$contieneEnlace)
                         <p class="mt-2"><strong>Observaciones:</strong> {{ $observaciones }}</p>
                     @endif
-
-                    @if (!empty($datos->evidencias))
+                        
+                    @if ($tipo_certificado !== 'Venta nacional' && $datos->evidencias->isNotEmpty())
                         <div class="mt-3">
                             <p class="text-muted mb-1">Evidencias:</p>
                             @foreach ($datos->evidencias as $evidencia)
@@ -128,7 +128,11 @@
                 <div class="col-md-4">
                     <p class="text-muted mb-1">Cliente</p>
                     <h5 class="fw-semibold">
-                        {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @if ($tipo_certificado !== 'Venta nacional')
+                            {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @else
+                             {{ $datos->certificado->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @endif
                     </h5>
                 </div>
 
@@ -304,11 +308,15 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'direccion_fiscal')
                                             <td>
+                                                @if($tipo_certificado !== 'Venta nacional')
                                                 {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }} 
                                                  C.P. {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
+                                                 @else
+                                                    {{ $datos->certificado->solicitud->empresa->domicilio_fiscal }}
+                                                 @endif
                                             </td>
                                          @elseif($pregunta->filtro == 'cp')
-                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
+                                            <td>{{ $datos->certificado->solicitud->empresa->cp ?? 'No registrado' }} 
                                             </td>
                                         @elseif($pregunta->filtro == 'solicitud_exportacion')
                                             <td>
@@ -686,7 +694,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                         : null;
 
                                                 $docFirmado = $loteGranel
-                                                    ? \App\Models\documentacion_url::where(
+                                                    ? \App\Models\Documentacion_url::where(
                                                         'id_relacion',
                                                         $loteGranel->id_lote_granel,
                                                     )
@@ -804,7 +812,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                     $numeroCliente = $empresa2?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
                                                     $url = null;
                                                     if ($empresa2 && $empresa2->id_empresa) {
-                                                        $url = \App\Models\documentacion_url::where('id_empresa', $empresa2->id_empresa)
+                                                        $url = \App\Models\Documentacion_url::where('id_empresa', $empresa2->id_empresa)
                                                             ->where('id_documento', 83)
                                                             ->value('url');
                                                     }

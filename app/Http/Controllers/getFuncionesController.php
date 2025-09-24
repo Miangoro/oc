@@ -94,6 +94,8 @@ class getFuncionesController extends Controller
 
     public function getDatos(empresa $empresa)
     {
+        $userId = Auth::id();// ID usuario logueado
+        
         // Obtener las marcas de la empresa
         //$marcas = $empresa->marcas()->get();  // Llamamos a `get()` para obtener los datos reales
         $marcas = $empresa->todasLasMarcas()->get();
@@ -109,20 +111,44 @@ class getFuncionesController extends Controller
         // Obtener instalaciones de todas las empresas relacionadas
         $instalacionesConMaqui = instalaciones::whereIn('id_empresa', $idsEmpresas)->get();
 
+        //SE AGREGO
+        // Lotes granel: aplicar filtro para usuarios especiales
+        $lotes_granel = $empresa->todos_lotes_granel();//(devuelve colección)
+        // Aplicar filtro para usuarios especiales
+        if (in_array($userId, [328, 46])) {
+            $lotes_granel = $lotes_granel->filter(function ($lote) use ($userId) {
+                return $lote->id_usuario_registro == $userId;
+            })->values(); // ->values() reindexa la colección
+        }
+
+        // Lotes envasado
+        $lotes_envasado = lotes_envasado::whereIn('id_empresa', $idsEmpresas)
+            ->with('lotes_envasado_granel.lotes_granel', 'dictamenEnvasado')
+            ->orderByDesc('id_lote_envasado')
+            ->get();
+
+        // Filtrar lotes envasado para usuarios especiales
+        if (in_array($userId, [328, 46])) {
+            $lotes_envasado = $lotes_envasado->filter(fn($lote) => $lote->id_usuario_registro == $userId)->values();
+        }
+
         return response()->json([
             'instalaciones' => $empresa->obtenerInstalaciones(),
             'instalacionesConMaqui' => $instalacionesConMaqui,
-            'lotes_granel' => $empresa->todos_lotes_granel(),
+            //'lotes_granel' => $empresa->todos_lotes_granel(),ANTERIOR
+            'lotes_granel' => $lotes_granel,
+
             'marcas' => $marcas,
             'guias' => $empresa->guias(),
             'predios' => $empresa->predios(),
             'predio_plantacion' => $empresa->predio_plantacion(),
             'direcciones' => $empresa->direcciones(),
-            /* 'lotes_envasado' => $empresa->todos_lotes_envasado(), */
-            'lotes_envasado' => lotes_envasado::whereIn('id_empresa', $idsEmpresas)
+            /*'lotes_envasado' => lotes_envasado::whereIn('id_empresa', $idsEmpresas)
                 ->with('lotes_envasado_granel.lotes_granel', 'dictamenEnvasado')
                 ->orderByDesc('id_lote_envasado')
-                ->get(),
+                ->get(),ANTERIOR*/
+            'lotes_envasado' => $lotes_envasado,
+
             'direcciones_destino' => Destinos::where("id_empresa", $empresa->id_empresa)->where('tipo_direccion', 1)->get(),
             'instalaciones_produccion' => instalaciones::where('tipo', 'like', '%Productora%')->whereIn("id_empresa", $idsEmpresas)->get(),
             'instalaciones_comercializadora' => instalaciones::where('tipo', 'like', '%Comercializadora%')->whereIn("id_empresa", $idsEmpresas)->get(),

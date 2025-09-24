@@ -560,7 +560,7 @@ Route::middleware('auth')->controller(CartaAsignacionController::class)->group(f
     Route::get('/certificado_productor_mezcal', [CartaAsignacionController::class, 'certificadoprod'])->name('certificado_productor_mezcal')->middleware(['auth']);
 });
     Route::get('/pdf_bitacora_revision_certificado_instalacion_052', [CartaAsignacionController::class, 'pdf_bitacora_revision_certificado_instalacion_052'])->name('pdf_bitacora_revision_certificado_instalacion_052')->middleware(['auth']);
-    Route::get('/pdf_bitacora_de_revisión_de_certificado_venta_nacional', [CartaAsignacionController::class, 'pdf_bitacora_de_revisión_de_certificado_venta_nacional'])->name('pdf_bitacora_de_revisión_de_certificado_venta_nacional')->middleware(['auth']);
+   
 
 
 Route::middleware('auth')->group(function () {
@@ -1068,6 +1068,7 @@ Route::middleware(['auth'])->controller(RevisionConsejoController::class)->group
     Route::get('/pdf_bitacora_revision_certificado_instalaciones/{id}', 'pdf_bitacora_revision_certificado_instalaciones');
     Route::get('/pdf_bitacora_revision_certificado_granel/{id}', 'pdf_bitacora_revision_certificado_granel');
     Route::get('/pdf_bitacora_revision_certificado_exportacion/{id}', 'pdf_bitacora_revision_certificado_exportacion');
+    Route::get('/pdf_bitacora_revision_certificado_venta_nacional/{id}', 'pdf_bitacora_revision_certificado_venta_nacional');
 });
 
 //-------------------REVISION UNIDAD DE INSPECCION-------------------
