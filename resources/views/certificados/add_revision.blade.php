@@ -1071,7 +1071,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
 
                                                          
 
-                                                        $numero_cliente = $datos?->certificado?->dictamen?->inspeccione?->solicitud?->lote_envasado->marca->empresa?->empresaNumClientes
+                                                        $numero_cliente = $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes
                                                             ->filter(fn($cliente) => !empty($cliente->numero_cliente))
                                                             ->first()?->numero_cliente ?? 'Sin asignar';
 
@@ -1095,6 +1095,10 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                         }
 
                                                             foreach ($hologramasData as $rango) {
+
+                                                                 $numero_cliente = $hologramas?->empresaNumClientes
+                                                            ->filter(fn($cliente) => !empty($cliente->numero_cliente))
+                                                            ->first()?->numero_cliente ?? 'Sin asignar';
                                                             
 
                                                            

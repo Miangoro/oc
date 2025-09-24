@@ -100,7 +100,7 @@ public function hologramas(): Collection
         ->unique()
         ->toArray();
 
-    return activarHologramasModelo::with('solicitudHolograma')
+    return activarHologramasModelo::with('solicitudHolograma.marcas.empresa')
         ->whereIn('id', $ids)
         ->get();
 }
