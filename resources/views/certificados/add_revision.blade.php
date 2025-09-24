@@ -1133,6 +1133,10 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
 
                                                         $folioMarca = $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->marca->folio;
 
+                                                         if ($tipo_certificado == 'Venta nacional'){
+                                                          $folioMarca = $datos->certificado->solicitud->lote_envasado->marca->folio;
+                                                        }
+
                                                         foreach ($hologramasData as $folio => $info) {
                                                             if (!isset($info['rangos'])) continue;
 
