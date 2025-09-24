@@ -1178,11 +1178,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
 
                                                         $folioMarca = $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->marca->folio;
 
-                                                         if ($tipo_certificado == 'Venta nacional'){
-                                                          $folioMarca = $datos->certificado->solicitud->lote_envasado->marca->folio;
-                                                          dd($folioMarca);
-                                                        }
-
+                                                       
                                                         foreach ($hologramasData as $folio => $info) {
                                                             if (!isset($info['rangos'])) continue;
 
@@ -1212,6 +1208,8 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                                     ->first()?->numero_cliente ?? 'Sin asignar';
 
                                                                 $rangoFolios = []; // Asegúrate de inicializar el array
+
+                                                                 $folioMarca = $solic->marcas->folio;
 
                                                                 foreach ($hologramasData as $rango) {
                                                                     $folioInicial = str_pad($rango['inicio'], 7, '0', STR_PAD_LEFT);
