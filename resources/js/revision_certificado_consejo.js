@@ -64,6 +64,9 @@ $(function () {
             if (tipoRevision === 'Exportación') {
               icono = `<span class="fw-bold mt-1 badge bg-primary">${tipoRevision}</span>`;
             }
+            if (tipoRevision === 'Nacional') {
+              icono = `<span class="fw-bold mt-1 badge bg-warning">${tipoRevision}</span>`;
+            }
             return icono;
           }
         },  

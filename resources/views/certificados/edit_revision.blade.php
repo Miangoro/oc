@@ -263,8 +263,8 @@
                                                         class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                 </a>
                                             </td>
-                                        @elseif($pregunta->filtro == 'domicilioEnvasado')
-                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa ?? 'N/A' }}
+                                          @elseif($pregunta->filtro == 'domicilioEnvasado')
+                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->instalacion_envasado->direccion_completa ?? $datos->certificado->dictamen->inspeccion->solicitud->instalacion->direccion_completa }}
                                             </td>
                                         @elseif($pregunta->filtro == 'pais')
                                             @php

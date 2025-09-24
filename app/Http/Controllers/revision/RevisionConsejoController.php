@@ -30,7 +30,7 @@ class RevisionConsejoController extends Controller
         $EstadisticasInstalaciones = $this->calcularCertificados($userId, 1, 2); // Estadisticas Instalaciones
         $EstadisticasGranel = $this->calcularCertificados($userId, 2, 2); // Estadisticas Granel
 
-        $revisorQuery = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion')
+        $revisorQuery = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion','certificadoNacional')
             ->where('tipo_revision', 2); // Solo revisiones de miembro
 
         if ($userId != 1) {
@@ -73,7 +73,8 @@ class RevisionConsejoController extends Controller
         $queryRevisor = Revisor::with([
             'certificadoNormal',
             'certificadoGranel',
-            'certificadoExportacion'
+            'certificadoExportacion',
+            'certificadoNacional'
         ])->where('tipo_revision', 2); // Solo revisiones de consejo
 
 
@@ -118,6 +119,9 @@ class RevisionConsejoController extends Controller
                     $sub->where('num_certificado', 'like', "%{$search}%");
                 })
                 ->orWhereHas('certificadoExportacion', function ($sub) use ($search) {
+                    $sub->where('num_certificado', 'like', "%{$search}%");
+                })
+                ->orWhereHas('certificadoNacional', function ($sub) use ($search) {
                     $sub->where('num_certificado', 'like', "%{$search}%");
                 })
                  ->orWhere('tipo_certificado', 'LIKE', "%{$search}%");
@@ -177,6 +181,10 @@ class RevisionConsejoController extends Controller
             if ($revisor->tipo_certificado == 3) {
                 $tipoCertificado = 'Exportación';
             }
+            if ($revisor->tipo_certificado == 4) {
+                $tipoCertificado = 'Nacional';
+            }
+
 
 
             $numDictamen = $revisor->certificado && $revisor->certificado->dictamen ? $revisor->certificado->dictamen->num_dictamen : null;
@@ -459,7 +467,11 @@ class RevisionConsejoController extends Controller
             $url = "/certificado_exportacion/" . $datos->id_certificado;
             $tipo = "Exportación";
 
+        }elseif ($datos->tipo_certificado == 4) {
+                $url = "/certificado_venta_nacional/" . $datos->id_certificado;
+                $tipo = 'Nacional';
         }
+
         return view('certificados.add_revision_consejo', compact('datos', 'preguntas', 'url', 'tipo','revisor_personal'));
     }
 
