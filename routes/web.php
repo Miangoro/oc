@@ -251,6 +251,7 @@ use App\Http\Controllers\gestionCalidad\DocumentosReferenciaController;
 use App\Http\Controllers\gestionCalidad\DocumentosProcedimientosController;
 use App\Http\Controllers\gestionCalidad\DocumentosListaMaestraController;
 use App\Http\Controllers\gestionCalidad\DocumentosManualesController;
+use App\Http\Controllers\gestionCalidad\DocumentosRegistroController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -560,7 +561,7 @@ Route::middleware('auth')->controller(CartaAsignacionController::class)->group(f
     Route::get('/certificado_productor_mezcal', [CartaAsignacionController::class, 'certificadoprod'])->name('certificado_productor_mezcal')->middleware(['auth']);
 });
     Route::get('/pdf_bitacora_revision_certificado_instalacion_052', [CartaAsignacionController::class, 'pdf_bitacora_revision_certificado_instalacion_052'])->name('pdf_bitacora_revision_certificado_instalacion_052')->middleware(['auth']);
-   
+
 
 
 Route::middleware('auth')->group(function () {
@@ -1640,4 +1641,21 @@ Route::controller(DocumentosManualesController::class)->middleware(['auth'])->gr
 });
 
 Route::get('/documentos-manuales-list', [DocumentosManualesController::class, 'index'])->middleware(['auth']);
+
+
+// Sistema de gestión de calidad - Documentos de registro
+Route::controller(DocumentosRegistroController::class)->middleware(['auth'])->group(function () {
+  Route::get('/documentos-registro','UserManagement')->name('documentos-registro');
+  Route::post('/documentos-registro-upload',  'store')->name('documentos-registro.upload');
+  Route::get('/documentos-registro/{id}/edit', 'edit');
+  Route::post('/documentos-registro/{id}', 'update');
+  Route::delete('/documentos-registro/{id}', 'destroy');
+  // web.php
+  Route::get('/documentos-registro/{id}/historial', 'historial');
+  Route::get('/documentos-registro-historial/{id}/edit', 'editHistorial');
+  Route::post('/documentos-registro-historial/{id}', 'updateHistorial');
+
+});
+
+Route::get('/documentos-registro-list', [DocumentosRegistroController::class, 'index'])->middleware(['auth']);
 
