@@ -255,6 +255,9 @@
                                         @elseif($pregunta->filtro == 'direccion_fiscal')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }}
                                             </td>
+                                         @elseif($pregunta->filtro == 'cp')
+                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
+                                            </td>
                                         @elseif($pregunta->filtro == 'solicitud_exportacion')
                                             <td>
                                                 <a target="_blank"

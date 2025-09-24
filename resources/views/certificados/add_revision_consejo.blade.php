@@ -402,6 +402,9 @@
                                                 <br>País: México
                                                 <br>C.P: {{ $empresa->cp ?? 'N/A' }}
                                             </td>
+                                         @elseif($pregunta->filtro == 'cp')
+                                            <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
+                                            </td>
                                         @elseif($pregunta->filtro == 'solicitud_certificado_exportac')
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
@@ -998,9 +1001,9 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                         @elseif($pregunta->filtro == 'edad')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->edad ?? 'N/A' }}
                                             </td>
-                                            {{--                                         @elseif($pregunta->filtro == 'marca')
+                                         @elseif($pregunta->filtro == 'marca')
                                             <td><b>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->marca->marca ?? 'N/A' }}</b>
-                                            </td> --}}
+                                            </td> 
                                         @elseif($pregunta->filtro == 'clase')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->lote_granel->clase->clase ?? 'N/A' }}
                                             </td>
