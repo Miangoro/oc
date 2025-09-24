@@ -442,6 +442,21 @@ public function index(Request $request)
                 $nestedData['renovacion'] = $caracteristicas['renovacion'] ?? 'N/A';
 
 
+                //REVISION DEL ACTA
+                $idInspeccion = $solicitud->inspeccion->id_inspeccion ?? null;
+
+                $ultimaRevision = $idInspeccion 
+                    ? RevisionDictamen::where('id_inspeccion', $idInspeccion)
+                        ->orderByDesc('numero_revision')
+                        ->first()
+                    : null;
+
+                $nestedData['ultima_revision'] = $ultimaRevision ? [
+                    'numero_revision' => $ultimaRevision->numero_revision,
+                    'decision'        => $ultimaRevision->decision,
+                    ] : null;
+
+
 
                 $data[] = $nestedData;
             }
