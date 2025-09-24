@@ -376,8 +376,12 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'direccion_fiscal')
                                             @php
-                                                $empresa =
-                                                    $datos->certificado->dictamen->inspeccione->solicitud->empresa;
+                                                $empresa = $datos->certificado->dictamen->inspeccione->solicitud->empresa;
+
+                                                    if ($tipo_certificado == 'Venta nacional'){
+                                                         $empresa = $datos->certificado->solicitud->empresa;
+                                                    }
+
                                                 $idConstanciaFiscal = 76;
                                                 $cliente = $empresa?->empresaNumClientes->firstWhere(
                                                     'numero_cliente',

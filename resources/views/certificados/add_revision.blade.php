@@ -157,24 +157,24 @@
                     </div>
                 </div>
 
-@if (!empty($revisor_consejo) && !empty($revisor_consejo->user))
-    <!-- Consejo -->
-    <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
-        <img src="{{ asset('storage/' . $revisor_consejo->user->profile_photo_path) }}"
-            alt="Foto consejo"
-            class="rounded-circle me-3 border border-white shadow-sm"
-            width="50" height="50" style="object-fit: cover;">
-        <div>
-            <p class="text-muted mb-0 small">Consejo</p>
-            <h6 class="mb-0 fw-semibold">{{ $revisor_consejo->user->name ?? 'N/A' }}</h6>
-        </div>
-    </div>
-@else
-    <div class="alert alert-warning d-flex align-items-center gap-2 p-2 rounded-3 shadow-sm">
-        <i class="ri-alert-line text-warning fs-5"></i>
-        <span class="small">No se ha asignado revisor del consejo aún.</span>
-    </div>
-@endif
+                @if (!empty($revisor_consejo) && !empty($revisor_consejo->user))
+                    <!-- Consejo -->
+                    <div class="d-flex align-items-center border rounded-3 p-2 shadow-sm bg-light">
+                        <img src="{{ asset('storage/' . $revisor_consejo->user->profile_photo_path) }}"
+                            alt="Foto consejo"
+                            class="rounded-circle me-3 border border-white shadow-sm"
+                            width="50" height="50" style="object-fit: cover;">
+                        <div>
+                            <p class="text-muted mb-0 small">Consejo</p>
+                            <h6 class="mb-0 fw-semibold">{{ $revisor_consejo->user->name ?? 'N/A' }}</h6>
+                        </div>
+                    </div>
+                @else
+                    <div class="alert alert-warning d-flex align-items-center gap-2 p-2 rounded-3 shadow-sm">
+                        <i class="ri-alert-line text-warning fs-5"></i>
+                        <span class="small">No se ha asignado revisor del consejo aún.</span>
+                    </div>
+                @endif
 
 
 
