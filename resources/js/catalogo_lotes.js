@@ -898,6 +898,55 @@ const fv = FormValidation.formValidation(addNewLote, {
           $('#offcanvasAddLote').modal('hide');
           $('.datatables-users').DataTable().ajax.reload(null, false);
 
+    // Diferenciar mensaje normal o advertencia
+    if(response.warning) {
+        Swal.fire({
+            icon: 'warning',
+            title: '¡Advertencia!',
+            text: response.message,
+            confirmButtonClass: 'btn btn-warning',
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+        }).then(() => {
+            location.reload(); // refresca la página para que veas el registro
+        });
+    } else if(response.success) {
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Lote registrado exitosamente',
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+        });
+    }
+          /*// Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Lote registrado exitosamente',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+          */
+        },
+        error: function (xhr) {
+          // Mostrar alerta de error
+          console.log(xhr.responseJSON?.message)
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al agregar el lote a granel',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+          $('#btnSpinner').addClass('d-none'); // Ocultar el botón de envío
+          $('#btnAdd').removeClass('d-none'); // Mostrar el spinner de carga
+        }
+          /*
           // Mostrar alerta de éxito
           Swal.fire({
             icon: 'success',
@@ -921,6 +970,7 @@ const fv = FormValidation.formValidation(addNewLote, {
           $('#btnSpinner').addClass('d-none'); // Ocultar el botón de envío
           $('#btnAdd').removeClass('d-none'); // Mostrar el spinner de carga
         }
+        */
       });
 });
     // Inicializar select2 y revalidar el campo cuando cambie

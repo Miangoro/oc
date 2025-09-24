@@ -696,10 +696,15 @@ public function store(Request $request)
 
                     // Verificar que el volumen no sea negativo
                     if ($loteOriginal->volumen_restante < 0) {
-                        return response()->json([
+                        /*return response()->json([
                             'success' => false,
                             'message' => 'El volumen del lote original no puede ser negativo.'
-                        ], 400);
+                        ], 400);*/
+                        return response()->json([
+                            'success' => true, // <-- cambiar a true porque se registró
+                            'warning' => true, // <-- bandera para JS
+                            'message' => 'Se registro con volumen original en 0.'
+                        ], 200); // <-- status 200
                     }
                 }
 

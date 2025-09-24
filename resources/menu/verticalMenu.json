@@ -107,6 +107,12 @@
           "name": "Solicitudes Eliminadas",
           "slug": "solicitudes-eliminadas",
           "can": "Visualizar solicitudes eliminadas"
+        },
+        {
+          "name": "Historial 052",
+          "url": "solicitudes-historial-052",
+          "slug": "solicitudes-historial-052",
+          "can": "Visualizar solicitudes 052"
         }
       ]
     },
