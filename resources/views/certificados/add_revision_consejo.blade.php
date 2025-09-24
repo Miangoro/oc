@@ -398,9 +398,13 @@
                                                 
                                                 @endif
                                                 {{-- Mostrar dirección fiscal siempre --}}
+                                                 @if($tipo_certificado !== 'Venta nacional')
                                                 {{ $empresa->domicilio_fiscal ?? 'N/A' }}
                                                 <br>País: México
                                                 <br>C.P: {{ $empresa->cp ?? 'N/A' }}
+                                                @else
+                                                     {{ $datos->certificado->solicitud->empresa->domicilio_fiscal }}
+                                                @endif
                                             </td>
                                          @elseif($pregunta->filtro == 'cp')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 

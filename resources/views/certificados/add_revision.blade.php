@@ -304,8 +304,12 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'direccion_fiscal')
                                             <td>
+                                                @if($tipo_certificado !== 'Venta nacional')
                                                 {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }} 
                                                  C.P. {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
+                                                 @else
+                                                    {{ $datos->certificado->solicitud->empresa->domicilio_fiscal }}
+                                                 @endif
                                             </td>
                                          @elseif($pregunta->filtro == 'cp')
                                             <td>{{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->cp ?? 'No registrado' }} 
