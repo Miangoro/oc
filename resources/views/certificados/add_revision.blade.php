@@ -1093,7 +1093,8 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                                 $rangoFolios[] = $linkInicio . ' a ' . $linkFinal;
                                                             }
                                                         }
-
+                                                            use App\Models\activarHologramasModelo;
+use App\Models\solicitudHolograma;
                                                             foreach ($hologramasData as $rango) {
                                                                 $activacion = activarHologramasModelo::find($hologramas[0]->id);
                                                                 $solic = $activacion ? solicitudHolograma::find($activacion->id_solicitud) : null;
