@@ -264,6 +264,7 @@ public function historial($id)
           $historial->id_doc_calidad       = $documento->id_doc_calidad;
           $historial->tipo                 = 4;
           $historial->nombre               = $documento->nombre;
+          $historial->area           = $documento->area;
           $historial->identificacion       = $documento->identificacion;
           $historial->edicion              = $documento->edicion;
           $historial->fecha_edicion        = $documento->fecha_edicion;

@@ -526,6 +526,10 @@ $(function () {
         }
       });
     });
+    // Inicializar select2 y revalidar el campo cuando cambie
+    $('#doc_reviso, #doc_aprobo').on('change', function () {
+      fv.revalidateField($(this).attr('name'));
+    });
   });
 
   // Delete Record
@@ -799,6 +803,10 @@ $(function () {
           }
         });
       });
+      $('#edit_reviso, #edit_aprobo').on('change', function () {
+        fv.revalidateField($(this).attr('name'));
+      });
+
     });
   });
 
@@ -986,7 +994,7 @@ $(function () {
             Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              text: 'Error al actualizar la clase',
+              text: 'Error al actualizar el documento',
               customClass: {
                 confirmButton: 'btn btn-danger'
               }
@@ -994,6 +1002,10 @@ $(function () {
           }
         });
       });
+      $('#edit_edit_reviso, #edit_edit_aprobo').on('change', function () {
+        fv.revalidateField($(this).attr('name'));
+      });
+
     });
   });
 

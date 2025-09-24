@@ -6,23 +6,27 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\documentos_registro;
 use App\Models\documentos_calidad;
-use App\Models\documentos_calidad_historial;
+use App\Models\documentos_registro_historial;
 
-class DocumentosProcedimientosController extends Controller
+
+
+class DocumentosRegistroController extends Controller
 {
-    //
+
       public function UserManagement()
     {
         $tipo_usuario =  Auth::user()->name;
         $usuarios = User::where('tipo', '!=', 3)->get();
-        return view('gestion_calidad.find_documentos_procedimientos_view', compact('tipo_usuario', 'usuarios'));
+        $procedimientos = documentos_calidad::where('tipo', 2)->get();
+        return view('gestion_calidad.find_documentos_registro_view', compact('tipo_usuario', 'usuarios', 'procedimientos'));
     }
 
     public function index(Request $request)
     {
         $columns = [
-            0 => 'id_doc_calidad',
+            0 => 'id_registro',
             1 => 'tipo',
             2 => 'archivo',
             3 => 'identificacion',
@@ -38,7 +42,7 @@ class DocumentosProcedimientosController extends Controller
 
         $search = [];
 
-        $totalData = documentos_calidad::where('tipo', 2)->count();
+        $totalData = documentos_registro::count();
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -48,17 +52,15 @@ class DocumentosProcedimientosController extends Controller
 
         if (empty($request->input('search.value'))) {
               // 🔥 Solo traer tipo = 2
-              $users = documentos_calidad::where('tipo', 2)
-                  ->offset($start)
+              $users = documentos_registro::offset($start)
                   ->limit($limit)
                   ->orderBy($order, $dir)
                   ->get();
           } else {
               $search = $request->input('search.value');
 
-              $users = documentos_calidad::where('tipo', 2)
-                  ->where(function ($query) use ($search) {
-                      $query->where('id_doc_calidad', 'LIKE', "%{$search}%")
+              $users = documentos_registro::where(function ($query) use ($search) {
+                      $query->where('id_registro', 'LIKE', "%{$search}%")
                             ->orWhere('nombre', 'LIKE', "%{$search}%");
                   })
                   ->offset($start)
@@ -66,9 +68,9 @@ class DocumentosProcedimientosController extends Controller
                   ->orderBy($order, $dir)
                   ->get();
 
-              $totalFiltered = documentos_calidad::where('tipo', 2)
-                  ->where(function ($query) use ($search) {
-                      $query->where('id_doc_calidad', 'LIKE', "%{$search}%")
+              $totalFiltered = documentos_registro::
+                  where(function ($query) use ($search) {
+                      $query->where('id_registro', 'LIKE', "%{$search}%")
                             ->orWhere('nombre', 'LIKE', "%{$search}%");
                   })
                   ->count();
@@ -80,13 +82,14 @@ class DocumentosProcedimientosController extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-                $nestedData['id_doc_calidad'] = $user->id_doc_calidad; // Ajusta el nombre de la columna según tu base de datos
+                $nestedData['id_registro'] = $user->id_registro; // Ajusta el nombre de la columna según tu base de datos
                 $nestedData['fake_id'] = ++$ids;
                 $nestedData['nombre'] = $user->nombre; // Ajusta el nombre de la columna según tu base de datos
                 $nestedData['identificacion'] = $user->identificacion;
                 $nestedData['estatus'] = $user->estatus;
                 $nestedData['archivo'] = $user->archivo;
-                 $versiones = documentos_calidad_historial::where('id_doc_calidad', $user->id_doc_calidad)->count();
+                $nestedData['edicion'] = $user->edicion;
+                 $versiones = documentos_registro_historial::where('id_registro', $user->id_registro)->count();
                 $nestedData['versiones'] = $versiones;
                 $data[] = $nestedData;
             }
@@ -113,7 +116,7 @@ class DocumentosProcedimientosController extends Controller
 public function destroy($id)
 {
     try {
-        $documento = documentos_calidad::with('historial')->findOrFail($id);
+        $documento = documentos_registro::with('historial')->findOrFail($id);
 
         // Eliminar historial primero
         $documento->historial()->delete();
@@ -135,6 +138,7 @@ public function destroy($id)
           'nombre'         => 'required|string|max:255',
           'identificacion' => 'required|string|max:100',
           'area'           => 'required|integer',
+          'id_procedimiento'=> 'required|integer',
           'edicion'        => 'required|string|max:50',
           'fecha_edicion'  => 'required|date',
           'estatus'        => 'required|string|max:50',
@@ -153,11 +157,12 @@ public function destroy($id)
           }
 
           // Guardar en documentos_calidad
-          $documento = new documentos_calidad();
+          $documento = new documentos_registro();
           $documento->nombre         = $request->nombre;
           $documento->identificacion = $request->identificacion;
           $documento->area           = $request->area;
-          $documento->tipo           = 2;
+          $documento->id_procedimiento = $request->id_procedimiento;
+          /* $documento->tipo           = 4; */
           $documento->edicion        = $request->edicion;
           $documento->fecha_edicion  = $request->fecha_edicion;
           $documento->estatus        = $request->estatus;
@@ -169,11 +174,12 @@ public function destroy($id)
           $documento->save();
 
           // Guardar en historial
-          $historial = new documentos_calidad_historial();
-          $historial->id_doc_calidad = $documento->id_doc_calidad;
-          $historial->tipo        = 2;
+          $historial = new documentos_registro_historial();
+          $historial->id_registro = $documento->id_registro;
+         /*  $historial->tipo        = 4; */
           $historial->area           = $documento->area;
           $historial->nombre         = $documento->nombre;
+          $historial->id_procedimiento = $documento->id_procedimiento;
           $historial->identificacion = $documento->identificacion;
           $historial->edicion        = $documento->edicion;
           $historial->fecha_edicion  = $documento->fecha_edicion;
@@ -198,7 +204,7 @@ public function destroy($id)
 // DocumentosReferenciaController.php
 public function historial($id)
 {
-    $historial = documentos_calidad_historial::where('id_doc_calidad', $id)->get();
+    $historial = documentos_registro_historial::where('id_registro', $id)->get();
 
     return response()->json([
         'data' => $historial
@@ -210,7 +216,7 @@ public function historial($id)
     public function edit($id_doc)
     {
         try {
-            $doc = documentos_calidad::findOrFail($id_doc);
+            $doc = documentos_registro::findOrFail($id_doc);
             return response()->json($doc);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener el documento'], 500);
@@ -224,6 +230,7 @@ public function historial($id)
           'nombre'         => 'required|string|max:255',
           'identificacion' => 'required|string|max:100',
           'area'           => 'required|integer',
+          'id_procedimiento'=> 'required|integer',
           'edicion'        => 'required|string|max:50',
           'fecha_edicion'  => 'required|date',
           'estatus'        => 'required|string|max:50',
@@ -235,7 +242,7 @@ public function historial($id)
 
       try {
           // Buscar documento existente
-          $documento = documentos_calidad::findOrFail($id);
+          $documento = documentos_registro::findOrFail($id);
 
           // Guardar archivo si se sube uno nuevo
           if ($request->hasFile('archivo')) {
@@ -246,8 +253,9 @@ public function historial($id)
           // Actualizar campos del documento
           $documento->nombre         = $request->nombre;
           $documento->identificacion = $request->identificacion;
-          $documento->tipo = 2;
+         /*  $documento->tipo = 4; */
           $documento->area           = $request->area;
+          $documento->id_procedimiento = $request->id_procedimiento;
           $documento->edicion        = $request->edicion;
           $documento->fecha_edicion  = $request->fecha_edicion;
           $documento->estatus        = $request->estatus;
@@ -258,12 +266,13 @@ public function historial($id)
           $documento->save();
 
           // Registrar nueva versión en historial
-          $historial = new documentos_calidad_historial();
-          $historial->id_doc_calidad       = $documento->id_doc_calidad;
-          $historial->tipo                 = 2;
+          $historial = new documentos_registro_historial();
+          $historial->id_registro       = $documento->id_registro;
+          /* $historial->tipo                 = 4; */
           $historial->nombre               = $documento->nombre;
           $historial->area           = $documento->area;
           $historial->identificacion       = $documento->identificacion;
+          $historial->id_procedimiento = $documento->id_procedimiento;
           $historial->edicion              = $documento->edicion;
           $historial->fecha_edicion        = $documento->fecha_edicion;
           $historial->estatus              = $documento->estatus;
@@ -287,7 +296,7 @@ public function historial($id)
   public function editHistorial($id)
   {
         try {
-            $historial = documentos_calidad_historial::findOrFail($id);
+            $historial = documentos_registro_historial::findOrFail($id);
             return response()->json($historial);
         } catch (\Exception $e) {
             return response()->json([
@@ -303,6 +312,7 @@ public function historial($id)
           'nombre' => 'required|string|max:255',
           'identificacion' => 'required|string|max:100',
           'area' => 'required|integer',
+          'id_procedimiento' => 'required|integer',
           'edicion' => 'required|string|max:50',
           'fecha_edicion' => 'required|date',
           'estatus' => 'required|string|max:50',
@@ -313,14 +323,15 @@ public function historial($id)
       ]);
 
       try {
-          $historial = documentos_calidad_historial::findOrFail($id);
+          $historial = documentos_registro_historial::findOrFail($id);
 
           // Actualizar campos
           $historial->nombre = $request->nombre;
           $historial->identificacion = $request->identificacion;
           $historial->area = $request->area;
-          $historial->tipo = 2;
+         /*  $historial->tipo = 4; */
           $historial->edicion = $request->edicion;
+          $historial->id_procedimiento = $request->id_procedimiento;
           $historial->fecha_edicion = $request->fecha_edicion;
           $historial->estatus = $request->estatus;
           $historial->modifico = $request->modifico;
@@ -344,5 +355,4 @@ public function historial($id)
           ], 500);
       }
   }
-
 }

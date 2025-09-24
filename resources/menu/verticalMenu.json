@@ -487,9 +487,9 @@
         },
         {
           "name": "Registros",
-          "url": "/documentos-referencia",
+          "url": "/documentos-registro",
           "icon": "menu-icon ri-archive-drawer-line",
-          "slug": "documentos-registros",
+          "slug": "documentos-registro",
           "can": "Visualizar Sistema de gestión de calidad"
         }
       ]

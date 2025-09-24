@@ -522,6 +522,9 @@ $(function () {
         }
       });
     });
+    $('#doc_reviso, #doc_aprobo').on('change', function () {
+      fv.revalidateField($(this).attr('name'));
+    });
   });
 
   // Delete Record
@@ -795,6 +798,10 @@ $(function () {
           }
         });
       });
+      $('#edit_reviso, #edit_aprobo').on('change', function () {
+        fv.revalidateField($(this).attr('name'));
+      });
+
     });
   });
 
@@ -990,6 +997,10 @@ $(function () {
           }
         });
       });
+      $('#edit_edit_reviso, #edit_edit_aprobo').on('change', function () {
+        fv.revalidateField($(this).attr('name'));
+      });
+
     });
   });
 
