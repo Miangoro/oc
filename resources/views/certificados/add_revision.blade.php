@@ -1094,6 +1094,37 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                             }
                                                         }
 
+                                                        use App\Models\activarHologramasModelo;
+use App\Models\solicitudHolograma;
+
+$activacion = activarHologramasModelo::find($hologramas[0]->id);
+
+$solic = $activacion
+    ? solicitudHolograma::find($activacion->id_solicitud)
+    : null;
+
+$numero_cliente = $solic?->empresa?->empresaNumClientes
+    ->filter(fn ($cliente) => !empty($cliente->numero_cliente))
+    ->first()?->numero_cliente ?? 'Sin asignar';
+
+$rangoFolios = []; // Asegúrate de inicializar el array
+
+foreach ($hologramasData as $rango) {
+    $folioInicial = str_pad($rango['inicio'], 7, '0', STR_PAD_LEFT);
+    $folioFinal   = str_pad($rango['final'], 7, '0', STR_PAD_LEFT);
+
+    $linkInicio = '<a target="_blank" href="/holograma/' .
+        $numero_cliente . '-' . $tipoHolograma . $folioMarca . $folioInicial . '">' .
+        $numero_cliente . '-' . $tipoHolograma . $folioMarca . $folioInicial . '</a>';
+
+    $linkFinal = '<a target="_blank" href="/holograma/' .
+        $numero_cliente . '-' . $tipoHolograma . $folioMarca . $folioFinal . '">' .
+        $numero_cliente . '-' . $tipoHolograma . $folioMarca . $folioFinal . '</a>';
+
+    $rangoFolios[] = $linkInicio . ' a ' . $linkFinal;
+}
+
+
                                                    
 
                                                         
