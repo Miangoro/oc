@@ -128,7 +128,11 @@
                 <div class="col-md-4">
                     <p class="text-muted mb-1">Cliente</p>
                     <h5 class="fw-semibold">
-                        {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @if ($tipo_certificado !== 'Venta nacional')
+                            {{ $datos->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @else
+                             {{ $datos->certificado->solicitud->empresa->razon_social ?? 'N/A' }}
+                        @endif
                     </h5>
                 </div>
 
