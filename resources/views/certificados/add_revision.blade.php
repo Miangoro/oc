@@ -226,6 +226,9 @@
                                             @php
                                                 $empresa =
                                                     $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa;
+                                                 if ($tipo_certificado == 'Venta nacional'){
+                                                         $empresa = $datos->certificado->solicitud->empresa;
+                                                    }
                                                 $cliente = $empresa?->empresaNumClientes?->firstWhere(
                                                     'numero_cliente',
                                                     '!=',
@@ -311,7 +314,25 @@
                                             </td>
                                         @elseif($pregunta->filtro == 'direccion_fiscal')
                                             <td>
-                                                @if ($documento && $tipo_certificado == 'Venta nacional')
+                                                @if ($tipo_certificado == 'Venta nacional')
+                                                 @php
+                                                $empresa = $datos->certificado->solicitud->empresa;
+
+                                                    if ($tipo_certificado == 'Venta nacional'){
+                                                         $empresa = $datos->certificado->solicitud->empresa;
+                                                    }
+
+                                                $idConstanciaFiscal = 76;
+                                                $cliente = $empresa?->empresaNumClientes->firstWhere(
+                                                    'numero_cliente',
+                                                    '!=',
+                                                    null,
+                                                );
+                                                $documento = $datos->obtenerDocumentosClientes(
+                                                    $idConstanciaFiscal,
+                                                    $empresa->id_empresa,
+                                                );
+                                            @endphp
                                                     <a target="_blank"
                                                         href="{{ '../files/' . $cliente->numero_cliente . '/' . $documento }}">
                                                         <i
