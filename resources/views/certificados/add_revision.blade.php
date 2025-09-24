@@ -1095,7 +1095,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                         }
 
                                                             foreach ($hologramasData as $rango) {
-
+                                                                dd($hologramas);
                                                                  $numero_cliente = $hologramas?->empresaNumClientes
                                                             ->filter(fn($cliente) => !empty($cliente->numero_cliente))
                                                             ->first()?->numero_cliente ?? 'Sin asignar';
