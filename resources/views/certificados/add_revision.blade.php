@@ -1071,7 +1071,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
 
                                                          
 
-                                                        $numero_cliente = $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes
+                                                        $numero_cliente = $datos?->certificado?->dictamen?->inspeccione?->solicitud?->lote_envasado->marca->empresa?->empresaNumClientes
                                                             ->filter(fn($cliente) => !empty($cliente->numero_cliente))
                                                             ->first()?->numero_cliente ?? 'Sin asignar';
 
