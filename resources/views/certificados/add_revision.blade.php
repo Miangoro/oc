@@ -686,7 +686,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                         : null;
 
                                                 $docFirmado = $loteGranel
-                                                    ? \App\Models\documentacion_url::where(
+                                                    ? \App\Models\Documentacion_url::where(
                                                         'id_relacion',
                                                         $loteGranel->id_lote_granel,
                                                     )
@@ -804,7 +804,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                     $numeroCliente = $empresa2?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente;
                                                     $url = null;
                                                     if ($empresa2 && $empresa2->id_empresa) {
-                                                        $url = \App\Models\documentacion_url::where('id_empresa', $empresa2->id_empresa)
+                                                        $url = \App\Models\Documentacion_url::where('id_empresa', $empresa2->id_empresa)
                                                             ->where('id_documento', 83)
                                                             ->value('url');
                                                     }
