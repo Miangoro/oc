@@ -53,11 +53,12 @@ $(function () {
         { data: '' }, //0
         { data: 'id_doc_calidad' }, // 1
         { data: 'archivo' }, // 2
-        { data: 'identificacion' }, // 3
-        { data: 'nombre' }, // 4
-        { data: 'estatus' }, // 5
-        { data: '' }, // 6
-        { data: 'action' } // 7
+        { data: 'archivo_editable'}, //3
+        { data: 'identificacion' }, // 4
+        { data: 'nombre' }, // 5
+        { data: 'estatus' }, // 6
+        { data: '' }, // 7
+        { data: 'action' } // 8
       ],
 
       columnDefs: [
@@ -78,42 +79,142 @@ $(function () {
             return `<span>${full.fake_id}</span>`;
           }
         },
+{
+  targets: 2,
+  className: 'text-center',
+  searchable: false,
+  orderable: false,
+  render: function (data, type, full, meta) {
+    var archivo = full['archivo']; // ruta del archivo en DB
+    if (archivo && archivo !== '') {
+      var extension = archivo.split('.').pop().toLowerCase();
+      var iconClass = '';
+      var colorClass = '';
+      var label = '';
+
+      switch (extension) {
+        case 'pdf':
+          iconClass = 'ri-file-pdf-2-fill';
+          colorClass = 'text-danger';
+          label = 'PDF';
+          break;
+        case 'doc':
+        case 'docx':
+          iconClass = 'ri-file-word-2-fill';
+          colorClass = 'text-primary';
+          label = 'Word';
+          break;
+        case 'xls':
+        case 'xlsx':
+          iconClass = 'ri-file-excel-2-fill';
+          colorClass = 'text-success';
+          label = 'Excel';
+          break;
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+          iconClass = 'ri-image-fill';
+          colorClass = 'text-info';
+          label = 'Imagen';
+          break;
+        default:
+          iconClass = 'ri-file-fill';
+          colorClass = 'text-secondary';
+          label = 'Archivo';
+      }
+
+      return `
+        <i class="${iconClass} ${colorClass} ri-40px PDFDocFind cursor-pointer"
+          title="${label}"
+          data-bs-target="#mostrarPdf"
+          data-bs-toggle="modal"
+          data-bs-dismiss="modal"
+          data-nombre="${full['nombre']}"
+          data-url="/storage/${archivo}"
+          data-id="${full['id_doc_calidad']}"
+          data-archivo="${archivo}"></i>
+      `;
+    } else {
+      return '<i class="ri-file-fill ri-32px icon-no-pdf text-muted"></i>'; // ícono gris genérico
+    }
+  }
+}
+,
+{
+  targets: 3,
+  className: 'text-center',
+  searchable: false,
+  orderable: false,
+  render: function (data, type, full, meta) {
+    var archivo = full['archivo_editable']; // ruta en DB
+    if (archivo && archivo !== '') {
+      // obtener la extensión (en minúsculas)
+      var extension = archivo.split('.').pop().toLowerCase();
+      var iconClass = '';
+      var colorClass = '';
+      var label = '';
+
+      switch (extension) {
+        case 'pdf':
+          iconClass = 'ri-file-pdf-2-fill';
+          colorClass = 'text-danger';
+          label = 'PDF';
+          break;
+        case 'doc':
+        case 'docx':
+          iconClass = 'ri-file-word-2-fill';
+          colorClass = 'text-primary';
+          label = 'Word';
+          break;
+        case 'xls':
+        case 'xlsx':
+          iconClass = 'ri-file-excel-2-fill';
+          colorClass = 'text-success';
+          label = 'Excel';
+          break;
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+          iconClass = 'ri-image-fill';
+          colorClass = 'text-info';
+          label = 'Imagen';
+          break;
+        default:
+          iconClass = 'ri-file-fill';
+          colorClass = 'text-secondary';
+          label = 'Archivo';
+      }
+
+      return `
+        <i class="${iconClass} ${colorClass} ri-40px PDFDocFind cursor-pointer"
+          title="${label}"
+          data-bs-target="#mostrarPdf"
+          data-bs-toggle="modal"
+          data-bs-dismiss="modal"
+          data-nombre="${full['nombre']}"
+          data-url="/storage/${archivo}"
+          data-id="${full['id_doc_calidad']}"
+          data-archivo="${archivo}"></i>
+      `;
+    } else {
+      return '<i class="ri-file-fill ri-32px icon-no-pdf text-muted"></i>'; // ícono gris genérico
+    }
+  }
+},
         {
-          targets: 2,
-          className: 'text-center',
-          searchable: false,
-          orderable: false,
-          render: function (data, type, full, meta) {
-            var archivo = full['archivo']; // ruta del archivo en DB
-            if (archivo && archivo !== '') {
-              return `
-                <i class="ri-file-pdf-2-fill text-danger ri-40px PDFDocFind cursor-pointer"
-                  data-bs-target="#mostrarPdf" data-bs-toggle="modal"
-                  data-bs-dismiss="modal"
-                  data-nombre="${full['nombre']}"
-                  data-url="/storage/${archivo}"
-                  data-id="${full['id_doc_calidad']}"
-                  data-archivo="${archivo}"></i>
-              `;
-            } else {
-              return '<i class="ri-file-pdf-2-fill ri-32px icon-no-pdf text-muted"></i>'; // Ícono gris deshabilitado
-            }
-          }
-        },
-        {
-          targets: 3,
+          targets: 4,
           render: function (data, type, full, meta) {
             return `<span>${full.identificacion}</span>`;
           }
         },
         {
-          targets: 4,
+          targets: 5,
           render: function (data, type, full, meta) {
             return `<span>${full.nombre}</span>`;
           }
         },
         {
-          targets: 5,
+          targets: 6,
           render: function (data, type, full, meta) {
             let colorClass = '';
             switch ((full.estatus || '').toLowerCase()) {
@@ -135,7 +236,7 @@ $(function () {
         {
           searchable: false,
           orderable: false,
-          targets: 6,
+          targets: 7,
           render: function (data, type, full, meta) {
             return `
               <button class="btn btn-sm btn-warning ver-versiones" data-id="${full.id_doc_calidad}" type="button">
@@ -146,7 +247,7 @@ $(function () {
         },
         {
           // Actions botones de eliminar y actualizar(editar)
-          targets: 7,
+          targets: 8,
           title: 'Acciones',
           searchable: false,
           orderable: false,
@@ -450,6 +551,18 @@ $(function () {
             }
           }
         },
+        archivo_editable: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un archivo.'
+            },
+            file: {
+              extension: 'pdf,doc,docx,xls,xlsx,png,jpg,jpeg',
+              type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/png,image/jpeg',
+              message: 'Solo se permiten archivos PDF, Word, Excel o imágenes.'
+            }
+          }
+        },
         modifico: {
           validators: {
             notEmpty: {
@@ -724,6 +837,18 @@ $(function () {
               }
             }
           },
+          archivo_editable: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un archivo.'
+            },
+            file: {
+              extension: 'pdf,doc,docx,xls,xlsx,png,jpg,jpeg',
+              type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/png,image/jpeg',
+              message: 'Solo se permiten archivos PDF, Word, Excel o imágenes.'
+            }
+          }
+        },
           modifico: {
             validators: {
               notEmpty: {
@@ -933,6 +1058,18 @@ $(function () {
               }
             }
           },
+          archivo_editable: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un archivo.'
+            },
+            file: {
+              extension: 'pdf,doc,docx,xls,xlsx,png,jpg,jpeg',
+              type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/png,image/jpeg',
+              message: 'Solo se permiten archivos PDF, Word, Excel o imágenes.'
+            }
+          }
+        },
           modifico: {
             validators: {
               notEmpty: {

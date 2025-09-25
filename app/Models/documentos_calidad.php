@@ -22,6 +22,7 @@ class documentos_calidad extends Model
         'fecha_edicion',
         'estatus',
         'archivo',
+        'archivo_editable',
         'area',
         'modifico',
         'reviso',

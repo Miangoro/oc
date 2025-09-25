@@ -86,7 +86,8 @@ class DocumentosProcedimientosController extends Controller
                 $nestedData['identificacion'] = $user->identificacion;
                 $nestedData['estatus'] = $user->estatus;
                 $nestedData['archivo'] = $user->archivo;
-                 $versiones = documentos_calidad_historial::where('id_doc_calidad', $user->id_doc_calidad)->count();
+                $nestedData['archivo_editable'] = $user->archivo_editable;
+                $versiones = documentos_calidad_historial::where('id_doc_calidad', $user->id_doc_calidad)->count();
                 $nestedData['versiones'] = $versiones;
                 $data[] = $nestedData;
             }
@@ -142,14 +143,20 @@ public function destroy($id)
           'reviso'         => 'required|integer',
           'aprobo'         => 'required|integer',
           'archivo' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:12288',
+          'archivo_editable' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:12288',
 
       ]);
 
       try {
-          // Guardar archivo
+          // Guardar archivos
           $archivoPath = null;
           if ($request->hasFile('archivo')) {
-              $archivoPath = $request->file('archivo')->store('documentos_referencia', 'public');
+              $archivoPath = $request->file('archivo')->store('documentos_procedimientos', 'public');
+          }
+
+          $archivoEditablePath = null;
+          if ($request->hasFile('archivo_editable')) {
+              $archivoEditablePath = $request->file('archivo_editable')->store('documentos_procedimientos', 'public');
           }
 
           // Guardar en documentos_calidad
@@ -164,7 +171,8 @@ public function destroy($id)
           $documento->modifico       = $request->modifico;
           $documento->reviso         = $request->reviso;
           $documento->aprobo         = $request->aprobo;
-          $documento->archivo        = $archivoPath;
+          $documento->archivo = $archivoPath;
+          $documento->archivo_editable = $archivoEditablePath;
           $documento->id_usuario_registro = Auth::id();
           $documento->save();
 
@@ -178,7 +186,9 @@ public function destroy($id)
           $historial->edicion        = $documento->edicion;
           $historial->fecha_edicion  = $documento->fecha_edicion;
           $historial->estatus        = $documento->estatus;
-          $historial->archivo        = $documento->archivo;
+          $historial->archivo = $archivoPath;
+          $historial->archivo_editable = $archivoEditablePath;
+
           $historial->modifico       = $documento->modifico;
           $historial->reviso         = $documento->reviso;
           $historial->aprobo         = $documento->aprobo;
@@ -231,6 +241,7 @@ public function historial($id)
           'reviso'         => 'required|integer',
           'aprobo'         => 'required|integer',
           'archivo'        => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:5120',
+          'archivo_editable' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:12288',
       ]);
 
       try {
@@ -239,8 +250,13 @@ public function historial($id)
 
           // Guardar archivo si se sube uno nuevo
           if ($request->hasFile('archivo')) {
-              $archivoPath = $request->file('archivo')->store('documentos_referencia', 'public');
+              $archivoPath = $request->file('archivo')->store('documentos_procedimientos', 'public');
               $documento->archivo = $archivoPath;
+          }
+          // Guardar archivo si se sube uno nuevo
+          if ($request->hasFile('archivo_editable')) {
+              $archivoPathE = $request->file('archivo_editable')->store('documentos_procedimientos', 'public');
+              $documento->archivo_editable = $archivoPathE;
           }
 
           // Actualizar campos del documento
@@ -268,6 +284,7 @@ public function historial($id)
           $historial->fecha_edicion        = $documento->fecha_edicion;
           $historial->estatus              = $documento->estatus;
           $historial->archivo              = $documento->archivo;
+          $historial->archivo_editable              = $documento->archivo_editable;
           $historial->modifico             = $documento->modifico;
           $historial->reviso               = $documento->reviso;
           $historial->aprobo               = $documento->aprobo;
@@ -310,6 +327,7 @@ public function historial($id)
           'reviso' => 'required|integer',
           'aprobo' => 'required|integer',
           'archivo' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:5120',
+          'archivo_editable' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:12288',
       ]);
 
       try {
@@ -329,8 +347,13 @@ public function historial($id)
 
           // Si hay archivo nuevo
           if ($request->hasFile('archivo')) {
-              $archivoPath = $request->file('archivo')->store('documentos_referencia', 'public');
+              $archivoPath = $request->file('archivo')->store('documentos_procedimientos', 'public');
               $historial->archivo = $archivoPath;
+          }
+           // Si hay archivo nuevo
+          if ($request->hasFile('archivo_editable')) {
+              $archivoPathE = $request->file('archivo_editable')->store('documentos_procedimientos', 'public');
+              $historial->archivo_editable = $archivoPathE;
           }
 
           $historial->save();

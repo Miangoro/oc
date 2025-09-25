@@ -19,6 +19,7 @@ class documentos_calidad_historial extends Model
         'fecha_edicion',
         'estatus',
         'archivo',
+        'archivo_editable',
         'area',
         'modifico',
         'reviso',

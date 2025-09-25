@@ -40,7 +40,8 @@
 
                    <!-- Header -->
                    <div class="modal-header bg-primary pb-4">
-                       <h5 class="modal-title text-white" id="modalEditHistorialLabel">Registrar nuevos procedimientos</h5>
+                       <h5 class="modal-title text-white" id="modalEditHistorialLabel">Registrar nuevos procedimientos
+                       </h5>
                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                    </div>
 
@@ -72,8 +73,8 @@
                                        <div class="form-floating form-floating-outline">
                                            <select class="form-select" id="edit_area" name="area">
                                                <option value="">Seleccione el área</option>
-                                              <option value="1">OC</option>
-                                                <option value="2">UI</option>
+                                               <option value="1">OC</option>
+                                               <option value="2">UI</option>
                                            </select>
                                            <label for="Área">Área</label>
                                        </div>
@@ -83,7 +84,7 @@
                                    <div class="col-md-4">
                                        <div class="form-floating form-floating-outline">
                                            <input type="text" class="form-control" id="edit_edicion" name="edicion"
-                                               placeholder="0" >
+                                               placeholder="0">
                                            <label for="doc_edicion">Edición</label>
                                        </div>
                                    </div>
@@ -112,15 +113,21 @@
 
 
                                    <!-- Archivo -->
-                                   <div class="col-md-12">
+                                   <div class="col-md-6">
                                        <div class="form-floating form-floating-outline">
 
-                                           <input class="form-control" type="file" id="edit_archivo" name="archivo"
-                                               required>
+                                           <input class="form-control" type="file" id="edit_archivo"
+                                               name="archivo" required>
                                            <label for="doc_archivo">Archivo</label>
                                        </div>
                                    </div>
-
+                                   <div class="col-md-6">
+                                       <div class="form-floating form-floating-outline">
+                                           <input class="form-control" type="file" id="edit_archivo_editable"
+                                               name="archivo_editable" required>
+                                           <label for="edit_archivo_editable">Archivo editable</label>
+                                       </div>
+                                   </div>
                                    <div class="col-md-4">
                                        <div class="form-floating form-floating-outline">
                                            <input type="text" class="form-control" id="edit_modifico"
@@ -139,7 +146,7 @@
                                                <option value="0">Sin asignar</option>
                                                @foreach ($usuarios as $usuario)
                                                    <option value="{{ $usuario->id }}"
-                                                     data-tipo="{{ $usuario->tipo == 1 ? 'OC' : 'UI' }}">
+                                                       data-tipo="{{ $usuario->tipo == 1 ? 'OC' : 'UI' }}">
                                                        {{ $usuario->name }} ({{ $usuario->puesto }})
                                                    </option>
                                                @endforeach
@@ -157,7 +164,7 @@
                                                <option value="0">Sin asignar</option>
                                                @foreach ($usuarios as $usuario)
                                                    <option value="{{ $usuario->id }}"
-                                                     data-tipo="{{ $usuario->tipo == 1 ? 'OC' : 'UI' }}">
+                                                       data-tipo="{{ $usuario->tipo == 1 ? 'OC' : 'UI' }}">
                                                        {{ $usuario->name }} ({{ $usuario->puesto }})
                                                    </option>
                                                @endforeach
@@ -194,16 +201,17 @@
 
 
 
-      <!-- Modal editar historial Documento -->
-       <div class="modal fade" id="modalEditHistorialEdit" tabindex="-1" aria-labelledby="modalEditHistorialEditLabel"
-           aria-hidden="true">
+       <!-- Modal editar historial Documento -->
+       <div class="modal fade" id="modalEditHistorialEdit" tabindex="-1"
+           aria-labelledby="modalEditHistorialEditLabel" aria-hidden="true">
            <div class="modal-dialog modal-xl">
                <div class="modal-content">
 
                    <!-- Header -->
                    <div class="modal-header bg-primary pb-4">
                        <h5 class="modal-title text-white" id="modalEditHistorialEditLabel">Editar procedimientos</h5>
-                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                       <button type="button" class="btn-close" data-bs-dismiss="modal"
+                           aria-label="Cerrar"></button>
                    </div>
 
                    <!-- Body -->
@@ -216,8 +224,8 @@
                                    <input type="hidden" name="id" id="edit_id">
                                    <div class="col-md-6">
                                        <div class="form-floating form-floating-outline">
-                                           <input type="text" class="form-control" id="edit_edit_nombre" name="nombre"
-                                               placeholder="Sistema de gestión" required>
+                                           <input type="text" class="form-control" id="edit_edit_nombre"
+                                               name="nombre" placeholder="Sistema de gestión" required>
                                            <label for="doc_nombre">Nombre del documento</label>
                                        </div>
                                    </div>
@@ -235,7 +243,7 @@
                                            <select class="form-select" id="edit_edit_area" name="area">
                                                <option value="">Seleccione el área</option>
                                                <option value="1">OC</option>
-                                                <option value="2">UI</option>
+                                               <option value="2">UI</option>
                                            </select>
                                            <label for="Área">Área</label>
                                        </div>
@@ -244,8 +252,8 @@
                                    <!-- Edición -->
                                    <div class="col-md-4">
                                        <div class="form-floating form-floating-outline">
-                                           <input type="text" class="form-control" id="edit_edit_edicion" name="edicion"
-                                               placeholder="0" >
+                                           <input type="text" class="form-control" id="edit_edit_edicion"
+                                               name="edicion" placeholder="0">
                                            <label for="doc_edicion">Edición</label>
                                        </div>
                                    </div>
@@ -253,8 +261,8 @@
                                    <!-- Fecha -->
                                    <div class="col-md-4">
                                        <div class="form-floating form-floating-outline">
-                                           <input type="text" class="form-control flatpickr" id="edit_edit_fecha_edicion"
-                                               name="fecha_edicion">
+                                           <input type="text" class="form-control flatpickr"
+                                               id="edit_edit_fecha_edicion" name="fecha_edicion">
                                            <label for="doc_fecha">Fecha de edición</label>
                                        </div>
                                    </div>
@@ -274,15 +282,21 @@
 
 
                                    <!-- Archivo -->
-                                   <div class="col-md-12">
+                                   <div class="col-md-6">
                                        <div class="form-floating form-floating-outline">
 
-                                           <input class="form-control" type="file" id="edit_edit_archivo" name="archivo"
-                                               required>
+                                           <input class="form-control" type="file" id="edit_edit_archivo"
+                                               name="archivo" required>
                                            <label for="doc_archivo">Archivo</label>
                                        </div>
                                    </div>
-
+                                   <div class="col-md-6">
+                                       <div class="form-floating form-floating-outline">
+                                           <input class="form-control" type="file" id="edit_edit_archivo_editable"
+                                               name="archivo_editable" >
+                                           <label for="edit_edit_archivo_editable">Archivo editable</label>
+                                       </div>
+                                   </div>
                                    <div class="col-md-4">
                                        <div class="form-floating form-floating-outline">
                                            <input type="text" class="form-control" id="edit_edit_modifico"
@@ -301,7 +315,7 @@
                                                <option value="0">Sin asignar</option>
                                                @foreach ($usuarios as $usuario)
                                                    <option value="{{ $usuario->id }}"
-                                                     data-tipo="{{ $usuario->tipo == 1 ? 'OC' : 'UI' }}">
+                                                       data-tipo="{{ $usuario->tipo == 1 ? 'OC' : 'UI' }}">
                                                        {{ $usuario->name }} ({{ $usuario->puesto }})
                                                    </option>
                                                @endforeach
@@ -319,7 +333,7 @@
                                                <option value="0">Sin asignar</option>
                                                @foreach ($usuarios as $usuario)
                                                    <option value="{{ $usuario->id }}"
-                                                     data-tipo="{{ $usuario->tipo == 1 ? 'OC' : 'UI' }}">
+                                                       data-tipo="{{ $usuario->tipo == 1 ? 'OC' : 'UI' }}">
                                                        {{ $usuario->name }} ({{ $usuario->puesto }})
                                                    </option>
                                                @endforeach
@@ -335,7 +349,8 @@
 
                            <!-- Botones -->
                            <div class="d-flex justify-content-center mt-3">
-                               <button disabled class="btn btn-primary me-2 d-none" type="button" id="loadingEditHistorial">
+                               <button disabled class="btn btn-primary me-2 d-none" type="button"
+                                   id="loadingEditHistorial">
                                    <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
                                    Actualizando...
                                </button>
