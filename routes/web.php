@@ -203,6 +203,7 @@ use App\Http\Controllers\insertar_datos_bd;
 use App\Http\Controllers\inspecciones\inspeccionesController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\solicitudes\solicitudesController;
+use App\Http\Controllers\solicitudes\Solicitudes052Controller;
 use App\Http\Controllers\TrazabilidadController;
 use App\Http\Controllers\pdf_llenado\PdfController;
 use App\Http\Controllers\revision\RevisionPersonalController;
@@ -1002,6 +1003,11 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::post('/activar-hologramas/{id}', 'cambiarEstatus')->name('activar hologramas solo de vista xd');
 
      Route::post('/documentos-productor/{id_solicitud}', 'delete_document');
+});
+
+//------------------- SOLICITUDES 052 -------------------
+Route::middleware(['auth'])->controller(Solicitudes052Controller::class)->group(function () {
+    Route::get('/solicitudes-historial-052', 'UserManagement')->name('solicitudes-historial-052');
 });
 
 Route::middleware(['auth'])->controller(solicitudes_eliminadas_controller::class)->group(function () {

@@ -410,8 +410,14 @@
                                                 {{ $empresa->domicilio_fiscal ?? 'N/A' }}
                                                 <br>País: México
                                                 <br>C.P: {{ $empresa->cp ?? 'N/A' }}
-                                                @else
+                                                @else 
                                                      {{ $datos->certificado->solicitud->empresa->domicilio_fiscal }}
+                                                     <br> 
+                                                      <a target="_blank"
+                                                        href="{{ route('solicitudservi', $datos->certificado->solicitud->id_solicitud) }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a> <b>Solicitud</b>
                                                 @endif
                                             </td>
                                          @elseif($pregunta->filtro == 'cp')
@@ -1178,6 +1184,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
 
                                                         $folioMarca = $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->marca->folio;
 
+                                                       
                                                         foreach ($hologramasData as $folio => $info) {
                                                             if (!isset($info['rangos'])) continue;
 
@@ -1207,6 +1214,8 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                                     ->first()?->numero_cliente ?? 'Sin asignar';
 
                                                                 $rangoFolios = []; // Asegúrate de inicializar el array
+
+                                                                 $folioMarca = $solic->marcas->folio;
 
                                                                 foreach ($hologramasData as $rango) {
                                                                     $folioInicial = str_pad($rango['inicio'], 7, '0', STR_PAD_LEFT);
@@ -1255,6 +1264,9 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                         @elseif($pregunta->filtro == 'etiqueta')
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
+                                                if ($tipo_certificado == 'Venta nacional'){
+                                                    
+                                                }
                                                 $empresa = $solicitud->empresa;
                                                 $cliente_folder = $empresa->empresaNumClientes->firstWhere(
                                                     'numero_cliente',
@@ -1271,7 +1283,11 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                             class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
                                                 @else
-                                                    <span class="text-muted">Sin etiqueta</span>
+                                                    <a target="_blank"
+                                                        href="{{ $cliente_folder ? '../files/' . $cliente_folder . '/' . $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado->etiquetas?->url_etiqueta->url : 'NA' }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
                                                 @endif
 
 

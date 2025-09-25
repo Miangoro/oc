@@ -648,7 +648,8 @@ public function agregarResultados(Request $request)
                         ->first();
 
                     /// ASIGNAR REVISION AUTOMATICA
-                    if ($sol->inspeccion && $sol->id_tipo != 8) { // Verifica que exista la inspección
+                    //if ($sol->inspeccion && $sol->id_tipo != 8) { // Verifica que exista la inspección
+                    if ($sol->inspeccion) {
                         $inspeccion = $sol->inspeccion;
                     
                         // Buscar la última revisión de esta inspección

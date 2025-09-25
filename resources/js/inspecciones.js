@@ -338,7 +338,7 @@ $(function () {
           const dictamen = full['url_dictamen'];
           const razon = full['razon_social'];
           const cliente = full['numero_cliente'];
-          const tiposValidos = [5, 3, 8, 11, 14];
+          const tiposValidos = [3, 5, 11, 14];
 
           let html = '';
 
