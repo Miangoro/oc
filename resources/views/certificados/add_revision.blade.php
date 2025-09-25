@@ -840,9 +840,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                     $empresa = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->certificadoGranel?->dictamen?->inspeccione?->solicitud?->empresa
                                                         ?? $datos->certificado->dictamen->inspeccione->solicitud->lote_granel?->empresa;
 
-                                                    if ($tipo_certificado == 'Venta nacional'){
-                                                         $empresa = $datos->certificado->solicitud->empresa;
-                                                    }
+                                                   
                                                     
                                                     $empresa2 = $empresa; // Ya está null si no existe, no hace falta if
 
