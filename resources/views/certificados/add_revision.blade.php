@@ -450,10 +450,7 @@
                                                 $detalle = $caracteristicas['detalles'][0] ?? null;
                                                  if ($tipo_certificado == 'Venta nacional'){
                                                     $caracteristicas = json_decode(
-                                                    $datos->certificado->solicitud
-                                                        ->caracteristicas,
-                                                    true,
-                                                );
+                                                    $datos->certificado->solicitud->caracteristicas,true,);
                                                         $detalle['cantidad_botellas'] = $caracteristicas['cantidad_botellas'];
                                                         $detalle['cantidad_cajas'] = $caracteristicas['cantidad_cajas'];
                                                 }
