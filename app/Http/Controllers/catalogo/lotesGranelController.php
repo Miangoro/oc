@@ -703,7 +703,7 @@ public function store(Request $request)
                         return response()->json([
                             'success' => true, // <-- cambiar a true porque se registró
                             'warning' => true, // <-- bandera para JS
-                            'message' => 'Se registro con volumen original en 0.'
+                            'message' => 'Se registro con volumen de procedencia en 0.'
                         ], 200); // <--status 200
                     }
                 }
