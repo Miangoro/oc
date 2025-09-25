@@ -1259,8 +1259,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
                                                 if ($tipo_certificado == 'Venta nacional'){
-                                                    $solicitud = $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado[0]->etiquetas->url_etiqueta->url;
-                                                    dd($solicitud);
+                                                    
                                                 }
                                                 $empresa = $solicitud->empresa;
                                                 $cliente_folder = $empresa->empresaNumClientes->firstWhere(
@@ -1278,7 +1277,11 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                             class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
                                                 @else
-                                                    <span class="text-muted">Sin etiqueta</span>
+                                                    <a target="_blank"
+                                                        href="{{ $cliente_folder ? '../files/' . $cliente_folder . '/' . $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado[0]->etiquetas->url_etiqueta->url : 'NA' }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
                                                 @endif
 
 
