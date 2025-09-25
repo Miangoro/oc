@@ -448,7 +448,12 @@
                                                     true,
                                                 );
                                                 $detalle = $caracteristicas['detalles'][0] ?? null;
+                                                 if ($tipo_certificado == 'Venta nacional'){
+                                                        $detalle['cantidad_botellas'] = $caracteristicas['cantidad_botellas'];
+                                                }
                                             @endphp
+
+                                            
 
                                             <td>
 
