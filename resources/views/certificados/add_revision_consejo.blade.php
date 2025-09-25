@@ -412,12 +412,12 @@
                                                 <br>C.P: {{ $empresa->cp ?? 'N/A' }}
                                                 @else 
                                                      {{ $datos->certificado->solicitud->empresa->domicilio_fiscal }}
-                                                     <br> Solicitud: 
+                                                     <br> 
                                                       <a target="_blank"
                                                         href="{{ route('solicitudservi', $datos->certificado->solicitud->id_solicitud) }}">
                                                         <i
                                                             class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
-                                                    </a>
+                                                    </a> <b>Solicitud</b>
                                                 @endif
                                             </td>
                                          @elseif($pregunta->filtro == 'cp')
