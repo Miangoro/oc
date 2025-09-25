@@ -1258,7 +1258,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                         @elseif($pregunta->filtro == 'etiqueta')
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
-                                                
+                                                dd($solicitud);
                                                 $empresa = $solicitud->empresa;
                                                 $cliente_folder = $empresa->empresaNumClientes->firstWhere(
                                                     'numero_cliente',
