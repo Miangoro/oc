@@ -209,10 +209,6 @@ public function index(Request $request)
                 REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
                 JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, '$.\"no_pedido\"')),
                 'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') ) LIKE ?", ["%{$search}%"])*/
-            
-            
-
-            
 
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
             ->orWhere('direcciones.pais_destino', 'LIKE', "%{$search}%")
