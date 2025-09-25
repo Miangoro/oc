@@ -1278,7 +1278,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                     </a>
                                                 @else
                                                     <a target="_blank"
-                                                        href="{{ $cliente_folder ? '../files/' . $cliente_folder . '/' . $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado[0]->etiquetas->url_etiqueta : 'NA' }}">
+                                                        href="{{ $cliente_folder ? '../files/' . $cliente_folder . '/' . $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado[0]->etiquetas : 'NA' }}">
                                                         <i
                                                             class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
