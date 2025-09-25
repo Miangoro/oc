@@ -1258,7 +1258,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                         @elseif($pregunta->filtro == 'etiqueta')
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
-                                                if ($tipo_certificado !== 'Venta nacional'){
+                                                if ($tipo_certificado == 'Venta nacional'){
                                                     $solicitud = $datos->certificado->solicitud;
                                                 }
                                                 $empresa = $solicitud->empresa;
