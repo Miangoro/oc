@@ -288,6 +288,7 @@ public function registrar(Request $request)
     $revisor->fill([
         'respuestas' => $nuevoRegistro,
         'decision' => $todasLasRespuestasSonC ? 'positiva' : 'negativa',
+        'id_usuario_registro' => Auth::id(),
     ]);
 
     $revisor->save();
