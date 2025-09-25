@@ -60,7 +60,7 @@ class RevisionDictamen extends Model
     }
 
 
-    public function dictamenInstalacion()
+    /*public function dictamenInstalacion()
     {
         return $this->belongsTo(Dictamen_instalaciones::class, 'id_dictamen', 'id_dictamen');
     }
@@ -94,7 +94,7 @@ class RevisionDictamen extends Model
             default:
                 return null;
         }
-    }
+    }*/
 
 
     //talvez...

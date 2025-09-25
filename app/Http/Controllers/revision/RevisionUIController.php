@@ -70,7 +70,7 @@ public function index(Request $request)
 
     /// Búsqueda Global
     if (!empty($search)) {
-        // Convertir a minúsculas sin tildes para comparar
+        // Convertir a minúsculas / elimina espacios al inicio y al final
         $searchNormalized = mb_strtolower(trim($search), 'UTF-8');
         // También elimina tildes para mejor comparación
         $searchNormalized = strtr($searchNormalized, [
@@ -97,17 +97,31 @@ public function index(Request $request)
             15 => 'Revisión de etiquetas',
         ];
 
-        // Buscar coincidencia con nombre
-        $tipoDictamen = null;
+        // Buscar coincidencia con nombre de solicitud
+        $tipoSolicitudValor = null;
         foreach ($tipoSolicitud as $clave => $valor) {
-            if (strpos($searchNormalized, $clave) !== false) {
-                $tipoDictamen = $valor;
-                break; // en cuanto encuentre coincidencia, detenemos
+            $valorNormalized = mb_strtolower($valor, 'UTF-8');
+            $valorNormalized = strtr($valorNormalized, [
+                'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u'
+            ]);
+            if (strpos($searchNormalized, $valorNormalized) !== false) {
+                $tipoSolicitudValor = $clave; // guardamos el número, no el nombre
+                break;
+            }
+        }
+
+        // Busqueda por estatus
+        $estatusPosibles = ['pendiente', 'negativa', 'positiva'];
+        $estatusValor = null;
+        foreach ($estatusPosibles as $estatus) {
+            if (strpos($searchNormalized, $estatus) !== false) {
+                $estatusValor = $estatus; // Para que coincida con la BD
+                break;
             }
         }
 
         // Aplicar la búsqueda
-        $query->where(function ($q) use ($search, $tipoDictamen) {
+        $query->where(function ($q) use ($search, $tipoSolicitudValor, $estatusValor) {
             // Buscar por número de dictamen en distintos modelos
             $q->orWhereHas('inspeccion', fn($q) => $q->where('num_servicio', 'LIKE', "%{$search}%"))
             
@@ -119,10 +133,14 @@ public function index(Request $request)
             ->orWhereRaw("DATE_FORMAT(updated_at, '%d de %M del %Y') LIKE ?", ["%$search%"]);
             
             // Filtrar por tipo de dictamen si se detectó una palabra clave
-            if (!is_null($tipoDictamen)) {
-                $q->orWhere('tipo_solicitud', $tipoDictamen);
+            if (!is_null($tipoSolicitudValor)) {
+                $q->orWhere('tipo_solicitud', $tipoSolicitudValor);
             }
 
+            // Filtrar por estatus
+            if (!is_null($estatusValor)) {
+                $q->orWhere('decision', 'LIKE', "%{$estatusValor}%");
+            }
         });
 
         $totalFiltered = $query->count();// total con filtros
@@ -191,7 +209,8 @@ public function index(Request $request)
     // Devolver los resultados como respuesta JSON
     return response()->json([
         'draw' => intval($request->input('draw')),
-        'recordsTotal' => intval($totalData),   // total sin filtros
+        //'recordsTotal' => intval($totalData),   // total sin filtros
+        'recordsTotal' => in_array($userId, $admins) ? intval($totalData) : intval($totalFiltered), // total oculto/limitado
         'recordsFiltered' => intval($totalFiltered), // total con filtros
         'data' => array_merge($dataRevisor->toArray()), // Combinacion
     ]);

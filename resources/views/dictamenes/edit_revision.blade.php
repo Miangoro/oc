@@ -23,7 +23,7 @@
 
 <style>
     td {
-        padding: 0.04rem !important;
+        padding: 0.4rem !important;
     }
 
     th {
@@ -298,6 +298,35 @@ document.addEventListener('DOMContentLoaded', function () {
                                 </tr>`;
                         });
                     }
+
+                    // Etiqueta
+                    let etiquetas = Array.isArray(response.url_etiqueta) ? response.url_etiqueta : (response.url_etiqueta ? [response.url_etiqueta] : []);
+                    etiquetas.forEach(url => {
+                        html += `
+                            <tr>
+                                <td>Etiqueta</td>
+                                <td>
+                                    <a href="/files/${response.numero_cliente}/${url}" target="_blank">
+                                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>`;
+                    });
+
+                    // Corrugado
+                    let corrugados = Array.isArray(response.url_corrugado) ? response.url_corrugado : (response.url_corrugado ? [response.url_corrugado] : []);
+                    corrugados.forEach(url => {
+                        html += `
+                            <tr>
+                                <td>Corrugado</td>
+                                <td>
+                                    <a href="/files/${response.numero_cliente}/${url}" target="_blank">
+                                        <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>`;
+                    });
+
 
                     html += `</tbody></table>`;
                     $('#contenedor-documentos').html(html);
