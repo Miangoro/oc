@@ -455,6 +455,7 @@
                                                     true,
                                                 );
                                                         $detalle['cantidad_botellas'] = $caracteristicas['cantidad_botellas'];
+                                                        $detalle['cantidad_cajas'] = $caracteristicas['cantidad_cajas'];
                                                 }
                                             @endphp
 
