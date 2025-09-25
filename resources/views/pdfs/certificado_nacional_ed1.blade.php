@@ -272,7 +272,7 @@
         <td style="font-weight: bold; font-size: 12px; width: 12%;">
             % Alc. Vol. en etiqueta: </td>
         <td>
-            {{ $cont_alc }}
+            {{ $cont_alc }} %
         </td>
     </tr>
     <tr>
