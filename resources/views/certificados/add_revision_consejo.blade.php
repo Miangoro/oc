@@ -405,6 +405,14 @@
                                                     </a>
                                                 
                                                 @endif
+
+                                                 @if ($tipo_certificado == 'Venta nacional')
+                                                          <a target="_blank"
+                                                        href="{{ route('solicitudservi', $datos->certificado->solicitud->id_solicitud) }}">
+                                                        <i
+                                                            class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
+                                                    </a>
+                                                @endif 
                                                 {{-- Mostrar dirección fiscal siempre --}}
                                                  @if($tipo_certificado !== 'Venta nacional')
                                                 {{ $empresa->domicilio_fiscal ?? 'N/A' }}
