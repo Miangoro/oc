@@ -1259,7 +1259,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                             @php
                                                 $solicitud = $datos->certificado->dictamen->inspeccione->solicitud;
                                                 if ($tipo_certificado == 'Venta nacional'){
-                                                    $solicitud = $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado[0]->etiquetas->url_etiqueta;
+                                                    $solicitud = $datos->certificado->dictamen->inspeccione->solicitud->lote_envasado[0]->etiquetas->url_etiqueta->url;
                                                     dd($solicitud);
                                                 }
                                                 $empresa = $solicitud->empresa;
