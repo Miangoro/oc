@@ -246,7 +246,12 @@ public function index(Request $request)
             $caracteristicas = json_decode($certificado->solicitud->caracteristicas ?? '', true);
             $nestedData['cajas'] = $caracteristicas['cantidad_cajas'] ?? 'No encontrado';
             $nestedData['botellas'] = $caracteristicas['cantidad_botellas'] ?? 'No encontrado';
-
+            
+            //Certificado Firmado
+            $documentacion = Documentacion_url::where('id_relacion', $certificado->id_certificado)
+                ->where('id_documento', 138)->first();
+            $nestedData['pdf_firmado'] = $documentacion?->url
+                ? asset("files/{$numero_cliente}/certificados_nacional/{$documentacion->url}") : null;
 
             $data[] = $nestedData;
         }
@@ -733,7 +738,7 @@ public function storeRevisor(Request $request)
 
 
 ///PDF CERTIFICADO
-public function certificado($id_certificado)
+public function certificado($id_certificado, Request $request)
 {
     $data = Certificado_Nacional::find($id_certificado);//Obtener datos del certificado
 
@@ -741,6 +746,9 @@ public function certificado($id_certificado)
         return abort(404, 'Registro no encontrado.');
         //return response()->json(['message' => 'Registro no encontrado.', $data], 404);
     }
+
+    // Detectar si debe ir sin marca de agua
+    $sinMarca = $request->query('sinMarca', false);
 
     $fecha_emision = date('d/m/Y', strtotime($data->fecha_emision));
     $fecha_vigencia = $data->fecha_vigencia ? date('d/m/Y', strtotime($data->fecha_vigencia)) : null;
@@ -790,9 +798,144 @@ public function certificado($id_certificado)
         'analisis_fq' =>$data->dictamen->inspeccion->solicitud->lote_envasado?->lotesGranel->first()->folio_fq ?? 'No encontrado',
         'sku' =>json_decode($data->dictamen->inspeccion->solicitud->lote_envasado->sku ?? '{}', true)['inicial'] ?? 'N/A',
         'envasado_en' =>$data->dictamen->inspeccion->solicitud->instalacion->direccion_completa ?? 'No encontrado',
+
+        'sinMarca' => $sinMarca,
     ];
 
     return Pdf::loadView('pdfs.certificado_nacional_ed1', $pdf)->stream('F7.1-01-23 Ver 1. Certificado de venta nacional.pdf');
+}
+
+
+
+
+
+///SUBIR CERTIFICADO FIRMADO
+public function subirCertificado(Request $request)
+{
+    $request->validate([
+        'id_certificado' => 'required|exists:certificados_nacional,id_certificado',
+        'documento' => 'required|mimes:pdf|max:3072',
+    ]);
+
+    $certificado = Certificado_Nacional::findOrFail($request->id_certificado);
+
+    // Limpiar num_certificado para evitar crear carpetas por error
+    $nombreCertificado = preg_replace('/[^A-Za-z0-9_\-]/', '_', $certificado->num_certificado ?? 'No encontrado');
+    // Generar nombre de archivo con num_certificado + cadena aleatoria
+    $nombreArchivo = $nombreCertificado.'_'. uniqid() .'.pdf'; //uniqid() para asegurar nombre único
+
+
+    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->solicitud->empresa->id_empresa)->first();
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+    // Ruta de carpeta física donde se guardará
+    $rutaCarpeta = "public/uploads/{$numeroCliente}/certificados_nacional";
+
+    // Guardar nuevo archivo
+    $upload = Storage::putFileAs($rutaCarpeta, $request->file('documento'), $nombreArchivo);
+    if (!$upload) {
+        return response()->json(['message' => 'Error al subir el archivo.'], 500);
+    }
+
+
+    // Buscar si ya existe un registro para ese lote y tipo de documento
+    $documentacion_url = Documentacion_url::where('id_documento', 138)
+        ->where('id_relacion', $certificado->id_certificado)//id del certificado
+        ->first();
+
+    if ($documentacion_url) {
+        $ArchivoAnterior = "public/uploads/{$numeroCliente}/certificados_nacional/{$documentacion_url->url}";
+        if (Storage::exists($ArchivoAnterior)) {
+            Storage::delete($ArchivoAnterior);
+        }
+    }
+
+    // Crear o actualizar registro
+    Documentacion_url::updateOrCreate(
+        [
+            'id_documento' => 138,
+            'id_relacion' => $certificado->id_certificado,//id del certificado
+        ],
+        [
+            'nombre_documento' => "Certificado de venta nacional",
+            'url' => "{$nombreArchivo}",
+            'id_empresa' => $certificado->solicitud?->id_empresa,
+        ]
+    );
+
+    return response()->json(['message' => 'Documento actualizado correctamente.']);
+}
+///OBTENER CERTIFICADO FIRMADO
+public function CertificadoFirmado($id)
+{
+    $certificado = Certificado_Nacional::findOrFail($id);
+
+    // Buscar documento asociado al lote
+    $documentacion = Documentacion_url::where('id_documento', 138)
+        ->where('id_relacion', $certificado->id_certificado)
+        ->first();
+
+    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $certificado->solicitud->empresa->id_empresa)->first();
+      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+
+    if ($documentacion) {
+        $rutaArchivo = "{$numeroCliente}/certificados_nacional/{$documentacion->url}";
+
+        if (Storage::exists("public/uploads/{$rutaArchivo}")) {
+            return response()->json([
+                //'documento_url' => Storage::url($rutaArchivo), // genera URL pública
+                'documento_url' => asset("files/".$rutaArchivo),
+                'nombre_archivo' => basename($documentacion->url),
+            ]);
+        }else {
+            return response()->json([
+                'documento_url' => null,
+                'nombre_archivo' => null,
+            ], 404);
+        }
+    }
+
+    return response()->json([
+        'documento_url' => null,
+        'nombre_archivo' => null,
+        //'message' => 'Documento no encontrado.',
+    ]);
+}
+///BORRAR CERTIFICADO FIRMADO
+public function borrarCertificadofirmado($id)
+{
+    $certificado = Certificado_Nacional::findOrFail($id);
+
+    $documentacion = Documentacion_url::where('id_documento', 138)
+        ->where('id_relacion', $certificado->id_certificado)
+        ->first();
+
+    if (!$documentacion) {
+        return response()->json(['message' => 'Documento no encontrado.'], 404);
+    }
+
+    $empresa = empresa::with("empresaNumClientes")
+        ->where("id_empresa", $certificado->solicitud->empresa->id_empresa)
+        ->first();
+
+    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+
+    $rutaArchivo = "public/uploads/{$numeroCliente}/certificados_nacional/{$documentacion->url}";
+
+    // Eliminar archivo físico
+    if (Storage::exists($rutaArchivo)) {
+        Storage::delete($rutaArchivo);
+    }
+
+    // Eliminar registro en la base de datos
+    $documentacion->delete();
+
+    return response()->json(['message' => 'Documento eliminado correctamente.']);
 }
 
 

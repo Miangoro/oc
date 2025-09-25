@@ -152,8 +152,18 @@ if (dt_user_table.length) {
             var $num_certificado = full['num_certificado'];
             var $id = full['id_certificado'];
             var $folio_nacional = full['folio_solicitud_nacional'];
+            var $pdf_firmado = full['pdf_firmado'];
+
+            if ($pdf_firmado) {
+              var icono = `<a href="${$pdf_firmado}" target="_blank" title="Ver PDF firmado">
+                <i class="ri-file-pdf-2-fill text-success ri-28px cursor-pointer"></i> </a>`;
+            } else {
+              var icono = '<i data-id="' + $id + '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+            }
+
             return '<small class="fw-bold">' + $num_certificado + '</small>' +
-              '<i data-id="' + $id + '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' +
+              `${icono}` +
+              /* '<i data-id="' + $id + '" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>' + */
               `<br><span class="fw-bold">Solicitud:</span> ${$folio_nacional} <i data-id="${full['id_solicitud_nacional']}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfSolicitudCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>
 `;
           }
@@ -342,6 +352,13 @@ if (dt_user_table.length) {
                   href="javascript:;" class="dropdown-item text-dark editar">
                   <i class="ri-edit-box-line ri-20px text-info"></i> Editar
                 </a>`;
+            }
+
+            if (window.puedeSubirCertificadoVentaNacional) {
+              acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-dark subirPDF"
+                              data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
+                              <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF
+                            </a>`;
             }
 
             if (window.puedeAsignarRevisorCertificadoVentaNacional) {
@@ -1197,6 +1214,7 @@ $('#asignarRevisorForm').on('submit', function (e) {
 $(document).on('click', '.pdfCertificado', function () {
   var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en PDF
   var pdfUrl = '/certificado_venta_nacional/' + id; //Ruta del PDF
+  var pdfUrlSinMarca = '/certificado_venta_nacional/' + id + '?sinMarca=1'; // PDF sin marca
   var iframe = $('#pdfViewer');
   var spinner = $('#cargando');
 
@@ -1211,6 +1229,20 @@ $(document).on('click', '.pdfCertificado', function () {
 
   $("#titulo_modal").text("Certificado de venta nacional");
   $("#subtitulo_modal").text("PDF del Certificado");
+
+  // Crear botón de descarga sin marca de agua
+  if ($('#btnDescargarDinamico').length === 0) {
+      var botonDescarga = $(`
+          <a id="btnDescargarDinamico" href="${pdfUrlSinMarca}" class="btn btn-secondary ms-2" target="_blank" download>
+              Certificado sin marca de agua
+          </a>
+      `);
+      $('#NewPestana').after(botonDescarga);
+  } else {
+      // Solo actualizar href si ya existe
+      $('#btnDescargarDinamico').attr('href', pdfUrlSinMarca).show();
+  }
+
   //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
   iframe.on('load', function () {
     spinner.hide();
@@ -1321,6 +1353,163 @@ $(document).on('click', '.pdfActa', function () {
       iframe.show();
     });
 });
+
+
+
+
+
+  ///SUBIR CERTIFICADO FIRMADO
+  $('#FormCertificadoFirmado').on('submit', function (e) {
+    e.preventDefault();
+    var formData = new FormData(this);
+
+    $.ajax({
+      url: '/certificados/nacional/documento',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.message,
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+        $('#ModalCertificadoFirmado').modal('hide');
+        $('#FormCertificadoFirmado')[0].reset();
+        $('#documentoActual').empty();
+        dataTable.ajax.reload(null, false); // Si usas datatables
+      },
+      error: function (xhr) {
+
+        console.log(xhr.responseText);
+        if (xhr.status === 422) {
+          // Error de validación
+          Swal.fire({
+            icon: 'warning',
+            title: 'Error al subir',
+            text: 'El documento no debe ser mayor a 3MB',
+            //footer: `<pre>${xhr.responseText}</pre>`,
+            customClass: {
+              confirmButton: 'btn btn-warning'
+            }
+          });
+        } else {
+          // Otro tipo de error (500, 404, etc.)
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al subir el documento.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+
+      }
+    });
+
+  });
+  ///OBTENER CERTIFICADO FIRMADO
+  $(document).on('click', '.subirPDF', function () {
+    var id = $(this).data('id');
+    var num_certificado = $(this).data('folio');
+    $('#doc_id_certificado').val(id);
+    $('#documentoActual').html('Cargando documento...');
+    $('#botonEliminarDocumento').empty(); // <-- Limpia el botón eliminar al cambiar
+    $('#modalTitulo').html('Certificado venta nacional firmado <span class="badge bg-info">' + num_certificado + '</span>');
+
+    $.ajax({
+      url: `/certificados/nacional/documento/${id}`,
+      type: 'GET',
+      success: function (response) {
+        if (response.documento_url && response.nombre_archivo) {
+          $('#documentoActual').html(
+            `<p>Documento actual:
+            <a href="${response.documento_url}" target="_blank">${response.nombre_archivo}</a>
+          </p>`);
+          $('#botonEliminarDocumento').html(
+            `<button type="button" class="btn btn-outline-danger btn-sm" id="btnEliminarDocumento"><i class="ri-delete-bin-line"></i> Eliminar</button>`
+          );
+        } else {
+          $('#documentoActual').html('<p>No hay documento cargado.</p>');
+        }
+      },
+      error: function () {
+        $('#documentoActual').html('<p class="text-danger">Error al cargar el documento.</p>');
+      }
+    });
+
+  });
+  ///BORRAR CERTIFICADO FIRMADO
+  $(document).on('click', '#btnEliminarDocumento', function () {
+    const id_certificado = $('#doc_id_certificado').val();
+
+    // SweetAlert para confirmar la eliminación
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: 'No podrá revertir este evento',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+      cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-primary me-2',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        // Enviar solicitud DELETE al servidor
+        $.ajax({
+          type: 'DELETE',
+          url: `/certificados/nacional/documento/${id_certificado}`,
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function (response) {
+            dataTable.draw(false); //Actualizar la tabla sin reiniciar
+            $('#documentoActual').html('<p>No hay documento cargado.</p>');
+            $('#botonEliminarDocumento').empty();
+
+            Swal.fire({
+              icon: 'success',
+              title: '¡Exito!',
+              text: response.message,
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              }
+            });
+          },
+          error: function (error) {
+            console.log('Error:', error);
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al eliminar.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
+
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: '¡Cancelado!',
+          text: 'La eliminación ha sido cancelada.',
+          icon: 'info',
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      }
+    });
+  });
+
 
 
 

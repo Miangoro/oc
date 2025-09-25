@@ -144,11 +144,14 @@
     </div>
 @endif
 
+@if (!$sinMarca)
 <div class="img-fondo"></div>
 <div class="img-nacional"></div>
+@endif
 
 <!--ENCABEZADO-->
 <div class="encabezado">
+@if (!$sinMarca)
     <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" style="width: 340px; vertical-align: top; margin-left: -13px" alt="logo de CIDAM 3D">
 
     <div class="cidam">
@@ -157,6 +160,10 @@
             <br>entidad mexicana de acreditación ema A.C. con <b>No. 144/18</b>
         </p>
     </div>
+@else
+    {{-- Espacio reservado para que no se mueva nada --}}
+    <div style="height: 135px;"></div>
+@endif
 
     <div class="titulos" style="margin-top: -2%;">CERTIFICADO DE VENTA NACIONAL</div>
     <table>
@@ -190,8 +197,12 @@
         <br>Certificado de venta nacional F7.1-01-39 Ed 1
         <br>Entrada en vigor: 19-08-2021
     </p>
-    
+@if (!$sinMarca)
     <img class="img-footer" src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="pie de pagina">
+@else
+    {{-- Espacio reservado para que no se mueva nada --}}
+    <div style="height: 50px;"></div>
+@endif
 </div>
 
 

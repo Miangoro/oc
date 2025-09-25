@@ -48,6 +48,7 @@
 <script>
   window.puedeRegistrarCertificadoVentaNacional = @json(auth()->user()->can('Registrar certificado de venta nacional'));
   window.puedeEditarCertificadoVentaNacional = @json(auth()->user()->can('Editar certificado de venta nacional'));
+  window.puedeSubirCertificadoVentaNacional = @json(auth()->user()->can('Subir certificado de venta nacional'));
   window.puedeEliminarCertificadoVentaNacional = @json(auth()->user()->can('Eliminar certificado de venta nacional'));
   window.puedeReexpedirCertificadoVentaNacional = @json(auth()->user()->can('Reexpedir certificado de venta nacional'));
   window.puedeAsignarRevisorCertificadoVentaNacional = @json(auth()->user()->can('Asignar revisor certificado de venta nacional'));
@@ -93,6 +94,8 @@
 @include('_partials/_modals/modal-add-certificado-nacional')
 @include('_partials/_modals/modal-reexpedir-certificado-nacional')
 @include('_partials/_modals/modal-add-asignar-revisor')
+
+@include('_partials/_modals/modal-add-certificado-firmado')<!--subir certificado-->
 
 {{--
 @include('_partials/_modals/modal-trazabilidad-certificados') --}}

@@ -1469,11 +1469,10 @@ Route::middleware(['auth'])->controller(Certificado_NacionalController::class)->
     Route::get('/obtener-revision-nacional/{id_certificado}', 'obtenerRevision');
     Route::delete('/eliminar-doc-revision-nacional/{id_certificado}', 'eliminarDocumentoRevision');
 
-    //revisiones
-    /*Route::post('/asignar-revisor/nacional', [Certificado_NacionalController::class, 'storeRevisor'])->name('asignarRevisor-nacional');
-    Route::get('/obtener-revision-nacional/{id_certificado}', [Certificado_NacionalController::class, 'obtenerRevision']);
-    Route::delete('/eliminar-doc-revision-nacional/{id_certificado}', [Certificado_NacionalController::class, 'eliminarDocumentoRevision']);
-    */
+    //subir certificado firmado
+    Route::post('/certificados/nacional/documento', 'subirCertificado');
+    Route::get('/certificados/nacional/documento/{id}', 'CertificadoFirmado');
+    Route::delete('/certificados/nacional/documento/{id}', 'borrarCertificadofirmado');
 });
 
 //-------------------TRAMITE IMPI-------------------

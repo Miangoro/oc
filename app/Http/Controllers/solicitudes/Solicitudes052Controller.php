@@ -68,8 +68,6 @@ class Solicitudes052Controller extends Controller
     }
 
 
-
-
 private function obtenerEmpresasVisibles($empresaId)
 {
     $idsEmpresas = [];
@@ -165,12 +163,6 @@ public function index(Request $request)
     /* if (!empty($instalacionAuth)) {
         $query->whereIn('solicitudes.id_instalacion', $instalacionAuth);
     } */
-    /*if (!empty($instalacionAuth)) {
-        $query->where(function($q) use ($instalacionAuth) {
-            $q->whereIn('solicitudes.id_instalacion', $instalacionAuth)
-            ->orWhere('solicitudes.id_instalacion', 0);
-        });
-    }*/
     if (!empty($instalacionAuth)) {
         $query->where(function($q) use ($instalacionAuth, $empresaId) {
             $q->whereIn('solicitudes.id_instalacion', $instalacionAuth) // instalaciones asignadas
@@ -181,12 +173,6 @@ public function index(Request $request)
         });
     }
     
-    // Filtro especial para usuario 49
-    if ($userId == 49) {
-        $query->where('solicitudes.id_tipo', 11);
-    }
-
-
     $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
     $totalData = $baseQuery->count();// totalData (sin búsqueda)
 
@@ -277,19 +263,7 @@ public function index(Request $request)
         $query->orderBy($orderColumn, $orderDirection);
     }
 
-    // Paginación + relaciones
-    /*$solicitudes = $query
-        ->with([
-            'tipo_solicitud',
-            'empresa',
-            'instalacion',
-            'inspeccion.inspector',
-            'ultima_validacion_oc',
-            'ultima_validacion_ui'
-        ])
-        ->offset($start)
-        ->limit($limit)
-        ->get();*/
+    // Paginación
     $solicitudes = $query
         ->offset($start)
         ->limit($limit)
@@ -460,7 +434,6 @@ public function index(Request $request)
             'recordsFiltered' => intval($totalFiltered),
             'code' => 200,
             'data' => $data ?? [],
-            //'message' => 'No tienes solicitudes asignadas.',
             'message' => empty($data) ? 'No tienes solicitudes asignadas.' : null,
         ]);
         
@@ -471,4 +444,6 @@ public function index(Request $request)
 
 
 
-}
+
+
+}//end-Controller
