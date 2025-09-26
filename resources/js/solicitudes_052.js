@@ -130,21 +130,13 @@ $(function () {
   const ahora = new Date();
   // 1. Declarar primero los filtros
   const filtros = [
-    'Muestreo de agave (ART)',
+    'Vigilancia en proceso de producción (familia)',
+    'Toma de muestra',
+    'Liberación de producto terminado',
+    'Emisión de certificado de cumplimiento de la bebida',
     'Dictaminación de instalaciones',
-    'Vigilancia en producción de lote',
-    'Muestreo de lote a granel',
-    'Vigilancia en el traslado del lote',
-    'Emisión de certificado NOM a granel',
-    'Inspección ingreso a barrica/ contenedor de vidrio',
-    'Inspección de liberación a barrica/contenedor de vidrio',
-    'Georreferenciación',
-    'Inspección de envasado',
-    'Muestreo de lote envasado',
-    'Liberación de producto terminado nacional',
-    'Pedidos para exportación',
-    'Emisión de certificado venta nacional',
-    'Revisión de etiquetas'
+    'Renovación de dictaminación de instalaciones',
+    'Emisión de certificado de cumplimiento de instalaciones',
   ];
 
 
@@ -172,7 +164,7 @@ $(function () {
     processing: true,
     serverSide: true,
     ajax: {
-      url: baseUrl + 'solicitudes-list',
+      url: baseUrl + 'solicitudes052-list',
       type: 'GET',
       dataSrc: function (json) {
           console.log('Estado:', json.message); // ver en  consola
@@ -301,91 +293,19 @@ $(function () {
             case 5:
               return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
                       <br><span class="fw-bold  small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
-            case 7:
-              return `<br><span class="fw-bold  small">Granel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis_barricada || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.tipo_lote || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
-                       <br>
-                      <span class="fw-bold  small">Volumen ingresado:</span><span class="small"> ${data.volumen_ingresado || 'N/A'}</span>
-                      `;
-            case 8:
-              return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
-                      `;
-            case 9:
-              return `<br><span class="fw-bold  small">Granel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Tipo:</span><span class="small"> ${data.tipo_lote_lib || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
-                      `;
-            case 10:
+            
+            case 6:
               return `<br><span class="fw-bold small">Punto de reunión:</span><span class="small"> ${data.punto_reunion || 'N/A'}</span>
                       <br>
                       <span class="fw-bold small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
-            case 11://Pedidos para exportacion
-              return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Granel:</span><span class="small"> ${data.lote_granel || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Marca:</span><span class="small"> ${data.marca || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Cont. Neto.:</span><span class="small"> ${data.presentacion || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Cajas:</span><span class="small"> ${data.cajas || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold  small">Botellas:</span><span class="small"> ${data.botellas || 'N/A'}</span>
-                       <br>
-                       <span class="fw-bold  small">Proforma:</span><span class="small"> ${data.no_pedido || 'N/A'}</span>
-                       <br>
-                       <span class="fw-bold  small">Pais destino:</span><span class="small"> ${data.pais || 'N/A'}</span>
-                       <br>
-                      <span class="fw-bold  small">Certificado:</span><span class="small"> ${data.certificado_exportacion || 'N/A'}</span>
-                       ${data.combinado}`;
-            case 14:
-              return `<span class="fw-bold  small">
-                  ${data.renovacion === 'si' ? 'Es renovación' : 'No es renovación'}
-              </span>`;
-
+            
             default:
               return `<br><span class="fw-bold text-dark small">Información no disponible</span>`;
           }
         }
       },
       { data: 'fecha_servicio' },
-      {
-        data: 'estatus',
+      { data: 'estatus',
         render: function (data, type, row) {
           //estatus hologramas activados
           var $color_estatus = '';
@@ -396,24 +316,7 @@ $(function () {
               var $color_estatus = '<span class="badge rounded-pill bg-label-danger">Hologramas no activados</span>';
             }
           }
-
-          // Define las etiquetas para cada estado
-          let estatus_validado_oc = 'bg-warning';
-          let estatus_validado_ui = 'bg-warning';
-          if (row.estatus_validado_oc == 'Validada') {
-            estatus_validado_oc = 'bg-success';
-          }
-          if (row.estatus_validado_oc == 'Rechazada') {
-            estatus_validado_oc = 'bg-danger';
-          }
-
-          if (row.estatus_validado_ui == 'Validada') {
-            estatus_validado_ui = 'bg-success';
-          }
-          if (row.estatus_validado_ui == 'Rechazada') {
-            estatus_validado_ui = 'bg-danger';
-          }
-
+        
           // ACTA
           const acta = row.url_acta;
           const razon = row.razon_social;
@@ -425,9 +328,7 @@ $(function () {
             html += '<span class="badge bg-danger me-1">Sin acta</span>';
           }
 
-          return `<span class="badge bg-warning mb-1">${data}</span><br>
-            <span class="badge ${estatus_validado_oc} mb-1">${row.estatus_validado_oc} por oc</span><br>
-            <span class="badge ${estatus_validado_ui}">${row.estatus_validado_ui} por ui</span> <br>`
+          return `<span class="badge bg-warning mb-1">${data}</span><br>`
             + html + `<br>` + $color_estatus;
         }
       },
@@ -522,41 +423,14 @@ $(function () {
         searchable: false,
         orderable: false,
         render: function (data, type, full, meta) {
-          ///estatus hologramas activados
-          var $boton = '';
-          let textoEstatus = full['estatus_activado'] == 1
-            ? 'Cambiar estatus <span class="text-danger">desactivado</span>'
-            : 'Cambiar estatus <span class="text-success">activado</span>';
-          if (full['id_tipo'] == 5) {
-            var $boton = `<a data-id="${full['id_solicitud']}" data-estatus="${full['estatus_activado']}" class="dropdown-item waves-effect text-dark activar-hologramas">
-                <i class="ri-refresh-line ri-20px"></i> ${textoEstatus}
-              </a>`;
-          }
-
+          
           let dropdown = `
                 <div class="d-flex align-items-center gap-50">
                   <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                     <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
                   </button>
-                  <div class="dropdown-menu dropdown-menu-end m-0">
-                    <a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']}, '${full['tipo']}', '${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2">
-                      <i class="text-warning ri-user-search-fill"></i> Trazabilidad
-                    </a> <a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['id_inspeccion']}', '${full['tipo']}', '${full['razon_social']}', '${full['id_tipo']}','${full['folio_info']}', '${full['num_servicio_info']}','${full['inspectorName']}')" href="javascript:;" class="dropdown-item"><i class="text-info ri-folder-3-fill"></i>Expediente de la solicitud</a>`;
-
-          // Si puede agregar usuario, incluir opción adicional
-          if (puedeValidarSolicitud) {
-            dropdown += `
-                  <a
-                    data-id="${full['id_tipo']}"
-                    data-id-solicitud="${full['id_solicitud']}"
-                    data-tipo="${full['tipo']}"
-                    data-razon-social="${full['razon_social']}"
-                    data-bs-toggle="modal"
-                    data-bs-target="#addSolicitudValidar"
-                    class="dropdown-item text-dark waves-effect validar-solicitudes">
-                    <i class="text-success ri-search-eye-line"></i> Validar solicitud
-                  </a>`;
-          }
+                  <div class="dropdown-menu dropdown-menu-end m-0">`;
+          
 
       const fechaString = full['fecha_inspeccion']; // "2025-07-24 10:00:00"
 
@@ -594,7 +468,7 @@ $(function () {
                     </a>`;
           }
 
-          dropdown += $boton +
+          dropdown +=
             `</div>
                 </div>`;
 
@@ -785,7 +659,7 @@ $(function () {
         // Solicitud de eliminación
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}solicitudes-lista/${id_solicitudes}`, // Ajusta la URL aquí
+          //url: `${baseUrl}solicitudes-lista/${id_solicitudes}`, // Ajusta la URL aquí
           data: { reason: reason }, // Envía el motivo al servidor si es necesario
           success: function () {
             dt_instalaciones_table.ajax.reload();
@@ -885,20 +759,7 @@ $(function () {
     }
   });
 
-  $(document).on('click', '.expediente-record', function () {
-    // Accediendo a los valores de los atributos data-
-    var id = $(this).data('id');
-    var id_solicitud = $(this).data('id-solicitud');
-    var tipo = $(this).data('tipo');
-    var id_tipo = $(this).data('id-tipo');
-    var razon_social = $(this).data('razon-social');
 
-
-    $('#expedienteServicio .id_solicitud').text(id_solicitud);
-    $('#expedienteServicio .tiposs').text(id_tipo);
-    // Aquí puedes utilizar estos datos para abrir un modal, hacer una solicitud AJAX, etc.
-    abrirModal(id_solicitud, tipo, razon_social);
-  });
 
 
 
@@ -1510,7 +1371,7 @@ $(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: `/documentos-productor/${idDoc}`, // tu ruta para eliminar
+          //url: `/documentos-productor/${idDoc}`, // tu ruta para eliminar
           type: 'POST',
           data: {
             _token: $('meta[name="csrf-token"]').attr('content')
@@ -1635,7 +1496,7 @@ $(function () {
 
       // Hacer la solicitud AJAX
       $.ajax({
-        url: '/actualizar-solicitudes/' + $('#id_solicitud_geo').val(),
+        //url: '/actualizar-solicitudes/' + $('#id_solicitud_geo').val(),
         type: 'POST',
         data: formData,
         processData: false,
@@ -1745,7 +1606,7 @@ $(function () {
       $('#btnEditDicIns').addClass('d-none');
       $('#loading_dictamen_edit').removeClass('d-none');
       $.ajax({
-        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud').val(),
+      //  url: '/actualizar-solicitudes/' + $('#edit_id_solicitud').val(),
         type: 'POST',
         data: formData,
         processData: false,
@@ -1869,7 +1730,7 @@ $(function () {
 
       // Hacer la solicitud AJAX
       $.ajax({
-        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_vig').val(),
+       // url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_vig').val(),
         type: 'POST',
         data: formData,
         processData: false,
@@ -2011,7 +1872,7 @@ $(function () {
       }, 3000);
       // Hacer la solicitud AJAX
       $.ajax({
-        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_muestreo').val(),
+        //url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_muestreo').val(),
         type: 'POST',
         data: formData,
         processData: false,
@@ -2120,7 +1981,7 @@ $(function () {
 
       // Hacer la solicitud AJAX
       $.ajax({
-        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_traslado').val(),
+        //url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_traslado').val(),
         type: 'POST',
         data: formData,
         processData: false,
@@ -2228,7 +2089,7 @@ $(function () {
       }, 2000);
       // Hacer la solicitud AJAX
       $.ajax({
-        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_barricada').val(),
+        //url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_barricada').val(),
         type: 'POST',
         data: formData,
         processData: false,
@@ -2356,7 +2217,7 @@ $(function () {
       }, 2500);
       // Hacer la solicitud AJAX
       $.ajax({
-        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_inspeccion').val(),
+        //url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_inspeccion').val(),
         type: 'POST',
         data: formData,
         processData: false,
@@ -2487,7 +2348,7 @@ $(function () {
       }, 3000);
 
       $.ajax({
-        url: '/hologramas/storeInspeccionEnvasado', // Cambiar a la ruta correspondiente
+        //url: '/hologramas/storeInspeccionEnvasado', // Cambiar a la ruta correspondiente
         type: 'POST',
         data: formData,
         processData: false,
@@ -2604,7 +2465,7 @@ $(function () {
 
       // Hacer la solicitud AJAX
       $.ajax({
-        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_liberacion').val(),
+        //url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_liberacion').val(),
         type: 'POST',
         data: formData,
         processData: false,
@@ -2699,7 +2560,7 @@ $(function () {
       $('#btneditlib').html('<span class="spinner-border spinner-border-sm"></span> Actualizando...');
       // Hacer la solicitud AJAX
       $.ajax({
-        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_liberacion_terminado').val(),
+        //url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_liberacion_terminado').val(),
         type: 'POST',
         data: formData,
         processData: false,
@@ -2787,7 +2648,7 @@ $(function () {
       $('#btnEditMA').addClass('d-none');
       $('#loading_mu_agv_edit').removeClass('d-none');
       $.ajax({
-        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_muestr').val(),
+        //url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_muestr').val(),
         type: 'POST',
         data: formData,
         processData: false,
@@ -2934,7 +2795,7 @@ $(function () {
       formData.append('caracteristicas', JSON.stringify(caracteristicas));
 
       $.ajax({
-        url: '/actualizar-solicitudes/' + $('#solicitud_id_pedidos').val(),
+        //url: '/actualizar-solicitudes/' + $('#solicitud_id_pedidos').val(),
         type: 'POST',
         data: formData,
         processData: false,
@@ -3040,7 +2901,7 @@ $(function () {
       $('#btnEditremi').html('<span class="spinner-border spinner-border-sm me-2"></span> Actualizando...');
       // Hacer la solicitud AJAX
       $.ajax({
-        url: '/actualizar-solicitudes/' + $('#id_solicitud_emision_v').val(),
+        //url: '/actualizar-solicitudes/' + $('#id_solicitud_emision_v').val(),
         type: 'POST',
         data: formData,
         processData: false,
@@ -3147,7 +3008,7 @@ $(function () {
       $('#btnRegistrarDicIns').addClass('d-none');
       $('#loading_dictamen').removeClass('d-none');
       $.ajax({
-        url: '/solicitudes-list',
+        //url: '/solicitudes052-list',
         type: 'POST',
         data: formData,
         processData: false,
@@ -3263,7 +3124,7 @@ $(function () {
       $('#btnRegistrarGeo').addClass('d-none');
       $('#btnSpinnerGeoreferenciacion').removeClass('d-none');
       $.ajax({
-        url: '/registrar-solicitud-georeferenciacion',
+        //url: '/registrar-solicitud-georeferenciacion',
         type: 'POST',
         data: formData,
         processData: false,
@@ -3455,7 +3316,7 @@ $(function () {
         });
 
       $.ajax({
-        url: '/hologramas/storeVigilanciaProduccion', // Actualiza con la URL correcta
+       // url: '/hologramas/storeVigilanciaProduccion', // Actualiza con la URL correcta
         type: 'POST',
         data: formData,
         processData: false,
@@ -3590,7 +3451,7 @@ $(function () {
       }, 3000);
 
       $.ajax({
-        url: '/hologramas/storeMuestreoLote', // Actualiza con la URL correcta
+        //url: '/hologramas/storeMuestreoLote', // Actualiza con la URL correcta
         type: 'POST',
         data: formData,
         processData: false,
@@ -3723,7 +3584,7 @@ $(function () {
         $('#btnReIngresoBarrica').html('<i class="ri-add-line"></i> Registrar');
       }, 2000);
       $.ajax({
-        url: '/hologramas/storeInspeccionBarricada', // Actualiza con la URL correcta
+       // url: '/hologramas/storeInspeccionBarricada', // Actualiza con la URL correcta
         type: 'POST',
         data: formData,
         processData: false,
@@ -3863,7 +3724,7 @@ $(function () {
       }, 3000);
 
       $.ajax({
-        url: '/hologramas/storeInspeccionBarricadaLiberacion', // Actualiza con la URL correcta
+        //url: '/hologramas/storeInspeccionBarricadaLiberacion', // Actualiza con la URL correcta
         type: 'POST',
         data: formData,
         processData: false,
@@ -3983,7 +3844,7 @@ $(function () {
         $('#btnReVigiLote').html('<i class="ri-add-line"></i> Registrar');
       }, 3000);
       $.ajax({
-        url: '/hologramas/storeVigilanciaTraslado', // Cambia a la URL correcta
+        //url: '/hologramas/storeVigilanciaTraslado', // Cambia a la URL correcta
         type: 'POST',
         data: formData,
         processData: false,
@@ -4091,7 +3952,7 @@ $(function () {
 
       $('#btnRegistraremi').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
       $.ajax({
-        url: '/storeEmisionCertificadoVentaNacional', // Cambia a la URL correcta
+        //url: '/storeEmisionCertificadoVentaNacional', // Cambia a la URL correcta
         type: 'POST',
         data: formData,
         processData: false,
@@ -4192,7 +4053,7 @@ $(function () {
       $('#btnRegistrarlib').prop('disabled', true);
       $('#btnRegistrarlib').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
       $.ajax({
-        url: '/registrar-solicitud-lib-prod-term',
+       // url: '/registrar-solicitud-lib-prod-term',
         type: 'POST',
         data: formData,
         processData: false,
@@ -4883,7 +4744,7 @@ $(function () {
       formData.append('caracteristicas', JSON.stringify(caracteristicas));
 
       $.ajax({
-        url: '/exportaciones/storePedidoExportacion', // Actualiza con la URL correcta
+        //url: '/exportaciones/storePedidoExportacion', // Actualiza con la URL correcta
         type: 'POST',
         data: formData,
         processData: false,
@@ -5034,328 +4895,10 @@ $(function () {
     ).html('');
   }
 
-  // Manejar el clic en los enlaces con clase "validar-solicitudes"
-  $(document).on('click', '.validar-solicitudes', function () {
-    limpiarCamposDictamen();
-    // Leer los datos desde los atributos data-*
-    var idTipo = $(this).data('id');
-    var id_solicitud = $(this).data('id-solicitud');
-    var tipoName = $(this).data('tipo');
-    var razon_social = $(this).data('razon-social');
-    $('#tipoSolicitud').text(tipoName);
-
-    // Manejar la visibilidad de divs si aplica
-    manejarVisibilidadDivs(idTipo);
-
-    $.ajax({
-      url: `/getDatosSolicitud/${id_solicitud}`,
-      type: 'GET',
-      dataType: 'json',
-      success: function (response) {
-        if (response.success) {
 
 
-          $('#solicitud_id').val(id_solicitud);
-          $('.razonSocial').html(response?.data?.empresa?.razon_social || 'No disponible');
-          $('.id_empresa').html(response?.data?.empresa?.id_empresa || 'No disponible');
-          $('.domicilioFiscal').html(response.data.empresa.domicilio_fiscal);
-          // Validar si `direccion_completa` no está vacío
-          if (response.data.instalacion) {
-            $('.domicilioInstalacion').append(
-              response.data.instalacion.direccion_completa +
-              ' <b>Vigencia: </b>' +
-              response.data.instalacion.fecha_vigencia
-            );
-          } else {
-            // Si está vacío, usar `ubicacion_predio`
-            $('.domicilioInstalacion').append(response.data?.predios?.ubicacion_predio);
-            $('.nombrePredio').text(response.data?.predios?.nombre_predio);
-            $('.preregistro').html(
-              "<a target='_Blank' href='/pre-registro_predios/" +
-              response.data?.predios?.id_predio +
-              "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
-            );
-          }
-
-          $('.fechaHora').text(response?.fecha_visita_formateada || 'No disponible');
-
-          $('.nombreLote').text(response?.data?.lote_granel?.nombre_lote || 'No disponible');
-
-          $('.guiasTraslado').text(response?.data?.caracteristicas?.guias || 'No disponible');
-
-          // Validar categoría
-          $('.categoria').text(
-            response?.data?.lote_granel?.categoria?.categoria ||
-            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
-            'No disponible'
-          );
-
-          // Validar clase
-          $('.clase').text(
-            response?.data?.lote_granel?.clase?.clase ||
-            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
-            'No disponible'
-          );
-          const documentConfig = [
-            {
-              ids: [45, 66, 113],
-              targetClass: '.comprobantePosesion',
-              noDocMessage: 'No hay comprobante de posesión',
-              condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
-            },
-            {
-              ids: [34],
-              targetClass: '.comprobantePosesion',
-              noDocMessage: 'No hay contrato de arrendamiento',
-              condition: (documento, response) => documento.id_relacion == response.data.id_predio
-            },
-            {
-              ids: [43, 106, 112],
-              targetClass: '.planoDistribucion',
-              noDocMessage: 'No hay plan de distribución',
-              condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
-            },
-            {
-              ids: [76],
-              targetClass: '.csf',
-              noDocMessage: 'No hay CSF',
-              condition: (documento, response) => documento.id_empresa == response.data.id_empresa
-            },
-            {
-              ids: [1],
-              targetClass: '.actaConstitutiva',
-              noDocMessage: 'No hay acta constitutiva',
-              condition: (documento, response) => documento.id_empresa == response.data.id_empresa
-            }
-
-          ];
-
-          // Variable para seguimiento de documentos encontrados
-          const documentsFound = {};
-
-          // Inicializamos cada grupo como no encontrado
-          documentConfig.forEach(config => {
-            documentsFound[config.targetClass] = false;
-          });
-
-          // Obtener el primer cliente válido
-          const clientes = response.data.empresa.empresa_num_clientes || [];
-          const clienteValido = clientes.find(c => c && c.numero_cliente);
-          const numeroCliente = clienteValido ? clienteValido.numero_cliente : null;
-
-          // Iterar sobre los documentos
-          if (numeroCliente) {
-            $.each(response.documentos, function (index, documento) {
-              documentConfig.forEach(config => {
-                if (
-                  config.ids.includes(documento.id_documento) &&
-                  config.condition(documento, response) // Usar la condición dinámica
-                ) {
-                  const link = $('<a>', {
-                    href: 'files/' + numeroCliente + '/' + documento.url,
-                    target: '_blank'
-                  });
-
-                  link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
-                  if (documento.id_documento === 128 || documento.id_documento === 76) {
-                    $(config.targetClass).html(link);
-                  } else {
-                    $(config.targetClass).empty().html(link);
-                  }
-                  documentsFound[config.targetClass] = true;
-                }
-              });
-            });
-          } else {
-            console.warn('No se encontró un número de cliente válido.');
-          }
-
-          $('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
-          $('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
-          $('.certificadoGranel').text(
-            response?.data?.lote_granel?.certificado_granel?.num_certificado ||
-            response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.certificado_granel
-              ?.num_certificado ||
-            'No disponible'
-          );
-       
-          if (response?.data?.lote_granel?.empresa?.empresa_num_clientes?.[0] && response?.url_certificado_granel) {
-            const cliente = response.data.lote_granel.empresa.empresa_num_clientes[0].numero_cliente;
-            const url = '/files/' + cliente + '/certificados_granel/' + response.url_certificado_granel;
-
-            $('.certificadoGranel').html(
-              `<a href="${url}" target="_blank">
-                <i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>
-            </a>`
-            );
-          }
-
-          if (response?.data?.lote_granel?.empresa?.empresa_num_clientes?.[0] && response?.url_fqs) {
-            const cliente = response.data.lote_granel.empresa.empresa_num_clientes[0].numero_cliente;
-            const url = '/files/' + cliente + '/fqs/' + response.url_fqs;
-
-            $('.fq').html(
-              `<a href="${url}" target="_blank">
-                 <i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>
-               </a>`
-            );
-          }
-
-          if (response.guias && Array.isArray(response.guias) && response.guias.length > 0) {
-            const folios = response.guias.map(g => g.folio || 'Sin folio').join(', ');
-            $('.guiasTraslado').text(folios);
-          } else {
-            $('.guiasTraslado').text('No disponibles');
-          }
-
-          $('.tipos').text(response?.tipos_agave || 'No disponible');
-
-          // Validar nombre del lote envasado
-
-          var caracteristicas = JSON.parse(response.data?.caracteristicas);
-          var tipos = {
-            1: 'Análisis completo',
-            2: 'Ajuste de grado alcohólico'
-          };
-
-          var texto = tipos[caracteristicas?.tipo_analisis] || 'No disponible';
-
-          $('.tipoAnalisis').text(texto);
-          $('.materialRecipiente').text(caracteristicas.material);
-          $('.capacidadRecipiente').text(caracteristicas.capacidad);
-          $('.numeroRecipiente').text(caracteristicas.num_recipientes);
-          $('.tiempoMaduracion').text(caracteristicas.tiempo_dura);
-          $('.tipoIngreso').text(caracteristicas.tipoIngreso);
-          $('.volumenLiberado').text(caracteristicas.volumen_liberacion);
-          $('.tipoLiberacion').text(caracteristicas.tipoLiberacion);
-          $('.volumenActual').text(caracteristicas.id_vol_actual);
-          $('.volumenTrasladado').text(caracteristicas.id_vol_traslado);
-          $('.volumenSobrante').text(caracteristicas.id_vol_res);
-          $('.volumenIngresado').text(caracteristicas.volumen_ingresado);
-          // $('.tipoEtiquetaEnvasado').text(response?.data?.lotes_envasado.tipo);
-          $('.inicioTerminoEnvasado').text(caracteristicas.fecha_inicio + ' a ' + caracteristicas.fecha_fin);
-          let destino;
-       
-          $('.etiqueta').html(
-            '<a href="files/' +
-            response.data.empresa.empresa_num_clientes[0].numero_cliente +
-            '/' +
-            response?.url_etiqueta +
-            '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
-          );
-          if (Array.isArray(response.lotesEnvasado) && response.lotesEnvasado.length > 0) {
-            $('.nombreLoteEnvasado').text(response.lotesEnvasado[0].nombre || 'Nombre no disponible');
-
-            //response.lotesEnvasado.forEach((lote, index) => {
-            const lote = response.lotesEnvasado[0];
-            let html = 'N/A';
-
-            if (lote.dictamen_envasado) {
-              const idDictamen = lote.dictamen_envasado.id_dictamen_envasado;
-              const numDictamen = lote.dictamen_envasado.num_dictamen;
-              const url = `/dictamen_envasado/${idDictamen}`;
-
-              html = `${numDictamen}
-                  <a href="${url}" target="_blank">
-                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>
-                  </a>`;
-            }
-
-            // Aplicar por índice si hay varios
-            //$(`.dictamenEnvasado[data-index="${index}"]`).html(html);
-            //});
-            $('.dictamenEnvasado').html(html); // Aplica solo a un elemento
-
-          } else {
-            // Si no hay lotes, dejar los campos limpios o con texto por defecto
-            $('.nombreLoteEnvasado').text('Nombre no disponible');
-            $('.dictamenEnvasado').html('Dictamen no disponible');
-          }
-
-          $('.acta').html(
-            '<a href="/files/' +
-            response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente +
-            '/actas/' +
-            response?.url_acta +
-            '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
-          );
-          $('.solicitudPdf').html(
-            '<a href="/solicitud_de_servicio/' +
-            response?.data?.id_solicitud +
-            '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
-          );
-          $('.proforma').html(
-            '<a href="/files/' +
-            response?.data?.empresa?.empresa_num_clientes[0]?.numero_cliente +
-            '/' +
-            response?.url_proforma +
-            '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'
-          );
-          // Verificar si 'detalles' existe y es un arreglo
-          if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
-            // Recorrer cada elemento de 'detalles'
-            $('.cajasBotellas').text('');
-            caracteristicas.detalles.forEach(function (detalle) {
-              // Asumiendo que '.cajasBotellas' es un contenedor de varias cajas, agregamos el texto en cada una
-              $('.cajasBotellas').append(
-                detalle.cantidad_cajas + ' Cajas y ' + detalle.cantidad_botellas + ' Botellas<br>'
-              );
-            });
-          } else {
-            // Si 'detalles' no existe o no es un arreglo
-            $('.cajasBotellas').text(
-              caracteristicas.cantidad_caja +
-              ' Cajas y ' +
-              (response?.lotesEnvasado?.[0]?.cant_botellas ?? '0') +
-              ' Botellas'
-            );
-          }
-          const cajas = caracteristicas.cajas_por_pallet || '0';
-          const botellas = caracteristicas.botellas_por_caja || '0';
-
-          $('.cajasBotellasTN').text(`Cajas por pallet: ${cajas} Botellas por caja: ${botellas}`);
-
-          let destinoTexto = 'No disponible';
-
-          switch (response?.lotesEnvasado?.[0]?.destino_lote) {
-            case 1:
-              destinoTexto = 'Nacional';
-              break;
-            case 2:
-              destinoTexto = 'Exportación';
-              break;
-            case 3:
-              destinoTexto = 'Stock';
-              break;
-          }
-
-          $('.destinoEnvasado').text(destinoTexto);
-
-          // Estructura de configuración para los documentos
-
-          // Mostrar mensajes para documentos no encontrados
-          documentConfig.forEach(config => {
-            if (!documentsFound[config.targetClass]) {
-              $(config.targetClass).text(config.noDocMessage);
-            }
-          });
-
-          $('select:visible').each(function () {
-            if ($(this).find('option[value="si"]').length) {
-              $(this).val('si');
-            }
-          });
 
 
-        } else {
-          console.warn('No se encontró información para la solicitud.');
-        }
-      },
-      error: function (xhr, status, error) {
-        console.error('Error al obtener los datos:', error);
-      }
-    });
-  });
   $(document).ready(function () {
     $('#reporteForm').on('submit', function (e) {
       e.preventDefault();
@@ -5537,7 +5080,7 @@ $(function () {
       $('#loading_mu_agv').removeClass('d-none');
       $;
       $.ajax({
-        url: '/registrar-solicitud-muestreo-agave',
+        //url: '/registrar-solicitud-muestreo-agave',
         type: 'POST',
         data: formData,
         processData: false,
@@ -5593,75 +5136,13 @@ $(function () {
     });
   });
 
-  $(function () {
-    // Configuración CSRF para Laravel
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-    // Inicializar FormValidation para las validaciones por parte del personal oc
-    const form = document.getElementById('addValidarSolicitud');
 
-    const fv = FormValidation.formValidation(form, {
-      excluded: ':disabled',
-      fields: {
-    
-      },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          eleInvalidClass: 'is-invalid',
-          rowSelector: '.marcar'
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function (e) {
-      // Validar el formulario
-      var formData = new FormData(form);
 
-      $.ajax({
-        url: '/registrarValidarSolicitud',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          $('#addSolicitudValidar').modal('hide');
-          $('#addValidarSolicitud')[0].reset();
-          $('.datatables-solicitudes').DataTable().ajax.reload();
-
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: 'Solicitud validada correctamente',
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-        },
-        error: function (xhr) {
-          console.log('Error:', xhr.responseText);
-
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al validar la solicitud',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
-        }
-      });
-    });
-  });
 
   $(function () {
     if ($('#dropzone-multi').length) {
       new Dropzone('#dropzone-multi', {
-        url: '/upload',
+        //url: '/upload',
         acceptedFiles: 'application/pdf',
         maxFilesize: 5,
         addRemoveLinks: true,
@@ -5684,35 +5165,6 @@ $(function () {
   });
 
 
-
-  ///ESTATUS ACTUVAR HOLOGRAMAS
-  $(document).on('click', '.activar-hologramas', function () {
-    var id_solicitud = $(this).data('id');
-    var estatusActual = $(this).data('estatus');
-    var nuevoEstatus = estatusActual == 1 ? 0 : 1;
-
-    // Actualizar el estatus sin preguntar
-    $.ajax({
-      type: 'POST',
-      url: `${baseUrl}activar-hologramas/${id_solicitud}`,
-      data: {
-        estatus_activado: nuevoEstatus,
-        _token: $('meta[name="csrf-token"]').attr('content')
-      },
-      success: (response) => {
-        dt_instalaciones_table.draw(false);
-
-        // Opcional: actualizar el texto y data-estatus del enlace en la tabla para reflejar el cambio inmediato
-        $(this).data('estatus', nuevoEstatus);
-        let nuevoTexto = nuevoEstatus == 1 ? 'Cambiar estatus desactivado' : 'Cambiar estatus activado';
-        $(this).html(`<i class="ri-refresh-bin-7-line ri-20px text-info"></i> ${nuevoTexto}`);
-      },
-      error: (err) => {
-        console.error(err);
-        // Aquí puedes mostrar mensaje de error si quieres
-      }
-    });
-  });
 
 
 

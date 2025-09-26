@@ -74,7 +74,7 @@ class Solicitudes052 extends Model
 
     public function tipo_solicitud()
     {
-        return $this->hasOne(solicitudTipo::class, 'id_tipo', 'id_tipo');
+        return $this->hasOne(SolicitudTipo052::class, 'id_tipo', 'id_tipo');
     }
 
 

@@ -1007,9 +1007,12 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
 
 //------------------- SOLICITUDES 052 -------------------
 Route::middleware(['auth'])->controller(Solicitudes052Controller::class)->group(function () {
-    Route::get('/solicitudes-historial-052', 'UserManagement')->name('solicitudes-historial-052');
     Route::get('/solicitudes-052/tipos', 'getSolicitudesTipos')->name('modal.solicitud052.tipo');
+    
+    Route::get('/solicitudes-historial-052', 'UserManagement')->name('solicitudes-historial-052');
+    Route::resource('/solicitudes052-list', solicitudesController::class);
 });
+
 
 Route::middleware(['auth'])->controller(solicitudes_eliminadas_controller::class)->group(function () {
     Route::get('/solicitudes-eliminadas', 'UserManagement')->name('solicitudes-eliminadas');

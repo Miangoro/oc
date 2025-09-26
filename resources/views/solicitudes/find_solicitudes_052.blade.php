@@ -44,7 +44,7 @@
 <!--Vista de la tabla-->
 <div class="card">
     <div class="card-header pb-0">
-        <h3 class="mb-0 fw-bold">Solicitudes de servicios 052</h3>
+        <h3 class="mb-0 fw-bold">Solicitudes de servicios NMX-V-052-NORMEX-2016</h3>
     </div>
     <div class="card-datatable table-responsive">
         <table style="font-size: 14px" class="datatables-solicitudes table table-bordered  table-hover">
