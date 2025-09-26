@@ -71,42 +71,35 @@
 
 
     <!-- Modal -->
-   {{--  @include('_partials._modals.modal-pdfs-frames')
-    @include('_partials._modals.modal-solicitudes')
-    @include('_partials._modals.modal-expediente-servicio')
-    @include('_partials._modals.modal-trazabilidad')
-    @include('_partials._modals.modal-validad-solicitud')
-    @include('_partials._modals.modal-add-solicitud-dictamen-instalaciones')
-    @include('_partials._modals.modal-add-solicitud-vigilancia-en-produccion')
-    @include('_partials._modals.modal-add-solicitud-vigilancia-traslado-lote')
-    @include('_partials._modals.modal-add-solicitud-muestreo-lote-agranel')
-    @include('_partials._modals.modal-add-solicitud-inspeccion-de-envasado')
-    @include('_partials._modals.modal-add-solicitud-muestreo-lote-envasado')
-    @include('_partials._modals.modal-add-solicitud-inspeccion-ingreso-barricada')
-    @include('_partials._modals.modal-add-solicitud-liberacion-producto-terminado')
-    @include('_partials._modals.modal-add-solicitud-inspeccion-de-liberacion')
-    @include('_partials._modals.modal-add-solicitud-pedidos-para-exportacion')
-    @include('_partials._modals.modal-add-solicitud-emision-certificado-venta-nacional')
-    @include('_partials._modals.modal-add-solicitud-inspeccion-emision-certificado-NOM')
-    @include('_partials._modals.modal-add-solicitud-georeferenciacion')
-    @include('_partials._modals.modal-add-solicitud-muestreo-agave')
-
-    @include('_partials._modals.modal-export-excel')
-
-    @include('_partials._modals.modal-add-instalaciones')
-    @include('_partials._modals.modal-edit-solicitudes-georeferenciacion')
-    @include('_partials._modals.modal-edit-solicitud-dictamen-instalaciones')
-    @include('_partials._modals.modal-edit-solicitud-vigilancia-produccion')
-    @include('_partials._modals.modal-edit-solicitud-muestreo-lote-agranel')
-    @include('_partials._modals.modal-edit-solicitud-vigilancia-traslado-lote')
-    @include('_partials._modals.modal-edit-solicitud-inspeccion-ingreso-barricada')
-    @include('_partials._modals.modal-edit-solicitud-inspeccion-de-liberacion')
-    @include('_partials._modals.modal-edit-solicitud-inspeccion-de-envasado')
-    @include('_partials._modals.modal-edit-solicitud-pedidos-para-exportacion')
-    @include('_partials._modals.modal-edit-solicitud-muestreo-agave')
-    @include('_partials._modals.modal-edit-solicitud-liberación-producto-terminado')
-    @include('_partials._modals.modal-edit-solicitud-emision-certificado-venta-nacional')
- --}}
+    @include('_partials/_modals/modal-pdfs-frames')
+    @include('_partials/_modals/modal-solicitudes-052')
+    <!--solicitudes-->
+    @include('_partials/_modals/modal-add-solicitud052-vigilancia-produccion')
+    @include('_partials/_modals/modal-add-solicitud052-toma-muestra')
+    @include('_partials/_modals/modal-add-solicitud052-liberacion-producto-terminado')
+    @include('_partials/_modals/modal-add-solicitud052-emision-certificado-bebida')
+    @include('_partials/_modals/modal-add-solicitud052-dictaminacion-instalacion')
+    {{-- @include('_partials/_modals/modal-add-solicitud052-emision-certificado-instalacion') --}}
 </div>
 @endsection
 
+
+<script>
+    /*document.addEventListener('DOMContentLoaded', function() {
+        // Función para obtener parámetros de la URL
+        function getParameterByName(name) {
+            const url = window.location.href;
+            const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
+            const results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Verificar si el modal debe abrirse
+        const modalToOpen = getParameterByName('abrirModal');
+        if (modalToOpen === 'nuevaSolicitud') {
+            $('#verSolicitudes').modal('show'); // Abrir modal
+        }
+    });*/
+</script>

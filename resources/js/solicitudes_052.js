@@ -1,4 +1,127 @@
-/* 
+
+//-------------------MODAL AGREGAR SOLICITUDES-------------------
+document.addEventListener('DOMContentLoaded', function () {
+    const tabs = {
+        'tab-mezcal': 'mezcal',
+        'tab-alcoholicas': 'alcoholicas',
+        'tab-no-alcoholicas': 'no-alcoholicas'
+    };
+
+// Función Icono por ID
+function obtenerIcono(id_tipo) {
+    const id_tipoStr = id_tipo.toString();
+   // console.log('ID recibido:', id_tipoStr);
+    switch (id_tipoStr) {
+        case '1':
+            return 'assets/img/solicitudes/muestreoDeAgave.png';
+        case '2':
+            return 'assets/img/solicitudes/Vigilancia en la producción de lote.png';
+        case '3':
+            return 'assets/img/solicitudes/muestreo de lote a granel.png';
+        case '4':
+            return 'assets/img/solicitudes/Vigilancia en el transaldo.png';
+        case '5':
+            return 'assets/img/solicitudes/inspección de envasado.png';
+        case '6':
+            return 'assets/img/solicitudes/muestreo de lote envasado.png';
+        default:
+            return 'assets/img/icons/brands/reddit-rounded.png';
+    }
+}
+
+    function cargarCards(tipo) {
+        fetch(`${obtenerSolicitudesTiposUrl}?tipo=${tipo}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Red no disponible');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const contentContainerId = Object.keys(tabs).find(key => tabs[key] === tipo) + '-content';
+                const contentContainer = document.getElementById(contentContainerId);
+                contentContainer.innerHTML = '';
+
+                var solicitudesMap = {
+                    1: "#ModalAddSoli052VigilanciaProduccion",
+                    2: "#ModalAddSoli052TomaMuestra",
+                    3: "#ModalAddSoli052LiberacionProducto",
+                    4: "#ModalAddSoli052EmisionCertificadoBebida",
+                    5: "#ModalAddSoli052DictaminacionInstalacion",
+                    6: "#ModalAddSoli052EmisionCertificadoInstalacion",
+                };
+
+
+                if (Array.isArray(data) && data.length > 0) {
+                    data.forEach((item, index) => {
+                        const solicitud = solicitudesMap[item.id_tipo] || "#defaultSolicitud";
+                        const icono = obtenerIcono(item.id_tipo);
+                        //console.log('Ícono asignado:', icono);
+
+                        // Crear la tarjeta
+                        const card = document.createElement('div');
+                        card.className = 'col-sm-12 col-md-6 col-lg-4 col-xl-3';
+                        card.innerHTML = `
+                            <div data-bs-target="${solicitud}" data-bs-toggle="modal" data-bs-dismiss="modal" class="card card-hover shadow-sm border-light">
+                                <div class="card-body text-center d-flex flex-column align-items-center">
+                                    <img src="${icono}" alt="Icono" class="img-fluid mb-3" style="max-width: 80px;"/>
+                                    <h5 class="card-title mb-4">${item.tipo || 'Tipo no disponible'}</h5>
+                                </div>
+                            </div>
+                        `;
+
+                        // Agregar la tarjeta al contenedor
+                        contentContainer.appendChild(card);
+
+                        // Agregar un "salto de línea" después de las primeras dos tarjetas
+                        if (index === 1) { // Después de la segunda tarjeta
+                            const clearfix = document.createElement('div');
+                            clearfix.className = 'w-100 d-md-none'; // w-100 rompe la fila, d-md-none lo oculta en pantallas medianas y más grandes
+                            contentContainer.appendChild(clearfix);
+                        }
+                    });
+
+                } else {
+                    contentContainer.innerHTML = '<p>No se encontraron datos.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos:', error);
+                const contentContainerId = Object.keys(tabs).find(key => tabs[key] === tipo) + '-content';
+                document.getElementById(contentContainerId).innerHTML = '<p class="text-danger">No se pudo cargar la información.</p>';
+            });
+    }
+
+    // Cargar datos para la pestaña activa por defecto
+    cargarCards('mezcal');
+
+    document.querySelectorAll('#myTab a[data-bs-toggle="tab"]').forEach(tab => {
+        tab.addEventListener('shown.bs.tab', (event) => {
+            const tipo = tabs[event.target.id];
+            cargarCards(tipo);
+        });
+    });
+
+
+    // Escuchar el clic en el botón de cancelar
+$(".btnCancelar").on('click', function () {
+    // Obtener el modal actual desde el botón que se hizo clic
+    const modal = $(this).closest('.modal');
+
+    // Ocultar el modal actual
+    modal.modal('hide');
+
+    // Mostrar el modal anterior (ajusta si usas varios niveles)
+    $("#verSolicitudes").modal('show');
+});
+
+
+});
+
+
+
+
+//-------------------FUNCIONES SOLICITUDES-------------------
 
 $(function () {
   // Definir la URL base
@@ -387,15 +510,6 @@ $(function () {
         searchable: false,
         orderable: false
       },
-      /*{
-        targets: 12,
-        className: 'text-center',
-        searchable: false,
-        orderable: false,
-        render: function (data, type, full, meta) {
-          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['folio']}"></i>`;
-        }
-      },***
       {///columna 'estatus'
         targets: 13,
         orderable: false,
@@ -505,7 +619,7 @@ $(function () {
       search: '',
       searchPlaceholder: 'Buscar',
       info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
-      emptyTable: 'No hay solicitudes disponibles', //agregado
+      //emptyTable: 'No hay solicitudes disponibles', //agregado
       paginate: {
         sFirst: 'Primero',
         sLast: 'Último',
@@ -515,22 +629,6 @@ $(function () {
     },
 
     buttons: [
-      {
-        extend: 'collection',
-        className:
-          'btn btn-outline-primary btn-lg dropdown-toggle me-4 waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4 mt-md-0',
-        text: '<i class="ri-filter-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Filtrar</span>',
-        buttons: filtroButtons
-      },
-      {
-        text: '<i class="ri-file-excel-2-fill ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
-        className: 'btn btn-info waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4  mt-md-0',
-        attr: {
-          'data-bs-toggle': 'modal',
-          'data-bs-dismiss': 'modal',
-          'data-bs-target': '#exportarExcel'
-        }
-      },
       {
         text: '<i class="ri-add-line ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nueva solicitud</span>',
         className: 'add-new btn btn-primary waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4  mt-md-0',
@@ -795,12 +893,6 @@ $(function () {
     var id_tipo = $(this).data('id-tipo');
     var razon_social = $(this).data('razon-social');
 
-    // Ahora puedes hacer lo que necesites con estos valores
-    /*   console.log("ID:", id);
-      console.log("ID Solicitud:", id_solicitud);
-      console.log("Tipo:", tipo);
-      console.log("ID Tipo:", id_tipo);
-      console.log("Razón Social:", razon_social); ***
 
     $('#expedienteServicio .id_solicitud').text(id_solicitud);
     $('#expedienteServicio .tiposs').text(id_tipo);
@@ -865,7 +957,8 @@ $(function () {
             const datos = response.data;
 
             $('.solicitud').text(datos.folio);
-            if (id_tipo === 1) {
+            //SOLICITUD Muestreo de agave (ART)
+            if (id_tipo === 1) { 
               modal.find('#edit_id_solicitud_muestr').val(id_solicitud);
               modal.find('#id_empresa_muestr').val(response.data.id_empresa).trigger('change');
               modal.find('#fecha_sol_muestr_agave_edit').val(response.data.fecha_solicitud);
@@ -880,6 +973,7 @@ $(function () {
               modal.find('#edit_info_adicional_muestr').val(response.data.info_adicional);
             }
 
+            //SOLICITUD Vigilancia en producción de lote
             if (id_tipo === 2) {
               modal.find('#edit_id_solicitud_vig').val(id_solicitud);
               modal.find('#edit_id_empresa_vig').val(response.data.id_empresa).trigger('change');
@@ -906,20 +1000,7 @@ $(function () {
                         <i class="ri-delete-bin-line"></i> Eliminar
                       </button>
                     `;
-                    /*  const linkHtml = `
-                       <div class="d-flex justify-content-between align-items-center mb-1">
-                         <a href="${url}" target="_blank" class="text-primary">
-                           <i class="ri-file-check-fill me-1"></i> ${fileName}
-                         </a>
-                         <button type="button"
-                                 class="btn btn-outline-danger btn-sm btn-eliminar-doc"
-                                 data-id="${doc.id}"
-                                 style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-                           <i class="ri-delete-bin-line"></i>
-                         </button>
-                       </div>
-                     `; ****
-
+                    
                     const linkHtml = `
                       <div class="d-flex justify-content-end align-items-end mb-1">
                         <a href="${url}" target="_blank" class="me-3">
@@ -955,7 +1036,8 @@ $(function () {
                 modal.find('#edit_cantidad_pinas').val('');
               }
               modal.find('#edit_info_adicional_vig').val(response.data.info_adicional);
-              //Muestreo lote a granel
+              
+            ///SOLICITUD Muestreo lote a granel
             } else if (id_tipo === 3) {
               modal.find('#edit_id_solicitud_muestreo').val(id_solicitud);
               modal.find('#edit_id_empresa_muestreo').val(response.data.id_empresa).trigger('change');
@@ -1016,7 +1098,8 @@ $(function () {
                 modal.find('#edit_id_certificado_muestreo').val('');
               }
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
-              //Vigilancia solicitud de vigilancia traslado lotes
+
+            ///SOLICITUD Vigilancia solicitud de vigilancia traslado lotes
             } else if (id_tipo === 4) {
               modal.find('#edit_id_solicitud_traslado').val(id_solicitud);
               modal.find('#edit_id_empresa_traslado').val(response.data.id_empresa).trigger('change');
@@ -1052,6 +1135,8 @@ $(function () {
               }
 
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
+
+            ///SOLICITUD Inspección de envasado
             } else if (id_tipo === 5) {
               modal.find('#edit_id_solicitud_inspeccion').val(id_solicitud);
               modal.find('#edit_id_empresa_inspeccion').val(response.data.id_empresa).trigger('change');
@@ -1066,46 +1151,7 @@ $(function () {
               } else {
                 modal.find('#edit_id_lote_envasado_inspeccion').val('');
               }
-              /*               if (response.caracteristicas && response.caracteristicas.id_categoria_inspeccion) {
-                              modal.find('#edit_id_categoria_inspeccion').val(response.caracteristicas.id_categoria_inspeccion);
-                            } else {
-                              modal.find('#edit_id_categoria_inspeccion').val('');
-                            }
-                            if (response.caracteristicas && response.caracteristicas.id_clase_inspeccion) {
-                              modal.find('#edit_id_clase_inspeccion').val(response.caracteristicas.id_clase_inspeccion);
-                            } else {
-                              modal.find('#edit_id_clase_inspeccion').val('');
-                            }
-                            if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_inspeccion) {
-                              modal.find('#edit_id_tipo_maguey_inspeccion').val(response.caracteristicas.id_tipo_maguey_inspeccion);
-                            } else {
-                              modal.find('#edit_id_tipo_maguey_inspeccion').val('');
-                            }
-                            if (response.caracteristicas && response.caracteristicas.id_marca) {
-                              modal.find('#edit_id_marca').val(response.caracteristicas.id_marca);
-                            } else {
-                              modal.find('#edit_id_marca').val('');
-                            }
-                            if (response.caracteristicas && response.caracteristicas.volumen_inspeccion) {
-                              modal.find('#edit_volumen_inspeccion').val(response.caracteristicas.volumen_inspeccion);
-                            } else {
-                              modal.find('#edit_volumen_inspeccion').val('');
-                            }
-                            if (response.caracteristicas && response.caracteristicas.analisis_inspeccion) {
-                              modal.find('#edit_analisis_inspeccion').val(response.caracteristicas.analisis_inspeccion);
-                            } else {
-                              modal.find('#edit_analisis_inspeccion').val('');
-                            }
-                            if (response.caracteristicas && response.caracteristicas.id_tipo_inspeccion) {
-                              modal.find('#edit_id_tipo_inspeccion').val(response.caracteristicas.id_tipo_inspeccion);
-                            } else {
-                              modal.find('#edit_id_tipo_inspeccion').val('');
-                            }
-                            if (response.caracteristicas && response.caracteristicas.id_cantidad_bote) {
-                              modal.find('#edit_id_cantidad_bote').val(response.caracteristicas.id_cantidad_bote);
-                            } else {
-                              modal.find('#edit_id_cantidad_bote').val('');
-                            } ****
+              
               if (response.caracteristicas && response.caracteristicas.cantidad_caja) {
                 modal.find('#edit_id_cantidad_caja').val(response.caracteristicas.cantidad_caja);
               } else {
@@ -1127,7 +1173,8 @@ $(function () {
                 modal.find('#edit_id_certificado_inspeccion').val('');
               }
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
-              //Inspeccion ingreso barricada
+
+            ///SOLICITUD Inspeccion ingreso barricada
             } else if (id_tipo === 7) {
               modal.find('#edit_id_solicitud_barricada').val(id_solicitud);
               modal.find('#edit_id_empresa_barricada').val(response.data.id_empresa).trigger('change');
@@ -1160,7 +1207,7 @@ $(function () {
 
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
 
-              //liberacion inspeccion
+            ///SOLICITUDliberacion inspeccion
             } else if (id_tipo === 8) {
               modal.find('#edit_id_solicitud_liberacion_terminado').val(id_solicitud);
               modal.find('#edit_id_empresa_solicitud_lib_ter').val(response.data.id_empresa).trigger('change');
@@ -1196,6 +1243,8 @@ $(function () {
               }
 
               modal.find('#edit_comentarios_lib_ter').val(response.data.info_adicional);
+
+            ///SOLICITUD Inspección de liberación a barrica/contenedor de vidrio
             } else if (id_tipo === 9) {
               modal.find('#edit_id_solicitud_liberacion').val(id_solicitud);
               modal.find('#edit_id_empresa_liberacion').val(response.data.id_empresa).trigger('change');
@@ -1233,9 +1282,8 @@ $(function () {
 
               modal.find('#edit_info_adicional').val(response.data.info_adicional || '');
 
-
-
-            } else if (id_tipo === 10) {///OBTENER SOLICITUD GEORREFERENCIACION
+            ///OBTENER SOLICITUD GEORREFERENCIACION
+            } else if (id_tipo === 10) {
               modal.find('#id_solicitud_geo').val(id_solicitud);
               modal.find('#edit_id_empresa_geo').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_sol_geo').val(response.data.fecha_solicitud);
@@ -1249,7 +1297,7 @@ $(function () {
               }
               modal.find('#edit_info_adicional_geo').val(response.data.info_adicional);
 
-
+            ///SOLICITUD Pedidos para exportación
             } else if (id_tipo === 11) {
               modal.find('#id_empresa_solicitud_exportacion_edit').val(response.data.id_empresa).trigger('change');
               modal.find('.id_solicitud').val(id_solicitud);
@@ -1360,6 +1408,8 @@ $(function () {
               }
 
               modal.find('#comentarios_edit').val(response.data.info_adicional);
+
+            ///SOLICITUD 	Emisión de certificado venta nacional
             } else if (id_tipo === 13) {
               modal.find('#id_solicitud_emision_v').val(id_solicitud);
               modal.find('#edit_id_empresa_solicitud_emision_venta').val(response.data.id_empresa).trigger('change');
@@ -1391,6 +1441,8 @@ $(function () {
               }
 
               modal.find('#edit_comentarios_e_venta_n').val(response.data.info_adicional);
+
+            /// SOLICITUD Dictaminación de instalaciones
             } else if (id_tipo === 14) {
               // Aquí va el tipo correspondiente para tu caso
               // Llenar los campos del modal con los datos de la solicitud
@@ -1519,7 +1571,7 @@ $(function () {
 
 
 ///EDITAR SOLICITUD GEORREFERENCIACION
-  /* formulario para enviar los datos y actualizar ****
+  //formulario para enviar los datos y actualizar
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -1621,7 +1673,7 @@ $(function () {
 
 
   
-  /*funcion para solicitud de dictaminacion  ****
+  //funcion para solicitud de dictaminacion 
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -1745,8 +1797,8 @@ $(function () {
       });
     });
   });
-  /*  */
-  /* formulario para enviar los datos y actualizar ****
+  
+  //formulario para enviar los datos y actualizar
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -2929,7 +2981,8 @@ $(function () {
       });
     });
   });
-  /* editar emision certificado venta nacional *****
+
+  // editar emision certificado venta nacional
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -3033,7 +3086,7 @@ $(function () {
       }
     });
     // Inicializar FormValidation para la solicitud de dictaminación de instalaciones
-    const form = document.getElementById('addRegistrarSolicitud');
+    const form = document.getElementById('FormAddSoli052DictaminacionInstalacion');
     const fv = FormValidation.formValidation(form, {
       fields: {
         id_empresa: {
@@ -3102,8 +3155,8 @@ $(function () {
         success: function (response) {
           $('#loading_dictamen').addClass('d-none');
           $('#btnRegistrarDicIns').removeClass('d-none');
-          $('#addSolicitudDictamen').modal('hide');
-          $('#addRegistrarSolicitud')[0].reset();
+          $('#ModalAddSoli052DictaminacionInstalacion').modal('hide');
+          $('#FormAddSoli052DictaminacionInstalacion')[0].reset();
           $('.select2').val(null).trigger('change');
           $('.datatables-solicitudes').DataTable().ajax.reload();
           console.log(response);
@@ -3349,8 +3402,8 @@ $(function () {
     });
 
     // Validación del formulario Vigilancia en produccion
-    const addVigilanciaProduccionForm = document.getElementById('addVigilanciaProduccionForm');
-    const fv5 = FormValidation.formValidation(addVigilanciaProduccionForm, {
+    const FormAddSoli052VigilanciaProduccion = document.getElementById('FormAddSoli052VigilanciaProduccion');
+    const fv5 = FormValidation.formValidation(FormAddSoli052VigilanciaProduccion, {
       fields: {
         id_empresa: {
           validators: {
@@ -3386,7 +3439,7 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
-      var formData = new FormData(addVigilanciaProduccionForm);
+      var formData = new FormData(FormAddSoli052VigilanciaProduccion);
       $('#btnRegisVigiPro').addClass('d-none');
       $('#btnSpinnerVigilanciaProduccion').removeClass('d-none');
       $('#id_tipo_maguey')
@@ -3410,8 +3463,8 @@ $(function () {
         success: function (response) {
           $('#btnRegisVigiPro').removeClass('d-none');
           $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
-          $('#addVigilanciaProduccion').modal('hide');
-          $('#addVigilanciaProduccionForm')[0].reset();
+          $('#ModalAddSoli052VigilanciaProduccion').modal('hide');
+          $('#FormAddSoli052VigilanciaProduccion')[0].reset();
           $('.select2').val(null).trigger('change');
           $('.datatables-solicitudes').DataTable().ajax.reload();
 
@@ -3484,8 +3537,8 @@ $(function () {
     });
 
     // Validación del formulario Muestreo Lote Agranel
-    const addMuestreoLoteAgranelForm = document.getElementById('addMuestreoLoteAgranelForm');
-    const fvMuestreo = FormValidation.formValidation(addMuestreoLoteAgranelForm, {
+    const FormAddSoli052TomaMuestra = document.getElementById('FormAddSoli052TomaMuestra');
+    const fvMuestreo = FormValidation.formValidation(FormAddSoli052TomaMuestra, {
       fields: {
         id_empresa: {
           validators: {
@@ -3528,7 +3581,7 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
-      const formData = new FormData(addMuestreoLoteAgranelForm);
+      const formData = new FormData(FormAddSoli052TomaMuestra);
       $('#btnRegistrMLote').prop('disabled', true);
       $('#btnRegistrMLote').html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
       setTimeout(function () {
@@ -3544,8 +3597,8 @@ $(function () {
         contentType: false,
         success: function (response) {
           // Cerrar modal y reiniciar formulario
-          $('#addMuestreoLoteAgranel').modal('hide');
-          $('#addMuestreoLoteAgranelForm')[0].reset();
+          $('#ModalAddSoli052TomaMuestra').modal('hide');
+          $('#FormAddSoli052TomaMuestra')[0].reset();
           $('.select2').val(null).trigger('change');
           $('.datatables-solicitudes').DataTable().ajax.reload();
 
@@ -3972,7 +4025,8 @@ $(function () {
     });
   });
 
-  /* envio de emision de certificado de venta nacional ****
+
+  //envio de emision de certificado de venta nacional
   ///
   $(function () {
     // Configuración CSRF para Laravel
@@ -3982,7 +4036,7 @@ $(function () {
       }
     });
     // Inicializar FormValidation para la solicitud de dictaminación de instalaciones
-    const form = document.getElementById('addEmisionCetificadoVentaNacionalForm');
+    const form = document.getElementById('ModalAddSoli052EmisionCertificadoBebida');
     const fv = FormValidation.formValidation(form, {
       fields: {
         id_empresa: {
@@ -4043,10 +4097,10 @@ $(function () {
         processData: false,
         contentType: false,
         success: function (response) {
-          $('#addEmisionCetificadoVentaNacional').modal('hide');
+          $('#ModalAddSoli052EmisionCertificadoBebida').modal('hide');
           $('#btnRegistraremi').prop('disabled', false);
           $('#btnRegistraremi').html('<i class="ri-add-line"></i> Registrar');
-          $('#addEmisionCetificadoVentaNacionalForm')[0].reset();
+          $('#ModalAddSoli052EmisionCertificadoBebida')[0].reset();
           $('.select2').val(null).trigger('change');
           $('.datatables-solicitudes').DataTable().ajax.reload();
           Swal.fire({
@@ -4080,7 +4134,7 @@ $(function () {
     });
   });
 
-  /*funcion para solicitud de liberacion producto termiando  ****
+  //funcion para solicitud de liberacion producto termiando 
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -4090,7 +4144,7 @@ $(function () {
     });
 
     // Inicializar FormValidation para la solicitud de dictaminación
-    const formDictaminacion = document.getElementById('addLiberacionProductoForm');
+    const formDictaminacion = document.getElementById('FormAddSoli052LiberacionProducto');
     const fvDictaminacion = FormValidation.formValidation(formDictaminacion, {
       fields: {
         id_empresa: {
@@ -4144,10 +4198,10 @@ $(function () {
         processData: false,
         contentType: false,
         success: function (response) {
-          $('#addLiberacionProducto').modal('hide');
+          $('#ModalAddSoli052LiberacionProducto').modal('hide');
           $('#btnRegistrarlib').prop('disabled', false);
           $('#btnRegistrarlib').html('<i class="ri-add-line"></i> Registrar');
-          $('#addLiberacionProductoForm')[0].reset();
+          $('#FormAddSoli052LiberacionProducto')[0].reset();
           $('.select2').val(null).trigger('change');
           $('.datatables-solicitudes').DataTable().ajax.reload();
           console.log(response);
@@ -4239,7 +4293,7 @@ $(function () {
     });
   });
 
-  /* seccion para exportacion ****
+  //seccion para exportacion 
   $(document).ready(function () {
     const $tipoSolicitud = $('#tipo_solicitud');
     const $seccionCombinado = $('#seccionCajasBotellasCombinado');
@@ -4456,12 +4510,13 @@ $(function () {
       });
     });
   });
+
+  
   /* seccion de editar solicitudes exportacion */
   // ==================== EDITAR ====================
   let sectionCountEdit = 1;
-  /*   $(document).ready(function () { */
 
-  /*     $('#add-characteristics_edit_1').click(function () {
+  $('#add-characteristics_edit_1').click(function () {
         let empresaSeleccionada = $('#id_empresa_solicitud_exportacion_edit').val();
         if (!empresaSeleccionada) {
           Swal.fire({
@@ -4505,9 +4560,9 @@ $(function () {
         cargarLotesEdit2(empresaSeleccionada, sectionCountEdit);
         initializeSelect2($('.select2'));
         sectionCountEdit++;
-      }); */
+      }); 
 
-  /*   }); ****
+
 
   $(document).ready(function () {
     $('#add-characteristics_edit').click(function () {
@@ -4692,9 +4747,9 @@ $(function () {
     }
   }
 
-  /* fin de la seccion de editar solicitudes exportacion ****
-  /* Enviar formulario store add exportacion ****
+  //fin de la seccion de editar solicitudes exportacion
 
+  //Enviar formulario store add exportacion
   $(function () {
     // Configuración de CSRF para las solicitudes AJAX
     $.ajaxSetup({
@@ -5072,18 +5127,7 @@ $(function () {
               noDocMessage: 'No hay acta constitutiva',
               condition: (documento, response) => documento.id_empresa == response.data.id_empresa
             }
-            /**** {
-               ids: [55],
-               targetClass: '.proforma',
-               noDocMessage: 'No hay factura proforma',
-               condition: (documento, response) => documento.id_empresa == response.data.id_empresa
-             },
-               {
-                 ids: [128],
-                 targetClass: '.domicilioInstalacion',
-                 noDocMessage: 'No hay dictamen de instalaciones',
-                 condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
-               }****
+
           ];
 
           // Variable para seguimiento de documentos encontrados
@@ -5134,7 +5178,7 @@ $(function () {
               ?.num_certificado ||
             'No disponible'
           );
-          /* $('.certificadoGranel').html('<a href="/files/' + response?.data?.lote_granel.empresa?.empresa_num_clientes[0]?.numero_cliente + '/certificados_granel/' + response?.url_certificado_granel + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'); ****
+       
           if (response?.data?.lote_granel?.empresa?.empresa_num_clientes?.[0] && response?.url_certificado_granel) {
             const cliente = response.data.lote_granel.empresa.empresa_num_clientes[0].numero_cliente;
             const url = '/files/' + cliente + '/certificados_granel/' + response.url_certificado_granel;
@@ -5146,7 +5190,6 @@ $(function () {
             );
           }
 
-          /* $('.fq').html('<a href="/files/' + response?.data?.lote_granel.empresa?.empresa_num_clientes[0]?.numero_cliente + '/fqs/' + response?.url_fqs + '" target="_blank"><i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i></a>'); *****
           if (response?.data?.lote_granel?.empresa?.empresa_num_clientes?.[0] && response?.url_fqs) {
             const cliente = response.data.lote_granel.empresa.empresa_num_clientes[0].numero_cliente;
             const url = '/files/' + cliente + '/fqs/' + response.url_fqs;
@@ -5192,17 +5235,7 @@ $(function () {
           // $('.tipoEtiquetaEnvasado').text(response?.data?.lotes_envasado.tipo);
           $('.inicioTerminoEnvasado').text(caracteristicas.fecha_inicio + ' a ' + caracteristicas.fecha_fin);
           let destino;
-          /* if (response?.data?.lote_envasado.destino_lote == 1) {
-             destino = 'Nacional';
-           }
-           if (response?.data?.lote_envasado.destino_lote == 2) {
-             destino = 'Exportación';
-           }
-           if (response?.data?.lote_envasado.destino_lote == 3) {
-             destino = 'stock';
-           }
-
-           $('.destinoEnvasado').text(destino);****
+       
           $('.etiqueta').html(
             '<a href="files/' +
             response.data.empresa.empresa_num_clientes[0].numero_cliente +
@@ -5313,11 +5346,6 @@ $(function () {
             }
           });
 
-          /*  $('.form-control').each(function () {
-       if ($(this).find('option[value="si"]').length) {
-         $(this).val('si');
-       }
-     }); ****
 
         } else {
           console.warn('No se encontró información para la solicitud.');
@@ -5578,69 +5606,7 @@ $(function () {
     const fv = FormValidation.formValidation(form, {
       excluded: ':disabled',
       fields: {
-        /* razonSocial: {
-           validators: {
-             notEmpty: {
-               message: 'Selecciona la respuesta'
-             }
-           }
-         },
-         razonSocial1: {
-           validators: {
-             notEmpty: {
-               message: 'Selecciona la respuesta'
-             }
-           }
-         },
-         domicilioFiscal: {
-           validators: {
-             notEmpty: {
-               message: 'Selecciona la respuesta'
-             }
-           }
-         },
-         domicilioInstalacion: {
-           validators: {
-             notEmpty: {
-               message: 'Selecciona la respuesta'
-             }
-           }
-         },
-         fechaHora: {
-           validators: {
-             notEmpty: {
-               message: 'Selecciona la respuesta'
-             }
-           }
-         },
-         actaConstitutiva: {
-           validators: {
-             notEmpty: {
-               message: 'Selecciona la respuesta'
-             }
-           }
-         },
-         csf: {
-           validators: {
-             notEmpty: {
-               message: 'Selecciona la respuesta'
-             }
-           }
-         },
-         comprobantePosesion: {
-           validators: {
-             notEmpty: {
-               message: 'Selecciona la respuesta'
-             }
-           }
-         },
-         planoDistribucion: {
-           validators: {
-             notEmpty: {
-               message: 'Selecciona la respuesta'
-             }
-           }
-         }, ****
+    
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -5756,4 +5722,3 @@ $(function () {
 
 });//fin function
 
- */

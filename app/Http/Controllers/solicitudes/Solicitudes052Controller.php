@@ -3,23 +3,22 @@
 namespace App\Http\Controllers\solicitudes;
 
 use App\Http\Controllers\Controller;
-use App\Models\categorias;
+use App\Models\Solicitudes052;
+use App\Models\SolicitudTipo052;
 use App\Models\empresa;
+use App\Models\maquiladores_model;
+use App\Models\categorias;
 use App\Models\estados;
 use App\Models\instalaciones;
 use App\Models\organismos;
 use App\Models\LotesGranel;
 use App\Models\lotes_envasado;
-use App\Models\solicitudesModel;
 use App\Models\clases;
-use App\Models\solicitudTipo;
-use App\Models\maquiladores_model;
 use App\Models\User;
 use App\Models\tipos;
 use App\Models\marcas;
 use App\Models\guias;
 use App\Models\catalogo_aduanas;
-use App\Models\solicitudes_eliminadas;
 /// Extensiones / Librerías
 use Carbon\Carbon;
 use App\Helpers\Helpers;
@@ -35,10 +34,10 @@ class Solicitudes052Controller extends Controller
 {
     public function UserManagement()
     {
-        $solicitudes = solicitudesModel::where('habilitado', 1)
+        $solicitudes = Solicitudes052::where('habilitado', 1)
             ->where('id_tipo', '!=', 12)
             ->get();
-        $solicitudesTipos = solicitudTipo::all();
+        $solicitudesTipos = SolicitudTipo052::all();
         $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
         $estados = estados::all(); // Obtener todos los estados
         $tipo_usuario =  Auth::user()->tipo;
@@ -135,13 +134,10 @@ public function index(Request $request)
     $search = $request->input('search.value');
 
     ///CONSULTA QUERY BASE
-    $query = solicitudesModel::with([
-            'tipo_solicitud',
+    $query = Solicitudes052::with([
             'empresa',
             'instalacion',
-            'inspeccion.inspector',
-            'ultima_validacion_oc',
-            'ultima_validacion_ui'
+            'tipo_solicitud',
         ])->where('habilitado', 1)
         ->where('id_tipo', '!=', 12);
 
@@ -437,6 +433,15 @@ public function index(Request $request)
             'message' => empty($data) ? 'No tienes solicitudes asignadas.' : null,
         ]);
         
+}
+
+
+
+///FUNCION OBTENER LAS SOLICITUDES EN EL MODAL PRINCIPAL
+public function getSolicitudesTipos()
+{
+    $solicitudesTipos = SolicitudTipo052::orderBy('orden', 'asc')->get();
+    return response()->json($solicitudesTipos);
 }
 
 
