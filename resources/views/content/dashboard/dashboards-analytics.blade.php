@@ -149,7 +149,7 @@
                                     @endif
                                 </p>
 
-                                @if ($maquiladora)
+                                @if($maquiladora->isNotEmpty())
                                     <hr class="my-3">
                                     <h6 class="fw-bold text-secondary mb-2">Maquilador de:</h6>
                                     <ul class="list-unstyled mb-0">
