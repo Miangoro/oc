@@ -141,6 +141,10 @@ class LotesGranel extends Model
     }
 
 
+    public function registro()
+    {
+        return $this->belongsTo(User::class, 'id_usuario_registro','id');
+    }
 
 
 }

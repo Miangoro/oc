@@ -62,6 +62,15 @@ $(function () {
           var ingredientes = '';
           var edad = '';
           var procedencia = '';
+          var usuario = '';
+
+          // 👤 Si existe id_usuario_registro, lo mostramos
+          if (row.id_usuario_registro && row.id_usuario_registro !== '') {
+            usuario =
+              '<br><span class="fw-bold text-dark small">Registrado por:</span><span class="small"> ' +
+              row.id_usuario_registro +
+              '</span>';
+          }
 
           if (row.ingredientes != 'N/A') {
             ingredientes =
@@ -71,10 +80,12 @@ $(function () {
           }
 
           if (row.edad != 'N/A') {
-            edad = '<br><span class="fw-bold text-dark small">Edad:</span><span class="small"> ' + row.edad + '</span>';
+            edad =
+              '<br><span class="fw-bold text-dark small">Edad:</span><span class="small"> ' +
+              row.edad +
+              '</span>';
           }
 
-          // Mostrar los nombres de los lotes de procedencia
           if (row.lote_procedencia != 'No tiene procedencia de otros lotes.') {
             procedencia =
               '<br><span class="fw-bold text-dark small">Lote de procedencia: <br></span><span class="small text-primary"> ' +
@@ -96,7 +107,8 @@ $(function () {
             '</span>' +
             ingredientes +
             edad +
-            procedencia
+            procedencia +
+            usuario // 👈 agregado al final
           );
         }
       },
