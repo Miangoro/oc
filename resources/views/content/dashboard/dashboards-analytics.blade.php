@@ -939,7 +939,7 @@
                     <h2 class="fw-bold text-primary mb-1">
                         {{ number_format($totalDisponibles, 0) }}
                     </h2>
-                    <p class="text-muted mb-3">Hologramas disponibles</p>
+                    <p class="text-muted mb-3">Hologramas sin activar</p>
 
                     {{-- Nombre de la marca --}}
                     <h5 class="fw-semibold text-dark">{{ $marca->marca }}</h5>
