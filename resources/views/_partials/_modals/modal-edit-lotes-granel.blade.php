@@ -49,7 +49,7 @@
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <div class="form-floating form-floating-outline mb-6">
+                                <div class="form-floating form-floating-outline mb-4">
                                     <select class=" form-select select2" id="edit_id_instalacion" name="id_instalacion"
                                         aria-label="id_instalacion">
                                         <option value="" disabled selected>Lista de instalaciones</option>

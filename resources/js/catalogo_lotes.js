@@ -1537,7 +1537,7 @@ async function obtenerDestinoEmpresa() {
           }
         },
         id_instalacion: {
-          valdiators: {
+          validators: {
             notEmpty: {
               message: 'Por favor seleccione la instalación'
             }
@@ -1578,13 +1578,7 @@ async function obtenerDestinoEmpresa() {
             }
           }
         },
-        id_tipo: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione un tipo'
-            }
-          }
-        },
+
         'id_tipo[]': {
           validators: {
             notEmpty: {
