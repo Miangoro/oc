@@ -14,7 +14,7 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Hologramas Activos</h4>
-                    <p class="address-subtitle"></p>
+                    <p id="subtitulo"></p>
                 </div>
                 
                 <form id="activosHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
@@ -35,6 +35,7 @@
                                   <th>No. de servicio</th>
                                   <th>Lugar de producción</th>
                                   <th>Lugar de envasado</th>
+                                  <th>Solicitados</th>
                                   <th>Rango inicial</th>
                                   <th>Rango final</th>
                                   <th>Mermas</th>

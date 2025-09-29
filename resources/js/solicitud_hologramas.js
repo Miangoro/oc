@@ -85,6 +85,12 @@ $(function () {
         { data: '' },
         { data: 'action' }
       ],
+
+    createdRow: function (row, data, dataIndex) { 
+        if (data.restantes === '0') { 
+            $(row).css('background-color', '#f8d7da'); // rojo pastel
+        }
+    },
       columnDefs: [
         {
           // For Responsive
@@ -1467,7 +1473,7 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
     var id = $(this).data('id');
     $.get('/solicitud_holograma/editActivos/' + id, function (data) {
       $('#tablita').empty();
-
+     // $('#subtitulo').text(data[0].solicitudHolograma[0].folio);
       // Rellenar el formulario con los datos obtenidos
       data.forEach(function (item) {
         let folio_inicial = String(item.folio_inicial)
@@ -1479,20 +1485,23 @@ $(document).on('click', '.pdfSolicitudHolograma', function () {
         let folio_final = String(item.folio_final).replace(/,/g, '<br>');
         let mermas = String(item.mermas).replace(/,/g, '<br>');
 
+   
+
         // Crear una nueva fila con los datos
         var fila = `
             <tr>
-                <td>${item.id}</td>
+                <td>${item.folio_activacion}</td>
                 <td>${item.no_lote_agranel}</td>
-                <td>${item.categoria}</td>
+                <td>${item.categorias.categoria}</td>
                 <td>${item.no_analisis}</td>
                 <td>${item.cont_neto} ${item.unidad}</td>
-                <td>${item.clase}</td>
-                <td>${item.contenido}</td>
+                <td>${item.clases.clase}</td>
+                <td>${item.contenido} %Alc. Vol.</td>
                 <td>${item.no_lote_envasado}</td>
               <td>${item.num_servicio}</td>
                 <td>${item.lugar_produccion}</td>
                 <td>${item.lugar_envasado}</td>
+                 <td>${item.cantidadActivando}</td>
                 <td>
                 ${folio_inicial}
                 </td>

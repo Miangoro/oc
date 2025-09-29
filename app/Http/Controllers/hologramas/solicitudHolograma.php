@@ -510,34 +510,39 @@ class solicitudHolograma extends Controller
 
 
     //Ver activos
-    public function editActivos($id)
-    {
-        try {
-            // Obtener los registros con un join para traer el num_servicio de inspecciones
-            $activaciones = activarHologramasModelo::where('activar_hologramas.id_solicitud', $id)
-                ->join('inspecciones', 'activar_hologramas.id_inspeccion', '=', 'inspecciones.id_inspeccion')
-                ->select('activar_hologramas.*', 'inspecciones.num_servicio')
-                ->get();
-
-            // Decodificar el JSON de los folios en cada registro
-            $activaciones->transform(function ($item) {
-                $folios = json_decode($item->folios, true); // Decodifica el JSON
+public function editActivos($id)
+{
+    try {
+        $activaciones = activarHologramasModelo::with('inspeccion:id_inspeccion,num_servicio','categorias','clases','solicitudHolograma')
+            ->where('id_solicitud', $id)
+            ->get()
+            ->map(function ($item) {
+                // Decodificar folios JSON
+                $folios = json_decode($item->folios, true) ?? [];
                 $item->folio_inicial = $folios['folio_inicial'] ?? null;
                 $item->folio_final = $folios['folio_final'] ?? null;
-                $mermas = json_decode($item->mermas, true); // Decodifica el JSON
+
+                // Decodificar mermas JSON
+                $mermas = json_decode($item->mermas, true) ?? [];
                 $item->mermas = $mermas['mermas'] ?? null;
 
+                // Agregar num_servicio directamente
+                $item->num_servicio = $item->inspeccion->num_servicio ?? null;
 
-
+                // ✅ Agregar campos calculados
+                $item->cantidadActivando = $item->cantidadActivando();
 
                 return $item;
             });
 
-            return response()->json($activaciones);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener las activaciones'], 500);
-        }
+        return response()->json($activaciones);
+    } catch (\Exception $e) {
+        \Log::error('Error al obtener las activaciones: '.$e->getMessage());
+        return response()->json(['error' => 'Error al obtener las activaciones'], 500);
     }
+}
+
+
 
 
     //Editar activos
