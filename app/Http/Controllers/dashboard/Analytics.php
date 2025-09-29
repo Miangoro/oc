@@ -247,7 +247,7 @@ $pendientesRevisarCertificadosConsejo = Revisor::where('decision', 'Pendiente')
     })->where('activo', 1)
       ->orderBy('orden')
       ->get();
-    return view('content.dashboard.dashboards-analytics', compact('actasSinActivarHologramas','maquiladora','maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado', 'imagenes', 'mensajes'));
+    return view('content.dashboard.dashboards-analytics', compact('empresaId','actasSinActivarHologramas','maquiladora','maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado', 'imagenes', 'mensajes'));
   }
 
 public function revisionesPorMes(Request $request)
