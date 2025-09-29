@@ -77,5 +77,21 @@ public function activarHologramasDesdeVariasSolicitudes($solicitudes, $folios)
     }
 }
 
+ public function cantidadActivando(): int
+    {
+        $folios = json_decode($this->folios, true) ?? [];
+        $folio_inicial = $folios['folio_inicial'] ?? [];
+        $folio_final = $folios['folio_final'] ?? [];
+
+        $total = 0;
+
+        foreach ($folio_inicial as $index => $inicio) {
+            $fin = $folio_final[$index] ?? $inicio;
+            $total += ((int)$fin - (int)$inicio + 1);
+        }
+
+        return $total;
+    }
+
 
 }

@@ -222,7 +222,7 @@
 
             <div class="d-flex justify-content-center mt-3">
 
-                @if( $userId == 1 || $userId == $datos->id_revisor )
+                @if( $userId == 1 || $userId == 319 || $userId == $datos->id_revisor ) 
                 <button type="submit" class="btn btn-primary me-2 waves-effect waves-light"><i
                         class="ri-pencil-fill"></i> Editar {{ $datos->numero_revision }}ª revisión</button>
                 @endif
