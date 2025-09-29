@@ -831,6 +831,7 @@ $(function () {
           $('#edit_operacion_adicional').val(bitacora.operacion_adicional);
           $('#edit_volumen_inicial').val(bitacora.volumen_inicial);
           $('#edit_alcohol_inicial').val(bitacora.alcohol_inicial);
+          $('#edit_id_tanque').val(bitacora.id_tanque);
           /*  */
           $('#edit_tipo_op').val(bitacora.tipo_operacion).trigger('change');
 

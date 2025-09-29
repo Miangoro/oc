@@ -24,7 +24,8 @@
                                                 name="id_empresa" class="select2 form-select"
                                                 data-error-message="por favor selecciona la empresa">
                                                 @if ($tipo_usuario != 3)
-                                                <option value="" disabled selected>Selecciona el cliente</option>
+                                                    <option value="" disabled selected>Selecciona el cliente
+                                                    </option>
                                                 @endif
                                                 @foreach ($empresas as $empresa)
                                                     <option value="{{ $empresa->id_empresa }}">
@@ -39,7 +40,7 @@
                                     <div class="col-md-5 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="date" class="form-control datepicker" id="fecha"
-                                                name="fecha" aria-label="Fecha" >
+                                                name="fecha" aria-label="Fecha">
                                             <label for="fecha">Fecha</label>
                                         </div>
                                     </div>
@@ -93,7 +94,14 @@
 
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-4 mb-4">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control" id="id_tanque" name="id_tanque"
+                                                placeholder="ID del Tanque(s)" aria-label="ID del Tanque">
+                                            <label for="id_tanque">ID del Tanque(s)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="number" class="form-control" id="volumen_inicial"
                                                 name="volumen_inicial" placeholder="Volumen inicial"
@@ -102,11 +110,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="number" step="0.01" class="form-control"
-                                                id="alcohol_inicial" name="alcohol_inicial" placeholder="% Alc. inicial"
-                                                aria-label="% Alc. inicial">
+                                                id="alcohol_inicial" name="alcohol_inicial"
+                                                placeholder="% Alc. inicial" aria-label="% Alc. inicial">
                                             <label for="alcohol_inicial">% Alc. inicial</label>
                                         </div>
                                     </div>

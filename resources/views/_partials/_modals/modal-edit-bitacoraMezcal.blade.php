@@ -36,7 +36,7 @@
                                     <div class="col-md-5 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="date" class="form-control datepicker" id="edit_fecha"
-                                                name="fecha" aria-label="Fecha" >
+                                                name="fecha" aria-label="Fecha">
                                             <label for="fecha">Fecha</label>
                                         </div>
                                     </div>
@@ -86,7 +86,15 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-4 mb-4">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control" id="edit_id_tanque"
+                                                name="id_tanque" placeholder="ID del Tanque(s)"
+                                                aria-label="ID del Tanque">
+                                            <label for="id_tanque">ID del Tanque(s)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="number" class="form-control" id="edit_volumen_inicial"
                                                 name="volumen_inicial" placeholder="Volumen inicial"
@@ -95,7 +103,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="number" step="0.01" class="form-control"
                                                 id="edit_alcohol_inicial" name="alcohol_inicial"

@@ -388,6 +388,7 @@ public function PDFBitacoraMezcal(Request $request)
             'fecha' => 'required|date',
             'id_empresa' => 'required|integer|exists:empresa,id_empresa',
             'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
+            'id_tanque' => 'nullable|string|max:255',
             'id_instalacion' => 'required|integer',
             'operacion_adicional' => 'nullable|string',
             'tipo_operacion' => 'required|string',
@@ -410,6 +411,7 @@ public function PDFBitacoraMezcal(Request $request)
             $bitacora->fecha = $request->fecha;
             $bitacora->id_empresa = $request->id_empresa;
             $bitacora->id_instalacion = $request->id_instalacion;
+            $bitacora->id_tanque = $request->id_tanque ?? 0;
             $bitacora->id_lote_granel = $request->id_lote_granel;
             $bitacora->tipo_operacion = $request->tipo_operacion;
             $bitacora->tipo = 1;
@@ -471,6 +473,7 @@ public function PDFBitacoraMezcal(Request $request)
                     'fecha' => $fecha_formateada, // para que el input date lo acepte
                     'id_lote_granel' => $bitacora->id_lote_granel,
                     'operacion_adicional' => $bitacora->operacion_adicional,
+                    'id_tanque' => $bitacora->id_tanque,
                     'volumen_inicial'    =>     $bitacora->volumen_inicial,
                     'alcohol_inicial'   =>     $bitacora->alcohol_inicial,
                     'tipo_operacion' => $bitacora->tipo_operacion,
@@ -502,6 +505,7 @@ public function PDFBitacoraMezcal(Request $request)
               'id_empresa'       => 'required|exists:empresa,id_empresa',
               'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
               'id_instalacion' => 'required|integer',
+              'id_tanque' => 'nullable|string|max:255',
               'operacion_adicional' => 'nullable|string',
               'tipo_operacion' => 'required|string',
               'volumen_inicial' => 'nullable|numeric|min:0',
@@ -524,6 +528,7 @@ public function PDFBitacoraMezcal(Request $request)
               'id_empresa'       => $request->id_empresa,
               'id_lote_granel'   => $request->id_lote_granel,
               'id_instalacion'   => $request->id_instalacion,
+              'id_tanque'   => $request->id_tanque,
               'fecha'            => $request->fecha,
               'operacion_adicional' => $request->operacion_adicional,
               'tipo' => 1,

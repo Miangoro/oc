@@ -493,6 +493,7 @@ private function esJsonValido($string)
             'id_empresa' => 'required|integer|exists:empresa,id_empresa',
             'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
             'id_instalacion' => 'required|integer',
+            'id_tanque' => 'nullable|string|max:255',
             'operacion_adicional' => 'nullable|string',
             'tipo_operacion' => 'required|string',
             'volumen_inicial' => 'nullable|numeric|min:0',
@@ -515,6 +516,7 @@ private function esJsonValido($string)
             $bitacora->id_empresa = $request->id_empresa;
             $bitacora->id_instalacion = $request->id_instalacion;
             $bitacora->id_lote_granel = $request->id_lote_granel;
+            $bitacora->id_tanque = $request->id_tanque ?? 0;
             $bitacora->tipo_operacion = $request->tipo_operacion;
             $bitacora->tipo = 2;
             $bitacora->operacion_adicional = $request->operacion_adicional;
@@ -577,6 +579,7 @@ private function esJsonValido($string)
                     'alcohol_inicial'   =>     $bitacora->alcohol_inicial,
                     'tipo_operacion' => $bitacora->tipo_operacion,
                     'procedencia_entrada'  =>     $bitacora->procedencia_entrada,
+                    'id_tanque' => $bitacora->id_tanque,
                     'volumen_entrada'   =>    $bitacora->volumen_entrada,
                     'alcohol_entrada'  =>     $bitacora->alcohol_entrada,
                     'agua_entrada' => $bitacora->agua_entrada,
@@ -604,6 +607,7 @@ private function esJsonValido($string)
               'id_empresa'       => 'required|exists:empresa,id_empresa',
               'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
               'id_instalacion' => 'required|integer',
+              'id_tanque' => 'nullable|string|max:255',
               'operacion_adicional' => 'nullable|string',
               'tipo_operacion' => 'required|string',
               'volumen_inicial' => 'nullable|numeric|min:0',
@@ -630,6 +634,7 @@ private function esJsonValido($string)
               'operacion_adicional' => $request->operacion_adicional,
               'tipo' => 2,
               'tipo_operacion' => $request->tipo_operacion,
+              'id_tanque' => $request->id_tanque,
               'volumen_inicial' => $request->volumen_inicial,
               'alcohol_inicial' => $request->alcohol_inicial ,
               'procedencia_entrada' => $request->procedencia_entrada ?? 0,
