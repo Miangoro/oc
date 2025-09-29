@@ -156,7 +156,7 @@
                                         @foreach ($maquiladora as $maquiladoras)
                                             @foreach ($maquiladoras->maquiladora as $soymaquilador)
                                                 <li class="mb-1">
-                                                    <i class="material-icons align-middle text-primary" style="font-size:18px;">business</i>
+                                                    <i class="material-icons align-middle text-primary" style="font-size:18px;"></i>
                                                     {{ $soymaquilador->razon_social }}
                                                 </li>
                                             @endforeach
@@ -895,41 +895,40 @@
                 </div>
             @endcan
             @can('Estadísticas hologramas clientes')
-                @foreach ($marcasConHologramas as $marca)
-                    @php
-                       $totalDisponibles = $marca->solicitudHolograma()
-                    ->where('id_empresa', $empresaId)
-                    ->get()
-                    ->sum(function ($solicitud) {
-                        return $solicitud->cantidadDisponibles();
-                    });
+<div class="row g-4"> {{-- g-4 para buen espacio entre tarjetas --}}
+    @foreach ($marcasConHologramas as $marca)
+        @php
+            $totalDisponibles = $marca->solicitudHolograma()
+                ->where('id_empresa', $empresaId)
+                ->get()
+                ->sum(fn ($solicitud) => $solicitud->cantidadDisponibles());
+        @endphp
 
-                    @endphp
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="card shadow-lg border-0 h-100 rounded-4 overflow-hidden hover-card">
+                <div class="card-body p-4 text-center d-flex flex-column justify-content-between">
 
-                    <div class="col-sm-2">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center flex-wrap">
-                                    <div class="avatar me-4">
-                                        <div class="avatar-initial bg-label-primary rounded-3">
-                                            <i class="ri-price-tag-3-line ri-24px"></i>
-                                        </div>
-                                    </div>
-                                    <div class="card-info">
-                                        <div class="d-flex align-items-center">
-                                            <h5 class="mb-0 me-2">{{ number_format($totalDisponibles, 0) }}</h5>
-                                            <i class="ri-arrow-down-s-line text-danger ri-20px"></i>
-                                            <small class="text-danger">Hologramas disponibles</small>
-                                        </div>
-                                        <p class="mb-0">{{ $marca->marca }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    {{-- Ícono grande con fondo degradado --}}
+                    <div class="mx-auto mb-3 icon-wrapper">
+                        <i class="ri-price-tag-3-line display-4 text-white"></i>
                     </div>
-                @endforeach
 
-            @endcan
+                    {{-- Cantidad de hologramas --}}
+                    <h2 class="fw-bold text-primary mb-1">
+                        {{ number_format($totalDisponibles, 0) }}
+                    </h2>
+                    <p class="text-muted mb-3">Hologramas disponibles</p>
+
+                    {{-- Nombre de la marca --}}
+                    <h5 class="fw-semibold text-dark">{{ $marca->marca }}</h5>
+
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
+@endcan
+
 
 
 
