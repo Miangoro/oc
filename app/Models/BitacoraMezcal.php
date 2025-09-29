@@ -15,6 +15,7 @@ class BitacoraMezcal extends Model
         'fecha',
         'id_tanque',
         'id_empresa',
+        'nombre_lote',
         'id_lote_granel',
         'id_lote_granel_destino',
         'id_instalacion',
