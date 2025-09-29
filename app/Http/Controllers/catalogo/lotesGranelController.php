@@ -37,7 +37,7 @@ class lotesGranelController extends Controller
                   $idsEmpresas = $this->obtenerEmpresasVisibles($empresaIdAut, null);
 
                   $empresas = empresa::with('empresaNumClientes')
-                      ->whereIn('id_empresa', $idsEmpresas)
+                      ->whereIn('id_empresa', $empresaIdAut)
                       ->get();
               } else {
                   $empresas = empresa::with('empresaNumClientes')
