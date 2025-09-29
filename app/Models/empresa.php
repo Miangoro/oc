@@ -81,9 +81,22 @@ public function empresaNumClientesNorma2()
         return $this->hasMany(Guias::class, 'id_empresa');
     }
 
-    public function obtenerInstalaciones(){
-        return instalaciones::where('id_empresa', $this->id_empresa)->get();
+public function obtenerInstalaciones()
+{
+    $query = instalaciones::where('id_empresa', $this->id_empresa);
+
+    // IDs de los 2 usuarios especiales
+    $usuariosEspeciales = [46, 328]; // Natividad y 
+
+    $user = Auth::user();
+
+    if (in_array($user->id, $usuariosEspeciales)) {
+        // solo mostrar la instalación que tiene el usuario en su campo id_instalacion
+        $query->where('id', $user->id_instalacion);
     }
+
+    return $query->get();
+}
 
     public function lotes_granel(){
         return LotesGranel::where('id_empresa', $this->id_empresa)->get();
