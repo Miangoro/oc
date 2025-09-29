@@ -193,7 +193,7 @@ $inspeccionesInspector = $inspecciones->map(function ($grupo) {
 })->sortByDesc('total_inspecciones');
 
 $marcasConHologramas = marcas::with('solicitudHolograma')
-    ->where('id_empresa', $empresaId) // <-- filtro en la tabla marcas
+    //->where('id_empresa', $empresaId) // <-- filtro en la tabla marcas
     ->whereHas('solicitudHolograma', function ($q) use ($empresaId) {
         $q->where('id_empresa', $empresaId); // <-- filtro en la tabla de la relación
     })
