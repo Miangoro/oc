@@ -42,7 +42,29 @@
 
 @endsection
 
+<style>
+    /* Degradado en el fondo del icono */
+.icon-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #4e73df 0%, #1cc88a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
 
+/* Efecto hover de la tarjeta */
+.hover-card {
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+</style>
 
 
 @section('content')
