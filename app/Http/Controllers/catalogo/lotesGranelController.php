@@ -364,6 +364,7 @@ $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($lote->fecha_emision) ?? 'N/A';
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($lote->fecha_vigencia) ?? 'N/A';
                 $nestedData['estatus'] = $lote->estatus;
+                $nestedData['id_usuario_registro'] =$lote->registro->name ?? 'N/A';
                 $nestedData['folio_certificado_oc'] = $lote->certificadoGranel->num_certificado ?? 'N/A';
                 $folios = explode(',', $lote->folio_fq); // Divide los folios en un array
                 $documentoCompleto = $lote->fqs->firstWhere('id_documento', 58);

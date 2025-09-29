@@ -491,7 +491,8 @@ private function esJsonValido($string)
         $request->validate([
             'fecha' => 'required|date',
             'id_empresa' => 'required|integer|exists:empresa,id_empresa',
-            'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
+            'nombre_lote' => 'nullable|string|max:255',
+            'id_lote_granel' => 'nullable|integer|exists:lotes_granel,id_lote_granel',
             'id_instalacion' => 'required|integer',
             'id_tanque' => 'nullable|string|max:255',
             'operacion_adicional' => 'nullable|string',
@@ -515,13 +516,14 @@ private function esJsonValido($string)
             $bitacora->fecha = $request->fecha;
             $bitacora->id_empresa = $request->id_empresa;
             $bitacora->id_instalacion = $request->id_instalacion;
-            $bitacora->id_lote_granel = $request->id_lote_granel;
+            $bitacora->id_lote_granel = $request->id_lote_granel ?? 0;
+            $bitacora->nombre_lote = $request->nombre_lote ?? null;
             $bitacora->id_tanque = $request->id_tanque ?? 0;
             $bitacora->tipo_operacion = $request->tipo_operacion;
             $bitacora->tipo = 2;
             $bitacora->operacion_adicional = $request->operacion_adicional;
-            $bitacora->volumen_inicial = $request->volumen_inicial;
-            $bitacora->alcohol_inicial = $request->alcohol_inicial;
+            $bitacora->volumen_inicial = $request->volumen_inicial ?? 0;
+            $bitacora->alcohol_inicial = $request->alcohol_inicial ?? 0;
             $bitacora->procedencia_entrada  = $request->procedencia_entrada ?? 0;
             $bitacora->volumen_entrada  = $request->volumen_entrada ?? 0;
             $bitacora->alcohol_entrada  = $request->alcohol_entrada ?? 0;
@@ -535,6 +537,31 @@ private function esJsonValido($string)
             $bitacora->id_usuario_registro = auth()->id();
 
             $bitacora->save();
+
+
+                    // 2️⃣ Si es entrada, crear lote automáticamente
+        if ($request->tipo_operacion === 'Entradas') {
+            $lote = new LotesGranel();
+            $lote->id_empresa = $request->id_empresa;
+            $lote->id_instalacion = $request->id_instalacion;
+            $lote->nombre_lote = $request->nombre_lote ?? 'Lote ' . now()->format('YmdHis');
+            $lote->tipo_lote = 1;
+            $lote->volumen = $request->volumen_entrada ?? $request->volumen_final;
+            $lote->volumen_restante = $lote->volumen;
+            $lote->volumen_con_agua = $request->volumen_final ?? $request->volumen_entrada;
+            $lote->cont_alc = $request->alcohol_entrada ?? $request->alc_vol_final;
+            $lote->id_tanque = $request->id_tanque ?? null;
+            $lote->id_estado = 1;
+            $lote->id_categoria = 1;
+            $lote->id_clase = 1;
+            $lote->creado_bitacora = "si";
+            $lote->agua_entrada = $request->agua_entrada ?? 0;
+
+            // ✅ Asignar id_tipo correctamente
+            $lote->id_tipo = json_encode($request->id_tipo ?? ["0"]);
+
+            $lote->save();
+        }
 
             return response()->json(['success' => 'Bitácora registrada correctamente']);
         } catch (\Exception $e) {
@@ -577,6 +604,7 @@ private function esJsonValido($string)
                     'operacion_adicional' => $bitacora->operacion_adicional,
                     'volumen_inicial'    =>     $bitacora->volumen_inicial,
                     'alcohol_inicial'   =>     $bitacora->alcohol_inicial,
+                    'nombre_lote' => $bitacora->nombre_lote,
                     'tipo_operacion' => $bitacora->tipo_operacion,
                     'procedencia_entrada'  =>     $bitacora->procedencia_entrada,
                     'id_tanque' => $bitacora->id_tanque,
@@ -605,7 +633,8 @@ private function esJsonValido($string)
           $request->validate([
               'edit_bitacora_id' => 'required|exists:bitacora_mezcal,id',
               'id_empresa'       => 'required|exists:empresa,id_empresa',
-              'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
+              'nombre_lote' => 'nullable|string|max:255',
+              'id_lote_granel' => 'nullable|integer|exists:lotes_granel,id_lote_granel',
               'id_instalacion' => 'required|integer',
               'id_tanque' => 'nullable|string|max:255',
               'operacion_adicional' => 'nullable|string',
@@ -628,15 +657,16 @@ private function esJsonValido($string)
 
           $bitacora->update([
               'id_empresa'       => $request->id_empresa,
-              'id_lote_granel'   => $request->id_lote_granel,
+              'id_lote_granel'   => $request->id_lote_granel ?? 0,
+              'nombre_lote' => $request->nombre_lote ?? null,
               'id_instalacion'   => $request->id_instalacion,
               'fecha'            => $request->fecha,
               'operacion_adicional' => $request->operacion_adicional,
               'tipo' => 2,
               'tipo_operacion' => $request->tipo_operacion,
               'id_tanque' => $request->id_tanque,
-              'volumen_inicial' => $request->volumen_inicial,
-              'alcohol_inicial' => $request->alcohol_inicial ,
+              'volumen_inicial' => $request->volumen_inicial ?? 0,
+              'alcohol_inicial' => $request->alcohol_inicial ?? 0 ,
               'procedencia_entrada' => $request->procedencia_entrada ?? 0,
               'volumen_entrada'=> $request->volumen_entrada ?? 0,
               'alcohol_entrada' => $request->alcohol_entrada ?? 0,

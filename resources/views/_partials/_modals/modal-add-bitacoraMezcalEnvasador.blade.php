@@ -24,7 +24,8 @@
                                                 name="id_empresa" class="select2 form-select"
                                                 data-error-message="por favor selecciona la empresa">
                                                 @if ($tipo_usuario != 3)
-                                                <option value="" disabled selected>Selecciona el cliente</option>
+                                                    <option value="" disabled selected>Selecciona el cliente
+                                                    </option>
                                                 @endif
                                                 @foreach ($empresas as $empresa)
                                                     <option value="{{ $empresa->id_empresa }}">
@@ -39,7 +40,7 @@
                                     <div class="col-md-5 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="date" class="form-control datepicker" id="fecha"
-                                                name="fecha" aria-label="Fecha" >
+                                                name="fecha" aria-label="Fecha">
                                             <label for="fecha">Fecha</label>
                                         </div>
                                     </div>
@@ -71,13 +72,21 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4 mb-3">
+                                    <div id="select_lote" class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select onchange="obtenerDatosGraneles();" id="id_lote_granel"
                                                 name="id_lote_granel" class="select2 form-select">
                                                 <option value="" disabled selected>Selecciona un lote</option>
                                             </select>
                                             <label for="id_lote_granel">Lote a granel</label>
+                                        </div>
+                                    </div>
+                                    <div id="nombre_entrada" class="col-md-4 mb-3 d-none">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control" id="nombre_lote"
+                                                name="nombre_lote" placeholder="Nombre del lote"
+                                                aria-label="Nombre del lote">
+                                            <label for="nombre_lote">Nombre del lote</label>
                                         </div>
                                     </div>
                                     <div class="col-md-8 mb-3">
@@ -93,7 +102,7 @@
 
                                 </div>
                                 <div class="row">
-                                   <div class="col-md-4 mb-4">
+                                    <div class="col-md-4 mb-4">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="id_tanque" name="id_tanque"
                                                 placeholder="ID del Tanque(s)" aria-label="ID del Tanque">
@@ -112,8 +121,8 @@
                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="number" step="0.01" class="form-control"
-                                                id="alcohol_inicial" name="alcohol_inicial" placeholder="% Alc. inicial"
-                                                aria-label="% Alc. inicial">
+                                                id="alcohol_inicial" name="alcohol_inicial"
+                                                placeholder="% Alc. inicial" aria-label="% Alc. inicial">
                                             <label for="alcohol_inicial">% Alc. inicial</label>
                                         </div>
                                     </div>
@@ -269,16 +278,19 @@
                 url: '/getDatosBitacora/' + empresa,
                 method: 'GET',
                 success: function(response) {
-                    var contenido = "";
-                    for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                            response
-                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
+                    var contenido = '<option value="" disabled selected>Selecciona un lote</option>';
+
+                    if (response.lotes_granel.length > 0) {
+                        for (let index = 0; index < response.lotes_granel.length; index++) {
+                            contenido += '<option value="' + response.lotes_granel[index].id_lote_granel +
+                                '">' +
+                                response.lotes_granel[index].nombre_lote + '</option>';
+                        }
+                    } else {
+                        contenido += '<option value="">Sin lotes registrados</option>';
                     }
-                    if (response.lotes_granel.length == 0) {
-                        contenido = '<option value="">Sin lotes registrados</option>';
-                    } else {}
-                    $('#id_lote_granel').html(contenido);
+
+                    $('#id_lote_granel').html(contenido).val(null).trigger('change');
 
                     var contenidoI = "";
                     for (let index = 0; index < response.instalaciones.length; index++) {

@@ -92,7 +92,7 @@ $(function () {
             var lotes_procedencia = full['folios_procedencia']; // ya es string
             var $certificado = full['folio_certificado'] ?? 'N/A';
             var $obs = (full['observaciones'] || '').trim();
-             var $operacion = (full['operacion_adicional'] || '').trim();
+            var $operacion = (full['operacion_adicional'] || '').trim();
             var $id_usuario_registro = (full['id_usuario_registro'] || '').trim();
             let html =
               '<span class="fw-bold small">Fecha: </span>' +
@@ -147,7 +147,10 @@ $(function () {
             }
             if ($id_usuario_registro && $id_usuario_registro.toUpperCase() !== 'N/A') {
               html +=
-                '<br><span class="fw-bold small">Registrado por: </span>' + '<span class="small">' + $id_usuario_registro + '</span>';
+                '<br><span class="fw-bold small">Registrado por: </span>' +
+                '<span class="small">' +
+                $id_usuario_registro +
+                '</span>';
             }
 
             return html;
@@ -250,34 +253,32 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-          let acciones = '';
+            let acciones = '';
 
-          const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
-          const esAdminBitacoras = window.adminBitacoras === true;
-          const esUsuarioTipo2 = window.tipoUsuario === 2;
+            const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
+            const esAdminBitacoras = window.adminBitacoras === true;
+            const esUsuarioTipo2 = window.tipoUsuario === 2;
 
-          // Permitir firmar si NO está firmada, o si es admin, o si es usuario tipo 2
-          if (!estaFirmado || esAdminBitacoras || esUsuarioTipo2) {
-            if (window.puedeFirmarElUsuario) {
-              const textoFirma = (estaFirmado && esUsuarioTipo2)
-                ? 'Volver a firmar bitácora'
-                : 'Firmar bitácora';
+            // Permitir firmar si NO está firmada, o si es admin, o si es usuario tipo 2
+            if (!estaFirmado || esAdminBitacoras || esUsuarioTipo2) {
+              if (window.puedeFirmarElUsuario) {
+                const textoFirma = estaFirmado && esUsuarioTipo2 ? 'Volver a firmar bitácora' : 'Firmar bitácora';
 
-              acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning">
+                acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning">
                             <i class="ri-ball-pen-line ri-20px text-warning"></i> ${textoFirma}</a>`;
-            }
-            if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info">
+              }
+              if (window.puedeEditarElUsuario) {
+                acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info">
                             <i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
-            }
-            if (window.puedeEliminarElUsuario) {
-              acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger">
+              }
+              if (window.puedeEliminarElUsuario) {
+                acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger">
                             <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora</a>`;
+              }
             }
-          }
 
-          if (acciones.trim()) {
-            return `
+            if (acciones.trim()) {
+              return `
               <div class="d-flex align-items-center gap-50">
                 <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                   <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
@@ -287,17 +288,16 @@ $(function () {
                 </div>
               </div>
             `;
-          }
+            }
 
-          // Si no hay acciones, mostrar botón deshabilitado
-          return `
+            // Si no hay acciones, mostrar botón deshabilitado
+            return `
             <div class="d-flex align-items-center gap-50">
               <button class="btn btn-sm btn-secondary disabled" style="opacity: 0.6; cursor: not-allowed;" disabled>
                 <i class="ri-settings-5-fill ri-20px me-1"></i> Opciones
               </button>
             </div>
           `;
-
 
             // Si no hay acciones, no retornar el dropdown
             /* if (!acciones.trim()) {
@@ -695,6 +695,13 @@ $(function () {
             }
           }
         },
+        nombre_lote: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el nombre del lote'
+            }
+          }
+        },
         id_instalacion: {
           validators: {
             notEmpty: {
@@ -771,11 +778,64 @@ $(function () {
         }
       });
     });
-
     // Inicializar select2 y revalidar el campo cuando cambie
     $('#id_empresa, #id_lote_granel, #fecha').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
+
+$('#tipo_op').on('change', function () {
+    let tipo = $(this).val();
+
+    if (tipo === 'Entradas') {
+        $('#nombre_entrada').removeClass('d-none');
+        $('#select_lote').addClass('d-none');
+
+        // Limpiar select de lotes
+        $('#id_lote_granel').val(null).trigger('change');
+
+        // Quitar validación del select
+        try { fv.removeField('id_lote_granel'); } catch(e) {}
+
+        // Agregar validación del nombre de lote
+        try {
+            fv.addField('nombre_lote', {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingrese el nombre del lote'
+                    }
+                }
+            });
+        } catch(e) {}
+
+        // Revalidar
+        fv.revalidateField('nombre_lote');
+
+    } else {
+        $('#nombre_entrada').addClass('d-none');
+        $('#select_lote').removeClass('d-none');
+
+        // Limpiar input nombre lote
+        $('#nombre_lote').val('');
+
+        // Quitar validación del nombre
+        try { fv.removeField('nombre_lote'); } catch(e) {}
+
+        // Agregar validación del select
+        try {
+            fv.addField('id_lote_granel', {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor seleccione el lote'
+                    }
+                }
+            });
+        } catch(e) {}
+
+        // Revalidar
+        fv.revalidateField('id_lote_granel');
+    }
+});
+
   });
 
   $(document).on('click', '.edit-record', function () {

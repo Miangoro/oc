@@ -65,13 +65,21 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4 mb-3">
+                                    <div id="edit_select_lote" class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select id="edit_id_lote_granel" name="id_lote_granel"
                                                 class="select2 form-select">
                                                 <option value="">Selecciona un lote</option>
                                             </select>
                                             <label for="id_lote_granel">Lote a granel</label>
+                                        </div>
+                                    </div>
+                                    <div id="edit_nombre_entrada" class="col-md-4 mb-3 d-none">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control" id="edit_nombre_lote"
+                                                name="nombre_lote" placeholder="Nombre del lote"
+                                                aria-label="Nombre del lote">
+                                            <label for="nombre_lote">Nombre del lote</label>
                                         </div>
                                     </div>
                                     <div class="col-md-8">
