@@ -895,7 +895,7 @@
                 </div>
             @endcan
             @can('Estadísticas hologramas clientes')
-<div class="row g-4"> {{-- g-4 para buen espacio entre tarjetas --}}
+<div class="row g-2"> {{-- g-4 para buen espacio entre tarjetas --}}
     @foreach ($marcasConHologramas as $marca)
         @php
             $totalDisponibles = $marca->solicitudHolograma()
