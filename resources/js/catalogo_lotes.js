@@ -935,7 +935,7 @@ async function obtenerDestinoEmpresa() {
       });
     });
     // Inicializar select2 y revalidar el campo cuando cambie
-    $('#id_empresa, #id_guia, #tipo_agave').on('change', function () {
+    $('#id_empresa, #id_guia, #tipo_agave, #id_instalacion').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
   });
@@ -1762,13 +1762,17 @@ async function obtenerDestinoEmpresa() {
   $(document).ready(function () {
     // Al abrir el modal, cargar marcas para el cliente seleccionado
     $('#offcanvasAddLote').on('shown.bs.modal', function () {
-      obtenerDatosEmpresa();
+        var empresa = $("#id_empresa").val();
+      if (!empresa) return;
+        obtenerDatosEmpresa();
+       obtenerInstalaciones(empresa);
     });
     // Llamar a obtenerDatosEmpresa cuando se selecciona la empresa
-    /* $('#id_empresa').change(function() { */
-    /*       var empresa = $("#id_empresa").val();
+    /* $('#id_empresa').change(function() {
+          var empresa = $("#id_empresa").val();
       if (!empresa) return;
-        obtenerDestinoEmpresa(); */
-    /*  }); */
+
+     }); */
+
   });
 });
