@@ -894,7 +894,7 @@
                     </div>
                 </div>
             @endcan
-            @can('Estadísticas hologramas clientes')
+            @can('Estadísticas hologramas clientes') ebntrio
                 @foreach ($marcasConHologramas as $marca)
                     @php
                         $totalDisponibles = $marca->solicitudHolograma->sum(function ($solicitud) {

@@ -673,6 +673,7 @@ public function agregarResultados(Request $request)
                             $revisor = User::where('tipo', 2)
                                 ->where('estatus', 'Activo')
                                 ->where('id', '<>', $excluirId)
+                                ->where('id', '<>', 12) //se excluye a amairany por solicitud de Gil
                                 ->orWhereIn('id', [319, 335, 344])
                                 ->inRandomOrder()
                                 ->first();
