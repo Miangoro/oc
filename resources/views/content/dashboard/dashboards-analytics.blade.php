@@ -894,12 +894,16 @@
                     </div>
                 </div>
             @endcan
-            @can('Estadísticas hologramas clientes') ebntrio
+            @can('Estadísticas hologramas clientes')
                 @foreach ($marcasConHologramas as $marca)
                     @php
-                        $totalDisponibles = $marca->solicitudHolograma->sum(function ($solicitud) {
-                            return $solicitud->cantidadDisponibles();
-                        });
+                       $totalDisponibles = $marca->solicitudHolograma()
+                    ->where('id_empresa', 5)
+                    ->get()
+                    ->sum(function ($solicitud) {
+                        return $solicitud->cantidadDisponibles();
+                    });
+
                     @endphp
 
                     <div class="col-sm-2">
