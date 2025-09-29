@@ -17,7 +17,7 @@
 
                             <div class="col-md-7">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select onchange="obtenerGuias1(); obtenerLotesEdit();" id="edit_id_empresa"
+                                    <select onchange="obtenerGuias1(); obtenerLotesEdit(); obtenerInstaEdit(this.value)" id="edit_id_empresa"
                                         name="id_empresa" class="select2 form-select">
                                         <option value="" disabled selected>Selecciona el cliente</option>
                                         @foreach ($empresas as $empresa)
@@ -40,15 +40,28 @@
                             </div>
                         </div>
 
-
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="text" id="edit_nombre_lote" name="nombre_lote" class="form-control"
                                         placeholder="Nombre del lote" autocomplete="off" />
                                     <label for="edit_nombre_lote">Nombre del Lote</label>
                                 </div>
                             </div>
+                            <div class="col-md-8">
+                                <div class="form-floating form-floating-outline mb-6">
+                                    <select class=" form-select select2" id="edit_id_instalacion" name="id_instalacion"
+                                        aria-label="id_instalacion">
+                                        <option value="" disabled selected>Lista de instalaciones</option>
+                                        <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
+                                    </select>
+                                    <label for="id_instalacion" class="form-label">Instalacion del lote</label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="edit_tipo_lote" name="tipo_lote" class="form-select">
@@ -59,7 +72,6 @@
                                     <label for="tipo_lote">Tipo de Lote</label>
                                 </div>
                             </div>
-
                             <!-- Campo para seleccionar lote original -->
                             <div class="col-md-6" id="editarLotes">
                                 <div class="form-floating form-floating-outline mb-4">
@@ -74,14 +86,15 @@
                                         lote?</label>
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-4">
+                            {{-- <div class="col-md-6 mb-4">
                                 <div class="form-floating form-floating-outline">
                                     <input type="text" class="form-control" id="edit_id_tanque" name="id_tanque"
                                         placeholder="ID del Tanque(s)" aria-label="ID del Tanque">
                                     <label for="id_tanque">ID del Tanque(s)</label>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
+                        <hr>
 
                         <div id="editLotesGranel" class="d-none">
                             <table class="table table-bordered shadow-lg">
@@ -404,7 +417,7 @@
 </div>
 
 <script>
-      function calcularVolumenTotalCheloE() {
+    function calcularVolumenTotalCheloE() {
         let volumenE = parseFloat(document.getElementById("edit_volumen").value) || 0;
         let aguaEntradaE = parseFloat(document.getElementById("edit_agua_entrada").value) || 0;
 
@@ -532,4 +545,42 @@
             }
         });
     }
+
+      function obtenerInstaEdit(empresa) {
+    if (empresa !== "" && empresa !== null && empresa !== undefined) {
+        $.ajax({
+            url: '/getDatosBitacora/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                // Siempre empieza con la opción vacía
+                var contenidoI = '<option value="" disabled selected>Seleccione la instalación</option>';
+
+                if (response.instalaciones.length > 0) {
+                    for (let index = 0; index < response.instalaciones.length; index++) {
+                        var inst = response.instalaciones[index];
+                        var tipoLimpio = limpiarTipo(inst.tipo);
+
+                        contenidoI += `
+                            <option value="${inst.id_instalacion}">
+                                ${tipoLimpio} | ${inst.direccion_completa}
+                            </option>`;
+                    }
+                } else {
+                    contenidoI += '<option value="">Sin instalaciones registradas</option>';
+                }
+
+                $('#edit_id_instalacion').html(contenidoI);
+
+                // Revisamos si había un valor guardado
+                const idInst = $('#edit_id_instalacion').data('selected');
+                if (idInst) {
+                    $('#edit_id_instalacion').val(idInst).trigger('change');
+                }
+            },
+            error: function() {}
+        });
+    }
+}
+
+
 </script>

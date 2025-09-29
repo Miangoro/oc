@@ -157,7 +157,6 @@ $(function () {
               (row.certificado
                 ? `<a href="${row.certificado}" class="text-primary" target="_blank">${row.num_certificado}</a>`
                 : row.num_certificado) +
-
               '</span>' +
               '<br><span class="fw-bold text-dark small">Emisión:</span><span class="small"> ' +
               row.fecha_emision +
@@ -273,18 +272,18 @@ $(function () {
           var data = $.map(columns, function (col, i) {
             return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
               ? '<tr data-dt-row="' +
-              col.rowIndex +
-              '" data-dt-column="' +
-              col.columnIndex +
-              '">' +
-              '<td>' +
-              col.title +
-              ':' +
-              '</td> ' +
-              '<td>' +
-              col.data +
-              '</td>' +
-              '</tr>'
+                  col.rowIndex +
+                  '" data-dt-column="' +
+                  col.columnIndex +
+                  '">' +
+                  '<td>' +
+                  col.title +
+                  ':' +
+                  '</td> ' +
+                  '<td>' +
+                  col.data +
+                  '</td>' +
+                  '</tr>'
               : '';
           }).join('');
 
@@ -310,7 +309,6 @@ $(function () {
 
   initializeSelect2(select2Elements);
 
-
   ///FORMATO PDF DICTAMEN
   $(document).on('click', '.pdfCerGranel', function () {
     var id = $(this).data('id');
@@ -325,9 +323,9 @@ $(function () {
     iframe.attr('src', url);
 
     //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', url).show();
-    $("#titulo_modal").text("Certificado de lote a granel");
-    $("#subtitulo_modal").html(registro);
+    $('#NewPestana').attr('href', url).show();
+    $('#titulo_modal').text('Certificado de lote a granel');
+    $('#subtitulo_modal').html(registro);
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();
@@ -360,8 +358,6 @@ $(function () {
       iframe.show();
     });
   });
-
-
 
   // Delete Record
   $(document).on('click', '.delete-record', function () {
@@ -436,11 +432,8 @@ $(function () {
     });
   });
 
-
-
-
-///REGISTRAR NUEVO LOTE
-$(document).ready(function () {
+  ///REGISTRAR NUEVO LOTE
+  $(document).ready(function () {
     var lotesDisponibles = []; // Variable para almacenar los lotes disponibles
 
     let rowIndex = 0; // Contador global para el índice de las filas
@@ -530,7 +523,8 @@ $(document).ready(function () {
       calcularVolumenTotal();
     });
 
-    $(document).on('input', '.volumen-parcial', function () { /* #agua_entrada */
+    $(document).on('input', '.volumen-parcial', function () {
+      /* #agua_entrada */
       calcularVolumenTotal(); // Recalcular total en cada cambio
     });
 
@@ -550,7 +544,9 @@ $(document).ready(function () {
         if (lotesDisponibles.length > 0) {
           lotesDisponibles.forEach(function (lote) {
             // Usar backticks para agregar la opción correctamente
-            $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote} (${lote.cont_alc}% Alc. Vol.) (${lote.volumen_restante} L)</option>`);
+            $select.append(
+              `<option value="${lote.id_lote_granel}">${lote.nombre_lote} (${lote.cont_alc}% Alc. Vol.) (${lote.volumen_restante} L)</option>`
+            );
           });
           if (valorSeleccionado) {
             $select.val(valorSeleccionado); // Seleccionar el valor si ya está definido
@@ -562,7 +558,7 @@ $(document).ready(function () {
     }
 
     // Función para calcular el volumen total
-   /*  function calcularVolumenTotal() {
+    /*  function calcularVolumenTotal() {
       let totalVolumen = 0;
 
       // Sumar todos los volúmenes parciales
@@ -575,7 +571,7 @@ $(document).ready(function () {
       $('#volumen').val(totalVolumen.toFixed(2)); // Mostrar el total con dos decimales
     } */
 
-      function calcularVolumenTotal() {
+    function calcularVolumenTotal() {
       let totalVolumen = 0;
 
       $('.volumen-parcial').each(function () {
@@ -584,10 +580,9 @@ $(document).ready(function () {
       });
 
       $('#volumen').val(totalVolumen.toFixed(2));
-  }
+    }
 
-
-/*     function calcularVolumenTotal() {
+    /*     function calcularVolumenTotal() {
       let totalVolumen = 0;
 
       $('.volumen-parcial').each(function () {
@@ -603,7 +598,6 @@ $(document).ready(function () {
       $('#volumen').val(totalVolumen.toFixed(2));
     }
  */
-
 
     $(document).on('change', '.id_lote_granel', function () {
       var loteSeleccionado = $(this).val();
@@ -692,10 +686,7 @@ $(document).ready(function () {
       });
     });
 
-
-
-
-/* // Detecta cambio de empresa
+    /* // Detecta cambio de empresa
   $('#id_empresa').on('change', function() {
       obtenerDestinoEmpresa();
   });
@@ -737,9 +728,9 @@ async function obtenerDestinoEmpresa() {
     }
 } */
 
-//FORMULARIO AGREGAR
-const addNewLote = document.getElementById('loteForm');
-const fv = FormValidation.formValidation(addNewLote, {
+    //FORMULARIO AGREGAR
+    const addNewLote = document.getElementById('loteForm');
+    const fv = FormValidation.formValidation(addNewLote, {
       fields: {
         nombre_lote: {
           validators: {
@@ -766,6 +757,13 @@ const fv = FormValidation.formValidation(addNewLote, {
           validators: {
             notEmpty: {
               message: 'Por favor seleccione el origen'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la instalación'
             }
           }
         },
@@ -812,29 +810,28 @@ const fv = FormValidation.formValidation(addNewLote, {
           }
         },
 
-
-        'folio_certificado': {
+        folio_certificado: {
           validators: {
             notEmpty: {
               message: 'Por favor ingresa el folio del certificado'
             }
           }
         },
-        'id_organismo': {
+        id_organismo: {
           validators: {
             notEmpty: {
               message: 'Por favor selecciona el organismo'
             }
           }
         },
-        'fecha_emision': {
+        fecha_emision: {
           validators: {
             notEmpty: {
               message: 'Por favor ingresa la fecha de emisión'
             }
           }
         },
-        'fecha_vigencia': {
+        fecha_vigencia: {
           validators: {
             notEmpty: {
               message: 'Por favor ingresa la fecha de vigencia'
@@ -855,8 +852,7 @@ const fv = FormValidation.formValidation(addNewLote, {
               message: 'Por favor seleccione una empresa destino'
             }
           }
-        },
-
+        }
       },
 
       plugins: {
@@ -874,7 +870,7 @@ const fv = FormValidation.formValidation(addNewLote, {
         // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
-}).on('core.form.valid', function (e) {
+    }).on('core.form.valid', function (e) {
       $('#btnAdd').addClass('d-none'); // Ocultar el botón de envío
       $('#btnSpinner').removeClass('d-none'); // Mostrar el spinner de carga
       // e.preventDefault();
@@ -898,34 +894,33 @@ const fv = FormValidation.formValidation(addNewLote, {
           $('#offcanvasAddLote').modal('hide');
           $('.datatables-users').DataTable().ajax.reload(null, false);
 
-        // Diferenciar mensaje normal o advertencia
-        if(response.warning) {
+          // Diferenciar mensaje normal o advertencia
+          if (response.warning) {
             Swal.fire({
-                icon: 'warning',
-                title: '¡Advertencia!',
-                text: response.message,
-                confirmButtonClass: 'btn btn-warning',
-                customClass: {
-                  confirmButton: 'btn btn-primary'
-                }
-            /*}).then(() => {
-                location.reload(); */// refresca la página para que veas el registro
+              icon: 'warning',
+              title: '¡Advertencia!',
+              text: response.message,
+              confirmButtonClass: 'btn btn-warning',
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              }
+              /*}).then(() => {
+                location.reload(); */ // refresca la página para que veas el registro
             });
-        } else if(response.success) {
+          } else if (response.success) {
             Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: 'Lote registrado exitosamente',
-                customClass: {
-                  confirmButton: 'btn btn-primary'
-                }
+              icon: 'success',
+              title: '¡Éxito!',
+              text: 'Lote registrado exitosamente',
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              }
             });
-        }
-
+          }
         },
         error: function (xhr) {
           // Mostrar alerta de error
-          console.log(xhr.responseJSON?.message)
+          console.log(xhr.responseJSON?.message);
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
@@ -937,22 +932,16 @@ const fv = FormValidation.formValidation(addNewLote, {
           $('#btnSpinner').addClass('d-none'); // Ocultar el botón de envío
           $('#btnAdd').removeClass('d-none'); // Mostrar el spinner de carga
         }
- 
       });
-});
+    });
     // Inicializar select2 y revalidar el campo cuando cambie
     $('#id_empresa, #id_guia, #tipo_agave').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
+  });
 
-});
-
-
-
-
-///FUNCION ACTUALIZAR
-$(document).ready(function () {
-
+  ///FUNCION ACTUALIZAR
+  $(document).ready(function () {
     const edit_tipoLoteSelect = document.getElementById('edit_tipo_lote');
     const edit_ocCidamFields = document.getElementById('edit_oc_cidam_fields');
     const edit_otroOrganismoFields = document.getElementById('edit_otro_organismo_fields');
@@ -994,7 +983,7 @@ $(document).ready(function () {
         edit_ocCidamFields.classList.add('d-none');
         edit_otroOrganismoFields.classList.add('d-none');
         edit_mostrarGuias.classList.add('d-none');
-       /*  edit_volumenIn.classList.remove('col-md-12');
+        /*  edit_volumenIn.classList.remove('col-md-12');
         edit_volumenIn.classList.add('col-md-6'); */
       }
     }
@@ -1007,10 +996,8 @@ $(document).ready(function () {
       rowIndex = $('#contenidoGranelesEdit').children('tr').length;
     }
 
-
-
-///OBTENER LOTE
-$(document).on('click', '.edit-record', function () {
+    ///OBTENER LOTE
+    $(document).on('click', '.edit-record', function () {
       var loteId = $(this).data('id');
       $('#edit_lote_id').val(loteId);
       $.ajax({
@@ -1073,10 +1060,16 @@ $(document).on('click', '.edit-record', function () {
             // Rellenar el modal con los datos del lote
             $('#edit_nombre_lote').val(lote.nombre_lote);
             $('#edit_id_empresa').val(lote.id_empresa).trigger('change');
+            /* $('#edit_id_instalacion').val(lote.id_instalacion).trigger('change'); */
+            // Obtener empresa_destino asignada y cargar select
+            let empresaDestinoAsignada = lote.id_empresa_destino ?? null;
+            obtenerDestinoEmpresaEdit(empresaDestinoAsignada);
+            $('#edit_id_instalacion')
+                .data('selected', lote.id_instalacion) // <-- Guardamos el id que debe seleccionarse
+                .empty(); // limpiamos mientras carga
 
-      // Obtener empresa_destino asignada y cargar select
-      let empresaDestinoAsignada = lote.id_empresa_destino ?? null;
-      obtenerDestinoEmpresaEdit(empresaDestinoAsignada);
+            // Llamamos al ajax que llenará las instalaciones
+            obtenerInstaEdit(lote.id_empresa);
 
             $('#edit_tipo_lote').val(lote.tipo_lote);
             $('#edit_id_tanque').val(lote.id_tanque);
@@ -1173,15 +1166,15 @@ $(document).on('click', '.edit-record', function () {
 
                   $('#archivo_url_display_otro_organismo').html(
                     'Documento disponible: <a href="../files/' +
-                    data.numeroCliente +
-                    '/certificados_granel/' +
-                    documento.url +
-                    '" target="_blank" class="text-primary">' +
-                    fileName +
-                    '</a>' +
-                    '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
-                    botonEliminar +
-                    '</span>'
+                      data.numeroCliente +
+                      '/certificados_granel/' +
+                      documento.url +
+                      '" target="_blank" class="text-primary">' +
+                      fileName +
+                      '</a>' +
+                      '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
+                      botonEliminar +
+                      '</span>'
                   );
                 }
               });
@@ -1291,8 +1284,7 @@ $(document).on('click', '.edit-record', function () {
           });
         }
       });
-});
-
+    });
 
     var lotesDisponiblesEdit = [];
 
@@ -1418,12 +1410,12 @@ $(document).on('click', '.edit-record', function () {
       }
     }
 
-    $(document).on('input', '.volumen-parcial-edit', function () {/* #edit_agua_entrada */
+    $(document).on('input', '.volumen-parcial-edit', function () {
+      /* #edit_agua_entrada */
       actualizarVolumenTotalEdit();
     });
 
-
-   /*  function actualizarVolumenTotalEdit() {
+    /*  function actualizarVolumenTotalEdit() {
       let total = 0;
 
       $('.volumen-parcial-edit').each(function () {
@@ -1436,20 +1428,20 @@ $(document).on('click', '.edit-record', function () {
       $('#edit_volumen').val(total.toFixed(2)); // Reemplaza con el ID correcto del campo total
     } */
 
-      function actualizarVolumenTotalEdit() {
-        let total = 0;
+    function actualizarVolumenTotalEdit() {
+      let total = 0;
 
-        // Sumar todos los volúmenes parciales
-        $('.volumen-parcial-edit').each(function () {
-          const val = parseFloat($(this).val()) || 0;
-          total += val;
-        });
+      // Sumar todos los volúmenes parciales
+      $('.volumen-parcial-edit').each(function () {
+        const val = parseFloat($(this).val()) || 0;
+        total += val;
+      });
 
-        // Actualizar el campo de volumen total
-        $('#edit_volumen').val(total.toFixed(2)); // ID del total en el formulario de edición
-      }
+      // Actualizar el campo de volumen total
+      $('#edit_volumen').val(total.toFixed(2)); // ID del total en el formulario de edición
+    }
 
-/*       function actualizarVolumenTotalEdit() {
+    /*       function actualizarVolumenTotalEdit() {
         let total = 0;
 
         // Sumar todos los volúmenes parciales
@@ -1467,50 +1459,49 @@ $(document).on('click', '.edit-record', function () {
       }
  */
 
+    // Detecta cambio de empresa en edición
+    $('#edit_id_empresa').on('change', function () {
+      obtenerDestinoEmpresaEdit();
+    });
+    // Función para obtener destinos de la empresa en edición
+    async function obtenerDestinoEmpresaEdit(selectedDestino = null) {
+      let empresaId = $('#edit_id_empresa').val();
+      if (!empresaId) return;
 
-// Detecta cambio de empresa en edición
-$('#edit_id_empresa').on('change', function() {
-    obtenerDestinoEmpresaEdit();
-});
-// Función para obtener destinos de la empresa en edición
-async function obtenerDestinoEmpresaEdit(selectedDestino = null) {
-    let empresaId = $("#edit_id_empresa").val();
-    if (!empresaId) return;
-
-    try {
+      try {
         const response = await $.get('/getDatosMaquila/' + empresaId);
         let $selectDestino = $('#edit_id_empresa_destino');
         $selectDestino.empty();
 
         // Obtener texto de la empresa seleccionada
-        let empresaSeleccionadaText = $("#edit_id_empresa option:selected").text();
+        let empresaSeleccionadaText = $('#edit_id_empresa option:selected').text();
         let numeroCliente = empresaSeleccionadaText.split('|')[0]?.trim() ?? '';
         let razonSocial = empresaSeleccionadaText.split('|')[1]?.trim() ?? '';
 
         if (response.empresasDestino.length > 1) {
-            // Tiene maquiladores: mostrar todos los destinos y habilitar select
-            response.empresasDestino.forEach(emp => {
-                let numeroClienteDestino = emp.empresa_num_clientes[0]?.numero_cliente
-                                            ?? emp.empresa_num_clientes[1]?.numero_cliente
-                                            ?? '';
-                let selected = selectedDestino == emp.id_empresa ? 'selected' : '';
-                $selectDestino.append(`<option value="${emp.id_empresa}" ${selected}>${numeroClienteDestino} | ${emp.razon_social}</option>`);
-            });
-            $selectDestino.prop('disabled', false);
+          // Tiene maquiladores: mostrar todos los destinos y habilitar select
+          response.empresasDestino.forEach(emp => {
+            let numeroClienteDestino =
+              emp.empresa_num_clientes[0]?.numero_cliente ?? emp.empresa_num_clientes[1]?.numero_cliente ?? '';
+            let selected = selectedDestino == emp.id_empresa ? 'selected' : '';
+            $selectDestino.append(
+              `<option value="${emp.id_empresa}" ${selected}>${numeroClienteDestino} | ${emp.razon_social}</option>`
+            );
+          });
+          $selectDestino.prop('disabled', false);
         } else {
-            // No tiene maquiladores: mostrar propia empresa visualmente y deshabilitar
-            $selectDestino.append(`<option value="${empresaId}" selected>${numeroCliente} | ${razonSocial}</option>`);
-            $selectDestino.prop('disabled', true);
+          // No tiene maquiladores: mostrar propia empresa visualmente y deshabilitar
+          $selectDestino.append(`<option value="${empresaId}" selected>${numeroCliente} | ${razonSocial}</option>`);
+          $selectDestino.prop('disabled', true);
         }
-
-    } catch (error) {
+      } catch (error) {
         console.error('Error al cargar maquiladora:', error);
         alert('Error al cargar los datos. Por favor, intenta nuevamente.');
+      }
     }
-}
-///FORMULARIO EDITAR
-const editLoteForm = document.getElementById('loteFormEdit');
-const fv = FormValidation.formValidation(editLoteForm, {
+    ///FORMULARIO EDITAR
+    const editLoteForm = document.getElementById('loteFormEdit');
+    const fv = FormValidation.formValidation(editLoteForm, {
       fields: {
         nombre_lote: {
           validators: {
@@ -1530,6 +1521,13 @@ const fv = FormValidation.formValidation(editLoteForm, {
           validators: {
             notEmpty: {
               message: 'Por favor seleccione el tipo de lote'
+            }
+          }
+        },
+        id_instalacion: {
+          valdiators: {
+            notEmpty: {
+              message: 'Por favor seleccione la instalación'
             }
           }
         },
@@ -1592,13 +1590,12 @@ const fv = FormValidation.formValidation(editLoteForm, {
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
-
-}).on('core.form.valid', function () {
+    }).on('core.form.valid', function () {
       $('#btnEdit').addClass('d-none'); // Ocultar el botón de envío
       $('#btnSpinnerEdit').removeClass('d-none'); // Mostrar el spinner de carga
       var formData = new FormData(editLoteForm);
       var loteId = $('#edit_lote_id').val();
-  ///ACTUALIZAR LOTE
+      ///ACTUALIZAR LOTE
       $.ajax({
         url: '/lotes-a-granel/' + loteId,
         type: 'POST',
@@ -1655,7 +1652,7 @@ const fv = FormValidation.formValidation(editLoteForm, {
           $('#btnEdit').removeClass('d-none'); // Mostrar el botón de envío
         }
       });
-});
+    });
 
     // Inicializar select2 y revalidar el campo cuando cambie
     $('#id_empresa, #id_guia, #tipo_agave').on('change', function () {
@@ -1667,9 +1664,7 @@ const fv = FormValidation.formValidation(editLoteForm, {
 
     // Añadir el listener para el cambio en el tipo de lote
     edit_tipoLoteSelect.addEventListener('change', updateFieldsAndValidation);
-
-});///fin funcion actualizar
-
+  }); ///fin funcion actualizar
 
   // Mover el último seleccionado al final visualmente
   $('#tipo_agave').on('select2:select', function (e) {
@@ -1684,9 +1679,7 @@ const fv = FormValidation.formValidation(editLoteForm, {
     $(this).append(selectedElement).trigger('change.select2');
   });
 
-
-
-///ELIMINAR LOTE
+  ///ELIMINAR LOTE
   $(document).on('click', '.btn-eliminar-doc', function () {
     var idDocumento = $(this).data('id');
     var dtrModal = $('.dtr-bs-modal.show');
@@ -1766,25 +1759,16 @@ const fv = FormValidation.formValidation(editLoteForm, {
     });
   });
 
-
-
-
-
   $(document).ready(function () {
     // Al abrir el modal, cargar marcas para el cliente seleccionado
     $('#offcanvasAddLote').on('shown.bs.modal', function () {
       obtenerDatosEmpresa();
     });
-        // Llamar a obtenerDatosEmpresa cuando se selecciona la empresa
+    // Llamar a obtenerDatosEmpresa cuando se selecciona la empresa
     /* $('#id_empresa').change(function() { */
-/*       var empresa = $("#id_empresa").val();
+    /*       var empresa = $("#id_empresa").val();
       if (!empresa) return;
         obtenerDestinoEmpresa(); */
-   /*  }); */
-
-
+    /*  }); */
   });
-
-
-
 });

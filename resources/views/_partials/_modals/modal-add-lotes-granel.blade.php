@@ -18,8 +18,8 @@
 
                             <div class="col-md-7" id="select_empresa">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select onchange="obtenerDatosEmpresa(); " id="id_empresa" name="id_empresa"
-                                        class="select2 form-select"
+                                    <select onchange="obtenerDatosEmpresa(); obtenerInstalaciones(this.value);"
+                                        id="id_empresa" name="id_empresa" class="select2 form-select"
                                         data-error-message="por favor selecciona la empresa">
                                         @if ($tipo_usuario != 3)
                                             <option value="" disabled selected>Selecciona el cliente</option>
@@ -59,7 +59,7 @@
 
                         <!-- Campo para seleccionar lote original -->
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="text" id="nombre_lote" name="nombre_lote" class="form-control"
                                         autocomplete="off" placeholder="Nombre del lote"
@@ -67,6 +67,20 @@
                                     <label for="nombre_lote">Nombre del Lote</label>
                                 </div>
                             </div>
+                            <div class="col-md-8 mb-3">
+                                <div class="form-floating form-floating-outline">
+                                    <select class=" form-select select2" id="id_instalacion" name="id_instalacion"
+                                        aria-label="id_instalacion">
+                                        <option value="" disabled selected>Lista de instalaciones</option>
+                                        <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
+                                    </select>
+                                    <label for="id_instalacion" class="form-label">Instalacion del lote</label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="tipo_lote" name="tipo_lote" class=" form-select"
@@ -78,9 +92,6 @@
                                     <label for="tipo_lote">Tipo de Lote</label>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="es_creado_a_partir" name="es_creado_a_partir" class="form-select">
@@ -92,13 +103,13 @@
                                         lote?</label>
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-4">
+                            {{-- <div class="col-md-6 mb-4">
                                 <div class="form-floating form-floating-outline">
                                     <input type="text" class="form-control" id="id_tanque" name="id_tanque"
                                         placeholder="ID del Tanque(s)" aria-label="ID del Tanque">
                                     <label for="id_tanque">ID del Tanque(s)</label>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
 
 
@@ -185,8 +196,9 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <input type="number" step="0.01" class="form-control bg-light text-muted" id="volumen_total"
-                                        name="volumen_total" placeholder="Volumen Total (Con agua)" readonly style="pointer-events: none;">
+                                    <input type="number" step="0.01" class="form-control bg-light text-muted"
+                                        id="volumen_total" name="volumen_total"
+                                        placeholder="Volumen Total (Con agua)" readonly style="pointer-events: none;">
                                     <label for="volumen_total">Volumen Total (Con agua)</label>
                                 </div>
                             </div>
@@ -506,8 +518,45 @@
         });
     }
 
+    function obtenerInstalaciones(empresa) {
+        if (empresa !== "" && empresa !== null && empresa !== undefined) {
+            $.ajax({
+                url: '/getDatosBitacora/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    // Arrancamos con la opción vacía
+                    var contenidoI =
+                    '<option value="" disabled selected>Seleccione la instalación</option>';
 
+                    if (response.instalaciones.length > 0) {
+                        for (let index = 0; index < response.instalaciones.length; index++) {
+                            var inst = response.instalaciones[index];
+                            var tipoLimpio = limpiarTipo(inst.tipo);
 
+                            contenidoI += `
+                            <option value="${inst.id_instalacion}">
+                                ${tipoLimpio} | ${inst.direccion_completa}
+                            </option>`;
+                        }
+                    } else {
+                        contenidoI += '<option value="">Sin instalaciones registradas</option>';
+                    }
+
+                    $('#id_instalacion').html(contenidoI);
+                },
+                error: function() {}
+            });
+        }
+    }
+
+    function limpiarTipo(tipo) {
+        try {
+            let tipoArray = JSON.parse(tipo);
+            return tipoArray.join(', ');
+        } catch (error) {
+            return tipo; // En caso de que no sea un JSON válido, regresamos el texto original
+        }
+    }
 
     ///NUEVA FUNCION
 

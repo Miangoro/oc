@@ -17,7 +17,7 @@ class LotesGranel extends Model
     protected $primaryKey = 'id_lote_granel';  // Cambia esto al nombre correcto de la columna de identificación
 
     protected $fillable = [
-        'id_empresa','id_empresa_destino', 'id_tanque', 'nombre_lote', 'tipo_lote', 'folio_fq', 'volumen', 'volumen_restante', 'volumen_con_agua',
+        'id_empresa','id_empresa_destino', 'id_tanque', 'nombre_lote', 'id_instalacion','tipo_lote', 'folio_fq', 'volumen', 'volumen_restante', 'volumen_con_agua',
         'cont_alc', 'id_categoria', 'id_clase', 'id_tipo', 'ingredientes',
         'edad', 'id_guia', 'folio_certificado', 'id_organismo',
         'fecha_emision', 'fecha_vigencia', 'agua_entrada','estatus', 'lote_original_id', 'id_estado', 'id_usuario_registro',

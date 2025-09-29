@@ -144,7 +144,7 @@ public function index(Request $request)
             });
         }
 
-        
+
 
         $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
         $totalData = $baseQuery->count();// totalData (sin búsqueda)
@@ -580,6 +580,7 @@ public function store(Request $request)
         'id_empresa' => 'required|exists:empresa,id_empresa',
         'nombre_lote' => 'required|string|max:70',
         'id_tanque' => 'nullable|string|max:100',
+        'id_instalacion' => 'required|integer',
         'tipo_lote' => 'required|integer',
         'volumen' => 'required|numeric',
         'volumen_total' => 'required|numeric',
@@ -625,7 +626,8 @@ public function store(Request $request)
             $lote->id_empresa_destino = null;
         }
 
-        $lote->id_tanque = $validatedData['id_tanque'];
+        $lote->id_tanque = $validatedData['id_tanque'] ?? null;
+        $lote->id_instalacion = $validatedData['id_instalacion'];
         $lote->nombre_lote = $validatedData['nombre_lote'];
         $lote->tipo_lote = $validatedData['tipo_lote'];
         $lote->volumen = $validatedData['volumen'];
@@ -728,9 +730,8 @@ public function store(Request $request)
                 'id_lote_granel' => $info['lote']->id_lote_granel,
                  'id_lote_granel_destino' => $lote->id_lote_granel,
                 //'id_instalacion' => auth()->user()->id_instalacion ?? 0,
-                /* 'id_instalacion' => Auth::user()->id_instalacion ?? 0, */
-                'id_instalacion' => Auth::user()->id_instalacion[0] ?? 0,
-
+                'id_instalacion' => $lote->id_instalacion ?? 0,
+                /* 'id_instalacion' => Auth::user()->id_instalacion[0] ?? 0, */
                 'tipo_operacion' => 'Salidas',
                 'tipo' => 3,
                 'procedencia_entrada' => 'Salida por creación de lote nuevo',
@@ -783,8 +784,8 @@ public function store(Request $request)
                 'id_empresa' => $lote->id_empresa,
                 'id_lote_granel' => $lote->id_lote_granel,
                 //'id_instalacion' => auth()->user()->id_instalacion ?? 0,
-                /* 'id_instalacion' => Auth::user()->id_instalacion ?? 0, */
-                'id_instalacion' => Auth::user()->id_instalacion[0] ?? 0,
+                'id_instalacion' => $lote->id_instalacion ?? 0,
+                /* 'id_instalacion' => Auth::user()->id_instalacion[0] ?? 0, */
                 'tipo_operacion' => 'Entradas',
                 'tipo' => 3, //
                 'procedencia_entrada' => $procedencia,
@@ -1010,6 +1011,7 @@ public function update(Request $request, $id_lote_granel)
                 'id_empresa' => 'required|integer|exists:empresa,id_empresa',
                 'id_tanque' => 'nullable|string|max:100',
                 'tipo_lote' => 'required|integer',
+                'id_instalacion' => 'required|integer',
                 'id_guia' => 'nullable|array',
                 'id_guia.*' => 'integer|exists:guias,id_guia',
                 'volumen' => 'required|numeric',
@@ -1043,7 +1045,8 @@ public function update(Request $request, $id_lote_granel)
           $updateData = [
               'id_empresa' => $validated['id_empresa'],
     'id_empresa_destino' => $request->filled('id_empresa_destino') ? $request->id_empresa_destino : null,
-              'id_tanque' => $validated['id_tanque'],
+              'id_tanque' => $validated['id_tanque'] ?? null,
+              'id_instalacion' => $validated['id_instalacion'],
               'nombre_lote' => $validated['nombre_lote'],
               'tipo_lote' => $validated['tipo_lote'],
               'id_estado' => $validated['id_estado'],
@@ -1301,8 +1304,9 @@ private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParc
             'id_tanque' => $loteOrigen->id_tanque ?? 0,
             'id_empresa' => $loteOrigen->id_empresa,
             //'id_instalacion' => auth()->user()->id_instalacion ?? 0,
-            /* 'id_instalacion' => Auth::user()->id_instalacion ?? 0, */
-            'id_instalacion' => Auth::user()->id_instalacion[0] ?? 0,
+            'id_instalacion' => $loteOrigen->id_instalacion,
+            /* 'id_instalacion' => Auth::user()->id_instalacion[0] ?? 0, */
+
             'tipo_operacion' => 'Salidas',
             'tipo' => 3,
             'procedencia_entrada' => 'Salida por creación de lote nuevo',
@@ -1339,7 +1343,8 @@ private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParc
             'id_empresa' => $loteDestino->id_empresa,
             //'id_instalacion' => auth()->user()->id_instalacion ?? 0,
             /* 'id_instalacion' => Auth::user()->id_instalacion ?? 0, */
-            'id_instalacion' => Auth::user()->id_instalacion[0] ?? 0,
+            'id_instalacion' => $loteDestino->id_instalacion,
+            /* 'id_instalacion' => Auth::user()->id_instalacion[0] ?? 0, */
             'procedencia_entrada' => !empty($lotesOrigenNombres)
             ? 'Creado a partir de: ' . implode(', ', $lotesOrigenNombres)
             : 'Nuevo Lote',
