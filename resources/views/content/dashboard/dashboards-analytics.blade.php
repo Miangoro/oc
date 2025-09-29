@@ -898,7 +898,7 @@
                 @foreach ($marcasConHologramas as $marca)
                     @php
                        $totalDisponibles = $marca->solicitudHolograma()
-                    ->where('id_empresa', 5)
+                    ->where('id_empresa', 38)
                     ->get()
                     ->sum(function ($solicitud) {
                         return $solicitud->cantidadDisponibles();
