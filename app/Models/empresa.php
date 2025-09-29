@@ -92,7 +92,7 @@ public function obtenerInstalaciones()
 
     if (in_array($user->id, $usuariosEspeciales)) {
         // solo mostrar la instalación que tiene el usuario en su campo id_instalacion
-        $query->where('id_instalacion', $user->id_instalacion);
+        $query->whereIn('id_instalacion', $user->id_instalacion);
     }
 
     return $query->get();
