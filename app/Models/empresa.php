@@ -88,16 +88,16 @@ public function obtenerInstalaciones()
     $user = Auth::user();
 
     // Si el usuario tiene asignadas instalaciones
-    if (!empty($user->id_instalaciones)) {
+    if (!empty($user->id_instalacion)) {
 
         // Si es un arreglo
-        if (is_array($user->id_instalaciones)) {
-            $query->whereIn('id_instalacion', $user->id_instalaciones);
+        if (is_array($user->id_instalacion)) {
+            $query->whereIn('id_instalacion', $user->id_instalacion);
         }
 
         // Si está guardado como string separado por comas
         else {
-            $ids = explode(',', $user->id_instalaciones);
+            $ids = explode(',', $user->id_instalacion);
             $query->whereIn('id_instalacion', $ids);
         }
     }
