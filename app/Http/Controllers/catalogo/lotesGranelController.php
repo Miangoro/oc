@@ -1305,7 +1305,7 @@ private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParc
             'id_tanque' => $loteOrigen->id_tanque ?? 0,
             'id_empresa' => $loteOrigen->id_empresa,
             //'id_instalacion' => auth()->user()->id_instalacion ?? 0,
-            'id_instalacion' => $loteOrigen->id_instalacion,
+            'id_instalacion' => $loteOrigen->id_instalacion ?? 0,
             /* 'id_instalacion' => Auth::user()->id_instalacion[0] ?? 0, */
 
             'tipo_operacion' => 'Salidas',
@@ -1344,7 +1344,7 @@ private function registrarBitacoraSalida($loteOrigen, $loteDestino, $volumenParc
             'id_empresa' => $loteDestino->id_empresa,
             //'id_instalacion' => auth()->user()->id_instalacion ?? 0,
             /* 'id_instalacion' => Auth::user()->id_instalacion ?? 0, */
-            'id_instalacion' => $loteDestino->id_instalacion,
+            'id_instalacion' => $loteDestino->id_instalacion ?? 0,
             /* 'id_instalacion' => Auth::user()->id_instalacion[0] ?? 0, */
             'procedencia_entrada' => !empty($lotesOrigenNombres)
             ? 'Creado a partir de: ' . implode(', ', $lotesOrigenNombres)
