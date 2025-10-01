@@ -125,7 +125,7 @@ $(".btnCancelar").on('click', function () {
 
 $(function () {
   // Definir la URL base
-  var baseUrl = window.location.origin + '/';
+  //var baseUrl = window.location.origin + '/';
 
   const ahora = new Date();
   // 1. Declarar primero los filtros
@@ -164,36 +164,11 @@ $(function () {
     processing: true,
     serverSide: true,
     ajax: {
-      url: baseUrl + 'solicitudes052-list',
-      type: 'GET',
-      dataSrc: function (json) {
-          console.log('Estado:', json.message); // ver en  consola
-          if (json.message) {
-            Swal.fire({
-              icon: 'warning',
-              title: 'Aviso',
-              text: json.message,
-              //confirmButtonText: 'Aceptar',
-              customClass: { 
-                confirmButton: 'btn btn-primary' 
-              }
-            });
-          }
-        return json.data; //sigue cargando la tabla
-      },
-      error: function (xhr, error, thrown) {
-        console.error('Error en la solicitud Ajax:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Hubo un problema al cargar los datos.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
+      //url: baseUrl + 'solicitudes052-list',
+      //url: baseUrl + 'solicitudes052-list'
+      url: '/solicitudes052-list',
+      //type: 'GET',
     },
-
     columns: [
       { data: '' },
       { data: 'fake_id' },
@@ -236,7 +211,8 @@ $(function () {
       { data: 'fecha_visita' },
       { data: 'inspector' },
       {///caracteristicas
-        data: null,
+         data: null 
+        /*data: null,
         render: function (data) {
           switch (data.id_tipo) {
             case 1: //Muestreo de agave
@@ -303,23 +279,13 @@ $(function () {
               return `<br><span class="fw-bold text-dark small">Información no disponible</span>`;
           }
         }
+        */
       },
       { data: 'fecha_servicio' },
       { data: 'estatus',
         render: function (data, type, row) {
-          //estatus hologramas activados
-          var $color_estatus = '';
-          if (row.id_tipo == 5) {
-            if (row.estatus_activado == 1) {
-              var $color_estatus = '<span class="badge rounded-pill bg-label-primary">Hologramas activados</span>';
-            } else {
-              var $color_estatus = '<span class="badge rounded-pill bg-label-danger">Hologramas no activados</span>';
-            }
-          }
-        
           // ACTA
           const acta = row.url_acta;
-          const razon = row.razon_social;
           const cliente = row.numero_cliente;
           let html = '';
           if (acta && acta !== 'Sin subir') {
@@ -329,7 +295,7 @@ $(function () {
           }
 
           return `<span class="badge bg-warning mb-1">${data}</span><br>`
-            + html + `<br>` + $color_estatus;
+            + html;
         }
       },
 
@@ -461,12 +427,12 @@ $(function () {
                     <i class="text-warning ri-edit-fill"></i> Editar
                   </a>`;
           }
-          if (puedeEliminarSolicitud) {
+          /*if (puedeEliminarSolicitud) {
             dropdown += `
                     <a data-id="${full['id']}" data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">
                       <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
                     </a>`;
-          }
+          }*/
 
           dropdown +=
             `</div>
