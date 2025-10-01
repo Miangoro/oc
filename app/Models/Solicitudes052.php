@@ -41,10 +41,10 @@ class Solicitudes052 extends Model
     }
 
     // Método para obtener el nombre del registro que sirve para la trazabilidad
-    public function getLogName2(): string
+    /*public function getLogName2(): string
     {
         return 'solicitud'; // Devuelve el nombre que desees
-    }
+    }*/
 
 
     public function empresa()

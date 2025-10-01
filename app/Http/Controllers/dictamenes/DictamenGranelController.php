@@ -141,12 +141,24 @@ public function index(Request $request)
 
     // Búsqueda Global
     if (!empty($search)) {
-        $query->where(function ($q) use ($search) {
+        //busqueda de lote granel (aparte)
+        $loteGranelIds = DB::table('lotes_granel')
+            ->select('id_lote_granel')
+            ->where('nombre_lote', 'LIKE', "%{$search}%")
+            ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+            ->pluck('id_lote_granel')
+            ->toArray();
+
+        $query->where(function ($q) use ($search, $loteGranelIds) {
             $q->where('dictamenes_granel.num_dictamen', 'LIKE', "%{$search}%")
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
             ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
             ->orWhereRaw("DATE_FORMAT(dictamenes_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+
+            foreach ($loteGranelIds as $idLoteGran) {//Buscar lote granel
+                $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
+            }
         });
 
         $totalFiltered = $query->count();

@@ -28,6 +28,8 @@ use App\Notifications\GeneralNotification;//Notificaciones
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;//Manejo de autenticación
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 
 class Solicitudes052Controller extends Controller
@@ -39,6 +41,7 @@ class Solicitudes052Controller extends Controller
             ->get();
         $solicitudesTipos = SolicitudTipo052::all();
         $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
+
         $estados = estados::all(); // Obtener todos los estados
         $tipo_usuario =  Auth::user()->tipo;
         $organismos = organismos::all(); // Obtener todos los estados
@@ -161,10 +164,10 @@ public function index(Request $request)
     } */
     if (!empty($instalacionAuth)) {
         $query->where(function($q) use ($instalacionAuth, $empresaId) {
-            $q->whereIn('solicitudes.id_instalacion', $instalacionAuth) // instalaciones asignadas
+            $q->whereIn('solicitudes_052.id_instalacion', $instalacionAuth) // instalaciones asignadas
             ->orWhere(function($sub) use ($empresaId) {
-                $sub->where('solicitudes.id_instalacion', 0)//solo su propia georreferenciacion
-                    ->where('solicitudes.id_empresa', $empresaId); // solo su empresa
+                $sub->where('solicitudes_052.id_instalacion', 0)//solo su propia georreferenciacion
+                    ->where('solicitudes_052.id_empresa', $empresaId); // solo su empresa
             });
         });
     }
@@ -224,24 +227,24 @@ public function index(Request $request)
 
 
         $query->where(function ($q) use ($search, $loteIds, $loteEnvIds, $loteGranelIds) {
-            $q->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
-                ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
-                ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
-                ->orWhere('solicitudes.info_adicional', 'LIKE', "%{$search}%")
-                ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
+            $q->where('solicitudes_052.id_solicitud', 'LIKE', "%{$search}%")
+                ->orWhere('solicitudes_052.folio', 'LIKE', "%{$search}%")
+                ->orWhere('solicitudes_052.estatus', 'LIKE', "%{$search}%")
+                ->orWhere('solicitudes_052.info_adicional', 'LIKE', "%{$search}%")
+                ->orWhere('solicitudes_052.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
                 ->orWhereHas('empresa', fn($q) => $q->where('razon_social', 'LIKE', "%{$search}%"))
                 ->orWhereHas('tipo_solicitud', fn($q) => $q->where('tipo', 'LIKE', "%{$search}%"))
                 ->orWhereHas('inspeccion', fn($q) => $q->where('num_servicio', 'LIKE', "%{$search}%"))
                 ->orWhereHas('inspeccion.inspector', fn($q) => $q->where('name', 'LIKE', "%{$search}%"));
 
             foreach ($loteIds as $idLote) {//Buscar lote envasado -> granel
-                $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
+                $q->orWhere('solicitudes_052.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
             }
             foreach ($loteEnvIds as $idLoteEnv) {//Buscar lote envasado
-                $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLoteEnv . '"%');
+                $q->orWhere('solicitudes_052.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLoteEnv . '"%');
             }
             foreach ($loteGranelIds as $idLoteGran) {//Buscar lote granel
-                $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
+                $q->orWhere('solicitudes_052.caracteristicas', 'LIKE', '%"id_lote_granel":"' . $idLoteGran . '"%');
             }
         });
 
@@ -400,6 +403,104 @@ public function getSolicitudesTipos()
 {
     $solicitudesTipos = SolicitudTipo052::orderBy('orden', 'asc')->get();
     return response()->json($solicitudesTipos);
+}
+
+
+
+///REGISTRAR SOLICITUDES
+public function storeVigilanciaProduccion(Request $request)
+{
+    $validated = $request->validate([
+        'id_empresa' => 'required|integer|exists:empresas,id_empresa',
+        'fecha_solicitud' => 'nullable|date',
+        'fecha_visita' => 'required|date',
+        'id_instalacion' => 'required|integer',
+        'nombre_produccion' => 'required|string|max:255',
+        'etapa_proceso' => 'nullable|string|max:255',
+        'cantidad_pinas' => 'nullable|integer|min:1',
+        'info_adicional' => 'nullable|string',
+        'documento_guias.*' => 'nullable|file|mimes:pdf|max:10240' // solo PDFs hasta 10MB
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        // 1. Obtener número de cliente
+        $empresa = Empresa::with("empresaNumClientes")
+            ->where("id_empresa", $validated['id_empresa'])
+            ->firstOrFail();
+
+        $numeroCliente = $empresa->empresaNumClientes
+            ->pluck('numero_cliente')
+            ->first(fn($num) => !empty($num));
+
+        if (!$numeroCliente) {
+            return response()->json(['message' => 'No se encontró un número de cliente válido'], 422);
+        }
+
+        // 2. Guardar solicitud
+        $VigilanciaProdu = new Solicitudes052();
+        $VigilanciaProdu->folio = Helpers::generarFolioSolicitud();
+        $VigilanciaProdu->id_empresa = $validated['id_empresa'];
+        $VigilanciaProdu->id_tipo = 2; // aquí defines que "2" es vigilancia
+        $VigilanciaProdu->id_predio = 0;
+        $VigilanciaProdu->fecha_solicitud = $validated['fecha_solicitud'];
+        $VigilanciaProdu->fecha_visita = $validated['fecha_visita'];
+        $VigilanciaProdu->id_instalacion = $validated['id_instalacion'];
+        $VigilanciaProdu->info_adicional = $validated['info_adicional'] ?? null;
+        $VigilanciaProdu->id_usuario_registro = Auth::id();
+
+        $VigilanciaProdu->caracteristicas = json_encode([
+            'nombre_produccion' => $validated['nombre_produccion'],
+            'etapa_proceso' => $validated['etapa_proceso'],
+            'cantidad_pinas' => $validated['cantidad_pinas'],
+        ]);
+
+        $VigilanciaProdu->save();
+
+        // 3. Guardar archivos si hay
+        if ($request->hasFile('documento_guias')) {
+            $carpetaDestino = "uploads/{$numeroCliente}";
+
+            if (!Storage::disk('public')->exists($carpetaDestino)) {
+                Storage::disk('public')->makeDirectory($carpetaDestino);
+            }
+
+            foreach ($request->file('documento_guias') as $file) {
+                if ($file->isValid()) {
+                    $extension = $file->getClientOriginalExtension();
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $originalNameSlug = Str::slug($originalName);
+                    $uniq = uniqid();
+                    $nombreArchivo = "guia-agave-{$originalNameSlug}_{$uniq}.{$extension}";
+
+                    $ruta = $file->storeAs($carpetaDestino, $nombreArchivo, 'public');
+
+                    if (!$ruta) {
+                        throw new \Exception("No se pudo guardar el archivo en el servidor.");
+                    }
+
+                    DB::table('documentacion_url')->insert([
+                        'id_documento' => 71, // id fijo para "Guía de traslado de agave"
+                        'nombre_documento' => 'Guía de traslado de agave',
+                        'id_empresa' => $VigilanciaProdu->id_empresa,
+                        'id_relacion' => $VigilanciaProdu->id_solicitud,
+                        'url' => $ruta, // importante: guardar la ruta, no solo el nombre
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
+
+        DB::commit();
+
+        return response()->json(['success' => true, 'message' => 'Solicitud de vigilancia registrada correctamente.']);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
+    }
 }
 
 

@@ -1010,7 +1010,9 @@ Route::middleware(['auth'])->controller(Solicitudes052Controller::class)->group(
     Route::get('/solicitudes-052/tipos', 'getSolicitudesTipos')->name('modal.solicitud052.tipo');
     
     Route::get('/solicitudes-historial-052', 'UserManagement')->name('solicitudes-historial-052');
-    Route::resource('/solicitudes052-list', solicitudesController::class);
+    Route::resource('/solicitudes052-list', Solicitudes052Controller::class);
+    //registrar solicitudes
+    Route::post('/solicitudes052/vigilancia-produccion/add', 'storeVigilanciaProduccion')->name('add-vigilancia-produccion');
 });
 
 

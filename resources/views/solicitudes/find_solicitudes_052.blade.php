@@ -47,7 +47,7 @@
         <h3 class="mb-0 fw-bold">Solicitudes de servicios NMX-V-052-NORMEX-2016</h3>
     </div>
     <div class="card-datatable table-responsive">
-        <table style="font-size: 14px" class="datatables-solicitudes table table-bordered  table-hover">
+        <table style="font-size: 14px" class="datatables-solicitudes052 table table-bordered  table-hover">
             <thead class="table-dark">
                 <tr>
                     <th></th>

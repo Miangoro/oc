@@ -160,14 +160,11 @@ $(function () {
 
 
   // Inicializar DataTable
-  var dt_instalaciones_table = $('.datatables-solicitudes').DataTable({
+  var dt_instalaciones_table = $('.datatables-solicitudes052').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
-      //url: baseUrl + 'solicitudes052-list',
-      //url: baseUrl + 'solicitudes052-list'
       url: '/solicitudes052-list',
-      //type: 'GET',
     },
     columns: [
       { data: '' },
@@ -514,7 +511,8 @@ $(function () {
     }
   });
 
-  var dt_user_table = $('.datatables-solicitudes'),
+
+  var dt_user_table = $('.datatables-solicitudes052'),
     select2Elements = $('.select2');
 
   // Función para inicializar Select2 en elementos específicos
@@ -548,20 +546,9 @@ $(function () {
   });
 
 
-  $(document).ready(function () {
-    $('#exportarExcel').on('shown.bs.modal', function () {
-      const today = new Date();
-      const currentYear = today.getFullYear();
-      const currentMonth = String(today.getMonth() + 1).padStart(2, '0'); // '01' a '12'
 
-      $('#anio').val(currentYear);
-      $('#mes').val(currentMonth);
-    });
-  });
-
-
-  ///FORMATO PDF SOLICITUD SERVICIOS
-  $(document).on('click', '.pdfSolicitud', function () {
+///FORMATO PDF SOLICITUD SERVICIOS
+$(document).on('click', '.pdfSolicitud', function () {
     var id = $(this).data('id');
     var folio = $(this).data('folio');
     var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
@@ -584,12 +571,13 @@ $(function () {
       spinner.hide();
       iframe.show();
     });
-  });
+});
 
 
 
-  // Eliminar registro
-  $(document).on('click', '.delete-recordes', function () {
+
+//ELIMINAR SOLICITUDES
+$(document).on('click', '.delete-recordes', function () {
     var id_solicitudes = $(this).data('id-solicitud');
     console.log(id_solicitudes);
     $('.modal').modal('hide');
@@ -676,62 +664,13 @@ $(function () {
         });
       }
     });
-  });
-
-  $(document).on('click', '.open-modal', function () {
-    // Ocultar el modal antes de abrir
-    $('.modal').modal('hide');
-
-    var id_solicitud = $('.id_solicitud').text(); // Extrae el texto de ID Solicitud
-    var tipo = $('.tiposs').text(); // Extrae el texto del Tipo
-    console.log(id_solicitud);
-    console.log(tipo);
-
-    // Verificar si el tipo es igual a 3
-    if (tipo === '3') {
-      var url = 'Etiqueta-2401ESPTOB'; // URL de la ruta
-
-      var iframe = $('#pdfViewerDictamen1');
-      var spinner = $('#loading-spinner1'); // Spinner
-      spinner.show();
-      iframe.hide();
-
-      // Asegurarse de que la URL esté bien formada
-      iframe.attr('src', url + '/' + id_solicitud); // Concatenar la URL con el ID de la solicitud
-
-      // Configurar el botón para abrir el PDF en una nueva pestaña
-      $('#openPdfBtnDictamen1')
-        .attr('href', url + '/' + id_solicitud)
-        .show();
-
-      // Configuración del título y subtítulo del modal
-      $('#titulo_modal_Dictamen1').text('Etiquetas');
-
-      // Obtener el texto del título de la solicitud
-      var solicitudTitleText = $('#solicitud_title').text().trim();
-      $('#subtitulo_modal_Dictamen1').html('<p class="solicitud badge bg-primary"> ' + solicitudTitleText + '</p>');
-
-      // Mostrar el modal
-      $('#modalDictamen').modal('show');
-
-      // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-      iframe.on('load', function () {
-        console.log('PDF cargado en el iframe.');
-        spinner.hide();
-        iframe.show();
-      });
-    } else {
-      console.log('El tipo no es 3. No se cargará el PDF.');
-    }
-  });
-
-
+});
 
 
 
 
 ///OBTENER DATOS SOLICITUDES
-  $(document).ready(function () {
+$(document).ready(function () {
     $(document).on('click', '.edit-record-tipo', function () {
       // Obtenemos los datos del botón
       const id_solicitud = $(this).data('id-solicitud');
@@ -1314,11 +1253,12 @@ $(function () {
         }
       });
     });
-  });
+});
 
 
 
 
+///????
   $(document).on('click', '.btn-eliminar-doc', function () {
     const idDoc = $(this).data('id');
 
@@ -1398,108 +1338,6 @@ $(function () {
 
 
 ///EDITAR SOLICITUD GEORREFERENCIACION
-  //formulario para enviar los datos y actualizar
-  $(function () {
-    // Configuración CSRF para Laravel
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-
-    // Inicializar FormValidation para el formulario de actualización
-    const formUpdate = document.getElementById('editFormTipo10');
-    const fvUpdate = FormValidation.formValidation(formUpdate, {
-      fields: {
-        id_empresa: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una empresa.'
-            }
-          }
-        },
-        fecha_visita: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione la fecha y hora para la inspección.'
-            }
-          }
-        },
-        id_predio: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione un predio para la inspección.'
-            }
-          }
-        },
-        punto_reunion: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor introduzca la dirección para el punto de reunión.'
-            }
-          }
-        }
-      },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating'
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function (e) {
-      var formData = new FormData(formUpdate);
-      $('#btnEditGeo').prop('disabled', true);
-
-      $('#btnEditGeo').html('<span class="spinner-border spinner-border-sm me-2"></span> Actualizando...');
-      setTimeout(function () {
-        $('#btnEditGeo').prop('disabled', false);
-        $('#btnEditGeo').html('<i class="ri-add-line"></i> Editar');
-      }, 3000);
-
-      // Hacer la solicitud AJAX
-      $.ajax({
-        //url: '/actualizar-solicitudes/' + $('#id_solicitud_geo').val(),
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          $('#editClienteModalTipo10').modal('hide'); // Oculta el modal
-          $('#editFormTipo10')[0].reset(); // Resetea el formulario
-          $('.select2').val(null).trigger('change'); // Resetea los select2
-          $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
-
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.message,
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-        },
-        error: function (xhr) {
-          console.log('Error:', xhr.responseText);
-
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al actualizar la solicitud',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
-        }
-      });
-    });
-  });
-
-
-  
   //funcion para solicitud de dictaminacion 
   $(function () {
     // Configuración CSRF para Laravel
@@ -2985,7 +2823,7 @@ $(function () {
           $('#ModalAddSoli052DictaminacionInstalacion').modal('hide');
           $('#FormAddSoli052DictaminacionInstalacion')[0].reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-solicitudes').DataTable().ajax.reload();
+          $('.datatables-solicitudes052').DataTable().ajax.reload();
           console.log(response);
 
           Swal.fire({
@@ -3034,194 +2872,11 @@ $(function () {
   });
 
 
-///REGISTRAR SOLICITUD GEORREFERENCIACION
-  $(function () {
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-    // Inicializar FormValidation para la solicitud de georeferenciacion
-    const form2 = document.getElementById('addRegistrarSolicitudGeoreferenciacion');
-    const fv2 = FormValidation.formValidation(form2, {
-      fields: {
-        id_empresa: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una empresa.'
-            }
-          }
-        },
-        fecha_visita: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione la fecha sugerida para la inspección.'
-            }
-          }
-        },
-        punto_reunion: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor introduzca la dirección para el punto de reunión.'
-            }
-          }
-        },
-        id_predio: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione el predio.'
-            }
-          }
-        }
-      },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating'
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function (e) {
-      // Validar el formulario
-      var formData = new FormData(form2);
-      $('#btnRegistrarGeo').addClass('d-none');
-      $('#btnSpinnerGeoreferenciacion').removeClass('d-none');
-      $.ajax({
-        //url: '/registrar-solicitud-georeferenciacion',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          $('#btnRegistrarGeo').removeClass('d-none');
-          $('#btnSpinnerGeoreferenciacion').addClass('d-none');
-          $('#addSolicitudGeoreferenciacion').modal('hide');
-          $('#addRegistrarSolicitudGeoreferenciacion')[0].reset();
-          $('.select2').val(null).trigger('change');
-          $('.datatables-solicitudes').DataTable().ajax.reload();
-          console.log(response);
-
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: 'Solicitud registrada correctamente',
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-        },
-        error: function (xhr) {
-          console.log('Error:', xhr.responseText);
-
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al registrar la solicitud',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
-          $('#btnRegistrarGeo').removeClass('d-none');
-          $('#btnSpinnerGeoreferenciacion').addClass('d-none');
-        }
-      });
-    });
-
-    $('#id_empresa_georefere, #fecha_visita_geo, #id_predio_georefe, #punto_reunion_georefere').on(
-      'change',
-      function () {
-        fv2.revalidateField($(this).attr('name'));
-      }
-    );
-});
 
 
 
-  //new
-  $(document).on('click', '.edit-record', function () {
-    var id_instalacion = $(this).data('id');
-    var url = baseUrl + 'domicilios/edit/' + id_instalacion;
-
-    // Solicitud para obtener los datos de la instalación
-    $.get(url, function (data) {
-      if (data.success) {
-        var instalacion = data.instalacion;
-
-        // Asignar valores a los campos
-        $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
-        $('#edit_tipo').val(instalacion.tipo).trigger('change');
-        $('#edit_estado').val(instalacion.estado).trigger('change');
-        $('#edit_direccion').val(instalacion.direccion_completa);
-
-        // Verificar si hay valores en los campos adicionales
-        var tieneCertificadoOtroOrganismo =
-          instalacion.folio ||
-          instalacion.id_organismo ||
-          (instalacion.fecha_emision && instalacion.fecha_emision !== 'N/A') ||
-          (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A') ||
-          data.archivo_url;
-
-        if (tieneCertificadoOtroOrganismo) {
-          $('#edit_certificacion').val('otro_organismo').trigger('change');
-          $('#edit_certificado_otros').removeClass('d-none');
-
-          $('#edit_folio').val(instalacion.folio || '');
-          $('#edit_id_organismo')
-            .val(instalacion.id_organismo || '')
-            .trigger('change');
-          $('#edit_fecha_emision').val(instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '');
-          $('#edit_fecha_vigencia').val(instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '');
-
-          // Mostrar URL del archivo debajo del campo de archivo
-          var archivoUrl = data.archivo_url || '';
-          var numCliente = data.numeroCliente;
-          if (archivoUrl) {
-            try {
-              $('#archivo_url_display').html(`
-                              <p>Archivo existente:</span> <a href="../files/${numCliente}/${archivoUrl}" target="_blank">${archivoUrl}</a></p>`);
-            } catch (e) {
-              $('#archivo_url_display').html('URL del archivo no válida.');
-            }
-          } else {
-            $('#archivo_url_display').html('No hay archivo disponible.');
-          }
-        } else {
-          $('#edit_certificacion').val('oc_cidam').trigger('change');
-          $('#edit_certificado_otros').addClass('d-none');
-          $('#archivo_url_display').html('No hay archivo disponible.');
-        }
-
-        // Mostrar el modal
-        $('#modalEditInstalacion').modal('show');
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo cargar los datos de la instalación',
-          customClass: {
-            confirmButton: 'btn btn-primary'
-          }
-        });
-      }
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-      console.error('Error en la solicitud:', textStatus, errorThrown);
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Error en la solicitud. Inténtalo de nuevo.',
-        customClass: {
-          confirmButton: 'btn btn-primary'
-        }
-      });
-    });
-  });
-
-  //vigilancia en produccion
-  $(function () {
+///REGISTRAR SOLICITUD vigilancia en produccion
+$(function () {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -3258,31 +2913,20 @@ $(function () {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
           eleValidClass: '',
-          rowSelector: function (field, ele) {
-            return '.mb-4, .mb-5, .mb-6';
-          }
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'//clases del formulario
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
       var formData = new FormData(FormAddSoli052VigilanciaProduccion);
+
       $('#btnRegisVigiPro').addClass('d-none');
       $('#btnSpinnerVigilanciaProduccion').removeClass('d-none');
-      $('#id_tipo_maguey')
-        .find('option:selected')
-        .each(function () {
-          formData.append('id_tipo_maguey[]', $(this).val());
-        });
-
-      $('#edit_id_guias_vigiP')
-        .find('option:selected')
-        .each(function () {
-          formData.append('id_guias[]', $(this).val());
-        });
-
+      
       $.ajax({
-       // url: '/hologramas/storeVigilanciaProduccion', // Actualiza con la URL correcta
+        url: '/solicitudes052/vigilancia-produccion/add',
         type: 'POST',
         data: formData,
         processData: false,
@@ -3291,22 +2935,27 @@ $(function () {
           $('#btnRegisVigiPro').removeClass('d-none');
           $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
           $('#ModalAddSoli052VigilanciaProduccion').modal('hide');
-          $('#FormAddSoli052VigilanciaProduccion')[0].reset();
+          FormAddSoli052VigilanciaProduccion.reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-solicitudes').DataTable().ajax.reload();
+
+          //$('.datatables-solicitudes052').DataTable().ajax.reload();
+          dt_instalaciones_table.ajax.reload();//Recarga los datos del datatable
 
           // Mostrar alerta de éxito
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
-            text: 'Solicitud vigilancia registrado exitosamente.',
+            //text: 'Solicitud vigilancia registrado exitosamente.',
+            text: response.message,
             customClass: {
-              confirmButton: 'btn btn-success'
+              confirmButton: 'btn btn-primary'
             }
           });
         },
         error: function (xhr) {
-          if (xhr.status === 422) {
+          console.log('Error:', xhr);
+          console.log('Error2:', xhr.responseText);
+          /*if (xhr.status === 422) {
             let errores = xhr.responseJSON.errors;
             let mensaje = '';
 
@@ -3325,36 +2974,34 @@ $(function () {
                 confirmButton: 'btn btn-danger'
               }
             });
-          } else if (xhr.status === 404) {
-            Swal.fire({
-              icon: 'warning',
-              title: 'No encontrado',
-              text: 'Solicitud no encontrada',
-              customClass: {
-                confirmButton: 'btn btn-warning'
-              }
-            });
-          } else {
+          
+          } else {*/
+            console.error('Error3:', xhr.responseJSON);
             Swal.fire({
               icon: 'error',
               title: '¡Error!',
+              //text: 'Error inesperado al registrar la vigilancia en producción.',
               text: 'Error inesperado al registrar la vigilancia en producción.',
               customClass: {
                 confirmButton: 'btn btn-danger'
               }
             });
-            console.error('Error inesperado:', xhr.responseText);
-          }
+          //}
 
           $('#btnRegisVigiPro').removeClass('d-none');
           $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
         }
       });
     });
+
+    // Revalidar campos al cambiar
     $('#id_empresa_vigilancia, #fecha_visita_vigi, #id_instalacion_vigi').on('change', function () {
-      fv5.revalidateField($(this).attr('name'));
+        fv5.revalidateField($(this).attr('name'));
     });
-  });
+});
+
+
+
 
   $(function () {
     $.ajaxSetup({
@@ -3427,7 +3074,7 @@ $(function () {
           $('#ModalAddSoli052TomaMuestra').modal('hide');
           $('#FormAddSoli052TomaMuestra')[0].reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-solicitudes').DataTable().ajax.reload();
+          $('.datatables-solicitudes052').DataTable().ajax.reload();
 
           // Mostrar alerta de éxito
           Swal.fire({
@@ -3560,7 +3207,7 @@ $(function () {
           $('#addInspeccionIngresoBarricada').modal('hide');
           $('#addInspeccionIngresoBarricadaForm')[0].reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-solicitudes').DataTable().ajax.reload();
+          $('.datatables-solicitudes052').DataTable().ajax.reload();
 
           // Mostrar alerta de éxito
           Swal.fire({
@@ -3700,7 +3347,7 @@ $(function () {
           $('#addInspeccionLiberacion').modal('hide');
           $('#addInspeccionLiberacionForm')[0].reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-solicitudes').DataTable().ajax.reload();
+          $('.datatables-solicitudes052').DataTable().ajax.reload();
 
           // Mostrar alerta de éxito
           Swal.fire({
@@ -3820,7 +3467,7 @@ $(function () {
           $('#addVigilanciaTraslado').modal('hide');
           $('#addVigilanciaTrasladoForm')[0].reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-solicitudes').DataTable().ajax.reload();
+          $('.datatables-solicitudes052').DataTable().ajax.reload();
 
           // Mostrar alerta de éxito
           Swal.fire({
@@ -3929,7 +3576,7 @@ $(function () {
           $('#btnRegistraremi').html('<i class="ri-add-line"></i> Registrar');
           $('#ModalAddSoli052EmisionCertificadoBebida')[0].reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-solicitudes').DataTable().ajax.reload();
+          $('.datatables-solicitudes052').DataTable().ajax.reload();
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -4030,7 +3677,7 @@ $(function () {
           $('#btnRegistrarlib').html('<i class="ri-add-line"></i> Registrar');
           $('#FormAddSoli052LiberacionProducto')[0].reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-solicitudes').DataTable().ajax.reload();
+          $('.datatables-solicitudes052').DataTable().ajax.reload();
           console.log(response);
 
           Swal.fire({
@@ -4720,7 +4367,7 @@ $(function () {
           $('#btnSpinnerPedidosExportacion').addClass('d-none');
           $('#btnAddExport').removeClass('d-none');
           resetearFormularioExportacion();
-          $('.datatables-solicitudes').DataTable().ajax.reload();
+          $('.datatables-solicitudes052').DataTable().ajax.reload();
           $('#addPedidoExportacion').modal('hide');
           // Mostrar alerta de éxito
           Swal.fire({
@@ -5057,7 +4704,7 @@ $(function () {
           $('#btnRegistrarMA').removeClass('d-none');
           $('#addRegistrarSolicitudMuestreoAgave')[0].reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-solicitudes').DataTable().ajax.reload();
+          $('.datatables-solicitudes052').DataTable().ajax.reload();
           console.log(response);
 
           Swal.fire({
