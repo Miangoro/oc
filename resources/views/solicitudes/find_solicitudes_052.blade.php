@@ -28,13 +28,13 @@
 
 @section('page-script')
     @vite(['resources/js/solicitudes_052.js'])
-    {{-- <script>
+    <script>
           window.puedeAgregarSolicitud = @json(auth()->user()->can('Registrar solicitudes 052'));
           window.puedeEditarSolicitud= @json(auth()->user()->can('Editar solicitudes 052'));
-          window.puedeEliminarSolicitud = @json(auth()->user()->can('Eliminar solicitudes 052'));
+          /* window.puedeEliminarSolicitud = @json(auth()->user()->can('Eliminar solicitudes 052'));
           window.puedeValidarSolicitud = @json(auth()->user()->can('Validar solicitudes 052'));
-          window.puedeExportarSolicitud = @json(auth()->user()->can('Exportar solicitudes 052'));
-    </script> --}}
+          window.puedeExportarSolicitud = @json(auth()->user()->can('Exportar solicitudes 052')); */
+    </script> 
 @endsection
 
 

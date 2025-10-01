@@ -85,14 +85,14 @@ public function obtenerInstalaciones()
 {
     $query = instalaciones::where('id_empresa', $this->id_empresa);
 
-    // IDs de los 2 usuarios especiales
-    $usuariosEspeciales = [46, 328]; // Natividad y 
-
     $user = Auth::user();
+   
+    if (!empty($user->id_instalacion)) {
 
-    if (in_array($user->id, $usuariosEspeciales)) {
-        // solo mostrar la instalación que tiene el usuario en su campo id_instalacion
-        $query->whereIn('id_instalacion', $user->id_instalacion);
+        if (is_array($user->id_instalacion)) {
+            $query->whereIn('id_instalacion', $user->id_instalacion);
+        }
+
     }
 
     return $query->get();

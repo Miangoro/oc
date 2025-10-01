@@ -270,15 +270,21 @@ public function index(Request $request)
         $data = [];
         if (!empty($solicitudes)) {
             $ids = $start;
-            $cajas = '';
-            $botellas = '';
-            $presentacion = '';
+
             foreach ($solicitudes as $solicitud) {
                 $nestedData['fake_id'] = ++$ids ?? 'N/A';
                 $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
                 $nestedData['folio'] = $solicitud->folio;
                 $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</span>';
+                
+                $empresa = $solicitud->empresa;
+                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                    ? $empresa->empresaNumClientes
+                    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
+                    : 'N/A';
+                $nestedData['numero_cliente'] = $numero_cliente;
                 $nestedData['razon_social'] = $solicitud->empresa->razon_social ?? 'N/A';
+
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud) ?? 'N/A';
                 $nestedData['tipo'] = $solicitud->tipo_solicitud->tipo ?? 'N/A';
                 $nestedData['direccion_completa'] =$solicitud?->instalacion?->direccion_completa ?? 'N/A';
@@ -287,15 +293,8 @@ public function index(Request $request)
                 $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? '';
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['fecha_inspeccion'] = $solicitud->inspeccion->fecha_servicio ?? '0';
-                $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo ?? 'N/A';
                 $nestedData['estatus'] = $solicitud->estatus ?? 'Vacío';
-                $nestedData['info_adicional'] = $solicitud->info_adicional ?? 'Vacío';
-                $nestedData['folio_info'] = $solicitud->folio;
-                $nestedData['num_servicio_info'] = $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
-                $nestedData['inspectorName'] = $solicitud->inspector->name ?? 'Sin inspector';
-                $nestedData['id_inspeccion'] = $solicitud->inspeccion->id_inspeccion ?? 'Sin inspeccion';
-                $nestedData['estatus_activado'] = $solicitud->estatus_activado;
-
+                
                 $urls = $solicitud->documentacion(69)->pluck('url')->toArray();
                 // Comprobamos si $urls está vacío
                 if (empty($urls)) {
@@ -306,12 +305,12 @@ public function index(Request $request)
                     $nestedData['url_acta'] = implode(', ', $urls);
                 }
 
-                $empresa = $solicitud->empresa;
-                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                    ? $empresa->empresaNumClientes
-                    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
-                    : 'N/A';
-                $nestedData['numero_cliente'] = $numero_cliente;
+                
+
+                //CARACTERISTICAS
+                $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo ?? 'N/A';
+
+                $nestedData['info_adicional'] = $solicitud->info_adicional ?? 'Vacío';
 
                 // Decodificar JSON y extraer datos específicos
                 $caracteristicas = json_decode($solicitud->caracteristicas, true);
@@ -322,19 +321,10 @@ public function index(Request $request)
                     $idLoteEnvasado = $caracteristicas['id_lote_envasado'];
                 } elseif (isset($caracteristicas['detalles']) && is_array($caracteristicas['detalles']) && isset($caracteristicas['detalles'][0]['id_lote_envasado'])) {
                     $idLoteEnvasado = $caracteristicas['detalles'][0]['id_lote_envasado'];
-                    $cajas = $caracteristicas['detalles'][0]['cantidad_cajas'];
-                    $botellas = $caracteristicas['detalles'][0]['cantidad_botellas'];
-                    $presentacion = $caracteristicas['detalles'][0]['presentacion'];
                 } else {
                     $idLoteEnvasado = null;
                 }
                 $loteEnvasado = lotes_envasado::with('marca')->find($idLoteEnvasado); // Busca el lote envasado
-
-                if ($loteEnvasado && $loteEnvasado->marca) {
-                    $marca = $loteEnvasado->marca->marca;
-                } else {
-                    $marca = null; // O un valor por defecto
-                }
 
                 $idLoguiass = $caracteristicas['id_guia'] ?? null;
                 $guias = [];
@@ -352,18 +342,10 @@ public function index(Request $request)
                 $nestedData['nombre_predio'] = $caracteristicas['nombre_predio'] ?? 'N/A';
                 $nestedData['art'] = $caracteristicas['art'] ?? 'N/A';
                 $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
-                $nestedData['folio_caracteristicas'] = $caracteristicas['folio'] ?? 'N/A';
-                $nestedData['combinado'] = ($caracteristicas['tipo_solicitud'] ?? null) == 2
-    ? '<span class="badge rounded-pill bg-info"><b>Combinado</b></span>'
-    : '';
                 $nestedData['etapa'] = $caracteristicas['etapa'] ?? 'N/A';
                 $nestedData['fecha_corte'] = isset($caracteristicas['fecha_corte']) ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i') : 'N/A';
-                $nestedData['marca'] = $marca ?? 'N/A';
-                $nestedData['cajas'] = $cajas ?? 'N/A';
-                $nestedData['botellas'] = $botellas ?? 'N/A';
-                $idTipoMagueyMuestreo = $caracteristicas['id_tipo_maguey'] ?? null;
-                $nestedData['presentacion'] = $presentacion ?? 'N/A';
 
+                $idTipoMagueyMuestreo = $caracteristicas['id_tipo_maguey'] ?? null;
                 if ($idTipoMagueyMuestreo) {
                     if (is_array($idTipoMagueyMuestreo)) {
                         $idTipoMagueyMuestreo = implode(',', $idTipoMagueyMuestreo);
@@ -391,29 +373,13 @@ public function index(Request $request)
                 $nestedData['id_vol_actual'] = $caracteristicas['id_vol_actual'] ?? 'N/A';
                 $nestedData['id_vol_res'] = $caracteristicas['id_vol_res'] ?? 'N/A';
                 $nestedData['analisis_traslado'] = $caracteristicas['analisis_traslado'] ?? 'N/A';
-                $nestedData['id_categoria_inspeccion'] = $caracteristicas['id_categoria_inspeccion'] ?? 'N/A';
-                $nestedData['id_clase_inspeccion'] = $caracteristicas['id_clase_inspeccion'] ?? 'N/A';
-                $nestedData['id_tipo_maguey_inspeccion'] = $caracteristicas['id_tipo_maguey_inspeccion'] ?? 'N/A';
-                $nestedData['id_marca'] = $caracteristicas['id_marca'] ?? 'N/A';
-                $nestedData['volumen_inspeccion'] = $caracteristicas['volumen_inspeccion'] ?? 'N/A';
-                $nestedData['analisis_inspeccion'] = $caracteristicas['analisis_inspeccion'] ?? 'N/A';
-                $nestedData['id_categoria_barricada'] = $caracteristicas['id_categoria'] ?? 'N/A';
-                $nestedData['id_clase_barricada'] = $caracteristicas['id_clase'] ?? 'N/A';
-                $nestedData['id_tipo_maguey_barricada'] = $caracteristicas['id_tipo_maguey'] ?? 'N/A';
-                $nestedData['analisis_barricada'] = $caracteristicas['analisis'] ?? 'N/A';
-                $nestedData['tipo_lote'] = $caracteristicas['tipoIngreso'] ?? 'N/A';
-                $nestedData['fecha_inicio'] = isset($caracteristicas['fecha_inicio']) ? Carbon::parse($caracteristicas['fecha_inicio'])->format('d/m/Y') : 'N/A';
-                $nestedData['fecha_termino'] = isset($caracteristicas['fecha_termino']) ? Carbon::parse($caracteristicas['fecha_termino'])->format('d/m/Y') : 'N/A';
-                $nestedData['tipo_lote_lib'] = $caracteristicas['tipoLiberacion'] ?? 'N/A';
                 $nestedData['punto_reunion'] = $caracteristicas['punto_reunion'] ?? 'N/A';
-                $nestedData['renovacion'] = $caracteristicas['renovacion'] ?? 'N/A';
-                $nestedData['volumen_ingresado'] = $caracteristicas['volumen_ingresado'] ?? 'N/A';
-                $nestedData['certificado_exportacion'] = $solicitud->certificadoExportacion()?->num_certificado ?? '';
-
+  
 
                 $data[] = $nestedData;
             }
         }
+
 
         return response()->json([
             'draw' => intval($request->input('draw')),
@@ -422,7 +388,7 @@ public function index(Request $request)
             'recordsFiltered' => intval($totalFiltered),
             'code' => 200,
             'data' => $data ?? [],
-            'message' => empty($data) ? 'No tienes solicitudes asignadas.' : null,
+            //'message' => empty($data) ? 'No tienes solicitudes asignadas.' : null,
         ]);
         
 }

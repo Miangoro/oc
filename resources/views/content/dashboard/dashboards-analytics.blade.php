@@ -222,27 +222,51 @@
 
                                 <!-- Mensajes del dashboard f0f8ff-->
                                 <!-- Mensajes del dashboard -->
-                                <div class="dashboard-messages d-flex justify-content-center align-items-center h-100 pe-5">
+                                <div class="dashboard-messages d-flex justify-content-center align-items-start h-100 pe-5">
                                     <div class="w-100 pe-5">
                                         @foreach ($mensajes as $mensaje)
                                             @if ($mensaje->activo == 1 && ($mensaje->id_usuario_destino == auth()->id() || is_null($mensaje->id_usuario_destino)))
-                                                <div class="message-card p-3 mb-2 rounded shadow-sm"
-                                                    style="min-height: 300px; background-color: #f4f8fc; border-left: 4px solid {{ $mensaje->tipo == 'danger' ? '#dc3545' : ($mensaje->tipo == 'success' ? '#28a745' : '#053160') }};">
-                                                    <div class="mb-2 py-1 px-2 text-center">
-                                                        <h4
-                                                            class="mb-1 {{ $mensaje->tipo_titulo != 'Normal' ? 'text-' . $mensaje->tipo_titulo : '' }}">
-                                                            <strong>{{ $mensaje->titulo }}</strong>
+                                                @php
+                                                    // Definir colores fuertes que combinen con el tipo de texto
+                                                    $textColor = $mensaje->tipo != 'Normal' ? match($mensaje->tipo) {
+                                                        'danger' => '#dc3545',
+                                                        'success' => '#28a745',
+                                                        default => '#0d6efd',
+                                                    } : '#0d6efd';
+
+                                                    $bgColor = $mensaje->tipo != 'Normal' ? match($mensaje->tipo) {
+                                                        'danger' => '#dc3545',    // rojo fuerte
+                                                        'success' => '#28a745',   // verde fuerte
+                                                        default => '#0d6efd',     // azul fuerte
+                                                    } : '#0d6efd';
+                                                @endphp
+
+                                                <div class="card mb-4 shadow-lg border-0 rounded-4 hover-scale"
+                                                    style="border-left: 8px solid {{ $textColor }};
+                                                            background-color: {{ $bgColor }};
+                                                            color: #fff;
+                                                            transition: transform 0.3s;">
+                                                    <div class="card-body text-center p-4">
+                                                        <h4 class="card-title fw-bold">
+                                                            {{ $mensaje->titulo }}
                                                         </h4>
-                                                        <h5
-                                                            class="mb-0 {{ $mensaje->tipo != 'Normal' ? 'text-' . $mensaje->tipo : '' }}">
+                                                        <p class="card-text fs-5 mt-3">
                                                             {{ $mensaje->mensaje }}
-                                                        </h5>
+                                                        </p>
                                                     </div>
                                                 </div>
                                             @endif
                                         @endforeach
                                     </div>
                                 </div>
+
+<style>
+.hover-scale:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25) !important;
+}
+</style>
+
 
 
                                 <!-- Mensajes del dashboard -->
