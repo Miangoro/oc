@@ -427,8 +427,8 @@ class RevisionPersonalController extends Controller
             $q->whereBetween('id_pregunta', [854, 860])
             ->OrwhereBetween('id_pregunta', [903, 909]);
             
-           
-        });  dd($preguntasQuery);
+             
+        }); $preguntas = $preguntasQuery->get();  dd($preguntas);
     } else {
         $preguntasQuery->where(function ($q) {
             $q->where('id_pregunta', '<', 851)
