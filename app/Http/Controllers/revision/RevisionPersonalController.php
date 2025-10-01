@@ -422,21 +422,21 @@ class RevisionPersonalController extends Controller
     ->where('tipo_certificado', $datos->tipo_certificado)
     ->where('orden', $datos->numero_revision == 1 ? 0 : 1);
 
-if ($datos->certificado->certificadoReexpedido()) {
-    $preguntasQuery->where(function ($q) {
-        $q->whereBetween('id_pregunta', [854, 860])
-          ->OrwhereBetween('id_pregunta', [903, 909]);
-    });
-} else {
-    $preguntasQuery->where(function ($q) {
-        $q->where('id_pregunta', '<', 851)
-          ->orWhere('id_pregunta', '>', 868);
-    });
-}
+    if ($datos->certificado->certificadoReexpedido()) {
+        $preguntasQuery->where(function ($q) {
+            $q->whereBetween('id_pregunta', [854, 860])
+            ->OrwhereBetween('id_pregunta', [903, 909]);
+        });
+    } else {
+        $preguntasQuery->where(function ($q) {
+            $q->where('id_pregunta', '<', 851)
+            ->orWhere('id_pregunta', '>', 868);
+        });
+    }
 
-$preguntas = $preguntasQuery->get();
+    $preguntas = $preguntasQuery->get();
 
-
+dd($preguntas);
        
      
 
