@@ -423,8 +423,7 @@ class RevisionPersonalController extends Controller
         ->where('orden', ($datos->numero_revision == 1 ? 0 : 1)); // paréntesis
 
             if ($datos->certificado->certificadoReexpedido()) {
-                $preguntasQuery->whereBetween('id_pregunta', [854, 860]);
-                $preguntasQuery->where('orden', 1);
+                $preguntasQuery->whereBetween('id_pregunta', [854, 860])->Orwhere('orden', 1);
             } else {
                 $preguntasQuery->where(function ($q) {
                     $q->where('id_pregunta', '<', 851)
