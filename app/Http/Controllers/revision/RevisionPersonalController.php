@@ -422,8 +422,6 @@ class RevisionPersonalController extends Controller
     ->where('tipo_certificado', $datos->tipo_certificado)
     ->where('orden', $datos->numero_revision == 1 ? 0 : 1);
 
-     $preguntas = $preguntasQuery->get();  
-     dd($preguntas);
 
     if ($datos->certificado->certificadoReexpedido()) {
         $preguntasQuery->where(function ($q) {
