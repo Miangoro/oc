@@ -223,42 +223,42 @@
                                 <!-- Mensajes del dashboard f0f8ff-->
                                 <!-- Mensajes del dashboard -->
                                 <div class="dashboard-messages d-flex justify-content-center align-items-start h-100 pe-5">
-    <div class="w-100 pe-5">
-        @foreach ($mensajes as $mensaje)
-            @if ($mensaje->activo == 1 && ($mensaje->id_usuario_destino == auth()->id() || is_null($mensaje->id_usuario_destino)))
-                @php
-                    // Definir colores fuertes que combinen con el tipo de texto
-                    $textColor = $mensaje->tipo != 'Normal' ? match($mensaje->tipo) {
-                        'danger' => '#dc3545',
-                        'success' => '#28a745',
-                        default => '#0d6efd',
-                    } : '#0d6efd';
+                                    <div class="w-100 pe-5">
+                                        @foreach ($mensajes as $mensaje)
+                                            @if ($mensaje->activo == 1 && ($mensaje->id_usuario_destino == auth()->id() || is_null($mensaje->id_usuario_destino)))
+                                                @php
+                                                    // Definir colores fuertes que combinen con el tipo de texto
+                                                    $textColor = $mensaje->tipo != 'Normal' ? match($mensaje->tipo) {
+                                                        'danger' => '#dc3545',
+                                                        'success' => '#28a745',
+                                                        default => '#0d6efd',
+                                                    } : '#0d6efd';
 
-                    $bgColor = $mensaje->tipo != 'Normal' ? match($mensaje->tipo) {
-                        'danger' => '#dc3545',    // rojo fuerte
-                        'success' => '#28a745',   // verde fuerte
-                        default => '#0d6efd',     // azul fuerte
-                    } : '#0d6efd';
-                @endphp
+                                                    $bgColor = $mensaje->tipo != 'Normal' ? match($mensaje->tipo) {
+                                                        'danger' => '#dc3545',    // rojo fuerte
+                                                        'success' => '#28a745',   // verde fuerte
+                                                        default => '#0d6efd',     // azul fuerte
+                                                    } : '#0d6efd';
+                                                @endphp
 
-                <div class="card mb-4 shadow-lg border-0 rounded-4 hover-scale"
-                     style="border-left: 8px solid {{ $textColor }};
-                            background-color: {{ $bgColor }};
-                            color: #fff;
-                            transition: transform 0.3s;">
-                    <div class="card-body text-center p-4">
-                        <h4 class="card-title fw-bold">
-                            {{ $mensaje->titulo }}
-                        </h4>
-                        <p class="card-text fs-5 mt-3">
-                            {{ $mensaje->mensaje }}
-                        </p>
-                    </div>
-                </div>
-            @endif
-        @endforeach
-    </div>
-</div>
+                                                <div class="card mb-4 shadow-lg border-0 rounded-4 hover-scale"
+                                                    style="border-left: 8px solid {{ $textColor }};
+                                                            background-color: {{ $bgColor }};
+                                                            color: #fff;
+                                                            transition: transform 0.3s;">
+                                                    <div class="card-body text-center p-4">
+                                                        <h4 class="card-title fw-bold">
+                                                            {{ $mensaje->titulo }}
+                                                        </h4>
+                                                        <p class="card-text fs-5 mt-3">
+                                                            {{ $mensaje->mensaje }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
 
 <style>
 .hover-scale:hover {
