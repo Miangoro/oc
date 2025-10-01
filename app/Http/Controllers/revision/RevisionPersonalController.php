@@ -433,7 +433,8 @@ class RevisionPersonalController extends Controller
     } else {
         $preguntasQuery->where(function ($q) {
             $q->where('id_pregunta', '<', 851)
-            ->orWhere('id_pregunta', '>', 868);
+            ->orWhere('id_pregunta', '>', 868)
+            ->whereNotIn('id_pregunta', [903, 909]); 
         });
     }
 
