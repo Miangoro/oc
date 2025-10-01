@@ -426,6 +426,7 @@ class RevisionPersonalController extends Controller
         $preguntasQuery->where(function ($q) {
             $q->whereBetween('id_pregunta', [854, 860])
             ->OrwhereBetween('id_pregunta', [903, 909]);
+            dd($preguntasQuery);
         });
     } else {
         $preguntasQuery->where(function ($q) {
@@ -436,7 +437,7 @@ class RevisionPersonalController extends Controller
 
     $preguntas = $preguntasQuery->get();
 
-dd($preguntas);
+
        
      
 
