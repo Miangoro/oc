@@ -525,7 +525,7 @@
                             var isSelected = selectedLotes[index] == lote.id_lote_granel;
                             $(this).append(new Option(lote.nombre_lote + " (" + lote
                                 .cont_alc + "% Alc. Vol.)" + " (" + lote
-                                .volumen_restante + " L)", lote.id_lote_granel,
+                                .volumen_restante + " L) " + lote.folio_certificado, lote.id_lote_granel,
                                 false, isSelected));
                         }, this); // Usar 'this' para referirse al select actual
 

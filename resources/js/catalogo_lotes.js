@@ -561,7 +561,7 @@ $(function () {
           lotesDisponibles.forEach(function (lote) {
             // Usar backticks para agregar la opción correctamente
             $select.append(
-              `<option value="${lote.id_lote_granel}">${lote.nombre_lote} (${lote.cont_alc}% Alc. Vol.) (${lote.volumen_restante} L)</option>`
+              `<option value="${lote.id_lote_granel}">${lote.nombre_lote} (${lote.cont_alc}% Alc. Vol.) (${lote.volumen_restante} L) ${lote.folio_certificado || 'Sin certificado'}</option>`
             );
           });
           if (valorSeleccionado) {
