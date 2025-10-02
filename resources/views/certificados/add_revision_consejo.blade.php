@@ -1298,7 +1298,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                         <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                         </a>
                                                  @else
-                                                        Sin etiqueta cargada
+                                                        <span class="text-muted">Sin etiqueta cargada</span>
                                                   @endif
 
                                                 @endif
@@ -1312,7 +1312,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                             class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                     </a>
                                                 @else
-                                                    <span class="text-muted">Sin corrugado</span>
+                                                    <span class="text-muted"></span>
                                                 @endif
                                             </td>
                                         @elseif($pregunta->filtro == 'dictamen_exportacion')
