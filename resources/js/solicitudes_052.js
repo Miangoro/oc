@@ -2955,6 +2955,11 @@ $(function () {
         error: function (xhr) {
           console.log('Error:', xhr);
           console.log('Error2:', xhr.responseText);
+            let errorResponse = JSON.parse(xhr.responseText);
+              console.log('Error2-2:', errorResponse.message);
+          console.error('Error3:', xhr.responseJSON);
+            console.error('Error3-3:', xhr.responseJSON.message);
+          
           /*if (xhr.status === 422) {
             let errores = xhr.responseJSON.errors;
             let mensaje = '';
@@ -2976,7 +2981,6 @@ $(function () {
             });
           
           } else {*/
-            console.error('Error3:', xhr.responseJSON);
             Swal.fire({
               icon: 'error',
               title: '¡Error!',
