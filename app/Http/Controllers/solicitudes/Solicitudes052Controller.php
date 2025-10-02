@@ -422,10 +422,10 @@ public function storeVigilanciaProduccion(Request $request)
         'documento_guias.*' => 'nullable|file|mimes:pdf|max:10240' // solo PDFs hasta 10MB
     ]);
 
-    DB::beginTransaction();
+    DB::beginTransaction(); // Inicia la transacción
 
     try {
-        // 1. Obtener número de cliente
+        // 1. Obtener empresa y número de cliente
         $empresa = Empresa::with("empresaNumClientes")
             ->where("id_empresa", $validated['id_empresa'])
             ->firstOrFail();
@@ -435,30 +435,31 @@ public function storeVigilanciaProduccion(Request $request)
             ->first(fn($num) => !empty($num));
 
         if (!$numeroCliente) {
-            return response()->json(['message' => 'No se encontró un número de cliente válido'], 422);
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró un número de cliente válido'
+            ], 422);
         }
 
         // 2. Guardar solicitud
         $VigilanciaProdu = new Solicitudes052();
         $VigilanciaProdu->folio = Helpers::generarFolioSolicitud();
         $VigilanciaProdu->id_empresa = $validated['id_empresa'];
-        $VigilanciaProdu->id_tipo = 2; // aquí defines que "2" es vigilancia
+        $VigilanciaProdu->id_tipo = 2;
         $VigilanciaProdu->id_predio = 0;
         $VigilanciaProdu->fecha_solicitud = $validated['fecha_solicitud'];
         $VigilanciaProdu->fecha_visita = $validated['fecha_visita'];
         $VigilanciaProdu->id_instalacion = $validated['id_instalacion'];
         $VigilanciaProdu->info_adicional = $validated['info_adicional'] ?? null;
         $VigilanciaProdu->id_usuario_registro = Auth::id();
-
         $VigilanciaProdu->caracteristicas = json_encode([
             'nombre_produccion' => $validated['nombre_produccion'],
             'etapa_proceso' => $validated['etapa_proceso'],
             'cantidad_pinas' => $validated['cantidad_pinas'],
         ]);
-
         $VigilanciaProdu->save();
 
-        // 3. Guardar archivos si hay
+        // 3. Guardar archivos si existen
         if ($request->hasFile('documento_guias')) {
             $carpetaDestino = "uploads/{$numeroCliente}";
 
@@ -467,41 +468,50 @@ public function storeVigilanciaProduccion(Request $request)
             }
 
             foreach ($request->file('documento_guias') as $file) {
-                if ($file->isValid()) {
-                    $extension = $file->getClientOriginalExtension();
-                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                    $originalNameSlug = Str::slug($originalName);
-                    $uniq = uniqid();
-                    $nombreArchivo = "guia-agave-{$originalNameSlug}_{$uniq}.{$extension}";
-
-                    $ruta = $file->storeAs($carpetaDestino, $nombreArchivo, 'public');
-
-                    if (!$ruta) {
-                        throw new \Exception("No se pudo guardar el archivo en el servidor.");
-                    }
-
-                    DB::table('documentacion_url')->insert([
-                        'id_documento' => 71, // id fijo para "Guía de traslado de agave"
-                        'nombre_documento' => 'Guía de traslado de agave',
-                        'id_empresa' => $VigilanciaProdu->id_empresa,
-                        'id_relacion' => $VigilanciaProdu->id_solicitud,
-                        'url' => $ruta, // importante: guardar la ruta, no solo el nombre
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
+                if (!$file->isValid()) {
+                    throw new \Exception("Uno de los archivos no se pudo cargar correctamente.");
                 }
+
+                $extension = $file->getClientOriginalExtension();
+                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $originalNameSlug = Str::slug($originalName);
+                $uniq = uniqid();
+                $nombreArchivo = "guia-agave-{$originalNameSlug}_{$uniq}.{$extension}";
+
+                $ruta = $file->storeAs($carpetaDestino, $nombreArchivo, 'public');
+
+                if (!$ruta) {
+                    throw new \Exception("No se pudo guardar el archivo en el servidor.");
+                }
+
+                DB::table('documentacion_url')->insert([
+                    'id_documento' => 71,
+                    'nombre_documento' => 'Guía de traslado de agave',
+                    'id_empresa' => $VigilanciaProdu->id_empresa,
+                    'id_relacion' => $VigilanciaProdu->id_solicitud,
+                    'url' => $ruta,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             }
         }
 
-        DB::commit();
+        DB::commit(); // Confirma toda la transacción
 
-        return response()->json(['success' => true, 'message' => 'Solicitud de vigilancia registrada correctamente.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Solicitud de vigilancia registrada correctamente.'
+        ]);
 
     } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
+        DB::rollBack(); // Deshace todo si algo falla
+        return response()->json([
+            'success' => false,
+            'message' => 'Ocurrió un error al registrar la solicitud: ' . $e->getMessage()
+        ], 500);
     }
 }
+
 
 
 

@@ -2937,7 +2937,6 @@ $(function () {
           $('#ModalAddSoli052VigilanciaProduccion').modal('hide');
           FormAddSoli052VigilanciaProduccion.reset();
           $('.select2').val(null).trigger('change');
-
           //$('.datatables-solicitudes052').DataTable().ajax.reload();
           dt_instalaciones_table.ajax.reload();//Recarga los datos del datatable
 
@@ -2953,44 +2952,19 @@ $(function () {
           });
         },
         error: function (xhr) {
-          console.log('Error:', xhr);
-          console.log('Error2:', xhr.responseText);
-            let errorResponse = JSON.parse(xhr.responseText);
-              console.log('Error2-2:', errorResponse.message);
-          console.error('Error3:', xhr.responseJSON);
-            console.error('Error3-3:', xhr.responseJSON.message);
-          
-          /*if (xhr.status === 422) {
-            let errores = xhr.responseJSON.errors;
-            let mensaje = '';
-
-            // Recorremos y formateamos los errores
-            for (let campo in errores) {
-              if (errores.hasOwnProperty(campo)) {
-                mensaje += `<div>• ${errores[campo][0]}</div>`;
-              }
-            }
-
-            Swal.fire({
-              icon: 'error',
-              title: 'Errores de validación',
-              html: mensaje,
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          
-          } else {*/
+          console.log('Error Completo:', xhr);
+          let errorJSON = xhr.responseJSON?.message || "Error sin JSON";
+            console.log("Mensaje JSON:", errorJSON);
+          /*let errorText = JSON.parse(xhr.responseText);
+              console.log('Mensaje Text:', errorText.message);*/
             Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              //text: 'Error inesperado al registrar la vigilancia en producción.',
-              text: 'Error inesperado al registrar la vigilancia en producción.',
+              text: 'Error al registrar.',
               customClass: {
                 confirmButton: 'btn btn-danger'
               }
             });
-          //}
 
           $('#btnRegisVigiPro').removeClass('d-none');
           $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
