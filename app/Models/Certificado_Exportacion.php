@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exports\CertificadosExport;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\TranslatableActivityLog;
@@ -71,7 +72,7 @@ class Certificado_Exportacion extends Model
     {
         $datos = json_decode($this->observaciones, true);
         if (isset($datos['id_sustituye'])) {
-            return Certificados::find($datos['id_sustituye']);
+            return Certificado_Exportacion::find($datos['id_sustituye']);
         }
         return null;
     }
