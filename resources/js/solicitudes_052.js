@@ -2953,14 +2953,13 @@ $(function () {
         },
         error: function (xhr) {
           console.log('Error Completo:', xhr);
-          let errorJSON = xhr.responseJSON?.message || "Error sin JSON";
-            console.log("Mensaje JSON:", errorJSON);
+          let errorJSON = xhr.responseJSON?.message || "Error al registrar.";
           /*let errorText = JSON.parse(xhr.responseText);
               console.log('Mensaje Text:', errorText.message);*/
             Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              text: 'Error al registrar.',
+              text: errorJSON,
               customClass: {
                 confirmButton: 'btn btn-danger'
               }

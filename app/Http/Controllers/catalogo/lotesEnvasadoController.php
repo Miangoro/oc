@@ -359,6 +359,9 @@ public function store(Request $request)
             DB::beginTransaction();
 
             try {
+                $warning = false;
+                $warningMessage = '';
+
                 // Validar que ningún volumen parcial supere el volumen restante del lote granel
                 if ($request->has('id_lote_granel') && is_array($request->id_lote_granel)) {
                     foreach ($request->id_lote_granel as $i => $idGranel) {
@@ -373,10 +376,13 @@ public function store(Request $request)
                         }
 
                         if ($volumenParcial > $loteGranel->volumen_restante) {
-                            return response()->json([
+                            /*return response()->json([
                                 'success' => false,
                                 'message' => "El volumen parcial ({$volumenParcial} L) excede el volumen restante del lote granel: {$loteGranel->nombre_lote}."
-                            ], 422);
+                            ], 422);*/
+
+                            $warning = true;
+                            $warningMessage = 'Se registró con volumen excedente del lote granel';
                         }
                     }
                 }
@@ -465,10 +471,22 @@ public function store(Request $request)
 
                 DB::commit();
 
-                return response()->json([
+                /*return response()->json([
                     'success' => true,
                     'message' => 'Lote envasado registrado exitosamente.'
-                ]);
+                ]);*/
+                $response = [
+                    'success' => true,
+                    'message' => 'Lote envasado registrado exitosamente.'
+                ];
+
+                if ($warning) {
+                    $response['warning'] = true;
+                    $response['message'] = $warningMessage;
+                }
+                
+                return response()->json($response);
+                
             } catch (\Exception $e) {
                 DB::rollBack();
                 return response()->json([

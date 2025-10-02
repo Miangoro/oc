@@ -950,6 +950,7 @@ const ahora = new Date();
                 modal.find('#edit_cantidad_pinas').val('');
               }
               modal.find('#edit_info_adicional_vig').val(response.data.info_adicional);
+
               //Muestreo lote a granel
             } else if (id_tipo === 3) {
               modal.find('#edit_id_solicitud_muestreo').val(id_solicitud);
@@ -1011,6 +1012,7 @@ const ahora = new Date();
                 modal.find('#edit_id_certificado_muestreo').val('');
               }
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
+
               //Vigilancia solicitud de vigilancia traslado lotes
             } else if (id_tipo === 4) {
               modal.find('#edit_id_solicitud_traslado').val(id_solicitud);
@@ -1047,6 +1049,8 @@ const ahora = new Date();
               }
 
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
+
+              //
             } else if (id_tipo === 5) {
               modal.find('#edit_id_solicitud_inspeccion').val(id_solicitud);
               modal.find('#edit_id_empresa_inspeccion').val(response.data.id_empresa).trigger('change');
@@ -1122,6 +1126,7 @@ const ahora = new Date();
                 modal.find('#edit_id_certificado_inspeccion').val('');
               }
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
+
               //Inspeccion ingreso barricada
             } else if (id_tipo === 7) {
               modal.find('#edit_id_solicitud_barricada').val(id_solicitud);
@@ -1191,6 +1196,7 @@ const ahora = new Date();
               }
 
               modal.find('#edit_comentarios_lib_ter').val(response.data.info_adicional);
+
             } else if (id_tipo === 9) {
               modal.find('#edit_id_solicitud_liberacion').val(id_solicitud);
               modal.find('#edit_id_empresa_liberacion').val(response.data.id_empresa).trigger('change');
@@ -1227,7 +1233,6 @@ const ahora = new Date();
               });
 
               modal.find('#edit_info_adicional').val(response.data.info_adicional || '');
-
 
 
             } else if (id_tipo === 10) {///OBTENER SOLICITUD GEORREFERENCIACION
@@ -1355,8 +1360,10 @@ const ahora = new Date();
               }
 
               modal.find('#comentarios_edit').val(response.data.info_adicional);
+
             } else if (id_tipo === 13) {
               modal.find('#id_solicitud_emision_v').val(id_solicitud);
+              modal.find('#edit_fecha_sol_geo').val(response.data.fecha_solicitud);
               modal.find('#edit_id_empresa_solicitud_emision_venta').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita_emision_v').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_emision_v').val(response.data.id_instalacion);
@@ -2924,7 +2931,9 @@ const ahora = new Date();
       });
     });
   });
-  /* editar emision certificado venta nacional */
+
+
+  ///EDITAR SOLICITUD VENTA NACIONAL
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -3967,8 +3976,8 @@ const ahora = new Date();
     });
   });
 
-  /* envio de emision de certificado de venta nacional */
-  ///
+
+  ///REGISTRAR SOLICITUD VENTA NACIONAL
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -4074,6 +4083,7 @@ const ahora = new Date();
       fv.revalidateField($(this).attr('name'));
     });
   });
+
 
   /*funcion para solicitud de liberacion producto termiando  */
   $(function () {

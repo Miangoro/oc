@@ -411,7 +411,7 @@ public function getSolicitudesTipos()
 public function storeVigilanciaProduccion(Request $request)
 {
     $validated = $request->validate([
-        'id_empresa' => 'required|integer|exists:empresas,id_empresa',
+        'id_empresa' => 'required|integer|exists:empresa,id_empresa',
         'fecha_solicitud' => 'nullable|date',
         'fecha_visita' => 'required|date',
         'id_instalacion' => 'required|integer',
@@ -431,8 +431,8 @@ public function storeVigilanciaProduccion(Request $request)
             ->firstOrFail();
 
         $numeroCliente = $empresa->empresaNumClientes
-            ->pluck('numero_cliente')
-            ->first(fn($num) => !empty($num));
+            ?->pluck('numero_cliente')
+            ?->first(fn($num) => !empty($num));
 
         if (!$numeroCliente) {
             return response()->json([

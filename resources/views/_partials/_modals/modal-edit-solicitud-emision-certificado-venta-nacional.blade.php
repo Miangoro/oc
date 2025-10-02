@@ -10,7 +10,7 @@
             <div class="modal-body p-8">
                 <form id="editEmisionCetificadoVentaNacionalForm">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <input type="hidden" name="id_solicitud" id="id_solicitud_emision_v">
                             <input type="hidden" name="form_type" value="emisionCertificadoVentaNacional">
 
@@ -29,8 +29,15 @@
                             </div>
                         </div>
 
+                        <div class="col-md-3">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text" name="fecha_solicitud" id="edit_fecha_sol_geo"
+                                <label>Fecha y hora de la solicitud</label>
+                            </div>
+                        </div>
 
-                        <div class="col-md-6">
+
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="edit_id_dictamen_envasado" name="id_dictamen_envasado"
                                     class="select2 form-select" onchange="editObtenerDatosDictamenesEnvasados();">

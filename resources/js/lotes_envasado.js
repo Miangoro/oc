@@ -786,6 +786,7 @@ $.ajaxSetup({
           $('#btnSpinner').addClass('d-none');
           $('#bntAddEnvasado').removeClass('d-none');
           // Mostrar alerta de éxito
+          /*
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -794,6 +795,30 @@ $.ajaxSetup({
               confirmButton: 'btn btn-success'
             }
           });
+          */
+         // Diferenciar mensaje normal o advertencia
+          if (response.warning) {
+            Swal.fire({
+              icon: 'warning',
+              title: '¡Advertencia!',
+              text: response.message,
+              confirmButtonClass: 'btn btn-warning',
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              }
+              /*}).then(() => {
+                location.reload(); */ // refresca la página para que veas el registro
+            });
+          } else if (response.success) {
+            Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.message,
+              customClass: {
+                confirmButton: 'btn btn-primary'
+              }
+            });
+          }
         },
         error: function (xhr) {
           // Mostrar alerta de error
