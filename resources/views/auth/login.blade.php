@@ -34,18 +34,19 @@
             z-index: 9999;
         }
 
-        /* Halloween */
+                /* Halloween */
         .bat {
-            position: absolute;
-            top: -50px;
+            position: fixed;          /* 👈 mejor que absolute, así no dependen de un contenedor */
+            top: -100px;              /* salen desde arriba */
+            left: 0;                  /* el JS luego pone el left random */
             opacity: 0;
-            animation: flyDown 3s ease-out forwards;
+            animation: flyDown 6s ease-in-out forwards;
             pointer-events: none;
-            width: 20px;
-            /* Ancho predeterminado */
-            max-width: 37px;
-            /* No más de 20px */
+            max-width: none;          /* sin límite */
+            height: auto;             /* mantiene proporción */
+            z-index: 9999;            /* siempre arriba */
         }
+
 
         @keyframes flyDown {
             0% {
@@ -598,7 +599,7 @@
 
     //Halloween
     let batCount = 0;
-    const maxBats = 10; // Máximo número de murciélagos
+    const maxBats = 12; // Máximo número de murciélagos
     const maxWidth = 768; // Ancho máximo para considerar el diseño responsive
 
     function isHalloweenSeason() {
@@ -615,12 +616,13 @@
             const batImages = [
                 "{{ asset('assets/img/branding/murcielago.png') }}",
                 "{{ asset('assets/img/branding/calabazin.png') }}",
-                "{{ asset('assets/img/branding/fantasma.png') }}"
+                "{{ asset('assets/img/branding/fantasma.png') }}",
+                 "{{ asset('assets/img/branding/bruja.png') }}"
             ];
             bat.src = batImages[Math.floor(Math.random() * batImages.length)];
             bat.classList.add("bat");
             bat.style.left = Math.random() * 90 + "vw";
-            bat.style.width = Math.random() * 30 + 20 + "px"; // Tamaño entre 20px y 50px
+            bat.style.width = Math.random() * 70 + 50 + "px"; // Tamaño entre 20px y 50px
             document.body.appendChild(bat);
             batCount++;
             bat.addEventListener("animationend", () => {
