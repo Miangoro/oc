@@ -1297,7 +1297,9 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                                 : 'NA' }}">
                                                         <i class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer"></i>
                                                         </a>
-                                                @endif
+                                                 @else
+                                                        Sin etiqueta cargada
+                                                  @endif
 
                                                 @endif
 
