@@ -622,7 +622,7 @@
             bat.src = batImages[Math.floor(Math.random() * batImages.length)];
             bat.classList.add("bat");
             bat.style.left = Math.random() * 90 + "vw";
-            bat.style.width = Math.random() * 70 + 50 + "px"; // Tamaño entre 20px y 50px
+            bat.style.width = Math.random() * 70 + 60 + "px"; // Tamaño entre 20px y 50px
             document.body.appendChild(bat);
             batCount++;
             bat.addEventListener("animationend", () => {
