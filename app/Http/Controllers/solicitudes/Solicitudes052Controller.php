@@ -430,7 +430,7 @@ public function storeVigilanciaProduccion(Request $request)
             ->where("id_empresa", $validated['id_empresa'])
             ->firstOrFail();
 
-        $numeroCliente = $empresa->empresaNumClientes
+        $numeroCliente = $empresa->empresaNumCliente
             ?->pluck('numero_cliente')
             ?->first(fn($num) => !empty($num));
 
@@ -507,7 +507,7 @@ public function storeVigilanciaProduccion(Request $request)
         DB::rollBack(); // Deshace todo si algo falla
         return response()->json([
             'success' => false,
-            'message' => 'Ocurrió un error al registrar la solicitud: ' . $e->getMessage()
+            'message' => 'Ocurrió un error al registrar la solicitud.'
         ], 500);
     }
 }

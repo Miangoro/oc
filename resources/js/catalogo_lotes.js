@@ -223,6 +223,10 @@ $(function () {
           if (window.puedeEditarElUsuario) {
             acciones += `<a data-id="${full['id_lote_granel']}" data-bs-toggle="modal" data-bs-target="#offcanvasEditLote" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes agranel</a>`;
           }
+          if (window.puedeVerTrazabilidad) {
+            acciones += `<a data-id="${full['id_lote_granel']}" data-tipo="1" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad">
+            <i class="ri-history-line text-secondary"></i> Trazabilidad</a>`;
+          }
           if (window.puedeEliminarElUsuario) {
             acciones += `<a data-id="${full['id_lote_granel']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes agranel</a>`;
           }
@@ -1781,4 +1785,126 @@ async function obtenerDestinoEmpresa() {
      }); */
 
   });
+
+
+
+
+///VER TRAZABILIDAD
+$(document).on('click', '.trazabilidad', function () {
+    var id_certificado = $(this).data('id');
+    var tipo = $(this).data('tipo');
+    $('.num_certificado').text($(this).data('folio'));
+    var url = '/trazabilidad/lotes/' + tipo + '/' + id_certificado;
+
+    $.get(url, function (data) {
+      if (data.success) {
+        var logs = data.logs;
+        var contenedor = $('#ListTracking');
+        contenedor.empty();
+
+        let voboPersonalHtml = '';
+        let voboClienteHtml = '';
+        $('<style>')
+          .prop('type', 'text/css')
+          .html(`
+        .border-blue { border: 2px solid #007bff !important; }
+        .border-purple { border: 2px solid #6f42c1 !important; }
+        .border-danger { border: 2px solid #ff0000 !important; }
+      `)
+          .appendTo('head');
+
+
+        // Extraemos y guardamos los Vo.Bo. (solo uno de cada)
+        logs.forEach(function (log) {
+          if (!voboPersonalHtml && log.vobo_personal) {
+            voboPersonalHtml = `
+            <li class="timeline-item timeline-item-transparent">
+              <span class="timeline-point timeline-point-primary"></span>
+              <div class="mt-2 pb-3 border border-blue p-3 rounded">
+                <h6 class="text-primary"><i class="ri-user-line me-1"></i> Vo.Bo. del Personal</h6>
+                ${log.vobo_personal}
+              </div>
+            </li><hr>`;
+          }
+          if (!voboClienteHtml && log.vobo_cliente) {
+            voboClienteHtml = `
+            <li class="timeline-item timeline-item-transparent">
+              <span class="timeline-point timeline-point-primary"></span>
+              <div class="mt-2 pb-3 border border-blue p-3 rounded">
+                <h6 class="text-success"><i class="ri-user-line me-1"></i> Revisión del cliente</h6>
+                ${log.vobo_cliente}
+              </div>
+            </li><hr>`;
+          }
+        });
+
+        // Calculamos el máximo orden_personalizado (aseguramos cubrir hasta 7)
+        const maxOrdenLogs = logs.length > 0 ? Math.max(...logs.map(l => l.orden_personalizado)) : 0;
+        const maxOrden = Math.max(maxOrdenLogs, 7);
+
+        // Insertar logs en orden y colocar Vo.Bo. en posiciones 4 y 7
+        for (let i = 1; i <= maxOrden; i++) {
+          logs.forEach(log => {
+            if (log.orden_personalizado === i) {
+              // Mapeamos el tipo a una clase de color
+              let borderClase = '';
+              switch (log.tipo_bloque) {
+                case 'registro':
+                  borderClase = 'border-blue';
+                  break;
+                case 'asignacion':
+                  borderClase = 'border-purple';
+                  break;
+                case 'resultado_positivo':
+                  borderClase = 'border-primary';
+                  break;
+                case 'resultado_negativo':
+                  borderClase = 'border-danger';
+                  break;
+                case 'cancelado':
+                  borderClase = 'border-danger';
+                  break;
+                default:
+                  borderClase = 'border-secondary';
+              }
+
+              contenedor.append(`
+              <li class="timeline-item timeline-item-transparent">
+                <span class="timeline-point timeline-point-primary"></span>
+                <div class="timeline-event border ${borderClase} p-3 rounded">
+                  <div class="timeline-header mb-3">
+                    <h6 class="mb-0">${log.description}</h6>
+                    <small class="text-muted">${log.created_at}</small>
+                  </div>
+                  <p class="mb-2">${log.contenido}</p>
+                  <div class="d-flex align-items-center mb-1">
+                    ${log.bitacora} ${log.bitacora2}
+                  </div>
+                </div>
+              </li><hr>
+            `);
+            }
+          });
+
+          // Insertar Vo.Bo. en orden 12 y 23
+          if (i === 12 && voboPersonalHtml) {
+            contenedor.append(voboPersonalHtml);
+          }
+          if (i === 23 && voboClienteHtml) {
+            contenedor.append(voboClienteHtml);
+          }
+        }
+
+        $('#ModalTracking').modal('show');
+      }
+    }).fail(function (xhr) {
+      console.error(xhr.responseText);
+    });
+});
+
+
+
+
+
+
 });

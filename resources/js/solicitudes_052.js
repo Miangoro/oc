@@ -2952,10 +2952,16 @@ $(function () {
           });
         },
         error: function (xhr) {
-          console.log('Error Completo:', xhr);
-          let errorJSON = xhr.responseJSON?.message || "Error al registrar.";
+          //console.log('Error Completo:', xhr);
+          //console.warn('Advertencia:', xhr.responseJSON);
           /*let errorText = JSON.parse(xhr.responseText);
               console.log('Mensaje Text:', errorText.message);*/
+        // Para desarrollador: revisar en consola (solo en desarrollo)
+        if (process.env.NODE_ENV !== 'production') {
+            console.log('Error Completo:', xhr);
+        }
+
+          let errorJSON = xhr.responseJSON?.message || "Error al registrar.";
             Swal.fire({
               icon: 'error',
               title: '¡Error!',

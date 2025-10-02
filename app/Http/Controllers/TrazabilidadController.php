@@ -13,13 +13,15 @@ use App\Models\Certificados;
 use App\Models\CertificadosGranel;
 use App\Models\Dictamen_Exportacion;
 use App\Models\Revisor;
-
+use App\Models\LotesGranel;
+use App\Models\lotes_envasado;
 
 use Illuminate\Http\Request;
 use Spatie\Activitylog\Models\Activity;
 
 class TrazabilidadController extends Controller
 {
+
     public function mostrarLogs($id)
     {   
         $inspeccionId = inspecciones::where('id_solicitud', $id)->pluck('id_inspeccion')->first();
@@ -560,5 +562,36 @@ if ($certificadoCancelado && $certificadoCancelado->estatus == 1) {
 
 
 
+///TRAZABILIDAD LOTES
+public function trackingLotes($tipo, $id)
+{
+    if ($tipo == 1) {
+        $lote = LotesGranel::find($id);
+    } else {
+        $lote = lotes_envasado::find($id);
+    }
+
+    if (!$lote) {
+        return response()->json(['success' => false, 'message' => 'Lote no encontrado']);
+    }
+
+
+    // Generar logs de trazabilidad según el lote
+    $logs = [];
+
+    return response()->json([
+        'success' => true, 
+        'lote' => $lote, 
+        'logs' => $logs
+    ]);
+
+
 
 }
+
+
+
+
+
+
+}//end-controller

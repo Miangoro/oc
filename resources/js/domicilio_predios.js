@@ -1912,7 +1912,7 @@ $(function () {
       var fechaEmision = $(this).val();
       if (fechaEmision) {
         var fecha = moment(fechaEmision, 'YYYY-MM-DD'); // Asegurarse del formato
-        var fechaVencimiento = fecha.add(5, 'years').format('YYYY-MM-DD'); // Agregar 5 años
+        var fechaVencimiento = fecha.add(6, 'years').format('YYYY-MM-DD'); // Agregar 5 años
         $('#fecha_vigencia').val(fechaVencimiento); // Actualizar el campo de vigencia
 
         // Revalidar ambos campos de fechas
@@ -2307,7 +2307,7 @@ $(function () {
       var fechaEmision = $(this).val();
       if (fechaEmision) {
         var fecha = moment(fechaEmision, 'YYYY-MM-DD'); // Asegurarse del formato
-        var fechaVencimiento = fecha.add(5, 'years').format('YYYY-MM-DD'); // Agregar 5 años
+        var fechaVencimiento = fecha.add(6, 'years').format('YYYY-MM-DD'); // Agregar 5 años
         $('#edit_fecha_vigencia').val(fechaVencimiento); // Actualizar el campo de vigencia
         // Revalidar ambos campos de fechas
         fv.revalidateField('fecha_emision');

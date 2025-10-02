@@ -30,6 +30,7 @@
 <script>
   window.puedeAgregarElUsuario = @json(auth()->user()->can('Registrar lotes a granel'));
   window.puedeEditarElUsuario = @json(auth()->user()->can('Editar lotes a granel'));
+  window.puedeVerTrazabilidad = @json(auth()->user()->can('Trazabilidad lotes a granel'));
   window.puedeEliminarElUsuario = @json(auth()->user()->can('Eliminar lotes a granel'));
   window.puedeVerElUsuario = @json(auth()->user()->can('Modificar volumen restante a granel'));
 </script>
@@ -38,34 +39,71 @@
 
 
 @section('content')
-    <!-- Users List Table -->
-    <div class="card">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<!-- Users List Table -->
+<div class="card">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <div class="card-header pb-0">
-            <h3 class="card-title mb-0 fw-bold">Lotes a granel</h3>
-        </div>
-        <div class="card-datatable table-responsive">
-            <table class="datatables-users table">
-                <thead class="table-dark">
-                    <tr>
-                        <th></th>
-                        <th>#</th>
-                        <th>Cliente</th>
-                        <th>tipo lote</th>
-                        <th>No. de lote</th>
-                        <th>Características</th>
-                        <th>FQs</th>
-                        <th>%Alc. Vol.</th>
-                        <th>Volumen restante</th>
-                        <th>Certificado</th>
-                        <th>estatus</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-            </table>
+    <div class="card-header pb-0">
+        <h3 class="card-title mb-0 fw-bold">Lotes a granel</h3>
+    </div>
+    <div class="card-datatable table-responsive">
+        <table class="datatables-users table">
+            <thead class="table-dark">
+                <tr>
+                    <th></th>
+                    <th>#</th>
+                    <th>Cliente</th>
+                    <th>tipo lote</th>
+                    <th>No. de lote</th>
+                    <th>Características</th>
+                    <th>FQs</th>
+                    <th>%Alc. Vol.</th>
+                    <th>Volumen restante</th>
+                    <th>Certificado</th>
+                    <th>estatus</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+
+
+<!--MODAL TRAZABILIDAD-->
+<div class="modal fade" id="ModalTracking" tabindex="-1" aria-hidden="true">
+   <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        
+        <div class="modal-body">
+          <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Close">
+          </button>
+
+          <div class="text-center mb-4 pt-5">
+            <h4 class="address-title mb-2">Trazabilidad del lote </h4>
+            <p class="num_certificado badge bg-primary"></p>
+          </div>
+
+          <div class="card pl-0"> 
+            <div class="card-body pb-0">
+              <ul id="ListTracking" class="timeline mb-0 pb-5">
+                
+              </ul>
+            </div>
+          </div>
+            
+            
+          <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+            <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+
         </div>
     </div>
+  </div>
+</div>
+
+
     <!-- Modal -->
     @include('_partials/_modals/modal-pdfs-frames')
     @include('_partials/_modals/modal-add-lotes-granel')

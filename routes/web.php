@@ -965,6 +965,8 @@ Route::post('/notificaciones/marcar-todas-leidas', [NotificacionController::clas
 Route::middleware(['auth'])->controller(TrazabilidadController::class)->group(function () {
     Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])->name('mostrarLogs');
     Route::get('/trazabilidad-certificados/{id}', [TrazabilidadController::class, 'TrackingCertificados'])->name('trazabilidad de certificados');
+
+    Route::get('/trazabilidad/lotes/{tipo}/{id}', [TrazabilidadController::class, 'trackingLotes']);
 });
 
 //-------------------MODULO DE SOLICITUDES-------------------
