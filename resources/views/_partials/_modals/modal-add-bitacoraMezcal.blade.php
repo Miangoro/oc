@@ -1,3 +1,12 @@
+<style>
+/* Solo aplica al select2 del #id_instalacion */
+#id_instalacion + .select2-container .select2-selection--single {
+    background-color: #fff3cd52 !important; /* fondo amarillo claro */
+    border-color: #ffc107 !important;       /* borde ámbar */
+    color: #856404 !important;              /* texto ámbar oscuro */
+}
+
+</style>
 <div class="modal fade" id="RegistrarBitacoraMezcal" tabindex="-1" aria-labelledby="registroInventarioModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -281,20 +290,22 @@
                     } else {}
                     $('#id_lote_granel').html(contenido);
 
-                    var contenidoI = "";
+                    var contenidoI = '<option value="">Lista de instalaciones</option>';
+
                     for (let index = 0; index < response.instalaciones.length; index++) {
                         var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
 
-                        contenidoI = '<option value="' + response.instalaciones[index].id_instalacion +
+                        contenidoI += '<option value="' + response.instalaciones[index].id_instalacion +
                             '">' +
                             tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                            '</option>' +
-                            contenidoI;
+                            '</option>';
                     }
+
                     if (response.instalaciones.length == 0) {
                         contenidoI = '<option value="">Sin instalaciones registradas</option>';
                     }
-                    $('#id_instalacion').html(contenidoI);
+
+                   $('#id_instalacion').html(contenidoI).val("").trigger('change');
                     obtenerDatosGraneles();
                 },
                 error: function() {}
@@ -331,4 +342,28 @@
             $('#alcohol_inicial').val('');
         }
     }
+
+$('#id_instalacion').select2({
+    placeholder: "Lista de instalaciones",
+    allowClear: true,
+    width: '100%'
+}).on('change', function () {
+    let $selection = $(this).next('.select2-container').find('.select2-selection--single');
+
+    if ($(this).val()) {
+        // Si seleccionó una instalación → limpiar estilos
+        $selection.removeAttr("style");
+    } else {
+        // Si está vacío → poner estilos amarillos
+        $selection.css({
+            "background-color": "#fff3cd52",
+            "border-color": "#ffc107",
+            "color": "#856404"
+        });
+    }
+});
+
+
+
+
 </script>

@@ -779,7 +779,7 @@ $(function () {
       });
     });
     // Inicializar select2 y revalidar el campo cuando cambie
-    $('#id_empresa, #id_lote_granel, #fecha').on('change', function () {
+    $('#id_empresa, #id_lote_granel, #fecha, #id_instalacion').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
 
