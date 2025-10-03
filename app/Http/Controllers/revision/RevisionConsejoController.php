@@ -423,16 +423,27 @@ class RevisionConsejoController extends Controller
         ->where('orden', $datos->numero_revision == 1 ? 0 : 1);
 
   
+        /*if ($datos->certificado->certificadoReexpedido()) {
+            $preguntasQuery->whereBetween('id_pregunta', [860, 868]);
+        } else {
+            $preguntasQuery->where(function ($q) {
+                $q->where('id_pregunta', '<', 851)
+                ->orWhere('id_pregunta', '>', 885);
+            });
+        }*/
+        if ($datos->certificado->certificadoReexpedido()) {
+            $preguntasQuery->where(function ($q) {
+                $q->whereBetween('id_pregunta', [860, 868])
+                ->OrwhereBetween('id_pregunta', [910, 916]);
+            });
 
-        
-            if ($datos->certificado->certificadoReexpedido()) {
-                $preguntasQuery->whereBetween('id_pregunta', [860, 868]);
-            } else {
-                $preguntasQuery->where(function ($q) {
-                    $q->where('id_pregunta', '<', 851)
-                    ->orWhere('id_pregunta', '>', 885);
-                });
-            }
+        } else {
+            $preguntasQuery->where(function ($q) {
+                $q->where('id_pregunta', '<', 851)
+                ->orWhere('id_pregunta', '>', 885)
+                ->whereNotIn('id_pregunta', [910, 916]); 
+            });
+        }
         $preguntas = $preguntasQuery->get();
 
 

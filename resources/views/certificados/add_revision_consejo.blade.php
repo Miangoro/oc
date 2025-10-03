@@ -20,6 +20,7 @@
     use App\Helpers\Helpers;
     use App\Models\activarHologramasModelo;
     use App\Models\solicitudHolograma;
+    use App\Models\solicitudesModel
 @endphp
 
 <style>
@@ -1323,9 +1324,27 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                                         class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                 </a>
                                             </td>
+
+                                <!--SOL REEX EMISION GRANEL-->
+                                @elseif($pregunta->filtro == 'sol_reex_granel')
+                                @php
+                                $solicitud_emision = $datos->certificado
+                                    ->hasOne(solicitudesModel::class, 'id_predio', 'id_certificado')
+                                    ->where('id_tipo', 12)
+                                    ->first();
+                                @endphp
+                                            <td>
+                                                <a target="_blank"
+                                                    href="/solicitud_de_servicio/{{ $solicitud_emision->id_solicitud ?? 'N/A' }}">
+                                                    <i
+                                                        class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
+                                                </a>
+                                            </td>
                                         @else
                                             <td>Sin datos</td>
                                         @endif
+
+                                <!--RESPUESTAS-->
                                         <td>
                                             <div class="resp">
                                                 <select class="form-select form-select-sm" aria-label="Elige la respuesta"
@@ -1338,6 +1357,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                             </div>
                                         </td>
 
+                                    <!--OBSERVACIONES-->
                                         <td>
                                             <textarea name="observaciones[{{ $index }}]" rows="1" name="" id=""
                                                 class="form-control" placeholder="Observaciones"></textarea>
