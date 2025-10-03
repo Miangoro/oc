@@ -1802,104 +1802,35 @@ $(document).on('click', '.trazabilidad', function () {
         var contenedor = $('#ListTracking');
         contenedor.empty();
 
-        let voboPersonalHtml = '';
-        let voboClienteHtml = '';
-        $('<style>')
-          .prop('type', 'text/css')
-          .html(`
-        .border-blue { border: 2px solid #007bff !important; }
-        .border-purple { border: 2px solid #6f42c1 !important; }
-        .border-danger { border: 2px solid #ff0000 !important; }
-      `)
-          .appendTo('head');
-
-
-        // Extraemos y guardamos los Vo.Bo. (solo uno de cada)
         logs.forEach(function (log) {
-          if (!voboPersonalHtml && log.vobo_personal) {
-            voboPersonalHtml = `
+          contenedor.append(`
             <li class="timeline-item timeline-item-transparent">
               <span class="timeline-point timeline-point-primary"></span>
-              <div class="mt-2 pb-3 border border-blue p-3 rounded">
-                <h6 class="text-primary"><i class="ri-user-line me-1"></i> Vo.Bo. del Personal</h6>
-                ${log.vobo_personal}
-              </div>
-            </li><hr>`;
-          }
-          if (!voboClienteHtml && log.vobo_cliente) {
-            voboClienteHtml = `
-            <li class="timeline-item timeline-item-transparent">
-              <span class="timeline-point timeline-point-primary"></span>
-              <div class="mt-2 pb-3 border border-blue p-3 rounded">
-                <h6 class="text-success"><i class="ri-user-line me-1"></i> Revisión del cliente</h6>
-                ${log.vobo_cliente}
-              </div>
-            </li><hr>`;
-          }
-        });
-
-        // Calculamos el máximo orden_personalizado (aseguramos cubrir hasta 7)
-        const maxOrdenLogs = logs.length > 0 ? Math.max(...logs.map(l => l.orden_personalizado)) : 0;
-        const maxOrden = Math.max(maxOrdenLogs, 7);
-
-        // Insertar logs en orden y colocar Vo.Bo. en posiciones 4 y 7
-        for (let i = 1; i <= maxOrden; i++) {
-          logs.forEach(log => {
-            if (log.orden_personalizado === i) {
-              // Mapeamos el tipo a una clase de color
-              let borderClase = '';
-              switch (log.tipo_bloque) {
-                case 'registro':
-                  borderClase = 'border-blue';
-                  break;
-                case 'asignacion':
-                  borderClase = 'border-purple';
-                  break;
-                case 'resultado_positivo':
-                  borderClase = 'border-primary';
-                  break;
-                case 'resultado_negativo':
-                  borderClase = 'border-danger';
-                  break;
-                case 'cancelado':
-                  borderClase = 'border-danger';
-                  break;
-                default:
-                  borderClase = 'border-secondary';
-              }
-
-              contenedor.append(`
-              <li class="timeline-item timeline-item-transparent">
-                <span class="timeline-point timeline-point-primary"></span>
-                <div class="timeline-event border ${borderClase} p-3 rounded">
-                  <div class="timeline-header mb-3">
-                    <h6 class="mb-0">${log.description}</h6>
-                    <small class="text-muted">${log.created_at}</small>
-                  </div>
-                  <p class="mb-2">${log.contenido}</p>
-                  <div class="d-flex align-items-center mb-1">
-                    ${log.bitacora} ${log.bitacora2}
-                  </div>
+              <div class="timeline-event border border-blue p-3 rounded">
+                <div class="timeline-header mb-3">
+                  <h6 class="mb-0">${log.description}</h6>
+                  <small class="text-muted">${log.created_at}</small>
                 </div>
-              </li><hr>
-            `);
-            }
-          });
-
-          // Insertar Vo.Bo. en orden 12 y 23
-          if (i === 12 && voboPersonalHtml) {
-            contenedor.append(voboPersonalHtml);
-          }
-          if (i === 23 && voboClienteHtml) {
-            contenedor.append(voboClienteHtml);
-          }
-        }
+                <p class="mb-2">${log.contenido}</p>
+              </div>
+            </li><hr>
+          `);
+        });
 
         $('#ModalTracking').modal('show');
       }
     }).fail(function (xhr) {
       console.error(xhr.responseText);
+      Swal.fire({
+        title: '¡Error!',
+        text: 'Ocurrió un error.',
+        icon: 'error',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
     });
+    
 });
 
 

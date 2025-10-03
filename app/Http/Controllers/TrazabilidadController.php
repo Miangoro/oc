@@ -13,8 +13,11 @@ use App\Models\Certificados;
 use App\Models\CertificadosGranel;
 use App\Models\Dictamen_Exportacion;
 use App\Models\Revisor;
+//para lotes
 use App\Models\LotesGranel;
 use App\Models\lotes_envasado;
+use App\Models\solicitudesModel;
+
 
 use Illuminate\Http\Request;
 use Spatie\Activitylog\Models\Activity;
@@ -565,19 +568,49 @@ if ($certificadoCancelado && $certificadoCancelado->estatus == 1) {
 ///TRAZABILIDAD LOTES
 public function trackingLotes($tipo, $id)
 {
-    if ($tipo == 1) {
+    //if ($tipo == 1) {// Obtener lote granel
         $lote = LotesGranel::find($id);
-    } else {
-        $lote = lotes_envasado::find($id);
-    }
+        if (!$lote) {
+            return response()->json(['success' => false, 'message' => 'Lote granel no encontrado']);
+        }
 
-    if (!$lote) {
-        return response()->json(['success' => false, 'message' => 'Lote no encontrado']);
-    }
+        // Buscamos solicitudes relacionadas
+        /*$solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
+            ->where('id_lote_granel', $lote->id_lote_granel)
+            ->get();*/
+        /*forma 1
+            $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
+                ->whereJsonContains('caracteristicas->id_lote_granel', (string)$lote->id_lote_granel)
+                ->get();*/
+        /*forma 2
+        $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
+                ->whereRaw("JSON_EXTRACT(caracteristicas, '$.id_lote_granel') = ?", [$lote->id_lote_granel])
+                ->get();*/
+        // Obtener solicitudes relacionadas dentro del JSON 'caracteristicas'
+        $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
+            ->whereJsonContains('caracteristicas->id_lote_granel', (string)$lote->id_lote_granel)
+            ->get();
+
+    /*} else {
+        $lote = lotes_envasado::find($id);
+        if (!$lote) return response()->json(['success' => false, 'message' => 'Lote envasado no encontrado']);
+
+        // Buscamos solicitudes relacionadas usando el campo correcto
+        $solicitudes = solicitudesModel::whereIn('id_tipo', [5,8,11])
+                        ->where('id_lote_envasado', $lote->id_lote_envasado)
+                        ->get();
+    }*/
 
 
     // Generar logs de trazabilidad según el lote
-    $logs = [];
+    $logs = [
+        [
+            'description' => $tipo == 1 ? 'Registro de Lote Granel' : 'Registro de Lote Envasado',
+            'created_at'  => $lote->created_at->format('Y-m-d H:i'),
+            'contenido'   => "Folio: {$lote->folio}" // 👈 ejemplo, puedes cambiar qué mostrar
+        ]
+    ];
+    
 
     return response()->json([
         'success' => true, 
