@@ -101,7 +101,7 @@ $(function () {
         case 'doc':
         case 'docx':
           iconClass = 'ri-file-word-2-fill';
-          colorClass = 'text-primary';
+          colorClass = 'text-primarycolor';
           label = 'Word';
           break;
         case 'xls':
@@ -163,7 +163,7 @@ $(function () {
         case 'doc':
         case 'docx':
           iconClass = 'ri-file-word-2-fill';
-          colorClass = 'text-primary';
+          colorClass = 'text-primarycolor';
           label = 'Word';
           break;
         case 'xls':

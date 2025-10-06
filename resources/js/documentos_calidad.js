@@ -85,18 +85,69 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             var archivo = full['archivo']; // ruta del archivo en DB
+
             if (archivo && archivo !== '') {
-              return `
-                <i class="ri-file-pdf-2-fill text-danger ri-40px PDFDocFind cursor-pointer"
-                  data-bs-target="#mostrarPdf" data-bs-toggle="modal"
+              var extension = archivo.split('.').pop().toLowerCase();
+              var iconClass = '';
+              var colorClass = '';
+              var iconTooltip = '';
+              var action = '';
+
+              // Detectar tipo de archivo
+              switch (extension) {
+                case 'pdf':
+                  iconClass = 'ri-file-pdf-2-fill';
+                  colorClass = 'text-danger';
+                  iconTooltip = 'Archivo PDF';
+                  // Acción: abrir modal
+                  action = `
+                  data-bs-target="#mostrarPdf"
+                  data-bs-toggle="modal"
                   data-bs-dismiss="modal"
                   data-nombre="${full['nombre']}"
                   data-url="/storage/${archivo}"
                   data-id="${full['id_doc_calidad']}"
-                  data-archivo="${archivo}"></i>
-              `;
+                  data-archivo="${archivo}"
+                `;
+                  break;
+                case 'doc':
+                case 'docx':
+                  iconClass = 'ri-file-word-2-fill';
+                  colorClass = 'text-primarycolor';
+                  iconTooltip = 'Documento Word';
+                  // Acción: descarga directa
+                  action = `onclick="window.open('/storage/${archivo}', '_blank')"`;
+                  break;
+                case 'xls':
+                case 'xlsx':
+                  iconClass = 'ri-file-excel-2-fill';
+                  colorClass = 'text-success';
+                  iconTooltip = 'Hoja de cálculo Excel';
+                  action = `onclick="window.open('/storage/${archivo}', '_blank')"`;
+                  break;
+                case 'txt':
+                  iconClass = 'ri-file-text-fill';
+                  colorClass = 'text-secondary';
+                  iconTooltip = 'Archivo de texto';
+                  action = `onclick="window.open('/storage/${archivo}', '_blank')"`;
+                  break;
+                default:
+                  iconClass = 'ri-file-fill';
+                  colorClass = 'text-warning';
+                  iconTooltip = 'Otro tipo de archivo';
+                  action = `onclick="window.open('/storage/${archivo}', '_blank')"`;
+                  break;
+              }
+
+              return `
+        <i class="${iconClass} ${colorClass} ri-40px cursor-pointer PDFDocFind"
+          title="${iconTooltip}"
+          ${action}>
+        </i>
+      `;
             } else {
-              return '<i class="ri-file-pdf-2-fill ri-32px icon-no-pdf text-muted"></i>'; // Ícono gris deshabilitado
+              // Sin archivo
+              return `<i class="ri-file-fill ri-32px text-muted" title="Sin archivo"></i>`;
             }
           }
         },
@@ -224,18 +275,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                col.rowIndex +
-                '" data-dt-column="' +
-                col.columnIndex +
-                '">' +
-                '<td>' +
-                col.title +
-                ':' +
-                '</td> ' +
-                '<td>' +
-                col.data +
-                '</td>' +
-                '</tr>'
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
                 : '';
             }).join('');
 
@@ -258,22 +309,21 @@ $(function () {
         dropdownParent: $this.parent(),
         language: {
           noResults: function () {
-            return "No se encontraron registros";
+            return 'No se encontraron registros';
           }
         }
       });
     });
   }
 
-
   initializeSelect2(select2Elements);
 
   $(document).ready(function () {
-    flatpickr(".flatpickr", {
-      dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
-      enableTime: false,   // Desactiva la  hora
-      allowInput: true,    // Permite al usuario escribir la fecha manualmente
-      locale: "es",        // idioma a español
+    flatpickr('.flatpickr', {
+      dateFormat: 'Y-m-d', // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
+      enableTime: false, // Desactiva la  hora
+      allowInput: true, // Permite al usuario escribir la fecha manualmente
+      locale: 'es' // idioma a español
     });
   });
 
@@ -284,15 +334,15 @@ $(function () {
     $('#modalEditDoc').modal('show');
 
     // Mostrar loader
-    $("#cargando").show();
-    $("#historialContent").html('');
+    $('#cargando').show();
+    $('#historialContent').html('');
 
     // Llamada AJAX
     $.ajax({
       url: `/documentos-referencia/${idDoc}/historial`,
       type: 'GET',
       success: function (response) {
-        $("#cargando").hide();
+        $('#cargando').hide();
 
         if (response.data.length === 0) {
           $('#historialContent').html('<p>No hay versiones registradas.</p>');
@@ -300,41 +350,92 @@ $(function () {
         }
 
         let html = `
-        <div class="table-responsive">
-          <table class="table table-striped">
-            <thead >
-              <tr>
-                <th>ID</th>
-                <th>Archivo</th>
-                <th>Identificación</th>
-                <th>Nombre del documento</th>
-                <th>Estatus</th>
-                <th>Versiones</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
+      <div class="table-responsive">
+        <table class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Archivo</th>
+              <th>Identificación</th>
+              <th>Nombre del documento</th>
+              <th>Estatus</th>
+              <th>Versión</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
       `;
 
         response.data.forEach((item, index) => {
+          let archivo = item.archivo;
+          let iconHtml = '';
+
+          if (archivo && archivo !== '') {
+            let extension = archivo.split('.').pop().toLowerCase();
+            let iconClass = '';
+            let colorClass = '';
+            let iconTooltip = '';
+            let action = '';
+
+            // Detectar tipo de archivo
+            switch (extension) {
+              case 'pdf':
+                iconClass = 'ri-file-pdf-2-fill';
+                colorClass = 'text-danger';
+                iconTooltip = 'Archivo PDF';
+                action = `
+                data-bs-toggle="modal"
+                data-bs-target="#mostrarPdf"
+                data-nombre="${item.nombre}"
+                data-url="/storage/${archivo}"
+              `;
+                break;
+              case 'doc':
+              case 'docx':
+                iconClass = 'ri-file-word-2-fill';
+                colorClass = 'text-primarycolor';
+                iconTooltip = 'Documento Word';
+                action = `onclick="window.open('/storage/${archivo}', '_blank')"`;
+                break;
+              case 'xls':
+              case 'xlsx':
+                iconClass = 'ri-file-excel-2-fill';
+                colorClass = 'text-success';
+                iconTooltip = 'Hoja de cálculo Excel';
+                action = `onclick="window.open('/storage/${archivo}', '_blank')"`;
+                break;
+              case 'txt':
+                iconClass = 'ri-file-text-fill';
+                colorClass = 'text-secondary';
+                iconTooltip = 'Archivo de texto';
+                action = `onclick="window.open('/storage/${archivo}', '_blank')"`;
+                break;
+              default:
+                iconClass = 'ri-file-fill';
+                colorClass = 'text-warning';
+                iconTooltip = 'Otro tipo de archivo';
+                action = `onclick="window.open('/storage/${archivo}', '_blank')"`;
+                break;
+            }
+
+            iconHtml = `
+            <i class="${iconClass} ${colorClass} ri-40px cursor-pointer PDFDocFind"
+              title="${iconTooltip}"
+              ${action}>
+            </i>
+          `;
+          } else {
+            iconHtml = `<i class="ri-file-fill ri-32px text-muted" title="Sin archivo"></i>`;
+          }
+
           html += `
           <tr>
             <td>${index + 1}</td>
-            <td>
-              ${item.archivo
-              ? `<i class="ri-file-pdf-2-fill text-danger ri-40px PDFDocFind cursor-pointer"
-                  data-bs-toggle="modal"
-                  data-bs-target="#mostrarPdf"
-                  data-nombre="${item.nombre}"
-                  data-url="/storage/${item.archivo}">
-                </i>
-                `
-              : `<i class="ri-file-pdf-2-fill ri-24px icon-no-pdf"></i>`}
-            </td>
-            <td>${item.identificacion}</td>
-            <td>${item.nombre}</td>
-            <td>${item.estatus}</td>
-            <td>${item.edicion}</td>
+            <td>${iconHtml}</td>
+            <td>${item.identificacion ?? '-'}</td>
+            <td>${item.nombre ?? '-'}</td>
+            <td>${item.estatus ?? '-'}</td>
+            <td>${item.edicion ?? '-'}</td>
             <td>
               <button class="btn btn-sm btn-info edit-record-historial" data-id="${item.id}">
                 <i class="ri-edit-box-line ri-20px me-1"></i> Editar
@@ -348,7 +449,7 @@ $(function () {
         $('#historialContent').html(html);
       },
       error: function () {
-        $("#cargando").hide();
+        $('#cargando').hide();
         $('#historialContent').html('<p class="text-danger">No se pudo cargar el historial.</p>');
       }
     });
@@ -368,9 +469,9 @@ $(function () {
     //Cargar el PDF con el ID
     iframe.attr('src', pdfUrl);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', pdfUrl).show();
-    $("#titulo_modal").text(registro);
-    $("#subtitulo_modal").empty();
+    $('#NewPestana').attr('href', pdfUrl).show();
+    $('#titulo_modal').text(registro);
+    $('#subtitulo_modal').empty();
 
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
@@ -485,7 +586,7 @@ $(function () {
     }).on('core.form.valid', function () {
       // Enviar datos por Ajax si el formulario es válido
       var formData = new FormData(form);
-      $('#btnRegistrarDoc').addClass('d-none')
+      $('#btnRegistrarDoc').addClass('d-none');
       $('#loadingDoc').removeClass('d-none');
 
       $.ajax({
@@ -606,7 +707,6 @@ $(function () {
     });
   });
 
-
   //editar un campo de la tabla
   $(document).ready(function () {
     // Abrir el modal y cargar datos para editar
@@ -627,9 +727,9 @@ $(function () {
         // archivo (si ya existe)
 
         if (data.archivo) {
-          $("#edit_archivo").removeAttr("required"); // no forzar cargar de nuevo
-          $("#edit_archivo").next('small').remove();
-          $("#edit_archivo").after(
+          $('#edit_archivo').removeAttr('required'); // no forzar cargar de nuevo
+          $('#edit_archivo').next('small').remove();
+          $('#edit_archivo').after(
             `<small class="text-muted">Archivo actual: <a href="/storage/${data.archivo}" target="_blank">Ver PDF</a></small>`
           );
         }
@@ -803,13 +903,10 @@ $(function () {
         });
       });
       $('#edit_reviso, #edit_aprobo').on('change', function () {
-      fv.revalidateField($(this).attr('name'));
-    });
+        fv.revalidateField($(this).attr('name'));
+      });
     });
   });
-
-
-
 
   //editar un campo de la tabla
   $(document).ready(function () {
@@ -830,17 +927,16 @@ $(function () {
 
         // archivo (si ya existe)
         if (data.archivo) {
-          $("#edit_edit_archivo").removeAttr("required"); // no forzar cargar de nuevo
+          $('#edit_edit_archivo').removeAttr('required'); // no forzar cargar de nuevo
 
           // Eliminar aviso previo si existe
-          $("#edit_edit_archivo").next('small').remove();
+          $('#edit_edit_archivo').next('small').remove();
 
           // Agregar nuevo aviso
-          $("#edit_edit_archivo").after(
+          $('#edit_edit_archivo').after(
             `<small class="text-muted">Archivo actual: <a href="/storage/${data.archivo}" target="_blank">Ver PDF</a></small>`
           );
         }
-
 
         $('#edit_edit_modifico').val(data.modifico);
         $('#edit_edit_reviso').val(data.reviso).trigger('change');
@@ -1001,8 +1097,8 @@ $(function () {
         });
       });
       $('#edit_edit_reviso, #edit_edit_aprobo').on('change', function () {
-      fv.revalidateField($(this).attr('name'));
-    });
+        fv.revalidateField($(this).attr('name'));
+      });
     });
   });
 
@@ -1019,7 +1115,7 @@ $(function () {
 
     $('#area').on('change', function () {
       var selectedArea = $(this).val(); // 1 = OC, 2 = UI
-      var tipo = selectedArea == '1' ? 'OC' : (selectedArea == '2' ? 'UI' : '');
+      var tipo = selectedArea == '1' ? 'OC' : selectedArea == '2' ? 'UI' : '';
 
       // Limpiar opciones de usuarios pero conservar las dos primeras opciones
       $('#doc_reviso, #doc_aprobo').each(function () {
@@ -1039,8 +1135,6 @@ $(function () {
     });
   });
 
-
-
   $(document).ready(function () {
     // Guardamos todos los usuarios en un array desde los options originales
     var usuariosEdit = [];
@@ -1055,7 +1149,7 @@ $(function () {
 
     $('#edit_area').on('change', function () {
       var selectedArea = $(this).val(); // 1 = OC, 2 = UI
-      var tipo = selectedArea == '1' ? 'OC' : (selectedArea == '2' ? 'UI' : '');
+      var tipo = selectedArea == '1' ? 'OC' : selectedArea == '2' ? 'UI' : '';
 
       // Limpiar opciones pero conservar las dos primeras
       $('#edit_reviso, #edit_aprobo').each(function () {
@@ -1075,7 +1169,6 @@ $(function () {
     });
   });
 
-
   $(document).ready(function () {
     // Guardamos todos los usuarios en un array desde los options originales
     var usuariosEditHist = [];
@@ -1090,7 +1183,7 @@ $(function () {
 
     $('#edit_edit_area').on('change', function () {
       var selectedArea = $(this).val(); // 1 = OC, 2 = UI
-      var tipo = selectedArea == '1' ? 'OC' : (selectedArea == '2' ? 'UI' : '');
+      var tipo = selectedArea == '1' ? 'OC' : selectedArea == '2' ? 'UI' : '';
 
       // Limpiar opciones pero conservar las dos primeras
       $('#edit_edit_reviso, #edit_edit_aprobo').each(function () {
@@ -1109,6 +1202,4 @@ $(function () {
       $('#edit_edit_reviso, #edit_edit_aprobo').val('').trigger('change');
     });
   });
-
-
 });
