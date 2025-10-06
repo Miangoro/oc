@@ -568,20 +568,15 @@ if ($certificadoCancelado && $certificadoCancelado->estatus == 1) {
 ///TRAZABILIDAD LOTES
 public function trackingLotes($tipo, $id)
 {
-    //if ($tipo == 1) {// Obtener lote granel
-        //$lote = LotesGranel::with(['registro', 'empresa'])->find($id);
-        $lote = LotesGranel::find($id);
+    if ($tipo == 1) {// Obtener lote granel
+        $lote = LotesGranel::with('empresa', 'registro')->find($id);
         if (!$lote) {
-            return response()->json(['success' => false, 'message' => 'Lote granel no encontrado']);
+            return response()->json(['message' => 'Lote granel no encontrado'], 404);
         }
 
-        // Acceder al campos del  lote
-        $nombreUsuario = $lote->registro->name ?? 'No encontrado';
-        // Construir registros dinámico
-        $titulo = "Registro de Lote a Granel por el usuario $nombreUsuario";
-        $contenido = "<b>No. de lote:</b> <span class='badge bg-secondary'>$lote->nombre_lote</span>";
-        $contenido .= ", <b>Cliente:</b> {$lote->empresa->razon_social}";
-
+        // Construir datos del lote
+        $useRegistro = $lote->registro->name ?? 'No encontrado';
+        $titulo = "Registro de Lote a Granel por el usuario $useRegistro";
         // Buscamos solicitudes relacionadas
         /*forma 1
         $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
@@ -591,67 +586,85 @@ public function trackingLotes($tipo, $id)
         $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
             ->whereRaw("JSON_EXTRACT(caracteristicas, '$.id_lote_granel') = ?", [$lote->id_lote_granel])
             ->get();*/
-        
-
-    /*} else {
-        $lote = lotes_envasado::find($id);
-        if (!$lote) return response()->json(['success' => false, 'message' => 'Lote envasado no encontrado']);
-
-        // Buscamos solicitudes relacionadas usando el campo correcto
-        $solicitudes = solicitudesModel::whereIn('id_tipo', [5,8,11])
-                        ->where('id_lote_envasado', $lote->id_lote_envasado)
-                        ->get();
-    }*/
-
-
-// Definir clases de borde cíclicas
-$baseColors = ['success','warning','danger','info','dark'];
-$solicitudCounter = 0;
-
-// Color para el primer registro (el lote)
-$color = $baseColors[$solicitudCounter % count($baseColors)];
-
-
-    // Generar logs de trazabilidad según el lote
-    $logs = [
-        [
-            'titulo' => $tipo == 1 ? $titulo : 'Registro de Lote Envasado',
-            'registro'  => $lote->created_at->format('Y-m-d H:i:s'),
-            'contenido'   => $contenido,
-            'colorBase' => 'primary',
-            'tipo' => 'lote'        // <-- puedes usarlo para icono
-        ]
-    ];
-    
-
-        // Obtener solicitudes relacionadas dentro del JSON 'caracteristicas'
+        // Solicitudes relacionadas dentro del JSON 'caracteristicas'
         $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9,12])
             ->whereRaw("JSON_EXTRACT(caracteristicas, '$.id_lote_granel') = ?", [(string)$lote->id_lote_granel])
             ->get();
+        
+    } elseif ($tipo == 2) {
+        //('id_tipo', [5,8,11])13 pendiente...
+        $lote = lotes_envasado::with('empresa', 'registro')->find($id);
+        if (!$lote) return response()->json(['message' => 'Lote envasado no encontrado'], 404);
+
+        // Construir datos del lote
+        $useRegistro = $lote->registro->name ?? 'No encontrado';
+        $titulo = "Registro de Lote Envasado por el usuario $useRegistro";
+
+        // Obtener solicitudes tipo 5, 8, 11
+        $solicitudes = solicitudesModel::whereIn('id_tipo', [5,8,11])->get();
+
+        // Filtrar solo aquellas que incluyan este lote
+        $solicitudes = $solicitudes->filter(function($sol) use ($lote) {
+            $car = json_decode($sol->caracteristicas, true);
+            if (in_array($sol->id_tipo, [5,8])) {
+                return isset($car['id_lote_envasado']) && $car['id_lote_envasado'] == $lote->id_lote_envasado;
+            } elseif ($sol->id_tipo == 11) {
+                if (!empty($car['detalles'])) {
+                    foreach ($car['detalles'] as $detalle) {
+                        if (isset($detalle['id_lote_envasado']) && $detalle['id_lote_envasado'] == $lote->id_lote_envasado) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        });
+    }
+
+
+// // Definir colores y contadores
+$baseColors = ['success','warning','danger','info','dark'];
+$solicitudCounter = 0;
+    
+    // Primer log: lote a granel
+    $logs = [[
+        'titulo' => $tipo == 1 ? $titulo : 'Registro de Lote Envasado',
+        'registro' => $lote->created_at->format('Y-m-d H:i:s'),
+        'contenido' => "<b>No. de lote:</b> <span class='badge bg-secondary'>$lote->nombre_lote</span>,
+            <b>Cliente:</b> {$lote->empresa->razon_social}",
+        'colorBase' => 'primary',
+        'borderClass' => 'border-3 border-primary', //bg-primary-subtle
+        'icono' => 'ri-file-text-line'
+    ]];
+    
+
+
         // Agregar un log por cada solicitud
         foreach ($solicitudes as $solicitud) {
-            // Elegir color de la solicitud cíclicamente
             $color = $baseColors[$solicitudCounter % count($baseColors)];
             $solicitudCounter++;
 
-            $logs[] = [
+            $logs[] = [// Log de solicitud
                 'titulo' => "Registro de solicitud relacionada con el lote",
                 'registro' => $solicitud->created_at->format('Y-m-d H:i:s'),
-                'contenido' => "<b>Folio:</b> {$solicitud->folio}, <b>Tipo:</b> {$solicitud->tipo_solicitud->tipo}",
+                'contenido' => "<b>Folio:</b> {$solicitud->folio}, 
+                    <b>Tipo:</b>{$solicitud->tipo_solicitud->tipo}",
                 'colorBase' => $color,
-                'tipo' => 'solicitud'
+                'borderClass' => "border-3 border-$color bg-$color bg-opacity-10",
+                'icono' => 'ri-file-text-line'
             ];
 
             // INSPECCIONES PARA TIPOS 3,4,7,9
             if (in_array($solicitud->id_tipo, [3,4,7,9]) && $solicitud->inspeccion) {
-                
                 $inspeccion = $solicitud->inspeccion;
                 $logs[] = [
                     'titulo' => "Inspección asociada a la solicitud",
                     'registro' => $inspeccion->created_at->format('Y-m-d H:i:s'),
-                    'contenido' => "<b>Folio solicitud:</b> {$solicitud->folio}, <b>Numero de servicio:</b> {$inspeccion->num_servicio}",
+                    'contenido' => "<b>Folio solicitud:</b> {$solicitud->folio},
+                        <b>Numero de servicio:</b> {$inspeccion->num_servicio}",
                     'colorBase' => $color,
-                    'tipo' => 'inspeccion'
+                    'borderClass' => "border border-$color",
+                    'icono' => 'ri-search-eye-line'
                 ];
 
                 // LOG DE DICTAMEN SI EXISTE PARA TIPOS 3,4,7,9
@@ -660,9 +673,11 @@ $color = $baseColors[$solicitudCounter % count($baseColors)];
                     $logs[] = [
                         'titulo' => "Dictamen asociado a la inspección",
                         'registro' => $dictamen->created_at->format('Y-m-d H:i:s'),
-                        'contenido' => "<b>Numero de servicio:</b> {$inspeccion->num_servicio}, <b>Numero de dictamen:</b> {$dictamen->num_dictamen}",
+                        'contenido' => "<b>Numero de servicio:</b> {$inspeccion->num_servicio}, 
+                            <b>Numero de dictamen:</b> {$dictamen->num_dictamen}",
                         'colorBase' => $color,
-                        'tipo' => 'dictamen'
+                        'borderClass' => "border border-$color",
+                        'icono' => 'ri-file-paper-2-line'
                     ];
 
                     // LOG DE CERTIFICADO SI EXISTE
@@ -679,16 +694,17 @@ $color = $baseColors[$solicitudCounter % count($baseColors)];
 
             // Para solicitudes tipo 12 (sin inspección ni dictamen)
             if ($solicitud->id_tipo === 12) {
-                
                 $certificado = CertificadosGranel::find($solicitud->id_predio);
                 if ($certificado) {
                     $numDictamen = $certificado->dictamen?->num_dictamen ?? 'No disponible';
                     $logs[] = [
-                        'titulo' => "Certificado asociado a la solicitud tipo 12",
+                        'titulo' => "Certificado asociado a la solicitud",
                         'registro' => $certificado->created_at->format('Y-m-d H:i:s'),
-                        'contenido' => "<b>Numero de dictamen:</b> {$numDictamen}, <b>numero de certificado:</b> {$certificado->num_certificado}",
+                        'contenido' => "<b>Numero de dictamen:</b> {$numDictamen}, 
+                            <b>Numero de certificado:</b> {$certificado->num_certificado}",
                         'colorBase' => $color,
-                        'tipo' => 'certificado'
+                        'borderClass' => "border border-$color",
+                        'icono' => 'ri-award-line'
                     ];
                 }
             }
@@ -697,10 +713,8 @@ $color = $baseColors[$solicitudCounter % count($baseColors)];
 
     return response()->json([
         'success' => true, 
-        'lote' => $lote, 
         'logs' => $logs
     ]);
-
 }
 
 
