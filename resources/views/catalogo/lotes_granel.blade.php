@@ -82,19 +82,31 @@
 
           <div class="text-center mb-4 pt-5">
             <h4 class="address-title mb-2">Trazabilidad del lote </h4>
-            <p class="num_certificado badge bg-primary"></p>
+            <p class="folio badge bg-primary"></p>
           </div>
 
           <div class="card pl-0"> 
             <div class="card-body pb-0">
               <ul id="ListTracking" class="timeline mb-0 pb-5">
-                
+              {{-- <li class="timeline-item timeline-item-transparent mb-8">
+                <span class="timeline-point timeline-point-primary p-2"></span>
+
+                <div class="card border border-primary p-3 ms-2 rounded">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="fw-bold mb-0">
+                      <i class="ri-file-text-line me-1"></i> Registro de Lote
+                    </h6>
+                    <small class="text-muted">2025-10-03 12:30</small>
+                  </div>
+                  <p class="mb-1">Folio: 12345</p>
+                </div>
+              </li> --}}
               </ul>
             </div>
           </div>
-            
-            
-          <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+          
+          <!-- Botón cerrar -->
+          <div class="col-12 mt-4 d-flex justify-content-center">
             <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
           </div>
 

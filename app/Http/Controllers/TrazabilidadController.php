@@ -569,27 +569,29 @@ if ($certificadoCancelado && $certificadoCancelado->estatus == 1) {
 public function trackingLotes($tipo, $id)
 {
     //if ($tipo == 1) {// Obtener lote granel
+        //$lote = LotesGranel::with(['registro', 'empresa'])->find($id);
         $lote = LotesGranel::find($id);
         if (!$lote) {
             return response()->json(['success' => false, 'message' => 'Lote granel no encontrado']);
         }
 
+        // Acceder al campos del  lote
+        $nombreUsuario = $lote->registro->name ?? 'No encontrado';
+        // Construir registros dinámico
+        $titulo = "Registro de Lote a Granel por el usuario $nombreUsuario";
+        $contenido = "<b>No. de lote:</b> <span class='badge bg-secondary'>$lote->nombre_lote</span>";
+        $contenido .= ", <b>Cliente:</b> {$lote->empresa->razon_social}";
+
         // Buscamos solicitudes relacionadas
-        /*$solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
-            ->where('id_lote_granel', $lote->id_lote_granel)
-            ->get();*/
         /*forma 1
-            $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
-                ->whereJsonContains('caracteristicas->id_lote_granel', (string)$lote->id_lote_granel)
-                ->get();*/
-        /*forma 2
-        $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
-                ->whereRaw("JSON_EXTRACT(caracteristicas, '$.id_lote_granel') = ?", [$lote->id_lote_granel])
-                ->get();*/
-        // Obtener solicitudes relacionadas dentro del JSON 'caracteristicas'
         $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
             ->whereJsonContains('caracteristicas->id_lote_granel', (string)$lote->id_lote_granel)
-            ->get();
+            ->get();*/
+        /*forma 2
+        $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
+            ->whereRaw("JSON_EXTRACT(caracteristicas, '$.id_lote_granel') = ?", [$lote->id_lote_granel])
+            ->get();*/
+        
 
     /*} else {
         $lote = lotes_envasado::find($id);
@@ -602,14 +604,95 @@ public function trackingLotes($tipo, $id)
     }*/
 
 
+// Definir clases de borde cíclicas
+$baseColors = ['success','warning','danger','info','dark'];
+$solicitudCounter = 0;
+
+// Color para el primer registro (el lote)
+$color = $baseColors[$solicitudCounter % count($baseColors)];
+
+
     // Generar logs de trazabilidad según el lote
     $logs = [
         [
-            'description' => $tipo == 1 ? 'Registro de Lote Granel' : 'Registro de Lote Envasado',
-            'created_at'  => $lote->created_at->format('Y-m-d H:i'),
-            'contenido'   => "Folio: {$lote->folio}" // 👈 ejemplo, puedes cambiar qué mostrar
+            'titulo' => $tipo == 1 ? $titulo : 'Registro de Lote Envasado',
+            'registro'  => $lote->created_at->format('Y-m-d H:i:s'),
+            'contenido'   => $contenido,
+            'colorBase' => 'primary',
+            'tipo' => 'lote'        // <-- puedes usarlo para icono
         ]
     ];
+    
+
+        // Obtener solicitudes relacionadas dentro del JSON 'caracteristicas'
+        $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9,12])
+            ->whereRaw("JSON_EXTRACT(caracteristicas, '$.id_lote_granel') = ?", [(string)$lote->id_lote_granel])
+            ->get();
+        // Agregar un log por cada solicitud
+        foreach ($solicitudes as $solicitud) {
+            // Elegir color de la solicitud cíclicamente
+            $color = $baseColors[$solicitudCounter % count($baseColors)];
+            $solicitudCounter++;
+
+            $logs[] = [
+                'titulo' => "Registro de solicitud relacionada con el lote",
+                'registro' => $solicitud->created_at->format('Y-m-d H:i:s'),
+                'contenido' => "<b>Folio:</b> {$solicitud->folio}, <b>Tipo:</b> {$solicitud->tipo_solicitud->tipo}",
+                'colorBase' => $color,
+                'tipo' => 'solicitud'
+            ];
+
+            // INSPECCIONES PARA TIPOS 3,4,7,9
+            if (in_array($solicitud->id_tipo, [3,4,7,9]) && $solicitud->inspeccion) {
+                
+                $inspeccion = $solicitud->inspeccion;
+                $logs[] = [
+                    'titulo' => "Inspección asociada a la solicitud",
+                    'registro' => $inspeccion->created_at->format('Y-m-d H:i:s'),
+                    'contenido' => "<b>Folio solicitud:</b> {$solicitud->folio}, <b>Numero de servicio:</b> {$inspeccion->num_servicio}",
+                    'colorBase' => $color,
+                    'tipo' => 'inspeccion'
+                ];
+
+                // LOG DE DICTAMEN SI EXISTE PARA TIPOS 3,4,7,9
+                if ($inspeccion->dictamenGranel) {
+                    $dictamen = $inspeccion->dictamenGranel;
+                    $logs[] = [
+                        'titulo' => "Dictamen asociado a la inspección",
+                        'registro' => $dictamen->created_at->format('Y-m-d H:i:s'),
+                        'contenido' => "<b>Numero de servicio:</b> {$inspeccion->num_servicio}, <b>Numero de dictamen:</b> {$dictamen->num_dictamen}",
+                        'colorBase' => $color,
+                        'tipo' => 'dictamen'
+                    ];
+
+                    // LOG DE CERTIFICADO SI EXISTE
+                    /*if ($dictamen->certificado) {
+                        $certificado = $dictamen->certificado;
+                        $logs[] = [
+                            'titulo' => "Certificado asociado al dictamen",
+                            'registro' => $certificado->created_at->format('Y-m-d H:i:s'),
+                            'contenido' => "<b>Numero de dictamen:</b> {$dictamen->num_dictamen}, <b>Numero de certificado:</b> {$certificado->num_certificado}"
+                        ];
+                    }*/
+                }
+            }
+
+            // Para solicitudes tipo 12 (sin inspección ni dictamen)
+            if ($solicitud->id_tipo === 12) {
+                
+                $certificado = CertificadosGranel::find($solicitud->id_predio);
+                if ($certificado) {
+                    $numDictamen = $certificado->dictamen?->num_dictamen ?? 'No disponible';
+                    $logs[] = [
+                        'titulo' => "Certificado asociado a la solicitud tipo 12",
+                        'registro' => $certificado->created_at->format('Y-m-d H:i:s'),
+                        'contenido' => "<b>Numero de dictamen:</b> {$numDictamen}, <b>numero de certificado:</b> {$certificado->num_certificado}",
+                        'colorBase' => $color,
+                        'tipo' => 'certificado'
+                    ];
+                }
+            }
+        }
     
 
     return response()->json([
@@ -618,9 +701,8 @@ public function trackingLotes($tipo, $id)
         'logs' => $logs
     ]);
 
-
-
 }
+
 
 
 

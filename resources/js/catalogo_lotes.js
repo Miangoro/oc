@@ -224,7 +224,7 @@ $(function () {
             acciones += `<a data-id="${full['id_lote_granel']}" data-bs-toggle="modal" data-bs-target="#offcanvasEditLote" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes agranel</a>`;
           }
           if (window.puedeVerTrazabilidad) {
-            acciones += `<a data-id="${full['id_lote_granel']}" data-tipo="1" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad">
+            acciones += `<a data-id="${full['id_lote_granel']}" data-tipo="1" data-folio="${full['folio']}" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad">
             <i class="ri-history-line text-secondary"></i> Trazabilidad</a>`;
           }
           if (window.puedeEliminarElUsuario) {
@@ -1791,10 +1791,10 @@ async function obtenerDestinoEmpresa() {
 
 ///VER TRAZABILIDAD
 $(document).on('click', '.trazabilidad', function () {
-    var id_certificado = $(this).data('id');
+    var id_lote = $(this).data('id');
     var tipo = $(this).data('tipo');
-    $('.num_certificado').text($(this).data('folio'));
-    var url = '/trazabilidad/lotes/' + tipo + '/' + id_certificado;
+    $('.folio').text($(this).data('folio'));
+    var url = '/trazabilidad/lotes/' + tipo + '/' + id_lote;
 
     $.get(url, function (data) {
       if (data.success) {
@@ -1803,17 +1803,40 @@ $(document).on('click', '.trazabilidad', function () {
         contenedor.empty();
 
         logs.forEach(function (log) {
+          // Usamos log.border si existe, sino default border-primary
+          let colorBase = log.colorBase ?? 'secondary'; // definido en PHP
+          let tipo = log.tipo ?? 'desconocido'; // 'solicitud', 'inspeccion', 'dictamen'
+
+          let borderClass = 'border-' + colorBase;
+          if(tipo === 'lote') borderClass += ' border-3';
+          if(tipo === 'solicitud') borderClass += ' border-3';
+          if(tipo === 'inspeccion') borderClass += ' border-1';
+          if(tipo === 'dictamen') borderClass += ' border-2';
+          if(tipo === 'certificado') borderClass += ' border-2';
+
+          let icon = 'ri-box-line'; // default
+          if(tipo === 'lote') icon = 'ri-file-text-line';
+          if(tipo === 'solicitud') icon = 'ri-file-text-line';
+          if(tipo === 'inspeccion') icon = 'ri-search-eye-line';
+          if(tipo === 'dictamen') icon = 'ri-file-paper-2-line';
+          if(tipo === 'certificado') icon = 'ri-award-line'; 
+          
+          //<span class="position-absolute start-0 translate-middle p-2 bg-primary rounded-circle"></span>
+          //<div class="card border border-primary p-3 ms-2">
+          //<i class="ri-file-text-line me-1"></i>${log.titulo} 
           contenedor.append(`
-            <li class="timeline-item timeline-item-transparent">
-              <span class="timeline-point timeline-point-primary"></span>
-              <div class="timeline-event border border-blue p-3 rounded">
-                <div class="timeline-header mb-3">
-                  <h6 class="mb-0">${log.description}</h6>
-                  <small class="text-muted">${log.created_at}</small>
+            <li class="timeline-item timeline-item-transparent mb-8">
+              <span class="position-absolute start-0 translate-middle p-2 bg-${colorBase} rounded-circle"></span>
+              <div class="card ${borderClass} p-3 ms-2">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h6 class="fw-bold mb-0">
+                    <i class="${icon}  me-1"></i>${log.titulo} 
+                  </h6>
+                  <small class="text-muted">${log.registro}</small>
                 </div>
-                <p class="mb-2">${log.contenido}</p>
+                <p class="mb-1">${log.contenido}</p>
               </div>
-            </li><hr>
+            </li>
           `);
         });
 
@@ -1821,10 +1844,12 @@ $(document).on('click', '.trazabilidad', function () {
       }
     }).fail(function (xhr) {
       console.error(xhr.responseText);
+      let error = xhr.responseJSON?.message;
       Swal.fire({
-        title: '¡Error!',
-        text: 'Ocurrió un error.',
         icon: 'error',
+        title: '¡Error!',
+        //text: 'Ocurrió un error.',
+        text: error,
         customClass: {
           confirmButton: 'btn btn-danger'
         }

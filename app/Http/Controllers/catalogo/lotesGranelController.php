@@ -325,6 +325,7 @@ $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId
 
             foreach ($LotesGranel as $lote) {
                 $nestedData['id_lote_granel'] = $lote->id_lote_granel ?? 'N/A';
+                $nestedData['folio'] = $lote->nombre_lote ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids ?? 'N/A'; // Incremental ID
 
                 $razonSocial = $lote->empresa ? $lote->empresa->razon_social : '';
