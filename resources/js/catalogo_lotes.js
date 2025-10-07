@@ -221,14 +221,14 @@ $(function () {
         render: function (data, type, full, meta) {
           let acciones = '';
           if (window.puedeEditarElUsuario) {
-            acciones += `<a data-id="${full['id_lote_granel']}" data-bs-toggle="modal" data-bs-target="#offcanvasEditLote" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes agranel</a>`;
+            acciones += `<a data-id="${full['id_lote_granel']}" data-bs-toggle="modal" data-bs-target="#offcanvasEditLote" class="dropdown-item edit-record waves-effect text-black"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>`;
           }
           if (window.puedeVerTrazabilidad) {
-            acciones += `<a data-id="${full['id_lote_granel']}" data-tipo="1" data-folio="${full['folio']}" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad">
+            acciones += `<a data-id="${full['id_lote_granel']}" data-folio="${full['folio']}" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad">
             <i class="ri-history-line text-secondary"></i> Trazabilidad</a>`;
           }
           if (window.puedeEliminarElUsuario) {
-            acciones += `<a data-id="${full['id_lote_granel']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes agranel</a>`;
+            acciones += `<a data-id="${full['id_lote_granel']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar </a>`;
           }
           // Si no hay acciones, no retornar el dropdown
           if (!acciones.trim()) {
@@ -1792,9 +1792,8 @@ async function obtenerDestinoEmpresa() {
 ///VER TRAZABILIDAD
 $(document).on('click', '.trazabilidad', function () {
   var id_lote = $(this).data('id');
-  var tipo = $(this).data('tipo');
   $('.folio').text($(this).data('folio'));
-  var url = '/trazabilidad/lotes/' + tipo + '/' + id_lote;
+  var url = '/trazabilidad/lotes-granel/' + id_lote;
 
     $.get(url, function (data) {
         var contenedor = $('#ListTracking').empty();

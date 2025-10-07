@@ -966,7 +966,8 @@ Route::middleware(['auth'])->controller(TrazabilidadController::class)->group(fu
     Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])->name('mostrarLogs');
     Route::get('/trazabilidad-certificados/{id}', [TrazabilidadController::class, 'TrackingCertificados'])->name('trazabilidad de certificados');
 
-    Route::get('/trazabilidad/lotes/{tipo}/{id}', [TrazabilidadController::class, 'trackingLotes']);
+    Route::get('/trazabilidad/lotes-granel/{id}', [TrazabilidadController::class, 'lotesGranel']);
+    Route::get('/trazabilidad/lotes-envasado/{id}', [TrazabilidadController::class, 'lotesEnvasado']);
 });
 
 //-------------------MODULO DE SOLICITUDES-------------------
