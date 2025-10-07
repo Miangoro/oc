@@ -296,7 +296,7 @@
                                         <thead class="table-light align-middle">
                                             <tr>
                                                 <th colspan="8"
-                                                    class="text-center bg-label-primary text-uppercase fs-6 fw-bold py-3">
+                                                    class="text-center bg-label-warning text-uppercase fs-6 fw-bold py-3">
                                                     SEGUNDA DESTILACIÓN
                                                 </th>
                                             </tr>
@@ -370,6 +370,91 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- CARD TERCERA DESTILACIÓN -->
+                        <div class="card mb-4 border rounded">
+                            <div class="card-body">
+                                <!-- TERCERA DESTILACIÓN -->
+                                <div class="table-responsive mb-4">
+                                    <table
+                                        class="table table-bordered table-sm mb-0 align-middle text-center table-hover">
+                                        <thead class="table-light align-middle">
+                                            <tr>
+                                                <th colspan="8"
+                                                    class="text-center bg-label-dark text-uppercase fs-6 fw-bold py-3">
+                                                    TERCERA DESTILACIÓN
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td rowspan="2">
+                                                    <button type="button" class="btn btn-primary btn-sm"
+                                                        id="agregarFilaTerceraDestilacion">
+                                                        <i class="ri-add-circle-fill text-white"></i>
+                                                    </button>
+                                                </td>
+                                                <th rowspan="2">Fecha de destilación</th>
+                                                <th colspan="2">Puntas</th>
+                                                <th colspan="2">Mezcal</th>
+                                                <th colspan="2">Colas</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Volumen</th>
+                                                <th>% Alc. Vol.</th>
+                                                <th>Volumen</th>
+                                                <th>% Alc. Vol.</th>
+                                                <th>Volumen</th>
+                                                <th>% Alc. Vol.</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tablaTerceraDestilacion">
+                                            <tr>
+                                                <td class="text-nowrap">
+                                                    <button type="button" class="btn btn-danger btn-sm" disabled>
+                                                        <i class="ri-close-circle-fill"></i>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control datepicker"
+                                                        name="tercera_destilacion[0][fecha_destilacion]"
+                                                        placeholder="aaaa-mm-dd">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="tercera_destilacion[0][puntas_volumen]"
+                                                        placeholder="Vol.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="tercera_destilacion[0][puntas_alcohol]"
+                                                        placeholder="% Alc.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="tercera_destilacion[0][mezcal_volumen]"
+                                                        placeholder="Vol.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="tercera_destilacion[0][mezcal_alcohol]"
+                                                        placeholder="% Alc.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="tercera_destilacion[0][colas_volumen]"
+                                                        placeholder="Vol.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="tercera_destilacion[0][colas_alcohol]"
+                                                        placeholder="% Alc.">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
 
                         <!-- CARD / OBSERVACIONES -->
                         <div class="card mb-4 border rounded">
@@ -494,7 +579,7 @@
                 method: 'GET',
                 success: function(response) {
                     var contenido =
-                    '<option value="" disabled selected>Seleccione una instalación</option>';
+                        '<option value="" disabled selected>Seleccione una instalación</option>';
 
                     for (let index = 0; index < response.instalaciones.length; index++) {
                         var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);

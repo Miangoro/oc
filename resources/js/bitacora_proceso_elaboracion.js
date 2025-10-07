@@ -69,9 +69,7 @@ $(function () {
               const etapas = JSON.parse(data);
 
               // Validar que todos tengan un firmante distinto de 0
-              const todasFirmadas = Object.values(etapas).every(
-                e => e.id_firmante && e.id_firmante != 0
-              );
+              const todasFirmadas = Object.values(etapas).every(e => e.id_firmante && e.id_firmante != 0);
 
               if (todasFirmadas) {
                 return `<span class="badge bg-success rounded-pill">Firmado</span>`;
@@ -194,16 +192,17 @@ $(function () {
             $(node).find('select').select2();
           }
         },
-         {
+        {
           className: 'dt-custom-select p-0 me-2 btn-outline-dark form-select-sm',
           text: '',
           init: function (api, node) {
             $(node).removeClass('btn btn-secondary');
 
             // Si usuario tipo 3 y tiene instalaciones, usar las precargadas
-            let htmlOpciones = window.tipoUsuario === 3
-              ? window.opcionesInstalacionesAutenticadas
-              : '<option value="">-- Todas las Instalaciones --</option>';
+            let htmlOpciones =
+              window.tipoUsuario === 3
+                ? window.opcionesInstalacionesAutenticadas
+                : '<option value="">-- Todas las Instalaciones --</option>';
 
             $(node).html(`
               <select id="filtroInstalacion" class="form-select select2" style="min-width: 280px;">
@@ -315,51 +314,51 @@ $(function () {
   initializeSelect2($('.select2'));
  */
 
-    $(document).on('select2:select', '#filtroEmpresa', function (e) {
+  $(document).on('select2:select', '#filtroEmpresa', function (e) {
     const selectedText = $(this).find('option:selected').text();
     $('#filtroEmpresa').next('.select2-container').find('.select2-selection__rendered').attr('title', selectedText);
   });
-      $('#filtroEmpresa, #filtroInstalacion').on('change', function () {
+  $('#filtroEmpresa, #filtroInstalacion').on('change', function () {
     $('.datatables-users').DataTable().ajax.reload();
   });
-$(document).ready(function () {
-  function cargarInstalaciones() {
-    // Si es usuario tipo 3, usar instalaciones precargadas
-    if (window.tipoUsuario === 3) {
-      $('#filtroInstalacion').html(window.opcionesInstalacionesAutenticadas).trigger('change');
-      return;
-    }
-
-    let empresaId = $('#filtroEmpresa').val();
-    if (!empresaId) {
-      $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
-      return;
-    }
-
-    $.ajax({
-      url: '/getDatos/' + empresaId,
-      method: 'GET',
-      success: function (response) {
-        let opciones = '<option value="">-- Todas las Instalaciones --</option>';
-        if (response.instalaciones.length > 0) {
-          response.instalaciones.forEach(function (inst) {
-            let tipoLimpio = limpiarTipo(inst.tipo);
-            opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
-          });
-        } else {
-          opciones += '<option value="">Sin instalaciones registradas</option>';
-        }
-        $('#filtroInstalacion').html(opciones).trigger('change');
-      },
-      error: function () {
-        $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+  $(document).ready(function () {
+    function cargarInstalaciones() {
+      // Si es usuario tipo 3, usar instalaciones precargadas
+      if (window.tipoUsuario === 3) {
+        $('#filtroInstalacion').html(window.opcionesInstalacionesAutenticadas).trigger('change');
+        return;
       }
-    });
-  }
 
-  cargarInstalaciones();
-  $('#filtroEmpresa').on('change', cargarInstalaciones);
-});
+      let empresaId = $('#filtroEmpresa').val();
+      if (!empresaId) {
+        $('#filtroInstalacion').html('<option value="">-- Todas las Instalaciones --</option>');
+        return;
+      }
+
+      $.ajax({
+        url: '/getDatos/' + empresaId,
+        method: 'GET',
+        success: function (response) {
+          let opciones = '<option value="">-- Todas las Instalaciones --</option>';
+          if (response.instalaciones.length > 0) {
+            response.instalaciones.forEach(function (inst) {
+              let tipoLimpio = limpiarTipo(inst.tipo);
+              opciones += `<option value="${inst.id_instalacion}">${tipoLimpio} | ${inst.direccion_completa}</option>`;
+            });
+          } else {
+            opciones += '<option value="">Sin instalaciones registradas</option>';
+          }
+          $('#filtroInstalacion').html(opciones).trigger('change');
+        },
+        error: function () {
+          $('#filtroInstalacion').html('<option value="">Error al cargar</option>');
+        }
+      });
+    }
+
+    cargarInstalaciones();
+    $('#filtroEmpresa').on('change', cargarInstalaciones);
+  });
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
   /*   $(document).on('click', '.verBitacoraBtn', function () {
@@ -449,8 +448,8 @@ $(document).ready(function () {
       $('#cargando').hide();
       $(this).show();
     }); */
-// Cuando abras el modal o al limpiar
-/*   $('#RegistrarBitacora').on('show.bs.modal', function () {
+  // Cuando abras el modal o al limpiar
+  /*   $('#RegistrarBitacora').on('show.bs.modal', function () {
       console.log('entro vez');
       // En molienda
       $("#tablaMolienda tr:not(:first)").remove();
@@ -517,7 +516,7 @@ $(document).ready(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
-       $('#btnFirma').addClass('d-none');
+      $('#btnFirma').addClass('d-none');
       $('#btnSpinner').removeClass('d-none');
 
       const formData = $(form).serialize();
@@ -758,7 +757,7 @@ $(document).ready(function () {
               message: 'El formato debe ser aaaa-mm-dd'
             }
           }
-        },
+        }
         /* volumen_total_formulado: {
           validators: {
             notEmpty: {
@@ -769,7 +768,7 @@ $(document).ready(function () {
             }
           }
         }, */
-      /*   puntas_alcohol: {
+        /*   puntas_alcohol: {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese el porcentaje de alcohol en puntas'
@@ -779,7 +778,7 @@ $(document).ready(function () {
             }
           }
         }, */
-      /*   puntas_volumen: {
+        /*   puntas_volumen: {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese el volumen de puntas'
@@ -989,6 +988,62 @@ $(document).ready(function () {
       indexSegundaDestilacion++;
     });
 
+    let indexTerceraDestilacion = 1;
+
+    $(document).on('click', '#agregarFilaTerceraDestilacion', function () {
+      let filaNueva = `
+        <tr>
+            <td class="text-nowrap">
+                <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">
+                    <i class="ri-close-circle-fill"></i>
+                </button>
+            </td>
+            <td>
+                <input type="text" class="form-control datepicker"
+                    name="tercera_destilacion[${indexTerceraDestilacion}][fecha_destilacion]"
+                    placeholder="aaaa-mm-dd">
+            </td>
+            <td>
+                <input type="number" step="0.01" class="form-control"
+                    name="tercera_destilacion[${indexTerceraDestilacion}][puntas_volumen]"
+                    placeholder="Vol.">
+            </td>
+            <td>
+                <input type="number" step="0.01" class="form-control"
+                    name="tercera_destilacion[${indexTerceraDestilacion}][puntas_alcohol]"
+                    placeholder="% Alc.">
+            </td>
+            <td>
+                <input type="number" step="0.01" class="form-control"
+                    name="tercera_destilacion[${indexTerceraDestilacion}][mezcal_volumen]"
+                    placeholder="Vol.">
+            </td>
+            <td>
+                <input type="number" step="0.01" class="form-control"
+                    name="tercera_destilacion[${indexTerceraDestilacion}][mezcal_alcohol]"
+                    placeholder="% Alc.">
+            </td>
+            <td>
+                <input type="number" step="0.01" class="form-control"
+                    name="tercera_destilacion[${indexTerceraDestilacion}][colas_volumen]"
+                    placeholder="Vol.">
+            </td>
+            <td>
+                <input type="number" step="0.01" class="form-control"
+                    name="tercera_destilacion[${indexTerceraDestilacion}][colas_alcohol]"
+                    placeholder="% Alc.">
+            </td>
+        </tr>
+    `;
+
+      $('#tablaTerceraDestilacion').append(filaNueva);
+
+      // Reinicializa el datepicker si estás usando uno
+      $('.datepicker').datepicker({ format: 'yyyy-mm-dd', autoclose: true });
+
+      indexTerceraDestilacion++;
+    });
+
     function calcularTotales() {
       // --- MOLIENDA: volumen_total_formulado ---
       let totalFormulacion = 0;
@@ -1048,6 +1103,7 @@ $(document).ready(function () {
 
   let edit_indexMolienda = 0;
   let edit_indexSegundaDestilacion = 0;
+  let edit_indexTerceraDestilacion = 0;
 
   $(function () {
     $(document).on('click', '.edit-record', function () {
@@ -1098,6 +1154,13 @@ $(document).ready(function () {
             edit_indexSegundaDestilacion = 0;
             bitacora.segunda_destilacion.forEach(fila => {
               agregarFilaSegundaDestilacionEdit(fila, edit_indexSegundaDestilacion++);
+            });
+
+            $('#edit_tablaTerceraDestilacion').empty();
+            edit_indexTerceraDestilacion = 0;
+            // Cargar filas existentes de la bitácora
+            bitacora.tercera_destilacion.forEach(fila => {
+              agregarFilaTerceraDestilacionEdit(fila, edit_indexTerceraDestilacion++);
             });
             // Mostrar modal
             $('#EditBitacora').modal('show');
@@ -1172,6 +1235,28 @@ $(document).ready(function () {
       $('.datepicker').datepicker({ format: 'yyyy-mm-dd', autoclose: true });
     }
 
+    // Función para agregar fila de tercera destilación en edición
+    function agregarFilaTerceraDestilacionEdit(fila = {}, index) {
+      const nuevaFila = `
+        <tr>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()">
+              <i class="ri-close-circle-fill"></i>
+            </button>
+          </td>
+          <td><input type="text" class="form-control datepicker" name="tercera_destilacion[${index}][fecha_destilacion]" value="${fila.fecha_destilacion || ''}"></td>
+          <td><input type="number" step="0.01" class="form-control" name="tercera_destilacion[${index}][puntas_volumen]" value="${fila.puntas_volumen || ''}"></td>
+          <td><input type="number" step="0.01" class="form-control" name="tercera_destilacion[${index}][puntas_alcohol]" value="${fila.puntas_porcentaje || ''}"></td>
+          <td><input type="number" step="0.01" class="form-control" name="tercera_destilacion[${index}][mezcal_volumen]" value="${fila.mezcal_volumen || ''}"></td>
+          <td><input type="number" step="0.01" class="form-control" name="tercera_destilacion[${index}][mezcal_alcohol]" value="${fila.mezcal_porcentaje || ''}"></td>
+          <td><input type="number" step="0.01" class="form-control" name="tercera_destilacion[${index}][colas_volumen]" value="${fila.colas_volumen || ''}"></td>
+          <td><input type="number" step="0.01" class="form-control" name="tercera_destilacion[${index}][colas_alcohol]" value="${fila.colas_porcentaje || ''}"></td>
+        </tr>
+      `;
+      $('#edit_tablaTerceraDestilacion').append(nuevaFila);
+      $('.datepicker').datepicker({ format: 'yyyy-mm-dd', autoclose: true });
+    }
+
     function calcularTotalesEdit() {
       console.log('Calculando totales de edición');
       // --- MOLIENDA: volumen_total_formulado ---
@@ -1232,6 +1317,10 @@ $(document).ready(function () {
 
     $('#edit_agregarFilaSegundaDestilacion').on('click', function () {
       agregarFilaSegundaDestilacionEdit({}, edit_indexSegundaDestilacion++);
+    });
+    // Botón para agregar fila nueva de tercera destilación
+    $('#edit_agregarFilaTerceraDestilacion').on('click', function () {
+      agregarFilaTerceraDestilacionEdit({}, edit_indexTerceraDestilacion++);
     });
   });
 
@@ -1352,8 +1441,8 @@ $(document).ready(function () {
               message: 'El formato debe ser aaaa-mm-dd'
             }
           }
-        },
-       /*  volumen_total_formulado: {
+        }
+        /*  volumen_total_formulado: {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese el volumen total formulado'
@@ -1487,8 +1576,7 @@ $(document).ready(function () {
     });
   });
 
-
-      $(document).ready(function () {
+  $(document).ready(function () {
     // Al abrir modal, disparas la carga inicial para el cliente seleccionado
     $('#RegistrarBitacora').on('shown.bs.modal', function () {
       var empresaSeleccionada = $('#id_empresa').val();

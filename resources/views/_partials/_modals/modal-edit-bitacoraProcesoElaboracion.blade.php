@@ -28,7 +28,8 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 mb-3">
-                                        <div class="form-floating form-floating-outline" onchange="obtenerInstalacion();">
+                                        <div class="form-floating form-floating-outline"
+                                            onchange="obtenerInstalacion();">
                                             <select id="edit_id_empresa" name="id_empresa" class="select2 form-select"
                                                 data-error-message="por favor selecciona la empresa">
                                                 @if ($tipo_usuario != 3)
@@ -45,12 +46,15 @@
                                             <label for="id_empresa" class="form-label">Cliente</label>
                                         </div>
                                     </div>
-                                     <div class="col-md-4 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <select id="edit_id_instalacion" name="id_instalacion" class="select2 form-select">
-                                            <option value="" disabled selected>Seleccione una instalación</option>
+                                            <select id="edit_id_instalacion" name="id_instalacion"
+                                                class="select2 form-select">
+                                                <option value="" disabled selected>Seleccione una instalación
+                                                </option>
                                             </select>
-                                            <label for="id_instalacion" class="form-label">Selecciona la instalación</label>
+                                            <label for="id_instalacion" class="form-label">Selecciona la
+                                                instalación</label>
                                         </div>
                                     </div>
                                     <div class="col-md-2 mb-3">
@@ -119,8 +123,9 @@
                                                                     id="edit_kg_maguey" name="kg_maguey"
                                                                     placeholder="Kg. de maguey"></span></td>
                                                         <td><span class="position-relative d-block mb-1"><input
-                                                                    type="number" step="0.01" class="form-control"
-                                                                    placeholder="% de art." id="edit_porcentaje_azucar"
+                                                                    type="number" step="0.01"
+                                                                    class="form-control" placeholder="% de art."
+                                                                    id="edit_porcentaje_azucar"
                                                                     name="porcentaje_azucar"></sapn>
                                                         </td>
                                                     </tr>
@@ -239,7 +244,7 @@
                                         <thead class="table-light align-middle">
                                             <tr>
                                                 <th colspan="8"
-                                                    class="text-center bg-label-primary text-uppercase fs-6 fw-bold py-3">
+                                                    class="text-center bg-label-warning text-uppercase fs-6 fw-bold py-3">
                                                     SEGUNDA DESTILACIÓN
                                                 </th>
                                             </tr>
@@ -271,6 +276,52 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        <!-- CARD TERCERA DESTILACIÓN -->
+                        <div class="card mb-4 border rounded">
+                            <div class="card-body">
+                                <!-- TERCERA DESTILACIÓN -->
+                                <div class="table-responsive mb-4">
+                                    <table
+                                        class="table table-bordered table-sm mb-0 align-middle text-center table-hover">
+                                        <thead class="table-light align-middle">
+                                            <tr>
+                                                <th colspan="8"
+                                                    class="text-center bg-label-dark text-uppercase fs-6 fw-bold py-3">
+                                                    TERCERA DESTILACIÓN
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td rowspan="2">
+                                                    <button type="button" class="btn btn-primary btn-sm"
+                                                        id="edit_agregarFilaTerceraDestilacion">
+                                                        <i class="ri-add-circle-fill text-white"></i>
+                                                    </button>
+                                                </td>
+                                                <th rowspan="2">Fecha de destilación</th>
+                                                <th colspan="2">Puntas</th>
+                                                <th colspan="2">Mezcal</th>
+                                                <th colspan="2">Colas</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Volumen</th>
+                                                <th>% Alc. Vol.</th>
+                                                <th>Volumen</th>
+                                                <th>% Alc. Vol.</th>
+                                                <th>Volumen</th>
+                                                <th>% Alc. Vol.</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="edit_tablaTerceraDestilacion">
+                                            {{-- filas dinámicas --}}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
 
                         <!-- CARD / OBSERVACIONES -->
                         <div class="card mb-4 border rounded">
@@ -385,43 +436,43 @@
     </div>
 </div>
 <script>
-function obtenerInstalacion() {
-    var empresa = $("#edit_id_empresa").val();
-    if (empresa !== "" && empresa !== null && empresa !== undefined) {
+    function obtenerInstalacion() {
+        var empresa = $("#edit_id_empresa").val();
+        if (empresa !== "" && empresa !== null && empresa !== undefined) {
 
-        $.ajax({
-            url: '/getDatosBitacora/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                var contenido = '<option value="" disabled>Seleccione una instalación</option>';
-                var instalacion_id = $("#edit_id_instalacion").data('selected') || "";
+            $.ajax({
+                url: '/getDatosBitacora/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    var contenido = '<option value="" disabled>Seleccione una instalación</option>';
+                    var instalacion_id = $("#edit_id_instalacion").data('selected') || "";
 
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-                    var seleccionado = (instalacion_id == response.instalaciones[index].id_instalacion) ? "selected" : "";
+                    for (let index = 0; index < response.instalaciones.length; index++) {
+                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+                        var seleccionado = (instalacion_id == response.instalaciones[index]
+                            .id_instalacion) ? "selected" : "";
 
-                    contenido += '<option ' + seleccionado + ' value="' + response.instalaciones[index].id_instalacion + '">' +
-                        tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                        '</option>';
+                        contenido += '<option ' + seleccionado + ' value="' + response.instalaciones[index]
+                            .id_instalacion + '">' +
+                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                            '</option>';
+                    }
+
+                    if (response.instalaciones.length == 0) {
+                        contenido = '<option value="">Sin instalaciones registradas</option>';
+                    }
+
+                    $('#edit_id_instalacion').html(contenido);
+
+                    // Si hay un valor seleccionado, aplicarlo después de insertar las opciones
+                    if (instalacion_id) {
+                        $('#edit_id_instalacion').val(instalacion_id).trigger('change');
+                    }
+                },
+                error: function() {
+                    console.error('Error al cargar las instalaciones.');
                 }
-
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
-                }
-
-                $('#edit_id_instalacion').html(contenido);
-
-                // Si hay un valor seleccionado, aplicarlo después de insertar las opciones
-                if (instalacion_id) {
-                    $('#edit_id_instalacion').val(instalacion_id).trigger('change');
-                }
-            },
-            error: function() {
-                console.error('Error al cargar las instalaciones.');
-            }
-        });
+            });
+        }
     }
-}
-
-
 </script>

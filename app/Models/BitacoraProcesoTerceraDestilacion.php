@@ -4,11 +4,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BitacoraProcesoSegundaDestilacion extends Model
+class BitacoraProcesoTerceraDestilacion extends Model
 {
-    use HasFactory;
 
-    protected $table = 'bitacora_segunda_destilacion';
+      use HasFactory;
+
+    protected $table = 'bitacora_tercera_destilacion';
     protected $primaryKey = 'id'; // Laravel usa esto por defecto, puedes omitirlo
 
     protected $fillable = [
@@ -31,4 +32,5 @@ class BitacoraProcesoSegundaDestilacion extends Model
     {
         return $this->belongsTo(BitacoraProcesoElaboracion::class, 'id_bitacora');
     }
+
 }

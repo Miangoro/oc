@@ -59,6 +59,10 @@ class BitacoraProcesoElaboracion extends Model
     {
         return $this->hasMany(BitacoraProcesoSegundaDestilacion::class, 'id_bitacora');
     }
+        public function terceraDestilacion()
+    {
+        return $this->hasMany(BitacoraProcesoTerceraDestilacion::class, 'id_bitacora');
+    }
 
     protected static function booted()
     {

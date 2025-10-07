@@ -11,6 +11,7 @@ use App\Models\instalaciones;
 use App\Models\empresa;
 use App\Models\BitacoraProcesoMoliendaDestilacion;
 use App\Models\BitacoraProcesoSegundaDestilacion;
+use App\Models\BitacoraProcesoTerceraDestilacion;
 use App\Models\maquiladores_model;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
@@ -372,6 +373,17 @@ class BitacoraProcesoElaboracionController extends Controller
               'segunda_destilacion.*.mezcal_alcohol'     => 'nullable|numeric|min:0|max:100',
               'segunda_destilacion.*.colas_volumen'      => 'nullable|numeric|min:0',
               'segunda_destilacion.*.colas_alcohol'      => 'nullable|numeric|min:0|max:100',
+
+              //tercera destilacion
+              'tercera_destilacion'                     => 'nullable|array',
+              'tercera_destilacion.*.fecha_destilacion' => 'nullable|date',
+              'tercera_destilacion.*.puntas_volumen'    => 'nullable|numeric|min:0',
+              'tercera_destilacion.*.puntas_alcohol'    => 'nullable|numeric|min:0|max:100',
+              'tercera_destilacion.*.mezcal_volumen'    => 'nullable|numeric|min:0',
+              'tercera_destilacion.*.mezcal_alcohol'    => 'nullable|numeric|min:0|max:100',
+              'tercera_destilacion.*.colas_volumen'     => 'nullable|numeric|min:0',
+              'tercera_destilacion.*.colas_alcohol'     => 'nullable|numeric|min:0|max:100',
+
           ]);
           try {
               DB::beginTransaction();
@@ -434,6 +446,23 @@ class BitacoraProcesoElaboracionController extends Controller
                   ]);
               }
             }
+            // Guardar tercera destilación
+            if (is_array($request->input('tercera_destilacion')) && count($request->input('tercera_destilacion')) > 0) {
+                foreach ($request->input('tercera_destilacion') as $fila) {
+                    BitacoraProcesoTerceraDestilacion::create([
+                      'id_bitacora'       => $bitacora->id,
+                      'fecha_destilacion' => $fila['fecha_destilacion'],
+                      'puntas_volumen'    => $fila['puntas_volumen'],
+                      'puntas_porcentaje' => $fila['puntas_alcohol'],  // map correcto
+                      'mezcal_volumen'    => $fila['mezcal_volumen'],
+                      'mezcal_porcentaje' => $fila['mezcal_alcohol'],  // map correcto
+                      'colas_volumen'     => $fila['colas_volumen'],
+                      'colas_porcentaje'  => $fila['colas_alcohol'],   // map correcto
+                  ]);
+
+                }
+            }
+
               DB::commit();
               return response()->json(['success' => 'Bitácora registrada correctamente']);
           } catch (\Throwable $e) {
@@ -446,7 +475,7 @@ class BitacoraProcesoElaboracionController extends Controller
         public function edit($id_bitacora)
         {
             try {
-                $bitacora = BitacoraProcesoElaboracion::with(['molienda', 'segundaDestilacion'])->findOrFail($id_bitacora);
+                $bitacora = BitacoraProcesoElaboracion::with(['molienda', 'segundaDestilacion', 'terceraDestilacion'])->findOrFail($id_bitacora);
                 return response()->json([
                     'success' => true,
                     'bitacora' => [
@@ -474,6 +503,7 @@ class BitacoraProcesoElaboracionController extends Controller
                         'observaciones'          => $bitacora->observaciones,
                         'molienda'               => $bitacora->molienda,
                         'segunda_destilacion'    => $bitacora->segundaDestilacion,
+                        'tercera_destilacion'    => $bitacora->terceraDestilacion,
                     ]
                 ]);
             } catch (\Exception $e) {
@@ -595,6 +625,16 @@ class BitacoraProcesoElaboracionController extends Controller
               'segunda_destilacion.*.mezcal_alcohol'     => 'nullable|numeric|min:0|max:100',
               'segunda_destilacion.*.colas_volumen'      => 'nullable|numeric|min:0',
               'segunda_destilacion.*.colas_alcohol'      => 'nullable|numeric|min:0|max:100',
+
+              //tercera destilacion
+              'tercera_destilacion'                     => 'nullable|array',
+              'tercera_destilacion.*.fecha_destilacion' => 'nullable|date',
+              'tercera_destilacion.*.puntas_volumen'    => 'nullable|numeric|min:0',
+              'tercera_destilacion.*.puntas_alcohol'    => 'nullable|numeric|min:0|max:100',
+              'tercera_destilacion.*.mezcal_volumen'    => 'nullable|numeric|min:0',
+              'tercera_destilacion.*.mezcal_alcohol'    => 'nullable|numeric|min:0|max:100',
+              'tercera_destilacion.*.colas_volumen'     => 'nullable|numeric|min:0',
+              'tercera_destilacion.*.colas_alcohol'     => 'nullable|numeric|min:0|max:100',
           ]);
 
           try {
@@ -629,6 +669,7 @@ class BitacoraProcesoElaboracionController extends Controller
               // 🔥 Eliminar registros relacionados existentes
               $bitacora->molienda()->delete();
               $bitacora->segundaDestilacion()->delete();
+              $bitacora->terceraDestilacion()->delete();
 
               // ✅ Insertar molienda (si hay)
               foreach ($request->input('molienda', []) as $fila) {
@@ -661,6 +702,22 @@ class BitacoraProcesoElaboracionController extends Controller
                       'colas_porcentaje'   => $fila['colas_alcohol'],
                   ]);
               }
+
+
+               // Guardar tercera destilación
+
+                foreach ($request->input('tercera_destilacion', []) as $fila) {
+                    BitacoraProcesoTerceraDestilacion::create([
+                      'id_bitacora'       => $bitacora->id,
+                      'fecha_destilacion' => $fila['fecha_destilacion'],
+                      'puntas_volumen'    => $fila['puntas_volumen'],
+                      'puntas_porcentaje' => $fila['puntas_alcohol'],  // map correcto
+                      'mezcal_volumen'    => $fila['mezcal_volumen'],
+                      'mezcal_porcentaje' => $fila['mezcal_alcohol'],  // map correcto
+                      'colas_volumen'     => $fila['colas_volumen'],
+                      'colas_porcentaje'  => $fila['colas_alcohol'],   // map correcto
+                  ]);
+                }
 
               DB::commit();
               return response()->json(['success' => 'Bitácora actualizada correctamente']);
