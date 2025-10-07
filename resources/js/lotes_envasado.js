@@ -294,7 +294,7 @@ $(function () {
             if (puedeEditar) {
               acciones += `
                 <a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit-record">
-                  <i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes envasado
+                  <i class="ri-edit-box-line ri-20px text-info"></i> Editar
                 </a>
                 <a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit-reclasificacion">
                   <i class="ri-id-card-fill ri-20px text-success"></i> Reclasificación SKU
@@ -302,7 +302,7 @@ $(function () {
             }
 
             if (window.puedeVerTrazabilidad) {
-              acciones += `<a data-id="${full['id_lote_envasado']}" data-tipo="2" data-folio="${full['nombre']}" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad">
+              acciones += `<a data-id="${full['id_lote_envasado']}" data-folio="${full['nombre']}" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad">
               <i class="ri-history-line text-secondary"></i> Trazabilidad</a>`;
             }
 
@@ -310,7 +310,7 @@ $(function () {
             if (puedeEliminar) {
               acciones += `
                 <a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record waves-effect text-danger">
-                  <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasado
+                  <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
                 </a>`;
             }
 
@@ -1460,9 +1460,8 @@ async function obtenerDestinoEmpresaEdit(selectedDestino = null) {
 ///VER TRAZABILIDAD
 $(document).on('click', '.trazabilidad', function () {
   var id_lote = $(this).data('id');
-  var tipo = $(this).data('tipo');
   $('.folio').text($(this).data('folio'));
-  var url = '/trazabilidad/lotes/' + tipo + '/' + id_lote;
+  var url = '/trazabilidad/lotes-envasado/' + id_lote;
 
     $.get(url, function (data) {
         var contenedor = $('#ListTracking').empty();

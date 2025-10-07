@@ -514,7 +514,8 @@ $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId
 
         return response()->json([
             'draw' => intval($request->input('draw')),
-            'recordsTotal' => intval($totalData),
+            //'recordsTotal' => intval($totalData),
+            'recordsTotal' => $empresaId ? intval($totalFiltered) : intval($totalData),//total oculto a clientes
             'recordsFiltered' => intval($totalFiltered),
             'code' => 200,
             'data' => $data,
