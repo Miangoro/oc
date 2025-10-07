@@ -17,6 +17,7 @@ use App\Models\Revisor;
 use App\Models\LotesGranel;
 use App\Models\lotes_envasado;
 use App\Models\solicitudesModel;
+use App\Models\Documentacion_url;
 
 
 use Illuminate\Http\Request;
@@ -568,13 +569,15 @@ if ($certificadoCancelado && $certificadoCancelado->estatus == 1) {
 ///TRAZABILIDAD LOTES
 public function trackingLotes($tipo, $id)
 {
-    if ($tipo == 1) {// Obtener lote granel
+    //if ($tipo == 1) {// Obtener lote granel
         $lote = LotesGranel::with('empresa', 'registro')->find($id);
         if (!$lote) {
             return response()->json(['message' => 'Lote granel no encontrado'], 404);
         }
 
         // Construir datos del lote
+        $numero_cliente = $lote->empresa?->empresaNumClientes->first(fn($item) => 
+            $item->empresa_id === $lote->empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado';
         $useRegistro = $lote->registro->name ?? 'No encontrado';
         $titulo = "Registro de Lote a Granel por el usuario $useRegistro";
         // Buscamos solicitudes relacionadas
@@ -591,7 +594,7 @@ public function trackingLotes($tipo, $id)
             ->whereRaw("JSON_EXTRACT(caracteristicas, '$.id_lote_granel') = ?", [(string)$lote->id_lote_granel])
             ->get();
         
-    } elseif ($tipo == 2) {
+    /*} elseif ($tipo == 2) {
         //('id_tipo', [5,8,11])13 pendiente...
         $lote = lotes_envasado::with('empresa', 'registro')->find($id);
         if (!$lote) return response()->json(['message' => 'Lote envasado no encontrado'], 404);
@@ -619,7 +622,7 @@ public function trackingLotes($tipo, $id)
             }
             return false;
         });
-    }
+    }*/
 
 
 // // Definir colores y contadores
@@ -644,10 +647,12 @@ $solicitudCounter = 0;
             $color = $baseColors[$solicitudCounter % count($baseColors)];
             $solicitudCounter++;
 
+            $pdfIcon = "<a href='/solicitud_de_servicio/{$solicitud->id_solicitud}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>"; 
+
             $logs[] = [// Log de solicitud
                 'titulo' => "Registro de solicitud relacionada con el lote",
                 'registro' => $solicitud->created_at->format('Y-m-d H:i:s'),
-                'contenido' => "<b>Folio:</b> {$solicitud->folio}, 
+                'contenido' => "<b>Folio:</b> {$solicitud->folio}{$pdfIcon}, 
                     <b>Tipo:</b>{$solicitud->tipo_solicitud->tipo}",
                 'colorBase' => $color,
                 'borderClass' => "border-3 border-$color bg-$color bg-opacity-10",
@@ -670,11 +675,14 @@ $solicitudCounter = 0;
                 // LOG DE DICTAMEN SI EXISTE PARA TIPOS 3,4,7,9
                 if ($inspeccion->dictamenGranel) {
                     $dictamen = $inspeccion->dictamenGranel;
+
+                    $pdfIcon = "<a href='/dictamen_granel/{$dictamen->id_dictamen}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>";
+
                     $logs[] = [
                         'titulo' => "Dictamen asociado a la inspección",
                         'registro' => $dictamen->created_at->format('Y-m-d H:i:s'),
                         'contenido' => "<b>Numero de servicio:</b> {$inspeccion->num_servicio}, 
-                            <b>Numero de dictamen:</b> {$dictamen->num_dictamen}",
+                            <b>Numero de dictamen:</b> {$dictamen->num_dictamen}{$pdfIcon}",
                         'colorBase' => $color,
                         'borderClass' => "border border-$color",
                         'icono' => 'ri-file-paper-2-line'
@@ -697,11 +705,31 @@ $solicitudCounter = 0;
                 $certificado = CertificadosGranel::find($solicitud->id_predio);
                 if ($certificado) {
                     $numDictamen = $certificado->dictamen?->num_dictamen ?? 'No disponible';
+
+                    //$pdfIcon = "<a href='/Pre-certificado-granel/{$certificado->id_certificado}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>";
+                    // Buscar documento firmado (id_documento = 59)
+                    $documentacion = Documentacion_url::where('id_relacion', $lote->id_lote_granel)
+                        ->where('id_documento', 59)
+                        ->where('id_doc', $certificado->id_certificado)
+                        ->first();
+
+                    $pdf_firmado = $documentacion?->url
+                        ? asset("files/{$numero_cliente}/certificados_granel/{$documentacion->url}")
+                        : null;
+
+                    // Ícono verde si existe PDF firmado, rojo si no
+                    if ($pdf_firmado) {
+                        $pdfIcon = "<a href='{$pdf_firmado}' target='_blank' title='Ver PDF firmado'>
+                        <i class='ri-file-pdf-2-fill text-success ri-20px'></i></a>";
+                    } else {
+                        $pdfIcon = "<a href='/Pre-certificado-granel/{$certificado->id_certificado}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>";
+                    }
+
                     $logs[] = [
                         'titulo' => "Certificado asociado a la solicitud",
                         'registro' => $certificado->created_at->format('Y-m-d H:i:s'),
                         'contenido' => "<b>Numero de dictamen:</b> {$numDictamen}, 
-                            <b>Numero de certificado:</b> {$certificado->num_certificado}",
+                            <b>Numero de certificado:</b> {$certificado->num_certificado}{$pdfIcon}",
                         'colorBase' => $color,
                         'borderClass' => "border border-$color",
                         'icono' => 'ri-award-line'
