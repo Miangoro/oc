@@ -39,4 +39,5 @@ class documentos_registro extends Model
           return $this->hasMany(documentos_calidad::class, 'id_procedimiento', 'id_doc_calidad');
       }
 
+
 }

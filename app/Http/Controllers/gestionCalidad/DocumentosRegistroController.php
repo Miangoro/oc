@@ -204,12 +204,15 @@ public function destroy($id)
 // DocumentosReferenciaController.php
 public function historial($id)
 {
-    $historial = documentos_registro_historial::where('id_registro', $id)->get();
+    $historial = documentos_registro_historial::with('procedimientos')
+        ->where('id_registro', $id)
+        ->get();
 
     return response()->json([
         'data' => $historial
     ]);
 }
+
 
 
 //funcion para llenar el campo del formulario

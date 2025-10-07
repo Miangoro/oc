@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class documentos_registro_historial extends Model
 {
-            protected $table = 'documentos_registros_historial';
+    protected $table = 'documentos_registros_historial';
 
     protected $primaryKey = 'id';  // Cambia esto al nombre correcto de la columna de identificación
 
@@ -29,5 +29,9 @@ class documentos_registro_historial extends Model
       ];
       public $timestamps = false;
 
+     public function procedimientos()
+    {
+        return $this->hasMany(documentos_calidad::class, 'id_doc_calidad', 'id_procedimiento');
+    }
 
 }

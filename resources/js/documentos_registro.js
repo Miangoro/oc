@@ -316,6 +316,7 @@ $(function () {
                 <th>Archivo</th>
                 <th>Identificación</th>
                 <th>Nombre del documento</th>
+                <th>Procedimiento al que pertenece</th>
                 <th>Estatus</th>
                 <th>Versiones</th>
                 <th>Acciones</th>
@@ -341,6 +342,7 @@ $(function () {
             </td>
             <td>${item.identificacion}</td>
             <td>${item.nombre}</td>
+            <td>${item.procedimientos.length > 0 ? item.procedimientos[0].nombre : 'Sin procedimiento'}</td>
             <td>${item.estatus}</td>
             <td>${item.edicion}</td>
             <td>
