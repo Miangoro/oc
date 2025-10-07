@@ -18,6 +18,7 @@ use App\Models\LotesGranel;
 use App\Models\lotes_envasado;
 use App\Models\solicitudesModel;
 use App\Models\Documentacion_url;
+use Carbon\Carbon;
 
 
 use Illuminate\Http\Request;
@@ -579,7 +580,7 @@ public function trackingLotes($tipo, $id)
         $numero_cliente = $lote->empresa?->empresaNumClientes->first(fn($item) => 
             $item->empresa_id === $lote->empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado';
         $useRegistro = $lote->registro->name ?? 'No encontrado';
-        $titulo = "Registro de Lote a Granel por el usuario $useRegistro";
+        $titulo = "Registro de lote a granel por el usuario $useRegistro";
         // Buscamos solicitudes relacionadas
         /*forma 1
         $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
@@ -628,12 +629,12 @@ public function trackingLotes($tipo, $id)
 // // Definir colores y contadores
 $baseColors = ['success','warning','danger','info','dark'];
 $solicitudCounter = 0;
-    
+$folioStyle = "style='background:#3A8DFF; color:white; padding:2px 4px; border-radius:4px; font-weight:500;'";
     // Primer log: lote a granel
     $logs = [[
         'titulo' => $tipo == 1 ? $titulo : 'Registro de Lote Envasado',
         'registro' => $lote->created_at->format('Y-m-d H:i:s'),
-        'contenido' => "<b>No. de lote:</b> <span class='badge bg-secondary'>$lote->nombre_lote</span>,
+        'contenido' => "<b>No. de lote:</b> <span {$folioStyle}>$lote->nombre_lote</span>,
             <b>Cliente:</b> {$lote->empresa->razon_social}",
         'colorBase' => 'primary',
         'borderClass' => 'border-3 border-primary', //bg-primary-subtle
@@ -650,10 +651,10 @@ $solicitudCounter = 0;
             $pdfIcon = "<a href='/solicitud_de_servicio/{$solicitud->id_solicitud}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>"; 
 
             $logs[] = [// Log de solicitud
-                'titulo' => "Registro de solicitud relacionada con el lote",
-                'registro' => $solicitud->created_at->format('Y-m-d H:i:s'),
-                'contenido' => "<b>Folio:</b> {$solicitud->folio}{$pdfIcon}, 
-                    <b>Tipo:</b>{$solicitud->tipo_solicitud->tipo}",
+                'titulo' => "Solicitud asociada al lote",
+                'registro' => Carbon::parse($solicitud->fecha_solicitud)->format('Y-m-d H:i:s'),
+                'contenido' => "<b>Folio:</b> <span {$folioStyle}>{$solicitud->folio}</span>{$pdfIcon}, 
+                    <b>Tipo:</b> {$solicitud->tipo_solicitud->tipo}",
                 'colorBase' => $color,
                 'borderClass' => "border-3 border-$color bg-$color bg-opacity-10",
                 'icono' => 'ri-file-text-line'
@@ -664,9 +665,9 @@ $solicitudCounter = 0;
                 $inspeccion = $solicitud->inspeccion;
                 $logs[] = [
                     'titulo' => "Inspección asociada a la solicitud",
-                    'registro' => $inspeccion->created_at->format('Y-m-d H:i:s'),
-                    'contenido' => "<b>Folio solicitud:</b> {$solicitud->folio},
-                        <b>Numero de servicio:</b> {$inspeccion->num_servicio}",
+                    'registro' => Carbon::parse($inspeccion->fecha_servicio)->format('Y-m-d H:i:s'),
+                    'contenido' => "<b>Número de servicio:</b> <span {$folioStyle}>
+                        {$inspeccion->num_servicio}</span>, <b>Folio solicitud:</b> {$solicitud->folio}",
                     'colorBase' => $color,
                     'borderClass' => "border border-$color",
                     'icono' => 'ri-search-eye-line'
@@ -680,9 +681,10 @@ $solicitudCounter = 0;
 
                     $logs[] = [
                         'titulo' => "Dictamen asociado a la inspección",
-                        'registro' => $dictamen->created_at->format('Y-m-d H:i:s'),
-                        'contenido' => "<b>Numero de servicio:</b> {$inspeccion->num_servicio}, 
-                            <b>Numero de dictamen:</b> {$dictamen->num_dictamen}{$pdfIcon}",
+                        'registro' => Carbon::parse($dictamen->fecha_emision)->format('Y-m-d'),
+                        'contenido' => "<b>Número de dictamen:</b> <span {$folioStyle}>
+                            {$dictamen->num_dictamen}</span>{$pdfIcon}, <b>Número de servicio:</b> 
+                            {$inspeccion->num_servicio}",
                         'colorBase' => $color,
                         'borderClass' => "border border-$color",
                         'icono' => 'ri-file-paper-2-line'
@@ -727,9 +729,9 @@ $solicitudCounter = 0;
 
                     $logs[] = [
                         'titulo' => "Certificado asociado a la solicitud",
-                        'registro' => $certificado->created_at->format('Y-m-d H:i:s'),
-                        'contenido' => "<b>Numero de dictamen:</b> {$numDictamen}, 
-                            <b>Numero de certificado:</b> {$certificado->num_certificado}{$pdfIcon}",
+                        'registro' => Carbon::parse($certificado->fecha_emision)->format('Y-m-d'),
+                        'contenido' => "<b>Número de certificado:</b> <span {$folioStyle}>
+                            {$certificado->num_certificado}</span>{$pdfIcon}, <b>Número de dictamen:</b> {$numDictamen}",
                         'colorBase' => $color,
                         'borderClass' => "border border-$color",
                         'icono' => 'ri-award-line'
