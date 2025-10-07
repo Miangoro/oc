@@ -791,6 +791,7 @@ $folioStyle ="style='background:#3A8DFF;color:white;padding:2px 4px;border-radiu
             ];
 
             // DICTAMEN PARA TIPO 5 y 11
+            $dictamen = null;
             if ($solicitud->id_tipo == 5 && $inspeccion->dictamenEnvasado) {
                 $dictamen = $inspeccion->dictamenEnvasado;
                 $ruta = "/dictamen_envasado/{$dictamen->id_dictamen}";
