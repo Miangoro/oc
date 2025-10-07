@@ -85,18 +85,52 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             var archivo = full['archivo']; // ruta del archivo en DB
+
             if (archivo && archivo !== '') {
+              // Detectar extensión
+              var extension = archivo.split('.').pop().toLowerCase();
+              var icono = '';
+
+              switch (extension) {
+                case 'pdf':
+                  icono = 'ri-file-pdf-2-fill text-danger';
+                  break;
+                case 'xls':
+                case 'xlsx':
+                  icono = 'ri-file-excel-2-fill text-success';
+                  break;
+                case 'doc':
+                case 'docx':
+                  icono = 'ri-file-word-2-fill text-primarycolor'; // tu clase personalizada
+                  break;
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                case 'gif':
+                  icono = 'ri-image-2-fill text-info';
+                  break;
+                case 'txt':
+                  icono = 'ri-file-text-fill text-secondary';
+                  break;
+                default:
+                  icono = 'ri-file-fill text-muted';
+                  break;
+              }
+
+              // Renderizar ícono clickeable
               return `
-                <i class="ri-file-pdf-2-fill text-danger ri-40px PDFDocFind cursor-pointer"
-                  data-bs-target="#mostrarPdf" data-bs-toggle="modal"
-                  data-bs-dismiss="modal"
-                  data-nombre="${full['nombre']}"
-                  data-url="/storage/${archivo}"
-                  data-id="${full['id_doc_calidad']}"
-                  data-archivo="${archivo}"></i>
-              `;
+        <i class="${icono} ri-40px cursor-pointer"
+          data-bs-target="#mostrarPdf" data-bs-toggle="modal"
+          data-bs-dismiss="modal"
+          data-nombre="${full['nombre']}"
+          data-url="/storage/${archivo}"
+          data-id="${full['id_doc_calidad']}"
+          data-archivo="${archivo}">
+        </i>
+      `;
             } else {
-              return '<i class="ri-file-pdf-2-fill ri-32px icon-no-pdf text-muted"></i>'; // Ícono gris deshabilitado
+              // Sin archivo: ícono gris
+              return '<i class="ri-file-fill ri-32px icon-no-pdf text-muted"></i>';
             }
           }
         },
@@ -137,7 +171,7 @@ $(function () {
           orderable: false,
           targets: 6,
           render: function (data, type, full, meta) {
-           return `<span>${full.edicion}</span>`;
+            return `<span>${full.edicion}</span>`;
           }
         },
         {
@@ -220,18 +254,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                col.rowIndex +
-                '" data-dt-column="' +
-                col.columnIndex +
-                '">' +
-                '<td>' +
-                col.title +
-                ':' +
-                '</td> ' +
-                '<td>' +
-                col.data +
-                '</td>' +
-                '</tr>'
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
                 : '';
             }).join('');
 
@@ -254,22 +288,21 @@ $(function () {
         dropdownParent: $this.parent(),
         language: {
           noResults: function () {
-            return "No se encontraron registros";
+            return 'No se encontraron registros';
           }
         }
       });
     });
   }
 
-
   initializeSelect2(select2Elements);
 
   $(document).ready(function () {
-    flatpickr(".flatpickr", {
-      dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
-      enableTime: false,   // Desactiva la  hora
-      allowInput: true,    // Permite al usuario escribir la fecha manualmente
-      locale: "es",        // idioma a español
+    flatpickr('.flatpickr', {
+      dateFormat: 'Y-m-d', // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
+      enableTime: false, // Desactiva la  hora
+      allowInput: true, // Permite al usuario escribir la fecha manualmente
+      locale: 'es' // idioma a español
     });
   });
 
@@ -280,15 +313,15 @@ $(function () {
     $('#modalEditDoc').modal('show');
 
     // Mostrar loader
-    $("#cargando").show();
-    $("#historialContent").html('');
+    $('#cargando').show();
+    $('#historialContent').html('');
 
     // Llamada AJAX
     $.ajax({
       url: `/documentos-lista-maestra/${idDoc}/historial`,
       type: 'GET',
       success: function (response) {
-        $("#cargando").hide();
+        $('#cargando').hide();
 
         if (response.data.length === 0) {
           $('#historialContent').html('<p>No hay versiones registradas.</p>');
@@ -317,15 +350,17 @@ $(function () {
           <tr>
             <td>${index + 1}</td>
             <td>
-              ${item.archivo
-              ? `<i class="ri-file-pdf-2-fill text-danger ri-40px PDFDocFind cursor-pointer"
+              ${
+                item.archivo
+                  ? `<i class="ri-file-pdf-2-fill text-danger ri-40px PDFDocFind cursor-pointer"
                   data-bs-toggle="modal"
                   data-bs-target="#mostrarPdf"
                   data-nombre="${item.nombre}"
                   data-url="/storage/${item.archivo}">
                 </i>
                 `
-              : `<i class="ri-file-pdf-2-fill ri-24px icon-no-pdf"></i>`}
+                  : `<i class="ri-file-pdf-2-fill ri-24px icon-no-pdf"></i>`
+              }
             </td>
             <td>${item.identificacion}</td>
             <td>${item.nombre}</td>
@@ -344,7 +379,7 @@ $(function () {
         $('#historialContent').html(html);
       },
       error: function () {
-        $("#cargando").hide();
+        $('#cargando').hide();
         $('#historialContent').html('<p class="text-danger">No se pudo cargar el historial.</p>');
       }
     });
@@ -364,9 +399,9 @@ $(function () {
     //Cargar el PDF con el ID
     iframe.attr('src', pdfUrl);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', pdfUrl).show();
-    $("#titulo_modal").text(registro);
-    $("#subtitulo_modal").empty();
+    $('#NewPestana').attr('href', pdfUrl).show();
+    $('#titulo_modal').text(registro);
+    $('#subtitulo_modal').empty();
 
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
@@ -481,7 +516,7 @@ $(function () {
     }).on('core.form.valid', function () {
       // Enviar datos por Ajax si el formulario es válido
       var formData = new FormData(form);
-      $('#btnRegistrarDoc').addClass('d-none')
+      $('#btnRegistrarDoc').addClass('d-none');
       $('#loadingDoc').removeClass('d-none');
 
       $.ajax({
@@ -602,7 +637,6 @@ $(function () {
     });
   });
 
-
   //editar un campo de la tabla
   $(document).ready(function () {
     // Abrir el modal y cargar datos para editar
@@ -623,9 +657,9 @@ $(function () {
         // archivo (si ya existe)
 
         if (data.archivo) {
-          $("#edit_archivo").removeAttr("required"); // no forzar cargar de nuevo
-          $("#edit_archivo").next('small').remove();
-          $("#edit_archivo").after(
+          $('#edit_archivo').removeAttr('required'); // no forzar cargar de nuevo
+          $('#edit_archivo').next('small').remove();
+          $('#edit_archivo').after(
             `<small class="text-muted">Archivo actual: <a href="/storage/${data.archivo}" target="_blank">Ver PDF</a></small>`
           );
         }
@@ -801,12 +835,8 @@ $(function () {
       $('#edit_reviso, #edit_aprobo').on('change', function () {
         fv.revalidateField($(this).attr('name'));
       });
-
     });
   });
-
-
-
 
   //editar un campo de la tabla
   $(document).ready(function () {
@@ -827,17 +857,16 @@ $(function () {
 
         // archivo (si ya existe)
         if (data.archivo) {
-          $("#edit_edit_archivo").removeAttr("required"); // no forzar cargar de nuevo
+          $('#edit_edit_archivo').removeAttr('required'); // no forzar cargar de nuevo
 
           // Eliminar aviso previo si existe
-          $("#edit_edit_archivo").next('small').remove();
+          $('#edit_edit_archivo').next('small').remove();
 
           // Agregar nuevo aviso
-          $("#edit_edit_archivo").after(
+          $('#edit_edit_archivo').after(
             `<small class="text-muted">Archivo actual: <a href="/storage/${data.archivo}" target="_blank">Ver PDF</a></small>`
           );
         }
-
 
         $('#edit_edit_modifico').val(data.modifico);
         $('#edit_edit_reviso').val(data.reviso).trigger('change');
@@ -922,9 +951,9 @@ $(function () {
                 message: 'Por favor seleccione un archivo.'
               },
               file: {
-                extension: 'pdf,doc,docx,xls,xlsx,png,jpg,jpeg',
+                extension: 'pdf,doc,docx,xls,xlsx,pptx,png,jpg,jpeg',
                 type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/png,image/jpeg',
-                message: 'Solo se permiten archivos PDF, Word, Excel o imágenes.'
+                message: 'Solo se permiten archivos PDF, Word, Excel, PowerPoint o imágenes.'
               }
             }
           },
@@ -1000,7 +1029,6 @@ $(function () {
       $('#edit_edit_reviso, #edit_edit_aprobo').on('change', function () {
         fv.revalidateField($(this).attr('name'));
       });
-
     });
   });
 
@@ -1017,7 +1045,7 @@ $(function () {
 
     $('#area').on('change', function () {
       var selectedArea = $(this).val(); // 1 = OC, 2 = UI
-      var tipo = selectedArea == '1' ? 'OC' : (selectedArea == '2' ? 'UI' : '');
+      var tipo = selectedArea == '1' ? 'OC' : selectedArea == '2' ? 'UI' : '';
 
       // Limpiar opciones de usuarios pero conservar las dos primeras opciones
       $('#doc_reviso, #doc_aprobo').each(function () {
@@ -1037,8 +1065,6 @@ $(function () {
     });
   });
 
-
-
   $(document).ready(function () {
     // Guardamos todos los usuarios en un array desde los options originales
     var usuariosEdit = [];
@@ -1053,7 +1079,7 @@ $(function () {
 
     $('#edit_area').on('change', function () {
       var selectedArea = $(this).val(); // 1 = OC, 2 = UI
-      var tipo = selectedArea == '1' ? 'OC' : (selectedArea == '2' ? 'UI' : '');
+      var tipo = selectedArea == '1' ? 'OC' : selectedArea == '2' ? 'UI' : '';
 
       // Limpiar opciones pero conservar las dos primeras
       $('#edit_reviso, #edit_aprobo').each(function () {
@@ -1073,7 +1099,6 @@ $(function () {
     });
   });
 
-
   $(document).ready(function () {
     // Guardamos todos los usuarios en un array desde los options originales
     var usuariosEditHist = [];
@@ -1088,7 +1113,7 @@ $(function () {
 
     $('#edit_edit_area').on('change', function () {
       var selectedArea = $(this).val(); // 1 = OC, 2 = UI
-      var tipo = selectedArea == '1' ? 'OC' : (selectedArea == '2' ? 'UI' : '');
+      var tipo = selectedArea == '1' ? 'OC' : selectedArea == '2' ? 'UI' : '';
 
       // Limpiar opciones pero conservar las dos primeras
       $('#edit_edit_reviso, #edit_edit_aprobo').each(function () {
@@ -1107,6 +1132,4 @@ $(function () {
       $('#edit_edit_reviso, #edit_edit_aprobo').val('').trigger('change');
     });
   });
-
-
 });

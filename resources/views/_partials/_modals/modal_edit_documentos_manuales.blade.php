@@ -112,12 +112,21 @@
 
 
                                    <!-- Archivo -->
-                                   <div class="col-md-12">
+                                   <div class="col-md-6">
                                        <div class="form-floating form-floating-outline">
 
                                            <input class="form-control" type="file" id="edit_archivo" name="archivo"
                                                required>
                                            <label for="doc_archivo">Archivo</label>
+                                       </div>
+                                   </div>
+
+                                   <div class="col-md-6">
+                                       <div class="form-floating form-floating-outline">
+
+                                           <input class="form-control" type="file" id="edit_archivo_editable" name="archivo_editable"
+                                               required>
+                                           <label for="edit_archivo_editable">Archivo editable</label>
                                        </div>
                                    </div>
 
@@ -274,12 +283,19 @@
 
 
                                    <!-- Archivo -->
-                                   <div class="col-md-12">
+                                   <div class="col-md-6">
                                        <div class="form-floating form-floating-outline">
 
                                            <input class="form-control" type="file" id="edit_edit_archivo" name="archivo"
                                                required>
                                            <label for="doc_archivo">Archivo</label>
+                                       </div>
+                                   </div>
+                                   <div class="col-md-6">
+                                       <div class="form-floating form-floating-outline">
+                                           <input class="form-control" type="file" id="edit_edit_archivo_editable" name="archivo_editable"
+                                               required>
+                                           <label for="edit_edit_archivo_editable">Archivo editable</label>
                                        </div>
                                    </div>
 

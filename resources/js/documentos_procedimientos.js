@@ -57,8 +57,9 @@ $(function () {
         { data: 'identificacion' }, // 4
         { data: 'nombre' }, // 5
         { data: 'estatus' }, // 6
-        { data: '' }, // 7
-        { data: 'action' } // 8
+        { data: 'edicion' }, // 7
+        { data: '' }, //8
+        { data: 'action' } // 9
       ],
 
       columnDefs: [
@@ -233,10 +234,16 @@ $(function () {
             return `<span class="${colorClass}">${full.estatus}</span>`;
           }
         },
+          {
+          targets: 7,
+          render: function (data, type, full, meta) {
+           return `<span>${full.edicion}</span>`;
+          }
+        },
         {
           searchable: false,
           orderable: false,
-          targets: 7,
+          targets: 8,
           render: function (data, type, full, meta) {
             return `
               <button class="btn btn-sm btn-warning ver-versiones" data-id="${full.id_doc_calidad}" type="button">
@@ -247,7 +254,7 @@ $(function () {
         },
         {
           // Actions botones de eliminar y actualizar(editar)
-          targets: 8,
+          targets: 9,
           title: 'Acciones',
           searchable: false,
           orderable: false,

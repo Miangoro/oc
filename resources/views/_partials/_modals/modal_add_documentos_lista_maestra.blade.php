@@ -57,7 +57,7 @@
                                        <div class="form-floating form-floating-outline">
                                            <input type="text" class="form-control flatpickr" id="doc_fecha"
                                                name="fecha_edicion" placeholder="aaaa-mm-dd">
-                                           <label for="doc_fecha">Fecha de edición</label>
+                                           <label for="doc_fecha">Fecha de actualización</label>
                                        </div>
                                    </div>
 

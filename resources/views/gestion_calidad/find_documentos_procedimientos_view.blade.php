@@ -49,6 +49,7 @@
                         <th>Identificación</th>
                         <th>Nombre del documento</th>
                         <th>Estatus</th>
+                        <th>No. edición (vigente)</th>
                         <th>Versiones</th>
                         <th>Acciones</th>
                     </tr>

@@ -76,12 +76,20 @@
 
 
                                    <!-- Archivo -->
-                                   <div class="col-md-12">
+                                   <div class="col-md-6">
                                        <div class="form-floating form-floating-outline">
 
                                            <input class="form-control" type="file" id="doc_archivo" name="archivo"
                                                required>
                                            <label for="doc_archivo">Archivo</label>
+                                       </div>
+                                   </div>
+                                   <div class="col-md-6">
+                                       <div class="form-floating form-floating-outline">
+
+                                           <input class="form-control" type="file" id="doc_archivo_editable" name="archivo_editable"
+                                               >
+                                           <label for="doc_archivo_editable">Archivo editable</label>
                                        </div>
                                    </div>
 

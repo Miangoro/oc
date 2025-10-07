@@ -28,7 +28,7 @@ class DocumentosProcedimientosController extends Controller
             3 => 'identificacion',
             4 => 'nombre',
             5 => 'estatus',
-            /*  */
+            6 => 'edicion',
             7 => 'area',
             8 => 'modifico',
             9 => 'reviso',
@@ -87,6 +87,7 @@ class DocumentosProcedimientosController extends Controller
                 $nestedData['estatus'] = $user->estatus;
                 $nestedData['archivo'] = $user->archivo;
                 $nestedData['archivo_editable'] = $user->archivo_editable;
+                $nestedData['edicion'] = $user->edicion;
                 $versiones = documentos_calidad_historial::where('id_doc_calidad', $user->id_doc_calidad)->count();
                 $nestedData['versiones'] = $versiones;
                 $data[] = $nestedData;
@@ -142,8 +143,9 @@ public function destroy($id)
           'modifico'       => 'required|string|max:255',
           'reviso'         => 'required|integer',
           'aprobo'         => 'required|integer',
-          'archivo' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:12288',
-          'archivo_editable' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:12288',
+          'archivo' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,png,jpg,jpeg|max:12288',
+          'archivo_editable' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,png,jpg,jpeg|max:12288',
+
 
       ]);
 
@@ -240,8 +242,9 @@ public function historial($id)
           'modifico'       => 'required|string|max:255',
           'reviso'         => 'required|integer',
           'aprobo'         => 'required|integer',
-          'archivo'        => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:5120',
-          'archivo_editable' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:12288',
+          'archivo' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,png,jpg,jpeg|max:12288',
+          'archivo_editable' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,png,jpg,jpeg|max:12288',
+
       ]);
 
       try {
@@ -326,8 +329,9 @@ public function historial($id)
           'modifico' => 'required|string|max:255',
           'reviso' => 'required|integer',
           'aprobo' => 'required|integer',
-          'archivo' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:5120',
-          'archivo_editable' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:12288',
+          'archivo' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,png,jpg,jpeg|max:12288',
+          'archivo_editable' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,png,jpg,jpeg|max:12288',
+
       ]);
 
       try {

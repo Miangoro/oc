@@ -40,6 +40,7 @@
                         <th></th>
                         <th>ID</th>
                         <th>Archivo</th>
+                        <th>Archivo editable</th>
                         <th>Identificación</th>
                         <th>Nombre del documento</th>
                         <th>Estatus</th>

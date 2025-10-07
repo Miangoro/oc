@@ -53,11 +53,12 @@ $(function () {
         { data: '' }, //0
         { data: 'id_doc_calidad' }, // 1
         { data: 'archivo' }, // 2
-        { data: 'identificacion' }, // 3
-        { data: 'nombre' }, // 4
-        { data: 'estatus' }, // 5
-        { data: '' }, // 6
-        { data: 'action' } // 7
+        { data: 'archivo_editable' }, //3
+        { data: 'identificacion' }, // 4
+        { data: 'nombre' }, // 5
+        { data: 'estatus' }, // 6
+        { data: '' }, // 7
+        { data: 'action' } // 8
       ],
 
       columnDefs: [
@@ -85,35 +86,135 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             var archivo = full['archivo']; // ruta del archivo en DB
+
             if (archivo && archivo !== '') {
+              // Obtener extensión del archivo
+              var extension = archivo.split('.').pop().toLowerCase();
+              var iconoClase = '';
+              var iconoTipo = '';
+
+              // Asignar ícono y color según el tipo de archivo
+              switch (extension) {
+                case 'pdf':
+                  iconoClase = 'ri-file-pdf-2-fill text-danger';
+                  break;
+                case 'xls':
+                case 'xlsx':
+                  iconoClase = 'ri-file-excel-2-fill text-success';
+                  break;
+                case 'doc':
+                case 'docx':
+                  iconoClase = 'ri-file-word-2-fill text-primarycolor'; // estilo personalizado para Word
+                  break;
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                case 'gif':
+                  iconoClase = 'ri-image-2-fill text-info';
+                  break;
+                case 'ppt':
+                case 'pptx':
+                  iconoClase = 'ri-file-ppt-2-fill text-danger';
+                  break;
+
+                default:
+                  iconoClase = 'ri-file-fill text-muted';
+                  break;
+              }
+
+              // Renderizar el ícono dinámicamente
               return `
-                <i class="ri-file-pdf-2-fill text-danger ri-40px PDFDocFind cursor-pointer"
-                  data-bs-target="#mostrarPdf" data-bs-toggle="modal"
-                  data-bs-dismiss="modal"
-                  data-nombre="${full['nombre']}"
-                  data-url="/storage/${archivo}"
-                  data-id="${full['id_doc_calidad']}"
-                  data-archivo="${archivo}"></i>
-              `;
+        <i class="${iconoClase} ri-40px cursor-pointer PDFDocFind"
+          data-bs-target="#mostrarPdf"
+          data-bs-toggle="modal"
+          data-bs-dismiss="modal"
+          data-nombre="${full['nombre']}"
+          data-url="/storage/${archivo}"
+          data-id="${full['id_doc_calidad']}"
+          data-archivo="${archivo}">
+        </i>
+      `;
             } else {
-              return '<i class="ri-file-pdf-2-fill ri-32px icon-no-pdf text-muted"></i>'; // Ícono gris deshabilitado
+              // Si no hay archivo, mostrar ícono gris
+              return '<i class="ri-file-fill ri-32px icon-no-pdf text-muted"></i>';
             }
           }
         },
         {
           targets: 3,
+          className: 'text-center',
+          searchable: false,
+          orderable: false,
           render: function (data, type, full, meta) {
-            return `<span>${full.identificacion}</span>`;
+            var archivo_editable = full['archivo_editable']; // ruta del archivo en DB
+
+            if (archivo_editable && archivo_editable !== '') {
+              // Obtener extensión del archivo
+              var extension = archivo_editable.split('.').pop().toLowerCase();
+              var iconoClase = '';
+              var iconoTipo = '';
+
+              // Asignar ícono y color según el tipo de archivo
+              switch (extension) {
+                case 'pdf':
+                  iconoClase = 'ri-file-pdf-2-fill text-danger';
+                  break;
+                case 'xls':
+                case 'xlsx':
+                  iconoClase = 'ri-file-excel-2-fill text-success';
+                  break;
+                case 'doc':
+                case 'docx':
+                  iconoClase = 'ri-file-word-2-fill text-primarycolor'; // estilo personalizado para Word
+                  break;
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                case 'gif':
+                  iconoClase = 'ri-image-2-fill text-info';
+                  break;
+                case 'ppt':
+                case 'pptx':
+                  iconoClase = 'ri-file-ppt-2-fill text-danger';
+                  break;
+
+                default:
+                  iconoClase = 'ri-file-fill text-muted';
+                  break;
+              }
+
+              // Renderizar el ícono dinámicamente
+              return `
+        <i class="${iconoClase} ri-40px cursor-pointer PDFDocFind"
+          data-bs-target="#mostrarPdf"
+          data-bs-toggle="modal"
+          data-bs-dismiss="modal"
+          data-nombre="${full['nombre']}"
+          data-url="/storage/${archivo_editable}"
+          data-id="${full['id_doc_calidad']}"
+          data-archivo="${archivo_editable}">
+        </i>
+      `;
+            } else {
+              // Si no hay archivo, mostrar ícono gris
+              return '<i class="ri-file-fill ri-32px icon-no-pdf text-muted"></i>';
+            }
           }
         },
         {
           targets: 4,
           render: function (data, type, full, meta) {
-            return `<span>${full.nombre}</span>`;
+            return `<span>${full.identificacion}</span>`;
           }
         },
         {
           targets: 5,
+          render: function (data, type, full, meta) {
+            return `<span>${full.nombre}</span>`;
+          }
+        },
+        {
+          targets: 6,
           render: function (data, type, full, meta) {
             let colorClass = '';
             switch ((full.estatus || '').toLowerCase()) {
@@ -135,15 +236,15 @@ $(function () {
         {
           searchable: false,
           orderable: false,
-          targets: 6,
+          targets: 7,
           render: function (data, type, full, meta) {
-           return `<span>${full.edicion}</span>`;
+            return `<span>${full.edicion}</span>`;
           }
         },
         {
           searchable: false,
           orderable: false,
-          targets: 7,
+          targets: 8,
           render: function (data, type, full, meta) {
             return `
               <button class="btn btn-sm btn-warning ver-versiones" data-id="${full.id_doc_calidad}" type="button">
@@ -154,7 +255,7 @@ $(function () {
         },
         {
           // Actions botones de eliminar y actualizar(editar)
-          targets: 8,
+          targets: 9,
           title: 'Acciones',
           searchable: false,
           orderable: false,
@@ -232,18 +333,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                col.rowIndex +
-                '" data-dt-column="' +
-                col.columnIndex +
-                '">' +
-                '<td>' +
-                col.title +
-                ':' +
-                '</td> ' +
-                '<td>' +
-                col.data +
-                '</td>' +
-                '</tr>'
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
                 : '';
             }).join('');
 
@@ -266,51 +367,45 @@ $(function () {
         dropdownParent: $this.parent(),
         language: {
           noResults: function () {
-            return "No se encontraron registros";
+            return 'No se encontraron registros';
           }
         }
       });
     });
   }
 
-
   initializeSelect2(select2Elements);
 
   $(document).ready(function () {
-    flatpickr(".flatpickr", {
-      dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
-      enableTime: false,   // Desactiva la  hora
-      allowInput: true,    // Permite al usuario escribir la fecha manualmente
-      locale: "es",        // idioma a español
+    flatpickr('.flatpickr', {
+      dateFormat: 'Y-m-d', // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
+      enableTime: false, // Desactiva la  hora
+      allowInput: true, // Permite al usuario escribir la fecha manualmente
+      locale: 'es' // idioma a español
     });
   });
+$('.datatables-users').on('click', '.ver-versiones', function () {
+  let idDoc = $(this).data('id');
 
-  $('.datatables-users').on('click', '.ver-versiones', function () {
-    let idDoc = $(this).data('id');
+  $('#modalEditDoc').modal('show');
+  $('#cargando').show();
+  $('#historialContent').html('');
 
-    // Abrir modal
-    $('#modalEditDoc').modal('show');
+  $.ajax({
+    url: `/documentos-manuales/${idDoc}/historial`,
+    type: 'GET',
+    success: function (response) {
+      $('#cargando').hide();
 
-    // Mostrar loader
-    $("#cargando").show();
-    $("#historialContent").html('');
+      if (response.data.length === 0) {
+        $('#historialContent').html('<p>No hay versiones registradas.</p>');
+        return;
+      }
 
-    // Llamada AJAX
-    $.ajax({
-      url: `/documentos-manuales/${idDoc}/historial`,
-      type: 'GET',
-      success: function (response) {
-        $("#cargando").hide();
-
-        if (response.data.length === 0) {
-          $('#historialContent').html('<p>No hay versiones registradas.</p>');
-          return;
-        }
-
-        let html = `
+      let html = `
         <div class="table-responsive">
           <table class="table table-striped">
-            <thead >
+            <thead>
               <tr>
                 <th>ID</th>
                 <th>Archivo</th>
@@ -324,21 +419,58 @@ $(function () {
             <tbody>
       `;
 
-        response.data.forEach((item, index) => {
-          html += `
+      response.data.forEach((item, index) => {
+        // Detectar extensión
+        let ext = '';
+        if (item.archivo) {
+          ext = item.archivo.split('.').pop().toLowerCase();
+        }
+
+        // Determinar ícono según tipo
+        let icon = '<i class="ri-file-unknow-line text-muted ri-40px"></i>';
+        let iconColor = '';
+        let iconClass = '';
+
+        switch (ext) {
+          case 'pdf':
+            iconClass = 'ri-file-pdf-2-fill text-danger';
+            break;
+          case 'doc':
+          case 'docx':
+            iconClass = 'ri-file-word-2-fill text-primarycolor';
+            break;
+          case 'xls':
+          case 'xlsx':
+            iconClass = 'ri-file-excel-2-fill text-success';
+            break;
+          case 'ppt':
+          case 'pptx':
+            iconClass = 'ri-file-ppt-2-fill text-danger';
+            break;
+          case 'png':
+          case 'jpg':
+          case 'jpeg':
+            iconClass = 'ri-image-2-fill text-info';
+            break;
+          default:
+            iconClass = 'ri-file-2-fill text-muted';
+            break;
+        }
+
+        let archivoHtml = item.archivo
+          ? `
+            <i class="${iconClass} ri-40px cursor-pointer PDFDocFind"
+              data-bs-toggle="modal"
+              data-bs-target="#mostrarPdf"
+              data-nombre="${item.nombre}"
+              data-url="/storage/${item.archivo}">
+            </i>`
+          : '<i class="ri-file-2-fill ri-24px icon-no-pdf text-muted"></i>';
+
+        html += `
           <tr>
             <td>${index + 1}</td>
-            <td>
-              ${item.archivo
-              ? `<i class="ri-file-pdf-2-fill text-danger ri-40px PDFDocFind cursor-pointer"
-                  data-bs-toggle="modal"
-                  data-bs-target="#mostrarPdf"
-                  data-nombre="${item.nombre}"
-                  data-url="/storage/${item.archivo}">
-                </i>
-                `
-              : `<i class="ri-file-pdf-2-fill ri-24px icon-no-pdf"></i>`}
-            </td>
+            <td>${archivoHtml}</td>
             <td>${item.identificacion}</td>
             <td>${item.nombre}</td>
             <td>${item.estatus}</td>
@@ -350,17 +482,18 @@ $(function () {
             </td>
           </tr>
         `;
-        });
+      });
 
-        html += `</tbody></table></div>`;
-        $('#historialContent').html(html);
-      },
-      error: function () {
-        $("#cargando").hide();
-        $('#historialContent').html('<p class="text-danger">No se pudo cargar el historial.</p>');
-      }
-    });
+      html += `</tbody></table></div>`;
+      $('#historialContent').html(html);
+    },
+    error: function () {
+      $('#cargando').hide();
+      $('#historialContent').html('<p class="text-danger">No se pudo cargar el historial.</p>');
+    }
   });
+});
+
 
   //FORMATO PDF REGISTRO DE PREDIO
   $(document).on('click', '.PDFDocFind', function () {
@@ -376,9 +509,9 @@ $(function () {
     //Cargar el PDF con el ID
     iframe.attr('src', pdfUrl);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', pdfUrl).show();
-    $("#titulo_modal").text(registro);
-    $("#subtitulo_modal").empty();
+    $('#NewPestana').attr('href', pdfUrl).show();
+    $('#titulo_modal').text(registro);
+    $('#subtitulo_modal').empty();
 
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
@@ -452,9 +585,21 @@ $(function () {
               message: 'Por favor seleccione un archivo.'
             },
             file: {
-              extension: 'pdf,doc,docx,xls,xlsx,png,jpg,jpeg',
-              type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/png,image/jpeg',
-              message: 'Solo se permiten archivos PDF, Word, Excel o imágenes.'
+              extension: 'pdf,doc,docx,xls,xlsx,ppt,pptx,png,jpg,jpeg',
+              type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,image/png,image/jpeg',
+              message: 'Solo se permiten archivos PDF, Word, Excel, PowerPoint o imágenes.'
+            }
+          }
+        },
+        archivo_editable: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un archivo.'
+            },
+            file: {
+              extension: 'pdf,doc,docx,xls,xlsx,ppt,pptx,png,jpg,jpeg',
+              type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,image/png,image/jpeg',
+              message: 'Solo se permiten archivos PDF, Word, Excel, PowerPoint o imágenes.'
             }
           }
         },
@@ -493,7 +638,7 @@ $(function () {
     }).on('core.form.valid', function () {
       // Enviar datos por Ajax si el formulario es válido
       var formData = new FormData(form);
-      $('#btnRegistrarDoc').addClass('d-none')
+      $('#btnRegistrarDoc').addClass('d-none');
       $('#loadingDoc').removeClass('d-none');
 
       $.ajax({
@@ -615,7 +760,6 @@ $(function () {
     });
   });
 
-
   //editar un campo de la tabla
   $(document).ready(function () {
     // Abrir el modal y cargar datos para editar
@@ -636,10 +780,17 @@ $(function () {
         // archivo (si ya existe)
 
         if (data.archivo) {
-          $("#edit_archivo").removeAttr("required"); // no forzar cargar de nuevo
-          $("#edit_archivo").next('small').remove();
-          $("#edit_archivo").after(
-            `<small class="text-muted">Archivo actual: <a href="/storage/${data.archivo}" target="_blank">Ver PDF</a></small>`
+          $('#edit_archivo').removeAttr('required'); // no forzar cargar de nuevo
+          $('#edit_archivo').next('small').remove();
+          $('#edit_archivo').after(
+            `<small class="text-muted">Archivo actual: <a href="/storage/${data.archivo}" target="_blank">Ver archivo</a></small>`
+          );
+        }
+        if (data.archivo_editable) {
+          $('#edit_archivo_editable').removeAttr('required'); // no forzar cargar de nuevo
+          $('#edit_archivo_editable').next('small').remove();
+          $('#edit_archivo_editable').after(
+            `<small class="text-muted">Archivo actual: <a href="/storage/${data.archivo}" target="_blank">Ver archivo</a></small>`
           );
         }
 
@@ -726,9 +877,21 @@ $(function () {
                 message: 'Por favor seleccione un archivo.'
               },
               file: {
-                extension: 'pdf,doc,docx,xls,xlsx,png,jpg,jpeg',
-                type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/png,image/jpeg',
-                message: 'Solo se permiten archivos PDF, Word, Excel o imágenes.'
+                extension: 'pdf,doc,docx,xls,xlsx,ppt,pptx,png,jpg,jpeg',
+                type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,image/png,image/jpeg',
+                message: 'Solo se permiten archivos PDF, Word, Excel, PowerPoint o imágenes.'
+              }
+            }
+          },
+          archivo_editable: {
+            validators: {
+              notEmpty: {
+                message: 'Por favor seleccione un archivo.'
+              },
+              file: {
+                extension: 'pdf,doc,docx,xls,xlsx,ppt,pptx,png,jpg,jpeg',
+                type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,image/png,image/jpeg',
+                message: 'Solo se permiten archivos PDF, Word, Excel, PowerPoint o imágenes.'
               }
             }
           },
@@ -814,12 +977,8 @@ $(function () {
       $('#edit_reviso, #edit_aprobo').on('change', function () {
         fv.revalidateField($(this).attr('name'));
       });
-
     });
   });
-
-
-
 
   //editar un campo de la tabla
   $(document).ready(function () {
@@ -840,17 +999,29 @@ $(function () {
 
         // archivo (si ya existe)
         if (data.archivo) {
-          $("#edit_edit_archivo").removeAttr("required"); // no forzar cargar de nuevo
+          $('#edit_edit_archivo').removeAttr('required'); // no forzar cargar de nuevo
 
           // Eliminar aviso previo si existe
-          $("#edit_edit_archivo").next('small').remove();
+          $('#edit_edit_archivo').next('small').remove();
 
           // Agregar nuevo aviso
-          $("#edit_edit_archivo").after(
-            `<small class="text-muted">Archivo actual: <a href="/storage/${data.archivo}" target="_blank">Ver PDF</a></small>`
+          $('#edit_edit_archivo').after(
+            `<small class="text-muted">Archivo actual: <a href="/storage/${data.archivo}" target="_blank">Ver archivo</a></small>`
           );
         }
 
+                // archivo (si ya existe)
+        if (data.archivo_editable) {
+          $('#edit_edit_archivo_editable').removeAttr('required'); // no forzar cargar de nuevo
+
+          // Eliminar aviso previo si existe
+          $('#edit_edit_archivo_editable').next('small').remove();
+
+          // Agregar nuevo aviso
+          $('#edit_edit_archivo_editable').after(
+            `<small class="text-muted">Archivo actual: <a href="/storage/${data.archivo_editable}" target="_blank">Ver archivo</a></small>`
+          );
+        }
 
         $('#edit_edit_modifico').val(data.modifico);
         $('#edit_edit_reviso').val(data.reviso).trigger('change');
@@ -935,12 +1106,25 @@ $(function () {
                 message: 'Por favor seleccione un archivo.'
               },
               file: {
-                extension: 'pdf,doc,docx,xls,xlsx,png,jpg,jpeg',
-                type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/png,image/jpeg',
-                message: 'Solo se permiten archivos PDF, Word, Excel o imágenes.'
+                extension: 'pdf,doc,docx,xls,xlsx,ppt,pptx,png,jpg,jpeg',
+                type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,image/png,image/jpeg',
+                message: 'Solo se permiten archivos PDF, Word, Excel, PowerPoint o imágenes.'
               }
             }
           },
+          archivo_editable: {
+            validators: {
+              notEmpty: {
+                message: 'Por favor seleccione un archivo.'
+              },
+              file: {
+                extension: 'pdf,doc,docx,xls,xlsx,ppt,pptx,png,jpg,jpeg',
+                type: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,image/png,image/jpeg',
+                message: 'Solo se permiten archivos PDF, Word, Excel, PowerPoint o imágenes.'
+              }
+            }
+          },
+
           modifico: {
             validators: {
               notEmpty: {
@@ -1013,7 +1197,6 @@ $(function () {
       $('#edit_edit_reviso, #edit_edit_aprobo').on('change', function () {
         fv.revalidateField($(this).attr('name'));
       });
-
     });
   });
 
@@ -1030,7 +1213,7 @@ $(function () {
 
     $('#area').on('change', function () {
       var selectedArea = $(this).val(); // 1 = OC, 2 = UI
-      var tipo = selectedArea == '1' ? 'OC' : (selectedArea == '2' ? 'UI' : '');
+      var tipo = selectedArea == '1' ? 'OC' : selectedArea == '2' ? 'UI' : '';
 
       // Limpiar opciones de usuarios pero conservar las dos primeras opciones
       $('#doc_reviso, #doc_aprobo').each(function () {
@@ -1050,8 +1233,6 @@ $(function () {
     });
   });
 
-
-
   $(document).ready(function () {
     // Guardamos todos los usuarios en un array desde los options originales
     var usuariosEdit = [];
@@ -1066,7 +1247,7 @@ $(function () {
 
     $('#edit_area').on('change', function () {
       var selectedArea = $(this).val(); // 1 = OC, 2 = UI
-      var tipo = selectedArea == '1' ? 'OC' : (selectedArea == '2' ? 'UI' : '');
+      var tipo = selectedArea == '1' ? 'OC' : selectedArea == '2' ? 'UI' : '';
 
       // Limpiar opciones pero conservar las dos primeras
       $('#edit_reviso, #edit_aprobo').each(function () {
@@ -1086,7 +1267,6 @@ $(function () {
     });
   });
 
-
   $(document).ready(function () {
     // Guardamos todos los usuarios en un array desde los options originales
     var usuariosEditHist = [];
@@ -1101,7 +1281,7 @@ $(function () {
 
     $('#edit_edit_area').on('change', function () {
       var selectedArea = $(this).val(); // 1 = OC, 2 = UI
-      var tipo = selectedArea == '1' ? 'OC' : (selectedArea == '2' ? 'UI' : '');
+      var tipo = selectedArea == '1' ? 'OC' : selectedArea == '2' ? 'UI' : '';
 
       // Limpiar opciones pero conservar las dos primeras
       $('#edit_edit_reviso, #edit_edit_aprobo').each(function () {
@@ -1120,6 +1300,4 @@ $(function () {
       $('#edit_edit_reviso, #edit_edit_aprobo').val('').trigger('change');
     });
   });
-
-
 });
