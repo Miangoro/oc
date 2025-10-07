@@ -1460,7 +1460,6 @@ async function obtenerDestinoEmpresaEdit(selectedDestino = null) {
 ///VER TRAZABILIDAD
 $(document).on('click', '.trazabilidad', function () {
   var id_lote = $(this).data('id');
-  var tipo = $(this).data('tipo');
   $('.folio').text($(this).data('folio'));
   var url = '/trazabilidad/lotes-envasado/' + id_lote;
 

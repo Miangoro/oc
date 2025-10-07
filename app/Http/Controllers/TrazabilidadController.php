@@ -717,25 +717,15 @@ $folioStyle = "style='background:#3A8DFF; color:white; padding:2px 4px; border-r
 }
 
 
-
-
-
-
-
-
-
-
 /// EXTRAER LOTES ENVASADO
 private function extraerLotesEnvasado($solicitud)
 {
-    if (in_array($solicitud->id_tipo, [5, 8])) {
-        // Retorna un array con un solo ID si existe
+    if (in_array($solicitud->id_tipo, [5, 8])) {// Retorna un array con un solo ID si existe
         $lote = $solicitud->lote_envasado; 
         return $lote ? [$lote->id_lote_envasado] : [];
     }
 
-    if ($solicitud->id_tipo === 11) {
-        // Retorna múltiples IDs desde JSON
+    if ($solicitud->id_tipo === 11) {// Retorna múltiples IDs desde JSON
         return $solicitud->lotesEnvasadoDesdeJson()->pluck('id_lote_envasado')->toArray();
     }
 
