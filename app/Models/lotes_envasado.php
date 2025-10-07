@@ -78,6 +78,10 @@ class lotes_envasado extends Model
     return $this->belongsTo(etiquetas::class, 'id_etiqueta', 'id_etiqueta');
   }
 
+  public function registro()
+{
+    return $this->belongsTo(User::class, 'id_usuario_registro','id');
+}
 
 
 

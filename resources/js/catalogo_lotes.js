@@ -1791,46 +1791,23 @@ async function obtenerDestinoEmpresa() {
 
 ///VER TRAZABILIDAD
 $(document).on('click', '.trazabilidad', function () {
-    var id_lote = $(this).data('id');
-    var tipo = $(this).data('tipo');
-    $('.folio').text($(this).data('folio'));
-    var url = '/trazabilidad/lotes/' + tipo + '/' + id_lote;
+  var id_lote = $(this).data('id');
+  var tipo = $(this).data('tipo');
+  $('.folio').text($(this).data('folio'));
+  var url = '/trazabilidad/lotes/' + tipo + '/' + id_lote;
 
     $.get(url, function (data) {
-      if (data.success) {
-        var logs = data.logs;
-        var contenedor = $('#ListTracking');
-        contenedor.empty();
+        var contenedor = $('#ListTracking').empty();
 
-        logs.forEach(function (log) {
-          // Usamos log.border si existe, sino default border-primary
-          let colorBase = log.colorBase ?? 'secondary'; // definido en PHP
-          let tipo = log.tipo ?? 'desconocido'; // 'solicitud', 'inspeccion', 'dictamen'
-
-          let borderClass = 'border-' + colorBase;
-          if(tipo === 'lote') borderClass += ' border-3';
-          if(tipo === 'solicitud') borderClass += ' border-3';
-          if(tipo === 'inspeccion') borderClass += ' border-1';
-          if(tipo === 'dictamen') borderClass += ' border-2';
-          if(tipo === 'certificado') borderClass += ' border-2';
-
-          let icon = 'ri-box-line'; // default
-          if(tipo === 'lote') icon = 'ri-file-text-line';
-          if(tipo === 'solicitud') icon = 'ri-file-text-line';
-          if(tipo === 'inspeccion') icon = 'ri-search-eye-line';
-          if(tipo === 'dictamen') icon = 'ri-file-paper-2-line';
-          if(tipo === 'certificado') icon = 'ri-award-line'; 
-          
-          //<span class="position-absolute start-0 translate-middle p-2 bg-primary rounded-circle"></span>
-          //<div class="card border border-primary p-3 ms-2">
-          //<i class="ri-file-text-line me-1"></i>${log.titulo} 
+        data.logs.forEach(log => {
           contenedor.append(`
             <li class="timeline-item timeline-item-transparent mb-8">
-              <span class="position-absolute start-0 translate-middle p-2 bg-${colorBase} rounded-circle"></span>
-              <div class="card ${borderClass} p-3 ms-2">
+              <span class="position-absolute start-0 translate-middle p-2 bg-${log.colorBase}
+                rounded-circle"></span>
+              <div class="card ${log.borderClass} p-3 ms-2">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                   <h6 class="fw-bold mb-0">
-                    <i class="${icon}  me-1"></i>${log.titulo} 
+                    <i class="${log.icono} me-1"></i>${log.titulo}
                   </h6>
                   <small class="text-muted">${log.registro}</small>
                 </div>
@@ -1841,21 +1818,20 @@ $(document).on('click', '.trazabilidad', function () {
         });
 
         $('#ModalTracking').modal('show');
-      }
+      
     }).fail(function (xhr) {
-      console.error(xhr.responseText);
-      let error = xhr.responseJSON?.message;
+      //console.error(xhr.responseJSON);
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
         //text: 'Ocurrió un error.',
-        text: error,
+        text: xhr.responseJSON?.message || 'Ocurrió un error.',
         customClass: {
           confirmButton: 'btn btn-danger'
         }
       });
-    });
-    
+    }); 
+
 });
 
 

@@ -285,10 +285,10 @@ $(function () {
             let acciones = '';
 
             // Siempre visible
-            acciones += `
+            /*acciones += `
               <a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#modalTrazabilidad" href="javascript:;" class="dropdown-item">
                 <i class="ri-git-repository-line ri-20px text-warning"></i> Trazabilidad
-              </a>`;
+              </a>`;*/
 
             // Solo si puede editar
             if (puedeEditar) {
@@ -299,6 +299,11 @@ $(function () {
                 <a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit-reclasificacion">
                   <i class="ri-id-card-fill ri-20px text-success"></i> Reclasificación SKU
                 </a>`;
+            }
+
+            if (window.puedeVerTrazabilidad) {
+              acciones += `<a data-id="${full['id_lote_envasado']}" data-tipo="2" data-folio="${full['nombre']}" data-bs-toggle="modal" data-bs-target="#ModalTracking" class="dropdown-item waves-effect text-black trazabilidad">
+              <i class="ri-history-line text-secondary"></i> Trazabilidad</a>`;
             }
 
             // Solo si puede eliminar
@@ -1448,6 +1453,58 @@ async function obtenerDestinoEmpresaEdit(selectedDestino = null) {
       $('input[name="volumen_parcial[]"]').val(volumenTotal ? volumenTotal.toFixed(2) : '');
     });
   });
+
+
+
+
+///VER TRAZABILIDAD
+$(document).on('click', '.trazabilidad', function () {
+  var id_lote = $(this).data('id');
+  var tipo = $(this).data('tipo');
+  $('.folio').text($(this).data('folio'));
+  var url = '/trazabilidad/lotes/' + tipo + '/' + id_lote;
+
+    $.get(url, function (data) {
+        var contenedor = $('#ListTracking').empty();
+
+        data.logs.forEach(log => {
+          contenedor.append(`
+            <li class="timeline-item timeline-item-transparent mb-8">
+              <span class="position-absolute start-0 translate-middle p-2 bg-${log.colorBase}
+                rounded-circle"></span>
+              <div class="card ${log.borderClass} p-3 ms-2">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h6 class="fw-bold mb-0">
+                    <i class="${log.icono} me-1"></i>${log.titulo}
+                  </h6>
+                  <small class="text-muted">${log.registro}</small>
+                </div>
+                <p class="mb-1">${log.contenido}</p>
+              </div>
+            </li>
+          `);
+        });
+
+        $('#ModalTracking').modal('show');
+      
+    }).fail(function (xhr) {
+      //console.error(xhr.responseJSON);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        //text: 'Ocurrió un error.',
+        text: xhr.responseJSON?.message || 'Ocurrió un error.',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }); 
+
+});
+
+
+
+
 
 
 });

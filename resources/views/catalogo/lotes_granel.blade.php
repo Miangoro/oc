@@ -81,7 +81,7 @@
           </button>
 
           <div class="text-center mb-4 pt-5">
-            <h4 class="address-title mb-2">Trazabilidad del lote </h4>
+            <h4 class="address-title mb-2">Trazabilidad del lote</h4>
             <p class="folio badge bg-primary"></p>
           </div>
 
@@ -116,9 +116,9 @@
 </div>
 
 
-    <!-- Modal -->
-    @include('_partials/_modals/modal-pdfs-frames')
-    @include('_partials/_modals/modal-add-lotes-granel')
-    @include('_partials/_modals/modal-edit-lotes-granel')
-    <!-- /Modal -->
+  <!-- Modal -->
+  @include('_partials/_modals/modal-pdfs-frames')
+  @include('_partials/_modals/modal-add-lotes-granel')
+  @include('_partials/_modals/modal-edit-lotes-granel')
+  <!-- /Modal -->
 @endsection
