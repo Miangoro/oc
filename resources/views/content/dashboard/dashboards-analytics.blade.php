@@ -378,7 +378,7 @@
         <div class="row g-6">
             @can('Estadísticas ui')
                 <div class="col-sm-6 col-lg-3">
-                    <div class="card card-border-shadow-primary h-100">
+                    <div class="card card-border-shadow-primary ">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-2" data-bs-toggle="modal"
                                 data-bs-target="#modalSolicitudesSinInspector">
@@ -432,7 +432,7 @@
 
             @can('Estadísticas ui')
                 <div class="col-sm-6 col-lg-3">
-                    <div class="card card-border-shadow-danger h-100">
+                    <div class="card card-border-shadow-danger">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-2">
                                 <div class="avatar me-4">
