@@ -333,26 +333,31 @@
         }
     }
 
-    function obtenerDatosGraneles() {
-        var lote_granel_id = $("#id_lote_granel").val();
-        if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
-            $.ajax({
-                url: '/getDatos2/' + lote_granel_id,
-                method: 'GET',
-                success: function(response) {
-                    // Setear valores para los campos individuales
-                    $('#volumen_inicial').val(response.lotes_granel.volumen_restante);
-                    $('#alcohol_inicial').val(response.lotes_granel.cont_alc);
-                },
-                error: function() {
-                    console.error('Error al obtener datos de graneles');
-                }
-            });
-        } else {
-            $('#volumen_inicial').val('');
-            $('#alcohol_inicial').val('');
-        }
+function obtenerDatosGraneles() {
+    var lote_granel_id = $("#id_lote_granel").val();
+    var tipo = 2; // o el valor que tengas definido en el formulario
+
+    if (lote_granel_id) {
+        $.ajax({
+            url: '/getVolumenLoteBitacora/' + lote_granel_id,
+            method: 'GET',
+            data: { tipo: tipo }, // 👈 aquí envías el tipo
+            success: function(response) {
+                $('#volumen_inicial').val(response.volumen_final ?? '');
+                $('#alcohol_inicial').val(response.alcohol_final ?? '');
+            },
+            error: function() {
+                console.error('Error al obtener datos del lote o bitácora');
+                $('#volumen_inicial').val('');
+                $('#alcohol_inicial').val('');
+            }
+        });
+    } else {
+        $('#volumen_inicial').val('');
+        $('#alcohol_inicial').val('');
     }
+}
+
 
 $('#id_instalacion').select2({
     placeholder: "Lista de instalaciones",

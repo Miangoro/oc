@@ -1,11 +1,13 @@
 <style>
-/* Solo aplica al select2 del #id_instalacion */
-#id_instalacion + .select2-container .select2-selection--single {
-    background-color: #fff3cd52 !important; /* fondo amarillo claro */
-    border-color: #ffc107 !important;       /* borde ámbar */
-    color: #856404 !important;              /* texto ámbar oscuro */
-}
-
+    /* Solo aplica al select2 del #id_instalacion */
+    #id_instalacion+.select2-container .select2-selection--single {
+        background-color: #fff3cd52 !important;
+        /* fondo amarillo claro */
+        border-color: #ffc107 !important;
+        /* borde ámbar */
+        color: #856404 !important;
+        /* texto ámbar oscuro */
+    }
 </style>
 <div class="modal fade" id="RegistrarBitacoraMezcal" tabindex="-1" aria-labelledby="registroInventarioModalLabel"
     aria-hidden="true">
@@ -305,7 +307,7 @@
                         contenidoI = '<option value="">Sin instalaciones registradas</option>';
                     }
 
-                   $('#id_instalacion').html(contenidoI).val("").trigger('change');
+                    $('#id_instalacion').html(contenidoI).val("").trigger('change');
                     obtenerDatosGraneles();
                 },
                 error: function() {}
@@ -324,17 +326,21 @@
 
     function obtenerDatosGraneles() {
         var lote_granel_id = $("#id_lote_granel").val();
-        if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
+        var tipo = 1; // o el valor que tengas definido en el formulario
+
+        if (lote_granel_id) {
             $.ajax({
-                url: '/getDatos2/' + lote_granel_id,
+                url: '/getVolumenLoteBitacora/' + lote_granel_id,
                 method: 'GET',
+                data: { tipo: tipo }, // 👈 aquí envías el tipo
                 success: function(response) {
-                    // Setear valores para los campos individuales
-                    $('#volumen_inicial').val(response.lotes_granel.volumen_restante);
-                    $('#alcohol_inicial').val(response.lotes_granel.cont_alc);
+                    $('#volumen_inicial').val(response.volumen_final ?? '');
+                    $('#alcohol_inicial').val(response.alcohol_final ?? '');
                 },
                 error: function() {
-                    console.error('Error al obtener datos de graneles');
+                    console.error('Error al obtener datos del lote o bitácora');
+                    $('#volumen_inicial').val('');
+                    $('#alcohol_inicial').val('');
                 }
             });
         } else {
@@ -343,27 +349,24 @@
         }
     }
 
-$('#id_instalacion').select2({
-    placeholder: "Lista de instalaciones",
-    allowClear: true,
-    width: '100%'
-}).on('change', function () {
-    let $selection = $(this).next('.select2-container').find('.select2-selection--single');
 
-    if ($(this).val()) {
-        // Si seleccionó una instalación → limpiar estilos
-        $selection.removeAttr("style");
-    } else {
-        // Si está vacío → poner estilos amarillos
-        $selection.css({
-            "background-color": "#fff3cd52",
-            "border-color": "#ffc107",
-            "color": "#856404"
-        });
-    }
-});
+    $('#id_instalacion').select2({
+        placeholder: "Lista de instalaciones",
+        allowClear: true,
+        width: '100%'
+    }).on('change', function() {
+        let $selection = $(this).next('.select2-container').find('.select2-selection--single');
 
-
-
-
+        if ($(this).val()) {
+            // Si seleccionó una instalación → limpiar estilos
+            $selection.removeAttr("style");
+        } else {
+            // Si está vacío → poner estilos amarillos
+            $selection.css({
+                "background-color": "#fff3cd52",
+                "border-color": "#ffc107",
+                "color": "#856404"
+            });
+        }
+    });
 </script>

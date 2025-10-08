@@ -95,7 +95,7 @@ class getFuncionesController extends Controller
     public function getDatos(empresa $empresa)
     {
         $userId = Auth::id();// ID usuario logueado
-        
+
         // Obtener las marcas de la empresa
         //$marcas = $empresa->marcas()->get();  // Llamamos a `get()` para obtener los datos reales
         $marcas = $empresa->todasLasMarcas()->get();
@@ -269,6 +269,56 @@ public function getDatosBitacora(empresa $empresa)
 
         return response()->json($formateados);
     }*/
+
+public function getVolumenLoteBitacora($id_lote_granel, Request $request)
+{
+    // Obtener tipo desde la request (1 = Productor, 2 = Envasador)
+    $tipo = $request->input('tipo');
+
+    // Definir qué valores de tipo incluir
+    $tiposValidos = [];
+    if ($tipo == 1) {
+        $tiposValidos = [1, 3];
+    } elseif ($tipo == 2) {
+        $tiposValidos = [2, 3];
+    }
+
+    // Buscar el último registro de bitácora filtrando por tipo
+    $ultimaBitacora = \App\Models\BitacoraMezcal::where('id_lote_granel', $id_lote_granel)
+        ->when(!empty($tiposValidos), function ($query) use ($tiposValidos) {
+            $query->whereIn('tipo', $tiposValidos);
+        })
+        ->orderByDesc('id') // el más reciente
+        ->first();
+
+    if ($ultimaBitacora) {
+        return response()->json([
+            'existe' => true,
+            'volumen_final' => $ultimaBitacora->volumen_final,
+            'alcohol_final' => $ultimaBitacora->alcohol_final,
+        ]);
+    } else {
+        // Si no hay bitácoras previas, intentar con el lote base
+        $lote = \App\Models\LotesGranel::find($id_lote_granel);
+
+        if ($lote) {
+            return response()->json([
+                'existe' => false,
+                'volumen_final' => $lote->volumen_restante,
+                'alcohol_final' => $lote->cont_alc,
+            ]);
+        } else {
+            return response()->json([
+                'existe' => false,
+                'volumen_final' => null,
+                'alcohol_final' => null,
+                'mensaje' => 'No se encontró el lote especificado.'
+            ]);
+        }
+    }
+}
+
+
 public function getDictamenesEnvasado($id_empresa)
 {
     if (!$id_empresa) {
