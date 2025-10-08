@@ -727,6 +727,8 @@ $folioStyle ="style='background:#3A8DFF;color:white;padding:2px 4px;border-radiu
 // Arreglo exclusivo para tabla de certificados
 $certificadosTabla = [];
 $certificadosAgregados = []; // Para evitar duplicados
+$totalBotellas = 0;
+$totalCajas = 0;
 
     // Primer log: registro del lote
     $logs = [[
@@ -859,9 +861,19 @@ $certificadosAgregados = []; // Para evitar duplicados
                     if (in_array($solicitud->id_tipo, [5, 8])) {
                         $caracteristicas = $car['cantidad_caja'] ?? $car['cantidad_botellas'] ?? 'N/A';
                     } elseif ($solicitud->id_tipo === 11 && !empty($car['detalles'])) {
-                        $detalles = collect($car['detalles'] ?? [])
+                        /*$detalles = collect($car['detalles'] ?? [])
                             ->filter(fn($d) => isset($d['id_lote_envasado']) && $d['id_lote_envasado'] == $lote->id_lote_envasado)
                             ->map(fn($d) => ($d['cantidad_botellas'] ?? 'N/A') . " botellas / " . ($d['cantidad_cajas'] ?? 'N/A') . " cajas")
+                            ->implode(' | ');*/
+                        $detalles = collect($car['detalles'] ?? [])
+                            ->filter(fn($d) => isset($d['id_lote_envasado']) && $d['id_lote_envasado'] == $lote->id_lote_envasado)
+                            ->map(function($d) use (&$totalBotellas, &$totalCajas) {
+                                $botellas = (int) ($d['cantidad_botellas'] ?? 0);
+                                $cajas = (int) ($d['cantidad_cajas'] ?? 0);
+                                $totalBotellas += $botellas;
+                                $totalCajas += $cajas;
+                                return "{$botellas} botellas / {$cajas} cajas";
+                            })
                             ->implode(' | ');
                         $caracteristicas = $detalles ?: 'N/A';
                     }
@@ -880,7 +892,11 @@ $certificadosAgregados = []; // Para evitar duplicados
     return response()->json([
         'success' => true,
         'logs' => $logs,
-        'certificados' => $certificadosTabla // solo para la tabla
+        'certificados' => $certificadosTabla,  // solo para la tabla
+        'totales' => [
+            'botellas' => $totalBotellas,
+            'cajas' => $totalCajas,
+        ]
     ]);
 }
 

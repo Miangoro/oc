@@ -1523,6 +1523,14 @@ $(document).on('click', '.trazabilidad', function () {
                           </tr>`;
               tbodyCertificados.append(fila);
           });
+
+          // Agregar fila de totales
+          tbodyCertificados.append(`
+              <tr class="fw-bold table-light">
+                  <td colspan="2" class="text-end">Total:</td>
+                  <td>${data.totales.botellas} botellas / ${data.totales.cajas} cajas</td>
+              </tr>
+          `);
       } else {
           tbodyCertificados.append(`<tr><td colspan="3" class="text-center">No hay certificados asociados</td></tr>`);
       }
