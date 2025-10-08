@@ -3,7 +3,20 @@
  */
 
 'use strict';
+// Declaras el arreglo de botones
+let buttons = [];
 
+// Si tiene permiso, agregas el botón
+if (puedeAgregarUsuario) {
+  buttons.push({
+    text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar cliente prospecto</span>',
+    className: 'add-new btn btn-primary waves-effect waves-light',
+    attr: {
+      'data-bs-toggle': 'modal',
+      'data-bs-target': '#AddClientesConfirmados'
+    }
+  });
+}
 // Datatable (jquery)
 $(function () {
   // Variable declaration for table
@@ -105,10 +118,11 @@ $(function () {
             } else {
               var $colorRegimen = 'warning';
             }
-            return `${$verified
-              ? '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-              : '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-              }`;
+            return `${
+              $verified
+                ? '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                : '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+            }`;
           }
         },
         {
@@ -173,6 +187,9 @@ $(function () {
               <a data-id="${full['id_empresa']}" data-regimen="${full['regimen']}"  data-bs-toggle="modal" data-bs-dismiss="modal" onclick="abrirModal(${full['id_empresa']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2">
                 <i class="text-success ri-checkbox-circle-fill"></i> Aceptar cliente
               </a>
+               <a data-id="${full['id_empresa']}" data-bs-toggle="modal" data-bs-target="#modalSubirDocumentacion" href="javascript:;" class="dropdown-item subir-docs">
+        <i class="text-primary ri-file-upload-fill"></i> Subir documentación
+      </a>
             `;
             // Acción condicional: Editar
             if (window.puedeEditarUsuario) {
@@ -221,8 +238,9 @@ $(function () {
         }
       },
       // Buttons with Dropdown
-      buttons: [
-        {
+      buttons: buttons /* [ */,
+
+      /*         {
           extend: 'collection',
           className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
           text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
@@ -366,8 +384,8 @@ $(function () {
               }
             }
           ]
-        }
-      ],
+        } */
+      /*  ], */
       // For responsive popup
       responsive: {
         details: {
@@ -382,18 +400,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                col.rowIndex +
-                '" data-dt-column="' +
-                col.columnIndex +
-                '">' +
-                '<td>' +
-                col.title +
-                ':' +
-                '</td> ' +
-                '<td>' +
-                col.data +
-                '</td>' +
-                '</tr>'
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
                 : '';
             }).join('');
 
@@ -779,7 +797,6 @@ $(function () {
         $('#btnSpinnerV').addClass('d-none');
         $('#btnAddV').removeClass('d-none');
       }
-
     });
   });
 
@@ -1034,4 +1051,221 @@ $(function () {
       });
     });
   }
+
+  //AGREGAR CLIENTES CONFIRMADOS
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation
+    const form = document.getElementById('ClientesConfirmadosForm');
+    const fv = FormValidation.formValidation(form, {
+      fields: {
+        razon_social: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el nombre del cliente/empresa'
+            }
+          }
+        },
+        regimen: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el régimen'
+            }
+          }
+        },
+        correo: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el correo electrónico'
+            }
+            /* emailAddress: {
+              message: 'Por favor ingrese un correo electrónico válido'
+            },
+            regexp: {
+              regexp: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              message: 'Por favor ingrese un correo electrónico en un formato válido'
+            }*/
+          }
+        },
+        domicilio_fiscal: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el domicilio fiscal'
+            }
+          }
+        },
+        telefono: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el número de teléfono'
+            },
+            stringLength: {
+              min: 10,
+              max: 15,
+              message: 'El teléfono debe tener entre 10 y 15 caracteres (incluidos espacios y otros caracteres)'
+            },
+            regexp: {
+              regexp: /^[0-9\s\-\(\)]+$/,
+              message: 'El teléfono debe contener solo números, espacios, guiones y paréntesis'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      }
+    });
+    // Escuchar el cambio en el campo #regimen
+    /*     $('#regimen').on('change', function () {
+      var tipoPersona = $(this).val();
+
+      if (tipoPersona === 'Persona moral') {
+        $('#MostrarRepresentante').removeClass('d-none');
+        $('#EstadosClass').removeClass('col-md-6').addClass('col-md-4');
+        fv.enableValidator('representante');
+      } else {
+        $('#MostrarRepresentante').addClass('d-none');
+        $('#EstadosClass').removeClass('col-md-4').addClass('col-md-6');
+        fv.disableValidator('representante');
+      }
+    }); */
+
+    fv.on('core.form.valid', function () {
+      var formData = new FormData(form);
+      $.ajax({
+        url: '/registrar-clientes-prospectos',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#AddClientesConfirmados').modal('hide');
+          $('#ClientesConfirmadosForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-users').DataTable().ajax.reload();
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+          $('#ClientesConfirmadosForm')[0].reset();
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar el cliente',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+
+    // Inicializar select2 y revalidar campos dinámicos
+    /*  $('#estado, #normas, #actividad').on('change', function () {
+      fv.revalidateField($(this).attr('name'));
+    }); */
+  });
+
+
+  $(function () {
+  // Configuración CSRF para Laravel
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
+  // --- SCRIPT PARA SUBIR DOCUMENTACIÓN ---
+
+  // 1. Capturar el ID del prospecto al abrir el modal
+  $(document).on('click', '.subir-docs', function () {
+    var prospectoId = $(this).data('id');
+    $('#prospecto_id_doc').val(prospectoId);
+  });
+
+
+  // 2. Manejar el clic del botón "Guardar Documentos"
+  $('#btnGuardarDocumentacion').on('click', function (e) {
+    e.preventDefault(); // Evitar el envío tradicional del formulario
+
+    var form = $('#formDocumentacionProspecto')[0];
+    var formData = new FormData(form);
+    var prospectoId = $('#prospecto_id_doc').val();
+    formData.append('prospecto_id', prospectoId); // Asegurarse que el ID vaya en la petición
+
+    // Mostrar un loader mientras se suben los archivos
+    Swal.fire({
+      title: 'Subiendo documentos...',
+      text: 'Por favor, espere.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    $.ajax({
+      url: '/registrar-documentos-prospecto/' + prospectoId, // URL para guardar los documentos
+      type: 'POST',
+      data: formData,
+      processData: false, // Necesario para FormData
+      contentType: false, // Necesario para FormData
+      success: function (response) {
+        $('#modalSubirDocumentacion').modal('hide');
+        $('#formDocumentacionProspecto')[0].reset();
+        $('.datatables-users').DataTable().ajax.reload();
+
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Documentos guardados correctamente.',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function (xhr) {
+        console.log('Error:', xhr.responseText);
+
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Ocurrió un error al subir los documentos.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  });
+
+  // Limpiar el formulario cuando el modal se cierra
+  $('#modalSubirDocumentacion').on('hidden.bs.modal', function () {
+    $('#formDocumentacionProspecto')[0].reset();
+    $('#prospecto_id_doc').val('');
+  });
+
+});
+
+
 });

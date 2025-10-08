@@ -581,9 +581,13 @@ Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserMana
 Route::resource('/empresas-list', clientesProspectoController::class)->middleware(['auth']);
 Route::get('/clientes-list/{id}/edit', [clientesProspectoController::class, 'edit'])->middleware(['auth']);
 Route::post('/clientes/{id}/update', [clientesProspectoController::class, 'update'])->name('clientes.update')->middleware(['auth']);
+Route::post('/registrar-clientes-prospectos', [clientesProspectoController::class, 'registrarClientes'])->name('clientes.registrarProspectos')->middleware(['auth']);
+Route::post('/registrar-documentos-prospecto/{id}', [clientesProspectoController::class, 'registrarDocumentos'])->name('clientes.registrarDocumentos')->middleware(['auth']);
 Route::get('/solicitudInfoClienteNOM-199/{id}', [clientesProspectoController::class, 'pdfNOM199'])->middleware(['auth']);
 
 Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente'])->middleware(['auth']);
+
+
 Route::get('/lista_empresas/{id}', [getFuncionesController::class, 'find_clientes_prospecto'])->middleware(['auth']);
 Route::get('/lista_inspetores', [getFuncionesController::class, 'usuariosInspectores'])->middleware(['auth']);
 Route::get('/datosComunes/{id_empresa}', [getFuncionesController::class, 'datosComunes'])->middleware(['auth']);
@@ -1011,7 +1015,7 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
 //------------------- SOLICITUDES 052 -------------------
 Route::middleware(['auth'])->controller(Solicitudes052Controller::class)->group(function () {
     Route::get('/solicitudes-052/tipos', 'getSolicitudesTipos')->name('modal.solicitud052.tipo');
-    
+
     Route::get('/solicitudes-historial-052', 'UserManagement')->name('solicitudes-historial-052');
     Route::resource('/solicitudes052-list', Solicitudes052Controller::class);
     //registrar solicitudes

@@ -336,6 +336,42 @@ public function info($id) {
 }
 
 
+public function registrarClientes(Request $request)
+{
+    $validated = $request->validate([
+        'regimen'             => 'required|string|max:100',
+        'razon_social'        => 'required|string|max:255',
+        'correo'              => 'nullable|email|max:255',
+        'telefono'            => 'nullable|string|max:20',
+        'representante_legal' => 'nullable|string|max:255',
+        'domicilio_fiscal'    => 'required|string|max:255',
+    ]);
+
+    try {
+        $empresa = new empresa();
+        $empresa->razon_social     = $validated['razon_social'];
+        $empresa->regimen          = $validated['regimen'];
+        $empresa->correo           = $validated['correo'] ?? null;
+        $empresa->telefono         = $validated['telefono'] ?? null;
+        $empresa->representante    = $validated['representante_legal'] ?? 'No aplica';
+        $empresa->domicilio_fiscal = $validated['domicilio_fiscal'];
+        $empresa->tipo             = 1; // 1 = Prospecto
+        $empresa->estatus          = 1; // opcional si tienes campo estatus
+        $empresa->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cliente prospecto registrado correctamente',
+            'data' => $empresa
+        ], 201);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al registrar el cliente prospecto',
+            'error'   => $e->getMessage()
+        ], 500);
+    }
+}
 
 
 

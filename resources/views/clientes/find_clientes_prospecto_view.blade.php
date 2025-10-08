@@ -168,7 +168,9 @@
     <!-- Modal -->
     @include('_partials/_modals/modal-pdfs-frames')
     @include('_partials/_modals/modal-add-aceptar-cliente')
+    @include('_partials/_modals/modal_add_clientes_prospectos')
     @include('_partials/_modals/modal-edit-cliente-prospecto')
+    @include('_partials._modals.modal_add_documentacion_clientes_prospectos')
     <!-- /Modal -->
 @endsection
 
