@@ -578,6 +578,7 @@ $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId
 ///REGISTRAR NUEVO LOTE
 public function store(Request $request)
 {
+  /* dd($request->all()); */
     /* dd($request->all(), $request->file('documentos')); */
     $validatedData = $request->validate([
         'id_empresa' => 'required|exists:empresa,id_empresa',
@@ -633,13 +634,22 @@ public function store(Request $request)
         $lote->id_instalacion = $validatedData['id_instalacion'];
         $lote->nombre_lote = $validatedData['nombre_lote'];
         $lote->tipo_lote = $validatedData['tipo_lote'];
-        $lote->volumen = $validatedData['volumen'];
         $lote->id_estado = $validatedData['id_estado'];
+
+        $lote->volumen = $validatedData['volumen_total']; //volumen_total
+        $lote->volumen_restante = $validatedData['volumen_total']; //volumen_total
+        $lote->volumen_sin_agua = $validatedData['volumen']; //volumen sin agua  = volumen
+        $lote->agua_entrada = $validatedData['agua_entrada'] ?? 0;
+
+        //logica antes
+        /* $lote->volumen = $validatedData['volumen'];
         $lote->volumen_restante = $validatedData['volumen'];
         $lote->volumen_con_agua = $validatedData['volumen_total'];
+        $lote->agua_entrada = $validatedData['agua_entrada'] ?? 0; */
+
         $lote->cont_alc = $validatedData['cont_alc'];
         $lote->id_categoria = $validatedData['id_categoria'];
-        $lote->agua_entrada = $validatedData['agua_entrada'] ?? 0;
+
         $lote->id_clase = $validatedData['id_clase'];
         $lote->id_tipo = json_encode($validatedData['id_tipo']);
 
@@ -1020,7 +1030,7 @@ public function update(Request $request, $id_lote_granel)
                 'volumen' => 'required|numeric',
                 'cont_alc' => 'required|numeric',
                 'agua_entrada' => 'nullable|numeric',
-                 'id_estado' => 'required|integer',
+                'id_estado' => 'required|integer',
                 'id_categoria' => 'required|integer|exists:catalogo_categorias,id_categoria',
                 'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
                 'id_tipo' => 'required|array', // Acepta un array de `id_tipo`
@@ -1028,6 +1038,7 @@ public function update(Request $request, $id_lote_granel)
                 'ingredientes' => 'nullable|string',
                 'edad' => 'nullable|string',
                 'volumen_restante' => 'nullable|numeric',
+                'volumen_total' => 'nullable|numeric',
                 'folio_certificado' => 'nullable|string',
                 'id_organismo' => 'nullable|integer|exists:catalogo_organismos,id_organismo',
                 'fecha_emision' => 'nullable|date',
@@ -1061,15 +1072,43 @@ public function update(Request $request, $id_lote_granel)
               'ingredientes' => $validated['ingredientes'],
               'edad' => $validated['edad'],
               'id_organismo' => $validated['id_organismo'] ?? null,
-              'volumen' => $validated['volumen'],
+              /* 'volumen' => $validated['volumen'], */
+                            // Aquí el volumen se asigna solo si llega el volumen_total
+              'volumen'   => $validated['volumen_total'] ?? $validated['volumen'],
+
               /* 'volumen_con_agua' => $validated['volumen_total'] ?? null, */
           ];
-          if (array_key_exists('volumen_restante', $validated)) {
+          /* if (array_key_exists('volumen_restante', $validated)) {
               $updateData['volumen_restante'] = $validated['volumen_restante'];
-          }
+
+          } *///si se envia siempre editara
+           if (array_key_exists('volumen_restante', $validated)) {
+              // Si se envía, actualiza con el valor recibido
+                $updateData['volumen_restante'] = $validated['volumen_restante'];
+            } else {
+                // Si no se envía, usa el volumen_total
+                $updateData['volumen_restante'] = $validated['volumen_total'];
+            }
+
           if (array_key_exists('volumen_total', $validated)) {
-              $updateData['volumen_con_agua'] = $validated['volumen_total'];
+              $updateData['volumen_sin_agua'] = $validated['volumen']; //volumen_total
           }
+
+
+
+
+
+// Siempre actualiza volumen_restante
+if (array_key_exists('volumen_restante', $validated)) {
+    $updateData['volumen_restante'] = $validated['volumen_restante'];
+}
+
+// Actualiza volumen_con_agua solo si se envía
+if ($request->filled('volumen_total')) {
+    $updateData['volumen_con_agua'] = $validated['volumen_total'];
+}
+
+
 
           // Solo agregamos estos campos si **no** vienen nulos (o están presentes con valor)
           if (!is_null($validated['folio_certificado'])) {

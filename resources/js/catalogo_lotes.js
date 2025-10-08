@@ -1098,11 +1098,11 @@ async function obtenerDestinoEmpresa() {
               return guia.id;
             });
             $('#edit_id_guia').val(guiasIds).trigger('change');
-            $('#edit_volumen').val(lote.volumen);
+            $('#edit_volumen').val(lote.volumen_sin_agua); //antes era volumen
             if (window.puedeVerElUsuario && $('#edit_volumen_restante').length > 0) {
-              $('#edit_volumen_restante').val(lote.volumen_restante);
+              $('#edit_volumen_restante').val(lote.volumen_sin_agua); //antes era volumen_restante
             }
-            $('#edit_volumen_total').val(lote.volumen_con_agua);
+            $('#edit_volumen_total').val(lote.volumen);
             $('#edit_cont_alc').val(lote.cont_alc);
             $('#edit_id_categoria').val(lote.id_categoria).trigger('change');
             $('#edit_clase_agave').val(lote.id_clase).trigger('change');
@@ -1817,7 +1817,7 @@ $(document).on('click', '.trazabilidad', function () {
         });
 
         $('#ModalTracking').modal('show');
-      
+
     }).fail(function (xhr) {
       //console.error(xhr.responseJSON);
       Swal.fire({
@@ -1829,7 +1829,7 @@ $(document).on('click', '.trazabilidad', function () {
           confirmButton: 'btn btn-danger'
         }
       });
-    }); 
+    });
 
 });
 
