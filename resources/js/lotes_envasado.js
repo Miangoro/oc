@@ -1464,6 +1464,7 @@ $(document).on('click', '.trazabilidad', function () {
   var url = '/trazabilidad/lotes-envasado/' + id_lote;
 
     $.get(url, function (data) {
+      /*
         var contenedor = $('#ListTracking').empty();
 
         data.logs.forEach(log => {
@@ -1485,6 +1486,48 @@ $(document).on('click', '.trazabilidad', function () {
         });
 
         $('#ModalTracking').modal('show');
+        */
+
+      // Limpiar contenedores
+      var generalContainer = $('#ListTrackingGeneral').empty();
+      var tbodyCertificados = $('#TableCertificados tbody').empty();
+
+      var tieneCertificados = false; // bandera
+
+      // Timeline GENERAL
+      data.logs.forEach(log => {
+          var timelineHtml = `
+              <li class="timeline-item timeline-item-transparent mb-8">
+                  <span class="position-absolute start-0 translate-middle p-2 bg-${log.colorBase} rounded-circle"></span>
+                  <div class="card ${log.borderClass} p-3 ms-2">
+                      <div class="d-flex justify-content-between align-items-center mb-2">
+                          <h6 class="fw-bold mb-0">
+                              <i class="${log.icono} me-1"></i>${log.titulo}
+                          </h6>
+                          <small class="text-muted">${log.registro}</small>
+                      </div>
+                      <p class="mb-1">${log.contenido}</p>
+                  </div>
+              </li>
+          `;
+          generalContainer.append(timelineHtml);
+      });
+
+      // --- Tabla CERTIFICADOS ---
+      if (data.certificados.length > 0) {
+          data.certificados.forEach(c => {
+              var fila = `<tr>
+                              <td>${c.fecha}</td>
+                              <td>${c.certificado}</td>
+                              <td>${c.caracteristicas}</td>
+                          </tr>`;
+              tbodyCertificados.append(fila);
+          });
+      } else {
+          tbodyCertificados.append(`<tr><td colspan="3" class="text-center">No hay certificados asociados</td></tr>`);
+      }
+
+      $('#ModalTracking').modal('show');
       
     }).fail(function (xhr) {
       //console.error(xhr.responseJSON);
@@ -1493,9 +1536,7 @@ $(document).on('click', '.trazabilidad', function () {
         title: '¡Error!',
         //text: 'Ocurrió un error.',
         text: xhr.responseJSON?.message || 'Ocurrió un error.',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
+        customClass: { confirmButton: 'btn btn-danger' }
       });
     }); 
 

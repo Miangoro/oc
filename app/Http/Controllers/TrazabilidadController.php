@@ -724,6 +724,9 @@ public function lotesEnvasado($id)
 $baseColors = ['success','warning','danger','info','dark'];
 $solicitudCounter = 0;
 $folioStyle ="style='background:#3A8DFF;color:white;padding:2px 4px;border-radius:4px;font-weight:500;'";
+// Arreglo exclusivo para tabla de certificados
+$certificadosTabla = [];
+$certificadosAgregados = []; // Para evitar duplicados
 
     // Primer log: registro del lote
     $logs = [[
@@ -843,6 +846,31 @@ $folioStyle ="style='background:#3A8DFF;color:white;padding:2px 4px;border-radiu
                         'borderClass' => "border border-$color",
                         'icono' => 'ri-award-line'
                     ];
+
+
+                    // Evitar duplicados
+                    if (in_array($certificado->id_certificado, $certificadosAgregados)) {
+                        continue;
+                    }
+                    $certificadosAgregados[] = $certificado->id_certificado;
+                    // Extraer características de la solicitud
+                    $car = json_decode($solicitud->caracteristicas, true);
+                    $caracteristicas = '';
+                    if (in_array($solicitud->id_tipo, [5, 8])) {
+                        $caracteristicas = $car['cantidad_caja'] ?? $car['cantidad_botellas'] ?? 'N/A';
+                    } elseif ($solicitud->id_tipo === 11 && !empty($car['detalles'])) {
+                        $detalles = collect($car['detalles'] ?? [])
+                            ->filter(fn($d) => isset($d['id_lote_envasado']) && $d['id_lote_envasado'] == $lote->id_lote_envasado)
+                            ->map(fn($d) => ($d['cantidad_botellas'] ?? 'N/A') . " botellas / " . ($d['cantidad_cajas'] ?? 'N/A') . " cajas")
+                            ->implode(' | ');
+                        $caracteristicas = $detalles ?: 'N/A';
+                    }
+                    $certificadosTabla[] = [
+                        'fecha' => Carbon::parse($certificado->fecha_emision)->format('Y-m-d'),
+                        'certificado' => $certificado->num_certificado,
+                        'caracteristicas' => $caracteristicas,
+                    ];
+
                 }
             }
         }
@@ -851,7 +879,8 @@ $folioStyle ="style='background:#3A8DFF;color:white;padding:2px 4px;border-radiu
 
     return response()->json([
         'success' => true,
-        'logs' => $logs
+        'logs' => $logs,
+        'certificados' => $certificadosTabla // solo para la tabla
     ]);
 }
 
