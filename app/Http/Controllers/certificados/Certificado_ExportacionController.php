@@ -494,8 +494,7 @@ public function store(Request $request)
             $oldHologramas["folio" . ($index + 1)] = $holo['descripcion'] ?? '';
         }
 
-
-        // Crear un registro
+        // Crear registro
         $new = new Certificado_Exportacion();
         $new->id_dictamen = $validated['id_dictamen'];
         $new->num_certificado = $validated['num_certificado'];
@@ -506,6 +505,36 @@ public function store(Request $request)
         $new->id_hologramas = json_encode($idHologramas);
         $new->old_hologramas = json_encode($oldHologramas);
         $new->save();
+
+
+        // === DESCONTAR BOTELLAS Y VOLUMEN ===
+        /*$dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')->find($validated['id_dictamen']);
+        $solicitud = $dictamen->inspeccione->solicitud ?? null;
+
+        if ($solicitud) {
+            $caracteristicas = $solicitud->caracteristicasDecodificadas();
+
+            foreach ($caracteristicas['detalles'] ?? [] as $detalle) {
+                $idLote = $detalle['id_lote_envasado'] ?? null;
+                $cantBotellas = $detalle['cantidad_botellas'] ?? 0;
+                $presentacion = $detalle['presentacion'][0] ?? null;
+
+                if ($idLote && $cantBotellas > 0 && $presentacion) {
+                    $lote = lotes_envasado::find($idLote);
+                    if ($lote) {
+                        $mililitros = floatval(str_replace(['mL', 'ml', 'ML'], '', $presentacion));
+                        $litros = $mililitros / 1000;
+                        $volumenDescontar = $litros * $cantBotellas;
+
+                        $lote->cant_bot_restantes = max(0, $lote->cant_bot_restantes - $cantBotellas);
+                        $lote->vol_restante = max(0, $lote->vol_restante - $volumenDescontar);
+                        $lote->save();
+                    }
+                }
+            }
+        }*/
+
+//----------------
 
 
         $dictamenExportacion = Dictamen_Exportacion::find($new->id_dictamen);
