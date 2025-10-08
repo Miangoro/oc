@@ -799,7 +799,7 @@ $totalCajas = 0;
             $dictamen = null;
             if ($solicitud->id_tipo == 5 && $inspeccion->dictamenEnvasado) {
                 $dictamen = $inspeccion->dictamenEnvasado;
-                $ruta = "/dictamen_envasado/{$dictamen->id_dictamen}";
+                $ruta = "/dictamen_envasado/{$dictamen->id_dictamen_envasado}";
             } elseif ($solicitud->id_tipo == 11 && $inspeccion->dictamenExportacion) {
                 $dictamen = $inspeccion->dictamenExportacion;
                 $ruta = "/dictamen_exportacion/{$dictamen->id_dictamen}";
