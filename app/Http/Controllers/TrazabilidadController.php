@@ -715,8 +715,6 @@ public function lotesEnvasado($id)
     }
 
     // Construir datos del lote
-    $numero_cliente = $lote->empresa?->empresaNumClientes->first(fn($item) => 
-        $item->empresa_id === $lote->empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado';
     $useRegistro = $lote->registro->name ?? 'No encontrado';
 
 
@@ -726,7 +724,8 @@ $solicitudCounter = 0;
 $folioStyle ="style='background:#3A8DFF;color:white;padding:2px 4px;border-radius:4px;font-weight:500;'";
 // Arreglo exclusivo para tabla de certificados
 $certificadosTabla = [];
-$certificadosAgregados = []; // Para evitar duplicados
+$certificadosAgregados = [];//evitar duplicados
+// Totales de botellas y cajas
 $totalBotellas = 0;
 $totalCajas = 0;
 
@@ -821,7 +820,12 @@ $totalCajas = 0;
                 // CERTIFICADO solo tipo 11
                 if ($dictamen->certificado) {
                     $certificado = $dictamen->certificado;
-
+                    
+                    // Número de cliente
+                    $numero_cliente = $certificado->dictamen->inspeccione->solicitud->empresa
+                        ?->empresaNumClientes->first(fn($item) => 
+                        $item->empresa_id === $lote->empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado';
+        
                     // Buscar certificado firmado (id_documento = 135)
                     $documentacion = Documentacion_url::where('id_relacion', $certificado->id_certificado)
                         ->where('id_documento', 135)
@@ -829,12 +833,16 @@ $totalCajas = 0;
                     $pdf_firmado = $documentacion?->url
                         ? asset("files/{$numero_cliente}/certificados_exportacion/{$documentacion->url}")
                         : null;
-                    if ($pdf_firmado) {
+                    /*if ($pdf_firmado) {
                         $pdfIcon = "<a href='{$pdf_firmado}' target='_blank' title='Ver PDF firmado'>
                         <i class='ri-file-pdf-2-fill text-success ri-20px'></i></a>";
                     } else {
                         $pdfIcon = "<a href='/certificado_exportacion/{$certificado->id_certificado}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>";
-                    }
+                    }*/
+                    $pdfIcon = $pdf_firmado
+                        ? "<a href='{$pdf_firmado}' target='_blank' title='Ver PDF firmado'><i class='ri-file-pdf-2-fill text-success ri-20px'></i></a>"
+                        : "<a href='/certificado_exportacion/{$certificado->id_certificado}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>";
+                    
 
                     $logs[] = [
                         'titulo' => "Certificado asociado al dictamen",
@@ -850,37 +858,37 @@ $totalCajas = 0;
                     ];
 
 
+                    /// INICIO TABLA DE CERTIFICADOS
                     // Evitar duplicados
                     if (in_array($certificado->id_certificado, $certificadosAgregados)) {
                         continue;
                     }
                     $certificadosAgregados[] = $certificado->id_certificado;
-                    // Extraer características de la solicitud
-                    $car = json_decode($solicitud->caracteristicas, true);
-                    $caracteristicas = '';
-                    if (in_array($solicitud->id_tipo, [5, 8])) {
-                        $caracteristicas = $car['cantidad_caja'] ?? $car['cantidad_botellas'] ?? 'N/A';
-                    } elseif ($solicitud->id_tipo === 11 && !empty($car['detalles'])) {
-                        /*$detalles = collect($car['detalles'] ?? [])
-                            ->filter(fn($d) => isset($d['id_lote_envasado']) && $d['id_lote_envasado'] == $lote->id_lote_envasado)
-                            ->map(fn($d) => ($d['cantidad_botellas'] ?? 'N/A') . " botellas / " . ($d['cantidad_cajas'] ?? 'N/A') . " cajas")
-                            ->implode(' | ');*/
-                        $detalles = collect($car['detalles'] ?? [])
-                            ->filter(fn($d) => isset($d['id_lote_envasado']) && $d['id_lote_envasado'] == $lote->id_lote_envasado)
-                            ->map(function($d) use (&$totalBotellas, &$totalCajas) {
-                                $botellas = (int) ($d['cantidad_botellas'] ?? 0);
-                                $cajas = (int) ($d['cantidad_cajas'] ?? 0);
-                                $totalBotellas += $botellas;
-                                $totalCajas += $cajas;
-                                return "{$botellas} botellas / {$cajas} cajas";
-                            })
-                            ->implode(' | ');
-                        $caracteristicas = $detalles ?: 'N/A';
+
+                    //Extraer caracteristicas del lote
+                    $car = $solicitud->caracteristicasDecodificadas();
+                    $detalles = collect($car['detalles'] ?? []);
+
+                    // Tomar cantidades del primer detalle
+                    $primerDetalle = $detalles->first(fn($d) => isset($d['cantidad_botellas']) && isset($d['cantidad_cajas']));
+                    $botellasBase = $primerDetalle['cantidad_botellas'] ?? 0;
+                    $cajasBase = $primerDetalle['cantidad_cajas'] ?? 0;
+
+                    // Buscar el detalle correspondiente al lote actual
+                    $detalleActual = $detalles->first(fn($d) => $d['id_lote_envasado'] == $lote->id_lote_envasado);
+
+                    $caracteristicas = 'N/A';
+                    if ($detalleActual) {
+                        $caracteristicas = "{$botellasBase} botellas / {$cajasBase} cajas";
+                        $totalBotellas += $botellasBase;
+                        $totalCajas += $cajasBase;
                     }
+
                     $certificadosTabla[] = [
                         'fecha' => Carbon::parse($certificado->fecha_emision)->format('Y-m-d'),
-                        'certificado' => $certificado->num_certificado .$pdfIcon,
+                        'certificado' => $certificado->num_certificado . $pdfIcon,
                         'caracteristicas' => $caracteristicas,
+                        'lote' => $lote
                     ];
 
                 }

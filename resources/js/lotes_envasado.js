@@ -1515,6 +1515,10 @@ $(document).on('click', '.trazabilidad', function () {
 
       // --- Tabla CERTIFICADOS ---
       if (data.certificados.length > 0) {
+        var totalBotellas = data.totales.botellas;
+        var totalCajas = data.totales.cajas;
+
+          // Filas de certificados
           data.certificados.forEach(c => {
               var fila = `<tr>
                               <td>${c.fecha}</td>
@@ -1524,13 +1528,53 @@ $(document).on('click', '.trazabilidad', function () {
               tbodyCertificados.append(fila);
           });
 
-          // Agregar fila de totales
+          // Fila total sumatoria
           tbodyCertificados.append(`
               <tr class="fw-bold table-light">
                   <td colspan="2" class="text-end">Total:</td>
                   <td>${data.totales.botellas} botellas / ${data.totales.cajas} cajas</td>
               </tr>
           `);
+
+
+          // --- CALCULAR RESTANTES POR LOTE ---
+          var loteActual = data.certificados.find(c => c.lote?.id_lote_envasado == id_lote)?.lote;
+
+          if (loteActual) {
+              // Asegurarse que cant_botellas y totales.botellas sean numéricos
+              var cantBotellas = Number(loteActual.cant_botellas) || 0;
+              var usadasBotellas = Number(data.totales.botellas) || 0;
+              var restantesBotellas = cantBotellas - usadasBotellas;
+
+              var presentacion = Number(loteActual.presentacion) || null; // ej: 750
+              var unidad = loteActual.unidad?.toLowerCase() || null; // "ml", "cl", "l"
+              var volumenTotal = Number(loteActual.volumen_total) || null; // ya en litros
+
+              var volumenRestante = 'Faltan datos';
+
+              if (presentacion && unidad && volumenTotal !== null && !isNaN(volumenTotal)) {
+                  // Convertimos la presentación a litros
+                  var factor = 1;
+                  if (unidad === 'ml') factor = 1/1000;
+                  if (unidad === 'cl') factor = 1/100;
+                  if (unidad === 'l') factor = 1;
+
+                  // Volumen usado según las botellas totales
+                  var volumenUsado = usadasBotellas * presentacion * factor;
+
+                  // Restante
+                  volumenRestante = volumenTotal - volumenUsado;
+                  volumenRestante = volumenRestante.toFixed(2); // opcional: 2 decimales
+              }
+
+              tbodyCertificados.append(`
+                  <tr class="fw-bold table-light">
+                      <td colspan="2" class="text-end">Restantes:</td>
+                      <td>${restantesBotellas} botellas (${volumenRestante} L)</td>
+                  </tr>
+              `);
+          }
+
       } else {
           tbodyCertificados.append(`<tr><td colspan="3" class="text-center">No hay certificados asociados</td></tr>`);
       }
