@@ -455,7 +455,7 @@
 
             @can('Estadísticas oc')
                 <div class="col-sm-6 col-lg-3">
-                    <div class="card card-border-shadow-primary h-100">
+                    <div class="card card-border-shadow-primary">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
                                 data-bs-target="#modalDictamenesInstalacionesPendientes">
@@ -496,7 +496,7 @@
 
             @can('Estadísticas oc')
                 <div class="col-sm-6 col-lg-3">
-                    <div class="card card-border-shadow-info h-100">
+                    <div class="card card-border-shadow-info">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-2">
                                 <div class="avatar me-4">
@@ -567,7 +567,7 @@
             @endcan
             @can('Estadísticas ui')
                 <div class="col-md-6 col-xxl-4">
-                    <div class="card h-100">
+                    <div class="card ">
                         <div class="card-header d-flex align-items-center justify-content-between">
                             <h5 class="card-title m-0 me-2">Inspecciones por inspector 2025</h5>
                             <div class="dropdown">
@@ -810,7 +810,7 @@
 
             @can('Estadísticas exportación clientes')
                 <div class="col-md-6 col-xxl-4">
-                    <div class="card h-100">
+                    <div class="card">
                         <div class="card-header d-flex align-items-center justify-content-between">
                             <h5 class="card-title m-0 me-2">Certificados de exportación</h5>
 
@@ -860,7 +860,7 @@
             @endphp
             @can('Estadísticas exportación clientes')
                 <div class="col-md-10 col-xxl-6">
-                    <div class="card h-100">
+                    <div class="card ">
                         <div class="card-header d-flex align-items-center justify-content-between">
                             <h5 class="card-title m-0 me-2">Servicios de exportación</h5>
 
