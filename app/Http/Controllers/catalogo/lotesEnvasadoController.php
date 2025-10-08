@@ -145,16 +145,51 @@ public function index(Request $request)
 
     // Búsqueda global
     if (!empty($search)) {
-        $query->where(function ($q) use ($search) {
+        // Convertir a minúsculas / elimina espacios al inicio y al final
+        $searchNormalized = mb_strtolower(trim($search), 'UTF-8');
+        // También elimina tildes para mejor comparación
+        $searchNormalized = strtr($searchNormalized, [
+            'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
+            'Á' => 'a', 'É' => 'e', 'Í' => 'i', 'Ó' => 'o', 'Ú' => 'u'
+        ]);
+
+        // Mapeamos posibles búsquedas de texto a su valor numérico
+        $estatusMap = [
+            /*'pendiente' => 0,
+            'disponible' => 1,
+            'agotado' => 2,*/
+            0 => 'pend',
+            1 => 'disp',
+            2 => 'agot'
+        ];
+
+        // Buscar coincidencia de nombre
+        $tipoEstado = null;
+        foreach ($estatusMap as $clave => $valor) {
+            $valorNormalized = mb_strtolower($valor, 'UTF-8');
+            $valorNormalized = strtr($valorNormalized, [
+                'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u'
+            ]);
+            if (strpos($searchNormalized, $valorNormalized) !== false) {
+                $tipoEstado = $clave; // guardamos el número, no el nombre
+                break;
+            }
+        }
+        
+        $query->where(function ($q) use ($search, $tipoEstado) {
             $q->where('destino_lote', 'LIKE', "%{$search}%")
                 ->orWhere('nombre', 'LIKE', "%{$search}%")
                 ->orWhere('sku', 'LIKE', "%{$search}%")
-                ->orWhere('estatus', 'LIKE', "%{$search}%")
                 ->orWhereHas('empresa', fn($q) => $q->where('razon_social', 'LIKE', "%{$search}%"))
                 ->orWhereHas('Instalaciones', fn($q) => $q->where('direccion_completa', 'LIKE', "%{$search}%"))
                 ->orWhereHas('marca', fn($q) => $q->where('marca', 'LIKE', "%{$search}%"))
                 ->orWhereHas('lotes_envasado_granel.lotes_granel', fn($q) => $q->where('nombre_lote', 'LIKE', "%{$search}%"))
                 ->orWhereHas('empresa.empresaNumClientes', fn($q) => $q->where('numero_cliente', 'LIKE', "%{$search}%"));
+
+                // Filtrar por tipo de dictamen si se detectó una palabra clave
+                if (!is_null($tipoEstado)) {
+                    $q->orWhere('estatus', $tipoEstado);
+                }
         });
 
         $totalFiltered = $query->count();

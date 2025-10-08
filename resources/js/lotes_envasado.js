@@ -272,6 +272,20 @@ $(function () {
             }`;
           }
         },
+        { //estatus
+          targets: 12,
+          responsivePriority: 4,
+          render: function (data, type, full, meta) {
+            var $estatus = full['estatus'];
+              if ($estatus == '1') {
+                return '<span class="badge rounded-pill bg-primary">Disponible</span>';
+              } else if ($estatus == '2') {
+                return '<span class="badge rounded-pill bg-danger">Agotado</span>';
+              } else {
+                return '<span class="badge rounded-pill bg-warning">Pendiente</span>';
+              }
+          }
+        },
         {
           // Actions
           targets: -1,
@@ -1515,8 +1529,6 @@ $(document).on('click', '.trazabilidad', function () {
 
       // --- Tabla CERTIFICADOS ---
       if (data.certificados.length > 0) {
-        var totalBotellas = data.totales.botellas;
-        var totalCajas = data.totales.cajas;
 
           // Filas de certificados
           data.certificados.forEach(c => {
