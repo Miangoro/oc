@@ -336,7 +336,8 @@
             {
               "url": "/bitacoraProcesoElaboracion",
               "name": "Proceso de elaboración",
-              "slug": "bitacora-productor-elaboracion"
+              "slug": "bitacora-productor-elaboracion",
+              "can": "Visualizar bitácoras"
             },
             {
               "url": "/bitacoraMezcalProductor",

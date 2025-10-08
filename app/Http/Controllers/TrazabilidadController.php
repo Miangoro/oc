@@ -189,7 +189,7 @@ private function determinarTipoBloque($log, $attributes)
 }
 ///TRAZABILIDAD CERTIFICADOS
 public function TrackingCertificados($id)
-{   
+{
     $logs = Activity::where(function($query) use ($id) {
         $query->where('subject_type', 'App\Models\Certificado_Exportacion')
             ->where('properties->attributes->id_certificado', $id);
@@ -567,7 +567,7 @@ if ($certificadoCancelado && $certificadoCancelado->estatus == 1) {
 
 
 
-///TRAZABILIDAD LOTES
+///TRAZABILIDAD LOTES GRANEL
 public function lotesGranel($id)
 {
     $lote = LotesGranel::with('empresa', 'registro')->find($id);
@@ -579,135 +579,109 @@ public function lotesGranel($id)
     $numero_cliente = $lote->empresa?->empresaNumClientes->first(fn($item) => 
         $item->empresa_id === $lote->empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado';
     $useRegistro = $lote->registro->name ?? 'No encontrado';
-    $titulo = "Registro de lote a granel por el usuario $useRegistro";
-        // Buscamos solicitudes relacionadas
-        /*forma 1
-        $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
-            ->whereJsonContains('caracteristicas->id_lote_granel', (string)$lote->id_lote_granel)
-            ->get();*/
-        /*forma 2
-        $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9])
-            ->whereRaw("JSON_EXTRACT(caracteristicas, '$.id_lote_granel') = ?", [$lote->id_lote_granel])
-            ->get();*/
-        // Solicitudes relacionadas dentro del JSON 'caracteristicas'
-        $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9,12])
-            ->whereRaw("JSON_EXTRACT(caracteristicas, '$.id_lote_granel') = ?", [(string)$lote->id_lote_granel])
-            ->get();
-        
-    
 
-// // Definir colores y contadores
+
+///Definir colores y contadores
 $baseColors = ['success','warning','danger','info','dark'];
 $solicitudCounter = 0;
-$folioStyle = "style='background:#3A8DFF; color:white; padding:2px 4px; border-radius:4px; font-weight:500;'";
-    // Primer log: lote a granel
+$folioStyle ="style='background:#3A8DFF;color:white;padding:2px 4px;border-radius:4px;font-weight:500;'";
+
+    // Primer log: registro del lote
     $logs = [[
-        'titulo' => $titulo,
+        'titulo' => "Registro de lote a granel por el usuario $useRegistro",
         'registro' => $lote->created_at->format('Y-m-d H:i:s'),
         'contenido' => "<b>No. de lote:</b> <span {$folioStyle}>$lote->nombre_lote</span>,
             <b>Cliente:</b> {$lote->empresa->razon_social}",
         'colorBase' => 'primary',
-        'borderClass' => 'border-3 border-primary', //bg-primary-subtle
+        'borderClass' => 'border-3 border-primary',//bg-primary-subtle
         'icono' => 'ri-file-text-line'
     ]];
     
+    // Solicitudes relacionadas dentro del JSON 'caracteristicas'
+    $solicitudes = solicitudesModel::whereIn('id_tipo', [3,4,7,9,12])
+        ->whereRaw("JSON_EXTRACT(caracteristicas, '$.id_lote_granel') = ?", [(string)$lote->id_lote_granel])
+        ->get();
 
-        // Agregar un log por cada solicitud
-        foreach ($solicitudes as $solicitud) {
-            $color = $baseColors[$solicitudCounter % count($baseColors)];
-            $solicitudCounter++;
+    // Generar  logs por cada solicitud asociada
+    foreach ($solicitudes as $solicitud) {
+        $color = $baseColors[$solicitudCounter % count($baseColors)];
+        $solicitudCounter++;
 
-            $pdfIcon = "<a href='/solicitud_de_servicio/{$solicitud->id_solicitud}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>"; 
+        $pdfIcon = "<a href='/solicitud_de_servicio/{$solicitud->id_solicitud}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>"; 
 
-            $logs[] = [// Log de solicitud
-                'titulo' => "Solicitud asociada al lote",
-                'registro' => Carbon::parse($solicitud->fecha_solicitud)->format('Y-m-d H:i:s'),
-                'contenido' => "<b>Folio:</b> <span {$folioStyle}>{$solicitud->folio}</span>{$pdfIcon}, 
-                    <b>Tipo:</b> {$solicitud->tipo_solicitud->tipo}",
+        $logs[] = [
+            'titulo' => "Solicitud asociada al lote",
+            'registro' => Carbon::parse($solicitud->fecha_solicitud)->format('Y-m-d H:i:s'),
+            'contenido' => "<b>Folio:</b> <span {$folioStyle}>{$solicitud->folio}</span>{$pdfIcon}, 
+                <b>Tipo:</b> {$solicitud->tipo_solicitud->tipo}",
+            'colorBase' => $color,
+            'borderClass' => "border-3 border-$color bg-$color bg-opacity-10",
+            'icono' => 'ri-file-text-line'
+        ];
+
+        // INSPECCIONES
+        if (in_array($solicitud->id_tipo, [3,4,7,9]) && $solicitud->inspeccion) {
+            $inspeccion = $solicitud->inspeccion;
+
+            $logs[] = [
+                'titulo' => "Inspección asociada a la solicitud",
+                'registro' => Carbon::parse($inspeccion->fecha_servicio)->format('Y-m-d H:i:s'),
+                'contenido' => "<b>Número de servicio:</b> <span {$folioStyle}>
+                    {$inspeccion->num_servicio}</span>, <b>Folio solicitud:</b> {$solicitud->folio}",
                 'colorBase' => $color,
-                'borderClass' => "border-3 border-$color bg-$color bg-opacity-10",
-                'icono' => 'ri-file-text-line'
+                'borderClass' => "border border-$color",
+                'icono' => 'ri-search-eye-line'
             ];
 
-            // INSPECCIONES PARA TIPOS 3,4,7,9
-            if (in_array($solicitud->id_tipo, [3,4,7,9]) && $solicitud->inspeccion) {
-                $inspeccion = $solicitud->inspeccion;
+            // DICTAMEN
+            if ($inspeccion->dictamenGranel) {
+                $dictamen = $inspeccion->dictamenGranel;
+
+                $pdfIcon = "<a href='/dictamen_granel/{$dictamen->id_dictamen}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>";
+
                 $logs[] = [
-                    'titulo' => "Inspección asociada a la solicitud",
-                    'registro' => Carbon::parse($inspeccion->fecha_servicio)->format('Y-m-d H:i:s'),
-                    'contenido' => "<b>Número de servicio:</b> <span {$folioStyle}>
-                        {$inspeccion->num_servicio}</span>, <b>Folio solicitud:</b> {$solicitud->folio}",
+                    'titulo' => "Dictamen asociado a la inspección",
+                    'registro' => Carbon::parse($dictamen->fecha_emision)->format('Y-m-d'),
+                    'contenido' => "<b>Número de dictamen:</b> <span {$folioStyle}>
+                        {$dictamen->num_dictamen}</span>{$pdfIcon}, <b>Número de servicio:</b> 
+                        {$inspeccion->num_servicio}",
                     'colorBase' => $color,
                     'borderClass' => "border border-$color",
-                    'icono' => 'ri-search-eye-line'
+                    'icono' => 'ri-file-paper-2-line'
                 ];
-
-                // LOG DE DICTAMEN SI EXISTE PARA TIPOS 3,4,7,9
-                if ($inspeccion->dictamenGranel) {
-                    $dictamen = $inspeccion->dictamenGranel;
-
-                    $pdfIcon = "<a href='/dictamen_granel/{$dictamen->id_dictamen}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>";
-
-                    $logs[] = [
-                        'titulo' => "Dictamen asociado a la inspección",
-                        'registro' => Carbon::parse($dictamen->fecha_emision)->format('Y-m-d'),
-                        'contenido' => "<b>Número de dictamen:</b> <span {$folioStyle}>
-                            {$dictamen->num_dictamen}</span>{$pdfIcon}, <b>Número de servicio:</b> 
-                            {$inspeccion->num_servicio}",
-                        'colorBase' => $color,
-                        'borderClass' => "border border-$color",
-                        'icono' => 'ri-file-paper-2-line'
-                    ];
-
-                    // LOG DE CERTIFICADO SI EXISTE
-                    /*if ($dictamen->certificado) {
-                        $certificado = $dictamen->certificado;
-                        $logs[] = [
-                            'titulo' => "Certificado asociado al dictamen",
-                            'registro' => $certificado->created_at->format('Y-m-d H:i:s'),
-                            'contenido' => "<b>Numero de dictamen:</b> {$dictamen->num_dictamen}, <b>Numero de certificado:</b> {$certificado->num_certificado}"
-                        ];
-                    }*/
-                }
-            }
-
-            // Para solicitudes tipo 12 (sin inspección ni dictamen)
-            if ($solicitud->id_tipo === 12) {
-                $certificado = CertificadosGranel::find($solicitud->id_predio);
-                if ($certificado) {
-                    $numDictamen = $certificado->dictamen?->num_dictamen ?? 'No disponible';
-
-                    //$pdfIcon = "<a href='/Pre-certificado-granel/{$certificado->id_certificado}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>";
-                    // Buscar documento firmado (id_documento = 59)
-                    $documentacion = Documentacion_url::where('id_relacion', $lote->id_lote_granel)
-                        ->where('id_documento', 59)
-                        ->where('id_doc', $certificado->id_certificado)
-                        ->first();
-
-                    $pdf_firmado = $documentacion?->url
-                        ? asset("files/{$numero_cliente}/certificados_granel/{$documentacion->url}")
-                        : null;
-
-                    // Ícono verde si existe PDF firmado, rojo si no
-                    if ($pdf_firmado) {
-                        $pdfIcon = "<a href='{$pdf_firmado}' target='_blank' title='Ver PDF firmado'>
-                        <i class='ri-file-pdf-2-fill text-success ri-20px'></i></a>";
-                    } else {
-                        $pdfIcon = "<a href='/Pre-certificado-granel/{$certificado->id_certificado}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>";
-                    }
-
-                    $logs[] = [
-                        'titulo' => "Certificado asociado a la solicitud",
-                        'registro' => Carbon::parse($certificado->fecha_emision)->format('Y-m-d'),
-                        'contenido' => "<b>Número de certificado:</b> <span {$folioStyle}>
-                            {$certificado->num_certificado}</span>{$pdfIcon}, <b>Número de dictamen:</b> {$numDictamen}",
-                        'colorBase' => $color,
-                        'borderClass' => "border border-$color",
-                        'icono' => 'ri-award-line'
-                    ];
-                }
             }
         }
+
+        // CERTIFICADOS (solicitudes tipo 12, sin inspección ni dictamen propio)
+        if ($solicitud->id_tipo === 12) {
+            $certificado = CertificadosGranel::find($solicitud->id_predio);
+
+            // Buscar certificado firmado (id_documento = 59)
+            $documentacion = Documentacion_url::where('id_relacion', $lote->id_lote_granel)
+                ->where('id_documento', 59)
+                ->where('id_doc', $certificado->id_certificado)
+                ->first();
+            $pdf_firmado = $documentacion?->url
+                ? asset("files/{$numero_cliente}/certificados_granel/{$documentacion->url}")
+                : null;
+            if ($pdf_firmado) {
+                $pdfIcon = "<a href='{$pdf_firmado}' target='_blank' title='Ver PDF firmado'>
+                <i class='ri-file-pdf-2-fill text-success ri-20px'></i></a>";
+            } else {
+                $pdfIcon = "<a href='/Pre-certificado-granel/{$certificado->id_certificado}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>";
+            }
+
+            $logs[] = [
+                'titulo' => "Certificado asociado a la solicitud",
+                'registro' => Carbon::parse($certificado->fecha_emision)->format('Y-m-d'),
+                'contenido' => "<b>Número de certificado:</b> <span {$folioStyle}>
+                    {$certificado->num_certificado}</span>{$pdfIcon}, <b>Número de dictamen:</b> {$certificado->dictamen->num_dictamen}",
+                'colorBase' => $color,
+                'borderClass' => "border border-$color",
+                'icono' => 'ri-award-line'
+            ];
+        }
+    }
 
 
     return response()->json([
@@ -717,7 +691,8 @@ $folioStyle = "style='background:#3A8DFF; color:white; padding:2px 4px; border-r
 }
 
 
-/// EXTRAER LOTES ENVASADO
+
+///EXTRAER LOTES ENVASADO
 private function extraerLotesEnvasado($solicitud)
 {
     if (in_array($solicitud->id_tipo, [5, 8])) {// Retorna un array con un solo ID si existe
@@ -731,37 +706,33 @@ private function extraerLotesEnvasado($solicitud)
 
     return [];
 }
-///TRAZABILIDAD LOTES
+///TRAZABILIDAD LOTES ENVASADO
 public function lotesEnvasado($id)
 {
-    //('id_tipo', [5,8,11])13 pendiente...
     $lote = lotes_envasado::with(['empresa', 'registro'])->find($id);
-    if (!$lote) return response()->json(['message' => 'Lote envasado no encontrado'], 404);
+    if (!$lote) {
+        return response()->json(['message' => 'Lote envasado no encontrado'], 404);
+    }
 
+    // Construir datos del lote
     $numero_cliente = $lote->empresa?->empresaNumClientes->first(fn($item) => 
-        $item->empresa_id === $lote->empresa->id && !empty($item->numero_cliente)
-    )?->numero_cliente ?? 'No encontrado';
-    $registroUsuario = $lote->registro->name ?? 'No encontrado';
-    $titulo = "Registro de lote envasado por el usuario $registroUsuario";
+        $item->empresa_id === $lote->empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado';
+    $useRegistro = $lote->registro->name ?? 'No encontrado';
 
-    // Obtener solicitudes relacionadas
-    $solicitudes = solicitudesModel::whereIn('id_tipo', [5,8,11])->get();
 
-    // Filtrar solo las solicitudes que incluyen este lote
-    $solicitudes = $solicitudes->filter(function($sol) use ($lote) {
-        $idsLote = $this->extraerLotesEnvasado($sol);
-        return in_array($lote->id_lote_envasado, $idsLote);
-    });
-    
-
-// // Definir colores y contadores
+//Definir colores y contadores
 $baseColors = ['success','warning','danger','info','dark'];
 $solicitudCounter = 0;
-$folioStyle = "style='background:#3A8DFF; color:white; padding:2px 4px; border-radius:4px; font-weight:500;'";
+$folioStyle ="style='background:#3A8DFF;color:white;padding:2px 4px;border-radius:4px;font-weight:500;'";
+// Arreglo exclusivo para tabla de certificados
+$certificadosTabla = [];
+$certificadosAgregados = []; // Para evitar duplicados
+$totalBotellas = 0;
+$totalCajas = 0;
 
-// Primer log: registro del lote
+    // Primer log: registro del lote
     $logs = [[
-        'titulo' => $titulo,
+        'titulo' => "Registro de lote envasado por el usuario $useRegistro",
         'registro' => $lote->created_at->format('Y-m-d H:i:s'),
         'contenido' => "<b>No. de lote:</b> <span {$folioStyle}>{$lote->nombre}</span>,
             <b>Cliente:</b> {$lote->empresa->razon_social}",
@@ -770,8 +741,11 @@ $folioStyle = "style='background:#3A8DFF; color:white; padding:2px 4px; border-r
         'icono' => 'ri-file-text-line'
     ]];
 
+    // Obtener solicitudes relacionadas
+    $solicitudes = SolicitudesModel::whereIn('id_tipo', [5,8,11])->get()
+        ->filter(fn($sol) => in_array($lote->id_lote_envasado, $this->extraerLotesEnvasado($sol)));
 
-    // Logs de solicitudes asociadas
+    // Generar  logs por cada solicitud asociada
     foreach ($solicitudes as $solicitud) {
         $color = $baseColors[$solicitudCounter % count($baseColors)];
         $solicitudCounter++;
@@ -782,7 +756,6 @@ $folioStyle = "style='background:#3A8DFF; color:white; padding:2px 4px; border-r
 
         $contenido = "<b>Folio:</b> <span {$folioStyle}>{$solicitud->folio}</span>{$pdfIcon}, 
                       <b>Tipo:</b> {$solicitud->tipo_solicitud->tipo}";
-
         // Extraer datos adicionales según tipo de solicitud
         /*$car = json_decode($solicitud->caracteristicas, true);
         if (in_array($solicitud->id_tipo, [5, 8])) {
@@ -808,10 +781,10 @@ $folioStyle = "style='background:#3A8DFF; color:white; padding:2px 4px; border-r
             'icono' => 'ri-file-text-line'
         ];
 
-
         // INSPECCIONES
         if ($solicitud->inspeccion) {
             $inspeccion = $solicitud->inspeccion;
+            
             $logs[] = [
                 'titulo' => "Inspección asociada a la solicitud",
                 'registro' => Carbon::parse($inspeccion->fecha_servicio)->format('Y-m-d H:i:s'),
@@ -822,13 +795,11 @@ $folioStyle = "style='background:#3A8DFF; color:white; padding:2px 4px; border-r
                 'icono' => 'ri-search-eye-line'
             ];
 
-
-            // DICTAMEN PARA TIPOS 5 y 11
+            // DICTAMEN PARA TIPO 5 y 11
             $dictamen = null;
-            $ruta = null;
             if ($solicitud->id_tipo == 5 && $inspeccion->dictamenEnvasado) {
                 $dictamen = $inspeccion->dictamenEnvasado;
-                $ruta = "/dictamen_envasado/{$dictamen->id_dictamen}";
+                $ruta = "/dictamen_envasado/{$dictamen->id_dictamen_envasado}";
             } elseif ($solicitud->id_tipo == 11 && $inspeccion->dictamenExportacion) {
                 $dictamen = $inspeccion->dictamenExportacion;
                 $ruta = "/dictamen_exportacion/{$dictamen->id_dictamen}";
@@ -840,28 +811,24 @@ $folioStyle = "style='background:#3A8DFF; color:white; padding:2px 4px; border-r
                 $logs[] = [
                     'titulo' => "Dictamen asociado a la inspección",
                     'registro' => Carbon::parse($dictamen->fecha_emision)->format('Y-m-d'),
-                    'contenido' => "<b>Número de dictamen:</b> <span {$folioStyle}>{$dictamen->num_dictamen}</span>{$pdfIcon}, 
-                                    <b>Número de servicio:</b> {$inspeccion->num_servicio}",
+                    'contenido' => "<b>Número de dictamen:</b> <span {$folioStyle}>
+                        {$dictamen->num_dictamen}</span>{$pdfIcon}, <b>Número de servicio:</b> {$inspeccion->num_servicio}",
                     'colorBase' => $color,
                     'borderClass' => "border border-$color",
                     'icono' => 'ri-file-paper-2-line'
                 ];
 
-
-                // CERTIFICADO
+                // CERTIFICADO solo tipo 11
                 if ($dictamen->certificado) {
                     $certificado = $dictamen->certificado;
 
-                    // Buscar documento firmado (id_documento = 135)
+                    // Buscar certificado firmado (id_documento = 135)
                     $documentacion = Documentacion_url::where('id_relacion', $certificado->id_certificado)
                         ->where('id_documento', 135)
                         ->first();
-
                     $pdf_firmado = $documentacion?->url
                         ? asset("files/{$numero_cliente}/certificados_exportacion/{$documentacion->url}")
                         : null;
-
-                    // Ícono verde si existe PDF firmado, rojo si no
                     if ($pdf_firmado) {
                         $pdfIcon = "<a href='{$pdf_firmado}' target='_blank' title='Ver PDF firmado'>
                         <i class='ri-file-pdf-2-fill text-success ri-20px'></i></a>";
@@ -881,6 +848,41 @@ $folioStyle = "style='background:#3A8DFF; color:white; padding:2px 4px; border-r
                         'borderClass' => "border border-$color",
                         'icono' => 'ri-award-line'
                     ];
+
+
+                    // Evitar duplicados
+                    if (in_array($certificado->id_certificado, $certificadosAgregados)) {
+                        continue;
+                    }
+                    $certificadosAgregados[] = $certificado->id_certificado;
+                    // Extraer características de la solicitud
+                    $car = json_decode($solicitud->caracteristicas, true);
+                    $caracteristicas = '';
+                    if (in_array($solicitud->id_tipo, [5, 8])) {
+                        $caracteristicas = $car['cantidad_caja'] ?? $car['cantidad_botellas'] ?? 'N/A';
+                    } elseif ($solicitud->id_tipo === 11 && !empty($car['detalles'])) {
+                        /*$detalles = collect($car['detalles'] ?? [])
+                            ->filter(fn($d) => isset($d['id_lote_envasado']) && $d['id_lote_envasado'] == $lote->id_lote_envasado)
+                            ->map(fn($d) => ($d['cantidad_botellas'] ?? 'N/A') . " botellas / " . ($d['cantidad_cajas'] ?? 'N/A') . " cajas")
+                            ->implode(' | ');*/
+                        $detalles = collect($car['detalles'] ?? [])
+                            ->filter(fn($d) => isset($d['id_lote_envasado']) && $d['id_lote_envasado'] == $lote->id_lote_envasado)
+                            ->map(function($d) use (&$totalBotellas, &$totalCajas) {
+                                $botellas = (int) ($d['cantidad_botellas'] ?? 0);
+                                $cajas = (int) ($d['cantidad_cajas'] ?? 0);
+                                $totalBotellas += $botellas;
+                                $totalCajas += $cajas;
+                                return "{$botellas} botellas / {$cajas} cajas";
+                            })
+                            ->implode(' | ');
+                        $caracteristicas = $detalles ?: 'N/A';
+                    }
+                    $certificadosTabla[] = [
+                        'fecha' => Carbon::parse($certificado->fecha_emision)->format('Y-m-d'),
+                        'certificado' => $certificado->num_certificado .$pdfIcon,
+                        'caracteristicas' => $caracteristicas,
+                    ];
+
                 }
             }
         }
@@ -889,10 +891,17 @@ $folioStyle = "style='background:#3A8DFF; color:white; padding:2px 4px; border-r
 
     return response()->json([
         'success' => true,
-        'logs' => $logs
+        'logs' => $logs,
+        'certificados' => $certificadosTabla,  // solo para la tabla
+        'totales' => [
+            'botellas' => $totalBotellas,
+            'cajas' => $totalCajas,
+        ]
     ]);
-
 }
+
+
+
 
 
 

@@ -57,7 +57,7 @@
 
 
 <!--MODAL TRAZABILIDAD-->
-<div class="modal fade" id="ModalTracking" tabindex="-1" aria-hidden="true">
+{{-- <div class="modal fade" id="ModalTracking" tabindex="-1" aria-hidden="true">
    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         
@@ -86,7 +86,64 @@
         </div>
     </div>
   </div>
+</div> --}}
+<!-- MODAL TRAZABILIDAD 2-->
+<div class="modal fade" id="ModalTracking" tabindex="-1" aria-hidden="true">
+   <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+         <div class="modal-body">
+            <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            <div class="text-center mb-4 pt-3">
+               <h4 class="address-title mb-2">Trazabilidad del lote envasado</h4>
+               <p class="folio badge bg-primary"></p>
+            </div>
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs mb-3" id="trazabilidadTabs" role="tablist">
+               <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab">General</button>
+               </li>
+               <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="certificados-tab" data-bs-toggle="tab" data-bs-target="#certificados" type="button" role="tab">Certificados</button>
+               </li>
+            </ul>
+
+            <div class="tab-content">
+               <!-- GENERAL (timeline) -->
+               <div class="tab-pane fade show active" id="general" role="tabpanel">
+                  <ul id="ListTrackingGeneral" class="timeline mb-0 pb-5">
+
+                  </ul>
+               </div>
+
+               <!-- CERTIFICADOS (tabla) -->
+               <div class="tab-pane fade" id="certificados" role="tabpanel">
+                  <div class="table-responsive">
+                     <table class="table table-striped table-bordered" id="TableCertificados">
+                        <thead class="table-light">
+                           <tr>
+                              <th>Fecha</th>
+                              {{-- <th>Tipo</th> --}}
+                              <th>Certificado</th>
+                              <th>Caracteristicas</th>
+                           </tr>
+                        </thead>
+                        <tbody></tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+
+            <!-- Botón cerrar -->
+            <div class="col-12 mt-4 d-flex justify-content-center">
+               <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>
+
 
 
     <!-- Modal -->
