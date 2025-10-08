@@ -76,7 +76,7 @@
                                     <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select id="id_lote_granel" name="id_lote_granel"
-                                                class="select2 form-select">
+                                                class="select2 form-select" onchange="obtenerDatosGraneles();">
                                                 <option value="" disabled selected>Selecciona un lote</option>
                                             </select>
                                             <label for="id_lote_granel">Lote a granel</label>
@@ -345,6 +345,27 @@
         }
     }
 
+    function obtenerDatosGraneles() {
+    var lote_granel_id = $("#id_lote_granel").val();
+    if (lote_granel_id) {
+        $.ajax({
+            url: '/getVolumenLoteBitacoraM/' + lote_granel_id,
+            method: 'GET',
+            success: function(response) {
+                $('#volumen_inicial').val(response.volumen_final ?? '');
+                $('#alcohol_inicial').val(response.alcohol_final ?? '');
+            },
+            error: function() {
+                console.error('Error al obtener datos del lote o bitácora');
+                $('#volumen_inicial').val('');
+                $('#alcohol_inicial').val('');
+            }
+        });
+    } else {
+        $('#volumen_inicial').val('');
+        $('#alcohol_inicial').val('');
+    }
+}
     function limpiarTipo(tipo) {
         try {
             let tipoArray = JSON.parse(tipo);
