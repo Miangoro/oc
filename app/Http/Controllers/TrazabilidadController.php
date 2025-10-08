@@ -867,7 +867,7 @@ $certificadosAgregados = []; // Para evitar duplicados
                     }
                     $certificadosTabla[] = [
                         'fecha' => Carbon::parse($certificado->fecha_emision)->format('Y-m-d'),
-                        'certificado' => $certificado->num_certificado,
+                        'certificado' => $certificado->num_certificado .$pdfIcon,
                         'caracteristicas' => $caracteristicas,
                     ];
 

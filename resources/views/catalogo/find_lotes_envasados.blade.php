@@ -95,7 +95,7 @@
             <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Close"></button>
 
             <div class="text-center mb-4 pt-3">
-               <h4 class="address-title mb-2">Trazabilidad del lote</h4>
+               <h4 class="address-title mb-2">Trazabilidad del lote envasado</h4>
                <p class="folio badge bg-primary"></p>
             </div>
 

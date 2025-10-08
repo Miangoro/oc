@@ -81,7 +81,7 @@
           </button>
 
           <div class="text-center mb-4 pt-5">
-            <h4 class="address-title mb-2">Trazabilidad del lote</h4>
+            <h4 class="address-title mb-2">Trazabilidad del lote a granel</h4>
             <p class="folio badge bg-primary"></p>
           </div>
 
