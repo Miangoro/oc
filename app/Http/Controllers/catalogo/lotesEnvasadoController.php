@@ -158,9 +158,9 @@ public function index(Request $request)
             /*'pendiente' => 0,
             'disponible' => 1,
             'agotado' => 2,*/
-            0 => 'pendiente',
-            1 => 'disponible',
-            2 => 'agotado'
+            0 => 'pend',
+            1 => 'disp',
+            2 => 'agot'
         ];
 
         // Buscar coincidencia de nombre
