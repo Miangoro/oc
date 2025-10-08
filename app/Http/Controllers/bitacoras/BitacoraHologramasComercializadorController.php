@@ -32,7 +32,15 @@ class BitacoraHologramasComercializadorController extends Controller
                   ->where('tipo', 2)
                   ->get();
           } */
-          $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
+         if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaIdAut = Auth::user()->empresa?->id_empresa;
+        $empresas = empresa::with('empresaNumClientes')->where('id_empresa', $empresaIdAut)->get();
+          } else {
+              $empresas = empresa::with('empresaNumClientes')
+                  ->where('tipo', 2)
+                  ->get();
+          }
+          /* $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
         ? Auth::user()->empresa?->id_empresa
         : null;
           if ($empresaIdAut) {
@@ -46,7 +54,7 @@ class BitacoraHologramasComercializadorController extends Controller
                   $empresas = empresa::with('empresaNumClientes')
                       ->where('tipo', 2)
                       ->get();
-              }
+              } */
       $tipo_usuario =  Auth::user()->tipo;
       $instalacionesIds = Auth::user()->id_instalacion ?? [];
       $instalacionesUsuario = instalaciones::whereIn('id_instalacion', $instalacionesIds)->get();

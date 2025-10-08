@@ -29,7 +29,7 @@ class BitacoraProcesoElaboracionController extends Controller
   public function UserManagement()
   {
     $bitacora = BitacoraProcesoElaboracion::all();
-                if (Auth::check() && Auth::user()->tipo == 3) {
+    if (Auth::check() && Auth::user()->tipo == 3) {
         $empresaIdA = Auth::user()->empresa?->id_empresa;
         $empresas = empresa::with('empresaNumClientes')->where('id_empresa', $empresaIdA)->get();
           } else {
@@ -102,9 +102,6 @@ class BitacoraProcesoElaboracionController extends Controller
       if (Auth::check() && Auth::user()->tipo == 3 && !empty($instalacionAuth)) {
                 $query->whereIn('id_instalacion', $instalacionAuth);
             }
-        /* if ($empresaId) {
-            $query->where('id_empresa', $empresaId);
-        } */
          if ($empresaId) {
               $empresa = empresa::find($empresaId);
               if ($empresa) {

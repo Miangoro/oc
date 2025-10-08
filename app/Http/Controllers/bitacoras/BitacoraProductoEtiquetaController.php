@@ -38,7 +38,15 @@ class BitacoraProductoEtiquetaController extends Controller
                   ->where('tipo', 2)
                   ->get();
           } */
-         $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
+         if (Auth::check() && Auth::user()->tipo == 3) {
+        $empresaIdAut = Auth::user()->empresa?->id_empresa;
+        $empresas = empresa::with('empresaNumClientes')->where('id_empresa', $empresaIdAut)->get();
+          } else {
+              $empresas = empresa::with('empresaNumClientes')
+                  ->where('tipo', 2)
+                  ->get();
+          }
+         /* $empresaIdAut = Auth::check() && Auth::user()->tipo == 3
         ? Auth::user()->empresa?->id_empresa
         : null;
           if ($empresaIdAut) {
@@ -52,7 +60,7 @@ class BitacoraProductoEtiquetaController extends Controller
                   $empresas = empresa::with('empresaNumClientes')
                       ->where('tipo', 2)
                       ->get();
-              }
+              } */
         $tipo_usuario =  Auth::user()->tipo;
         $tipos = tipos::all();
         $clases = clases::all();
