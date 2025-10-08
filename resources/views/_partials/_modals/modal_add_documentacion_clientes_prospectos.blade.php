@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <form id="formDocumentacionProspecto" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" id="prospecto_id_doc" name="prospecto_id">
+                    <input type="" id="prospecto_id_doc" name="prospecto_id">
 
                     <div class="table-responsive ">
                         <table class="table table-hover table-striped">

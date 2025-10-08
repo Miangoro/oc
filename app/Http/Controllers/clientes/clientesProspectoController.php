@@ -374,7 +374,33 @@ public function registrarClientes(Request $request)
 }
 
 
+public function registrarDocumentos(Request $request, $id)
+    {
+        $prospecto = empresa::findOrFail($id);
+        $documentos = $request->allFiles();
 
+        foreach ($documentos as $inputName => $file) {
+            if ($request->hasFile($inputName)) {
+                // Generar un nombre único para el archivo
+                $fileName = time() . '_' . $file->getClientOriginalName();
+
+                // Definir la ruta de almacenamiento específica para el prospecto
+                $path = $file->storeAs('documentos_prospectos/' . $prospecto->id_empresa, $fileName, 'public');
+
+                // Aquí necesitarás una tabla para guardar la referencia de los documentos.
+                // Por ejemplo, una tabla `empresa_documentos` con `id_empresa`, `tipo_documento`, `ruta_archivo`.
+                // DB::table('empresa_documentos')->insert([
+                //     'id_empresa' => $prospecto->id_empresa,
+                //     'tipo_documento' => $inputName, // ej: 'doc_acta_constitutiva'
+                //     'ruta_archivo' => $path,
+                //     'created_at' => now(),
+                //     'updated_at' => now(),
+                // ]);
+            }
+        }
+
+        return response()->json(['message' => 'Documentos subidos con éxito'], 200);
+    }
 
 
 }
