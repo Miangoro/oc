@@ -294,7 +294,7 @@ public function index(Request $request)
 
 
 ///FUNCION REGISTRAR
-  public function store(Request $request)
+public function store(Request $request)
 {
     try {
         $validated = $request->validate([
@@ -337,6 +337,7 @@ public function index(Request $request)
         $lote->unidad = $validated['unidad'] ?? $lote->unidad;
         $lote->volumen_total = $validated['volumen_total'] ?? $lote->volumen_total;
         $lote->id_marca = $validated['id_marca'] ?? $lote->id_marca;
+        $lote->estatus = 1;
         $lote->save();
 
         return response()->json(['message' => 'Dictamen registrado correctamente.']);
