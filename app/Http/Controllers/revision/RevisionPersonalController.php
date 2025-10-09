@@ -417,29 +417,51 @@ class RevisionPersonalController extends Controller
 
     public function add_revision($id_revision)
     {
-        $datos = Revisor::with('certificadoNormal', 'certificadoGranel', 'certificadoExportacion','certificadoNacional')->where("id_revision", $id_revision)->first();
-        $preguntasQuery = preguntas_revision::where('tipo_revisor', 1)
+        $datos = Revisor::with([
+        'certificadoNormal',
+        'certificadoGranel',
+        'certificadoExportacion',
+        'certificadoNacional'
+    ])
+    ->where('id_revision', $id_revision)
+    ->first();
+
+if (!$datos) {
+    return response()->json(['error' => 'Revisión no encontrada'], 404);
+}
+
+// Base de la consulta de preguntas
+$preguntasQuery = preguntas_revision::where('tipo_revisor', 1)
     ->where('tipo_certificado', $datos->tipo_certificado)
     ->where('orden', $datos->numero_revision == 1 ? 0 : 1);
 
+// Determinar certificado activo
+$certificado = $datos->certificadoNormal
+    ?? $datos->certificadoGranel
+    ?? $datos->certificadoExportacion
+    ?? $datos->certificadoNacional;
 
-    if ($datos->certificado->certificadoReexpedido()) {
-        $preguntasQuery->where(function ($q) {
-            $q->whereBetween('id_pregunta', [851, 860])
-            ->OrwhereBetween('id_pregunta', [903, 909]);
-            
-             
-        });
-    } else {
-        $preguntasQuery->where(function ($q) {
-            $q->where('id_pregunta', '<', 851)
-            ->orWhere('id_pregunta', '>', 868)
-             ->orWhere('id_pregunta', '<', 903)
-            ->whereNotIn('id_pregunta', [903, 909]); 
-        });
-    }
+// Validar existencia del método antes de llamar
+if ($certificado && method_exists($certificado, 'certificadoReexpedido') && $certificado->certificadoReexpedido()) {
+    // Si el certificado fue reexpedido
+    $preguntasQuery->where(function ($q) {
+        $q->whereBetween('id_pregunta', [851, 860])
+          ->orWhereBetween('id_pregunta', [903, 909]);
+    });
+} else {
+    // Si el certificado NO fue reexpedido
+    $preguntasQuery->where(function ($q) {
+        $q->where(function ($sub) {
+            $sub->where('id_pregunta', '<', 851)
+                ->orWhere('id_pregunta', '>', 868);
+        })
+        ->whereNotIn('id_pregunta', [903, 909]);
+    });
+}
 
-    $preguntas = $preguntasQuery->get();
+// Obtener resultados finales
+$preguntas = $preguntasQuery->get();
+
 
 
        
