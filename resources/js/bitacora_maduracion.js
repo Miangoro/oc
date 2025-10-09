@@ -978,6 +978,49 @@ $(document).ready(function () {
   });
 
   $(document).ready(function () {
+  // Renombramos la función para claridad
+  function calcularEdit() {
+    // Obtenemos los valores de los campos del formulario de edición
+    let volumenInicialEdit = parseFloat($('#edit_volumen_inicial').val()) || 0;
+    let alcoholInicialEdit = parseFloat($('#edit_alcohol_inicial').val()) || 0;
+
+    let volumenEntradaEdit = parseFloat($('#edit_volumen_entrada').val()) || 0;
+    let alcoholEntradaEdit = parseFloat($('#edit_alcohol_entrada').val()) || 0;
+    let aguaEntradaEdit = parseFloat($('#edit_agua_entrada').val()) || 0;
+
+    let volumenSalidaEdit = parseFloat($('#edit_volumen_salida').val()) || 0;
+    let alcoholSalidaEdit = parseFloat($('#edit_alc_vol_salida').val()) || 0;
+
+    // Se calcula el volumen final
+    let volumenFinalEdit = volumenInicialEdit + volumenEntradaEdit + aguaEntradaEdit - volumenSalidaEdit;
+
+    // Se inicializa el alcohol final
+    let alcoholFinalEdit = 0;
+
+    // Evitamos la división por cero si el volumen final es 0 o negativo
+    if (volumenFinalEdit > 0) {
+      // Se calcula la cantidad total de alcohol
+      let alcoholTotalEdit =
+        (volumenInicialEdit * alcoholInicialEdit) +
+        (volumenEntradaEdit * alcoholEntradaEdit) -
+        (volumenSalidaEdit * alcoholSalidaEdit);
+
+      // Se calcula la concentración final de alcohol
+      alcoholFinalEdit = alcoholTotalEdit / volumenFinalEdit;
+    }
+
+    // Se actualizan los campos de resultado con los valores calculados
+    $('#edit_volumen_final').val(volumenFinalEdit.toFixed(2));
+    $('#edit_alc_vol_final').val(alcoholFinalEdit.toFixed(2));
+  }
+
+  // Se asocia la función 'calcularEdit' al evento 'input' de los campos
+  $(
+    '#edit_volumen_inicial, #edit_alcohol_inicial, #edit_volumen_entrada, #edit_alcohol_entrada, #edit_agua_entrada, #edit_volumen_salida, #edit_alc_vol_salida'
+  ).on('input', calcularEdit);
+});
+
+  $(document).ready(function () {
     $('#tipo_op').on('change', function () {
       const tipo = $(this).val();
 

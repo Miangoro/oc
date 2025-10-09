@@ -92,7 +92,7 @@ $(function () {
             var $certificado = full['folio_certificado'] ?? 'N/A';
             var $obs = (full['observaciones'] || '').trim();
             var $operacion = (full['operacion_adicional'] || '').trim();
-             var $id_usuario_registro = (full['id_usuario_registro'] || '').trim();
+            var $id_usuario_registro = (full['id_usuario_registro'] || '').trim();
 
             let html =
               '<span class="fw-bold small">Fecha: </span>' +
@@ -138,9 +138,11 @@ $(function () {
             }
             if ($id_usuario_registro && $id_usuario_registro.toUpperCase() !== 'N/A') {
               html +=
-                '<br><span class="fw-bold small">Registrado por: </span>' + '<span class="small">' + $id_usuario_registro + '</span>';
+                '<br><span class="fw-bold small">Registrado por: </span>' +
+                '<span class="small">' +
+                $id_usuario_registro +
+                '</span>';
             }
-
 
             return html;
           }
@@ -199,8 +201,18 @@ $(function () {
             var $volumen_entrada = full['volumen_entrada'] ?? 'N/A';
             var $alcohol_entrada = full['alcohol_entrada'] ?? 'N/A';
             var $agua_entrada = full['agua_entrada'] ?? 'N/A';
+            var tipoMovimiento = full['tipo_movimiento'];
+            var badgeHtml = ''; // Variable para guardar el HTML del badge
+
+            // 2. Crear el badge según el tipo de movimiento
+            if (tipoMovimiento === 'Entradas') {
+              badgeHtml = '<span class="badge rounded-pill bg-success mb-2">Entrada</span><br>';
+            } else if (tipoMovimiento === 'Entradas y salidas') {
+              badgeHtml = '<span class="badge rounded-pill bg-primary mb-2">Entradas y Salidas</span><br>';
+            }
 
             return (
+              badgeHtml +
               '<span class="fw-bold small">Procedencia: </span>' +
               '<span class="small">' +
               $procedencia_entrada +
@@ -228,8 +240,20 @@ $(function () {
             var $volumen_salidas = full['volumen_salidas'] ?? 'N/A';
             var $alcohol_salidas = full['alcohol_salidas'] ?? 'N/A';
             var $destino_salidas = full['destino_salidas'] ?? 'N/A';
+            // 1. Obtener el tipo de movimiento
+            var tipoMovimiento = full['tipo_movimiento'];
+            var badgeHtml = '';
+
+            // 2. Crear el badge (con colores diferentes para distinguirlo)
+            if (tipoMovimiento === 'Salidas') {
+              badgeHtml = '<span class="badge rounded-pill bg-danger mb-2">Salida</span><br>';
+            } else if (tipoMovimiento === 'Entradas y salidas') {
+              // Usamos un color diferente (ej. 'info') para cumplir con "algo diferente pues"
+              badgeHtml = '<span class="badge rounded-pill bg-info mb-2">Entradas y Salidas</span><br>';
+            }
 
             return (
+              badgeHtml+
               '<span class="fw-bold small">Volumen de Salidas: </span>' +
               '<span class="small">' +
               $volumen_salidas +
@@ -288,34 +312,32 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-          let acciones = '';
+            let acciones = '';
 
-          const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
-          const esAdminBitacoras = window.adminBitacoras === true;
-          const esUsuarioTipo2 = window.tipoUsuario === 2;
+            const estaFirmado = full['id_firmante'] != 0 && full['id_firmante'] != null;
+            const esAdminBitacoras = window.adminBitacoras === true;
+            const esUsuarioTipo2 = window.tipoUsuario === 2;
 
-          // Permitir firmar si NO está firmada, o si es admin, o si es usuario tipo 2
-          if (!estaFirmado || esAdminBitacoras || esUsuarioTipo2) {
-            if (window.puedeFirmarElUsuario) {
-              const textoFirma = (estaFirmado && esUsuarioTipo2)
-                ? 'Volver a firmar bitácora'
-                : 'Firmar bitácora';
+            // Permitir firmar si NO está firmada, o si es admin, o si es usuario tipo 2
+            if (!estaFirmado || esAdminBitacoras || esUsuarioTipo2) {
+              if (window.puedeFirmarElUsuario) {
+                const textoFirma = estaFirmado && esUsuarioTipo2 ? 'Volver a firmar bitácora' : 'Firmar bitácora';
 
-              acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning">
+                acciones += `<a data-id="${full['id']}" class="dropdown-item firma-record waves-effect text-warning">
                             <i class="ri-ball-pen-line ri-20px text-warning"></i> ${textoFirma}</a>`;
-            }
-            if (window.puedeEditarElUsuario) {
-              acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info">
+              }
+              if (window.puedeEditarElUsuario) {
+                acciones += `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editarBitacoraMezcal" class="dropdown-item edit-record waves-effect text-info">
                             <i class="ri-edit-box-line ri-20px text-info"></i> Editar bitácora</a>`;
-            }
-            if (window.puedeEliminarElUsuario) {
-              acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger">
+              }
+              if (window.puedeEliminarElUsuario) {
+                acciones += `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger">
                             <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar bitácora</a>`;
+              }
             }
-          }
 
-          if (acciones.trim()) {
-            return `
+            if (acciones.trim()) {
+              return `
               <div class="d-flex align-items-center gap-50">
                 <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                   <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
@@ -325,18 +347,16 @@ $(function () {
                 </div>
               </div>
             `;
-          }
+            }
 
-          // Si no hay acciones, mostrar botón deshabilitado
-          return `
+            // Si no hay acciones, mostrar botón deshabilitado
+            return `
             <div class="d-flex align-items-center gap-50">
               <button class="btn btn-sm btn-secondary disabled" style="opacity: 0.6; cursor: not-allowed;" disabled>
                 <i class="ri-settings-5-fill ri-20px me-1"></i> Opciones
               </button>
             </div>
           `;
-
-
           }
         }
       ],
@@ -1015,50 +1035,48 @@ $(function () {
     ).on('input', calcular);
   });
 
+  $(document).ready(function () {
+    // Función para calcular los valores del formulario de edición
+    function calcularEdit() {
+      // Lectura de valores de los campos de edición
+      let volumenInicialEdit = parseFloat($('#edit_volumen_inicial').val()) || 0;
+      let alcoholInicialEdit = parseFloat($('#edit_alcohol_inicial').val()) || 0;
 
-$(document).ready(function () {
-  // Función para calcular los valores del formulario de edición
-  function calcularEdit() {
-    // Lectura de valores de los campos de edición
-    let volumenInicialEdit = parseFloat($('#edit_volumen_inicial').val()) || 0;
-    let alcoholInicialEdit = parseFloat($('#edit_alcohol_inicial').val()) || 0;
+      let volumenEntradaEdit = parseFloat($('#edit_volumen_entrada').val()) || 0;
+      let alcoholEntradaEdit = parseFloat($('#edit_alcohol_entrada').val()) || 0;
+      let aguaEntradaEdit = parseFloat($('#edit_agua_entrada').val()) || 0;
 
-    let volumenEntradaEdit = parseFloat($('#edit_volumen_entrada').val()) || 0;
-    let alcoholEntradaEdit = parseFloat($('#edit_alcohol_entrada').val()) || 0;
-    let aguaEntradaEdit = parseFloat($('#edit_agua_entrada').val()) || 0;
+      let volumenSalidaEdit = parseFloat($('#edit_volumen_salida').val()) || 0;
+      let alcoholSalidaEdit = parseFloat($('#edit_alc_vol_salida').val()) || 0;
 
-    let volumenSalidaEdit = parseFloat($('#edit_volumen_salida').val()) || 0;
-    let alcoholSalidaEdit = parseFloat($('#edit_alc_vol_salida').val()) || 0;
+      // Cálculo del volumen final
+      let volumenFinalEdit = volumenInicialEdit + volumenEntradaEdit + aguaEntradaEdit - volumenSalidaEdit;
 
-    // Cálculo del volumen final
-    let volumenFinalEdit = volumenInicialEdit + volumenEntradaEdit + aguaEntradaEdit - volumenSalidaEdit;
+      // Variable para el alcohol final
+      let alcoholFinalEdit = 0;
 
-    // Variable para el alcohol final
-    let alcoholFinalEdit = 0;
+      // Se asegura de no dividir por cero
+      if (volumenFinalEdit > 0) {
+        // Cálculo del alcohol total
+        let alcoholTotalEdit =
+          volumenInicialEdit * alcoholInicialEdit +
+          volumenEntradaEdit * alcoholEntradaEdit -
+          volumenSalidaEdit * alcoholSalidaEdit;
 
-    // Se asegura de no dividir por cero
-    if (volumenFinalEdit > 0) {
-      // Cálculo del alcohol total
-      let alcoholTotalEdit =
-        (volumenInicialEdit * alcoholInicialEdit) +
-        (volumenEntradaEdit * alcoholEntradaEdit) -
-        (volumenSalidaEdit * alcoholSalidaEdit);
+        // Cálculo de la concentración final de alcohol
+        alcoholFinalEdit = alcoholTotalEdit / volumenFinalEdit;
+      }
 
-      // Cálculo de la concentración final de alcohol
-      alcoholFinalEdit = alcoholTotalEdit / volumenFinalEdit;
+      // Muestra los resultados en los campos correspondientes
+      $('#edit_volumen_final').val(volumenFinalEdit.toFixed(2));
+      $('#edit_alc_vol_final').val(alcoholFinalEdit.toFixed(2));
     }
 
-    // Muestra los resultados en los campos correspondientes
-    $('#edit_volumen_final').val(volumenFinalEdit.toFixed(2));
-    $('#edit_alc_vol_final').val(alcoholFinalEdit.toFixed(2));
-  }
-
-  // Se asigna la función 'calcularEdit' al evento 'input' de cada campo
-  $(
-    '#edit_volumen_inicial, #edit_alcohol_inicial, #edit_volumen_entrada, #edit_alcohol_entrada, #edit_agua_entrada, #edit_volumen_salida, #edit_alc_vol_salida'
-  ).on('input', calcularEdit);
-});
-
+    // Se asigna la función 'calcularEdit' al evento 'input' de cada campo
+    $(
+      '#edit_volumen_inicial, #edit_alcohol_inicial, #edit_volumen_entrada, #edit_alcohol_entrada, #edit_agua_entrada, #edit_volumen_salida, #edit_alc_vol_salida'
+    ).on('input', calcularEdit);
+  });
 
   $(document).ready(function () {
     $('#tipo_op').on('change', function () {

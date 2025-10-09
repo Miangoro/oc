@@ -164,8 +164,18 @@ $(function () {
             var $volumen_entrada = full['volumen_entrada'] ?? 'N/A';
             var $alcohol_entrada = full['alcohol_entrada'] ?? 'N/A';
             var $agua_entrada = full['agua_entrada'] ?? 'N/A';
+            var tipoMovimiento = full['tipo_movimiento'];
+            var badgeHtml = ''; // Variable para guardar el HTML del badge
+
+            // 2. Crear el badge según el tipo de movimiento
+            if (tipoMovimiento === 'Entradas') {
+              badgeHtml = '<span class="badge rounded-pill bg-success mb-2">Entrada</span><br>';
+            } else if (tipoMovimiento === 'Entradas y salidas') {
+              badgeHtml = '<span class="badge rounded-pill bg-primary mb-2">Entradas y Salidas</span><br>';
+            }
 
             return (
+              badgeHtml +
               '<span class="fw-bold small">Procedencia: </span>' +
               '<span class="small">' +
               $procedencia_entrada +
@@ -193,8 +203,20 @@ $(function () {
             var $volumen_salidas = full['volumen_salidas'] ?? 'N/A';
             var $alcohol_salidas = full['alcohol_salidas'] ?? 'N/A';
             var $destino_salidas = full['destino_salidas'] ?? 'N/A';
+            // 1. Obtener el tipo de movimiento
+            var tipoMovimiento = full['tipo_movimiento'];
+            var badgeHtml = '';
+
+            // 2. Crear el badge (con colores diferentes para distinguirlo)
+            if (tipoMovimiento === 'Salidas') {
+              badgeHtml = '<span class="badge rounded-pill bg-danger mb-2">Salida</span><br>';
+            } else if (tipoMovimiento === 'Entradas y salidas') {
+              // Usamos un color diferente (ej. 'info') para cumplir con "algo diferente pues"
+              badgeHtml = '<span class="badge rounded-pill bg-info mb-2">Entradas y Salidas</span><br>';
+            }
 
             return (
+              badgeHtml +
               '<span class="fw-bold small">Volumen de Salidas: </span>' +
               '<span class="small">' +
               $volumen_salidas +

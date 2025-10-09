@@ -254,7 +254,7 @@ class BitacoraMezcalController extends Controller
                 'id_tanque' => $bitacora->id_tanque ?? 'N/A',
                 'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
                 'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A',
-
+                'tipo_movimiento' => $bitacora->tipo_operacion ?? 'N/A',
                 //Entradas
                 'procedencia_entrada' => $bitacora->procedencia_entrada ?? 'N/A',
                 'volumen_entrada' => $bitacora->volumen_entrada ?? 'N/A',

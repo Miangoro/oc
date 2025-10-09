@@ -307,6 +307,8 @@ class BitacoraMezcalEnvasadorController extends Controller
                 'volumen_inicial' => $bitacora->volumen_inicial ?? 'N/A',
                 'alcohol_inicial' => $bitacora->alcohol_inicial ?? 'N/A',
                 'id_tanque' => $bitacora->id_tanque ?? 'N/A',
+
+                'tipo_movimiento' => $bitacora->tipo_operacion ?? 'N/A',
                 //procedencia de los lotes
                 'folios_procedencia' => implode(', ', $this->obtenerFoliosProcedencia($bitacora->loteBitacora)),
                 //Entradas
