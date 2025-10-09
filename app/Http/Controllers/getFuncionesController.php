@@ -284,7 +284,7 @@ public function getVolumenLoteBitacora($id_lote_granel, Request $request)
 
 
 
-    $ultimaBitacora = BitacoraMezcal::where('id_lote_granel', $id_lote_granel)
+    $ultimaBitacora = \App\Models\BitacoraMezcal::where('id_lote_granel', $id_lote_granel)
         ->when(!empty($tiposValidos), function ($query) use ($tiposValidos) {
             $query->whereIn('tipo', $tiposValidos);
         })

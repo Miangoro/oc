@@ -375,32 +375,42 @@ public function registrarClientes(Request $request)
 
 
 public function registrarDocumentos(Request $request, $id)
-    {
-        $prospecto = empresa::findOrFail($id);
-        $documentos = $request->allFiles();
+{
+    $prospecto = empresa::findOrFail($id);
+    $documentos = $request->allFiles();
 
-        foreach ($documentos as $inputName => $file) {
-            if ($request->hasFile($inputName)) {
-                // Generar un nombre único para el archivo
-                $fileName = time() . '_' . $file->getClientOriginalName();
+    foreach ($documentos as $inputName => $file) {
+        if ($request->hasFile($inputName)) {
 
-                // Definir la ruta de almacenamiento específica para el prospecto
-                $path = $file->storeAs('documentos_prospectos/' . $prospecto->id_empresa, $fileName, 'public');
+            // Carpeta específica del cliente
+            $folder = 'documentos_prospectos/' . $prospecto->id_empresa;
 
-                // Aquí necesitarás una tabla para guardar la referencia de los documentos.
-                // Por ejemplo, una tabla `empresa_documentos` con `id_empresa`, `tipo_documento`, `ruta_archivo`.
-                // DB::table('empresa_documentos')->insert([
-                //     'id_empresa' => $prospecto->id_empresa,
-                //     'tipo_documento' => $inputName, // ej: 'doc_acta_constitutiva'
-                //     'ruta_archivo' => $path,
-                //     'created_at' => now(),
-                //     'updated_at' => now(),
-                // ]);
-            }
+            // Ver cuántos archivos ya existen en esa carpeta (para numerar)
+            $existingFiles = Storage::disk('public')->files($folder);
+            $nextNumber = count($existingFiles) + 1;
+
+            // Crear nombre controlado: ejemplo -> 12_001_acta_constitutiva.pdf
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $fileName = sprintf('%d_%03d_%s.%s', $prospecto->id_empresa, $nextNumber, Str::slug($originalName, '_'), $extension);
+
+            // Guardar archivo
+            $path = $file->storeAs($folder, $fileName, 'public');
+
+            // Registrar en BD
+            DB::table('empresa_documentos')->insert([
+                'id_empresa' => $prospecto->id_empresa,
+                'tipo_documento' => $inputName,
+                'ruta_archivo' => $path,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
-
-        return response()->json(['message' => 'Documentos subidos con éxito'], 200);
     }
+
+    return response()->json(['message' => 'Documentos subidos con éxito'], 200);
+}
+
 
 
 }
