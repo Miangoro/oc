@@ -1,11 +1,13 @@
 <style>
-/* Solo aplica al select2 del #id_instalacion */
-#id_instalacion + .select2-container .select2-selection--single {
-    background-color: #fff3cd52 !important; /* fondo amarillo claro */
-    border-color: #ffc107 !important;       /* borde ámbar */
-    color: #856404 !important;              /* texto ámbar oscuro */
-}
-
+    /* Solo aplica al select2 del #id_instalacion */
+    #id_instalacion+.select2-container .select2-selection--single {
+        background-color: #fff3cd52 !important;
+        /* fondo amarillo claro */
+        border-color: #ffc107 !important;
+        /* borde ámbar */
+        color: #856404 !important;
+        /* texto ámbar oscuro */
+    }
 </style>
 <div class="modal fade" id="RegistrarBitacoraMezcal" tabindex="-1" aria-labelledby="registroInventarioModalLabel"
     aria-hidden="true">
@@ -281,53 +283,64 @@
 </div>
 
 <script>
-function obtenerGraneles(empresa) {
-    if (empresa) { // Forma corta de verificar que no sea nulo o vacío
-        $.ajax({
-            url: '/getDatosBitacora/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                let contenido = '<option value="" disabled selected>Selecciona un lote</option>';
+    function obtenerGraneles(empresa) {
+        if (empresa) { // Forma corta de verificar que no sea nulo o vacío
+            $.ajax({
+                url: '/getDatosBitacora/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    let contenido = '<option value="" disabled selected>Selecciona un lote</option>';
 
-                if (response.lotes_granel && response.lotes_granel.length > 0) {
-                    // Usamos forEach para un código más limpio
-                    response.lotes_granel.forEach(lote => {
-                        // AQUÍ ESTÁ LA LÍNEA MODIFICADA
-                        // Se agregan los datos de cont_alc y volumen_restante
-                        contenido += `<option value="${lote.id_lote_granel}">` +
-                                     `${lote.nombre_lote} | %Alc. Vol: ${lote.cont_alc}% | Volumen: ${lote.volumen_restante}` +
-                                     `</option>`;
-                    });
-                } else {
-                    // Corregimos la lógica para que no se dupliquen opciones
-                    contenido = '<option value="">Sin lotes registrados</option>';
+                    if (response.lotes_granel && response.lotes_granel.length > 0) {
+                        response.lotes_granel.forEach(lote => {
+                            // Verifica si el lote tiene certificado
+                            let certificado = lote.certificado_granel ? lote.certificado_granel
+                                .num_certificado : null;
+
+                            // Construcción del texto
+                            let textoOpcion =
+                                `${lote.nombre_lote} | %Alc. Vol: ${lote.cont_alc}% | Volumen: ${lote.volumen_restante}`;
+
+                            // Si hay certificado, se agrega al texto
+                            if (certificado) {
+                                textoOpcion += ` | Certificado: ${certificado}`;
+                            }
+
+                            contenido +=
+                                `<option value="${lote.id_lote_granel}">${textoOpcion}</option>`;
+                        });
+                    } else {
+                        contenido = '<option value="">Sin lotes registrados</option>';
+                    }
+
+
+                    // Usamos .val("") para resetear la selección de forma segura
+                    $('#id_lote_granel').html(contenido).val("").trigger('change');
+
+                    // --- Código para las instalaciones (sin cambios) ---
+                    let contenidoI =
+                        '<option value="" disabled selected>Selecciona una instalación</option>';
+
+                    if (response.instalaciones && response.instalaciones.length > 0) {
+                        response.instalaciones.forEach(instalacion => {
+                            const tipoLimpio = limpiarTipo(instalacion.tipo);
+                            contenidoI +=
+                                `<option value="${instalacion.id_instalacion}">${tipoLimpio} | ${instalacion.direccion_completa}</option>`;
+                        });
+                    } else {
+                        contenidoI = '<option value="">Sin instalaciones registradas</option>';
+                    }
+
+                    $('#id_instalacion').html(contenidoI).val("").trigger('change');
+                    obtenerDatosGraneles();
+                },
+                error: function() {
+                    console.error("Error al cargar los datos de la bitácora.");
+                    $('#id_lote_granel').html('<option value="">Error al cargar lotes</option>');
                 }
-
-                // Usamos .val("") para resetear la selección de forma segura
-                $('#id_lote_granel').html(contenido).val("").trigger('change');
-
-                // --- Código para las instalaciones (sin cambios) ---
-                let contenidoI = '<option value="" disabled selected>Selecciona una instalación</option>';
-
-                if (response.instalaciones && response.instalaciones.length > 0) {
-                    response.instalaciones.forEach(instalacion => {
-                        const tipoLimpio = limpiarTipo(instalacion.tipo);
-                        contenidoI += `<option value="${instalacion.id_instalacion}">${tipoLimpio} | ${instalacion.direccion_completa}</option>`;
-                    });
-                } else {
-                    contenidoI = '<option value="">Sin instalaciones registradas</option>';
-                }
-
-                $('#id_instalacion').html(contenidoI).val("").trigger('change');
-                obtenerDatosGraneles();
-            },
-            error: function() {
-                console.error("Error al cargar los datos de la bitácora.");
-                $('#id_lote_granel').html('<option value="">Error al cargar lotes</option>');
-            }
-        });
+            });
+        }
     }
-}
 
     function limpiarTipo(tipo) {
         try {
@@ -338,51 +351,51 @@ function obtenerGraneles(empresa) {
         }
     }
 
-function obtenerDatosGraneles() {
-    var lote_granel_id = $("#id_lote_granel").val();
-    var tipo = 2; // o el valor que tengas definido en el formulario
+    function obtenerDatosGraneles() {
+        var lote_granel_id = $("#id_lote_granel").val();
+        var tipo = 2; // o el valor que tengas definido en el formulario
 
-    if (lote_granel_id) {
-        $.ajax({
-            url: '/getVolumenLoteBitacora/' + lote_granel_id,
-            method: 'GET',
-            data: { tipo: tipo }, // 👈 aquí envías el tipo
-            success: function(response) {
-                $('#volumen_inicial').val(response.volumen_final ?? '');
-                $('#alcohol_inicial').val(response.alcohol_final ?? '');
-            },
-            error: function() {
-                console.error('Error al obtener datos del lote o bitácora');
-                $('#volumen_inicial').val('');
-                $('#alcohol_inicial').val('');
-            }
-        });
-    } else {
-        $('#volumen_inicial').val('');
-        $('#alcohol_inicial').val('');
+        if (lote_granel_id) {
+            $.ajax({
+                url: '/getVolumenLoteBitacora/' + lote_granel_id,
+                method: 'GET',
+                data: {
+                    tipo: tipo
+                }, // 👈 aquí envías el tipo
+                success: function(response) {
+                    $('#volumen_inicial').val(response.volumen_final ?? '');
+                    $('#alcohol_inicial').val(response.alcohol_final ?? '');
+                },
+                error: function() {
+                    console.error('Error al obtener datos del lote o bitácora');
+                    $('#volumen_inicial').val('');
+                    $('#alcohol_inicial').val('');
+                }
+            });
+        } else {
+            $('#volumen_inicial').val('');
+            $('#alcohol_inicial').val('');
+        }
     }
-}
 
 
-$('#id_instalacion').select2({
-    placeholder: "Lista de instalaciones",
-    allowClear: true,
-    width: '100%'
-}).on('change', function () {
-    let $selection = $(this).next('.select2-container').find('.select2-selection--single');
+    $('#id_instalacion').select2({
+        placeholder: "Lista de instalaciones",
+        allowClear: true,
+        width: '100%'
+    }).on('change', function() {
+        let $selection = $(this).next('.select2-container').find('.select2-selection--single');
 
-    if ($(this).val()) {
-        // Si seleccionó una instalación → limpiar estilos
-        $selection.removeAttr("style");
-    } else {
-        // Si está vacío → poner estilos amarillos
-        $selection.css({
-            "background-color": "#fff3cd52",
-            "border-color": "#ffc107",
-            "color": "#856404"
-        });
-    }
-});
-
-
+        if ($(this).val()) {
+            // Si seleccionó una instalación → limpiar estilos
+            $selection.removeAttr("style");
+        } else {
+            // Si está vacío → poner estilos amarillos
+            $selection.css({
+                "background-color": "#fff3cd52",
+                "border-color": "#ffc107",
+                "color": "#856404"
+            });
+        }
+    });
 </script>

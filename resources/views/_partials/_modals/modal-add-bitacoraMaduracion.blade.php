@@ -51,10 +51,11 @@
                                 </div>
 
                                 <div class="row">
-                                  <div class="col-md-4 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control datepicker" id="fecha"
-                                                name="fecha" aria-label="Fecha" placeholder="Fecha" autocomplete="off">
+                                                name="fecha" aria-label="Fecha" placeholder="Fecha"
+                                                autocomplete="off">
                                             <label for="fecha">Fecha</label>
                                         </div>
                                     </div>
@@ -229,8 +230,8 @@
                                     </div>
                                     <div class="col-md-8 mb-3">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="destino_salidas" name="destino"
-                                                placeholder="Destino" aria-label="Destino" required>
+                                            <input type="text" class="form-control" id="destino_salidas"
+                                                name="destino" placeholder="Destino" aria-label="Destino" required>
                                             <label for="destino">Destino</label>
                                         </div>
                                     </div>
@@ -304,77 +305,94 @@
 </div>
 
 <script>
- function obtenerGraneles(empresa) {
-    // Usamos una simple comprobación para la variable 'empresa'
-    if (empresa) {
-        $.ajax({
-            url: '/getDatosBitacora/' + empresa,
-            method: 'GET',
-            success: function(response) {
+    function obtenerGraneles(empresa) {
+        // Usamos una simple comprobación para la variable 'empresa'
+        if (empresa) {
+            $.ajax({
+                url: '/getDatosBitacora/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    // --- Lógica para el select de Lotes a Granel ---
+                    let contenidoLotes = '';
 
-                // --- Lógica para el select de Lotes a Granel ---
-                let contenidoLotes = '';
-                // Verificamos que el array exista y no esté vacío
-                if (response.lotes_granel && response.lotes_granel.length > 0) {
-                    contenidoLotes = '<option value="" disabled selected>Selecciona un lote</option>';
-                    response.lotes_granel.forEach(lote => {
-                        // AQUÍ AÑADIMOS LOS DATOS FALTANTES
-                        contenidoLotes += `<option value="${lote.id_lote_granel}">` +
-                                          `${lote.nombre_lote} | %Alc. Vol: ${lote.cont_alc}% | Volumen: ${lote.volumen_restante}` +
-                                          `</option>`;
-                    });
-                } else {
-                    contenidoLotes = '<option value="">Sin lotes registrados</option>';
+                    if (response.lotes_granel && response.lotes_granel.length > 0) {
+                        contenidoLotes = '<option value="" disabled selected>Selecciona un lote</option>';
+
+                        response.lotes_granel.forEach(lote => {
+                            // Verifica si el lote tiene certificado
+                            let certificado = lote.certificado_granel ?
+                                lote.certificado_granel.num_certificado :
+                                null;
+
+                            // Construcción del texto base
+                            let textoOpcion =
+                                `${lote.nombre_lote} | %Alc. Vol: ${lote.cont_alc}% | Volumen: ${lote.volumen_restante}`;
+
+                            // Si hay certificado, se agrega al texto
+                            if (certificado) {
+                                textoOpcion += ` | Certificado: ${certificado}`;
+                            }
+
+                            contenidoLotes +=
+                                `<option value="${lote.id_lote_granel}">${textoOpcion}</option>`;
+                        });
+                    } else {
+                        contenidoLotes = '<option value="">Sin lotes registrados</option>';
+                    }
+
+                    $('#id_lote_granel').html(contenidoLotes);
+
+
+
+                    // --- Lógica para el select de Instalaciones ---
+                    let contenidoIns = '';
+                    if (response.instalaciones && response.instalaciones.length > 0) {
+                        contenidoIns =
+                            '<option value="" disabled selected>Seleccione una instalación</option>';
+                        response.instalaciones.forEach(instalacion => {
+                            const tipoLimpio = limpiarTipo(instalacion.tipo);
+                            contenidoIns += `<option value="${instalacion.id_instalacion}">` +
+                                `${tipoLimpio} | ${instalacion.direccion_completa}` +
+                                `</option>`;
+                        });
+                    } else {
+                        contenidoIns = '<option value="">Sin instalaciones registradas</option>';
+                    }
+                    $('#id_instalacion').html(contenidoIns);
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // Es fundamental manejar los errores de la petición
+                    console.error("Error al obtener datos:", textStatus, errorThrown);
+                    $('#id_lote_granel').html('<option value="">Error al cargar lotes</option>');
+                    $('#id_instalacion').html('<option value="">Error al cargar instalaciones</option>');
                 }
-                $('#id_lote_granel').html(contenidoLotes);
-
-
-                // --- Lógica para el select de Instalaciones ---
-                let contenidoIns = '';
-                if (response.instalaciones && response.instalaciones.length > 0) {
-                    contenidoIns = '<option value="" disabled selected>Seleccione una instalación</option>';
-                    response.instalaciones.forEach(instalacion => {
-                        const tipoLimpio = limpiarTipo(instalacion.tipo);
-                        contenidoIns += `<option value="${instalacion.id_instalacion}">` +
-                                        `${tipoLimpio} | ${instalacion.direccion_completa}` +
-                                        `</option>`;
-                    });
-                } else {
-                    contenidoIns = '<option value="">Sin instalaciones registradas</option>';
-                }
-                $('#id_instalacion').html(contenidoIns);
-
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // Es fundamental manejar los errores de la petición
-                console.error("Error al obtener datos:", textStatus, errorThrown);
-                $('#id_lote_granel').html('<option value="">Error al cargar lotes</option>');
-                $('#id_instalacion').html('<option value="">Error al cargar instalaciones</option>');
-            }
-        });
+            });
+        }
     }
-}
+
     function obtenerDatosGraneles() {
-    var lote_granel_id = $("#id_lote_granel").val();
-    if (lote_granel_id) {
-        $.ajax({
-            url: '/getVolumenLoteBitacoraM/' + lote_granel_id,
-            method: 'GET',
-            success: function(response) {
-                $('#volumen_inicial').val(response.volumen_final ?? '');
-                $('#alcohol_inicial').val(response.alcohol_final ?? '');
-            },
-            error: function() {
-                console.error('Error al obtener datos del lote o bitácora');
-                $('#volumen_inicial').val('');
-                $('#alcohol_inicial').val('');
-            }
-        });
-    } else {
-        $('#volumen_inicial').val('');
-        $('#alcohol_inicial').val('');
+        var lote_granel_id = $("#id_lote_granel").val();
+        if (lote_granel_id) {
+            $.ajax({
+                url: '/getVolumenLoteBitacoraM/' + lote_granel_id,
+                method: 'GET',
+                success: function(response) {
+                    $('#volumen_inicial').val(response.volumen_final ?? '');
+                    $('#alcohol_inicial').val(response.alcohol_final ?? '');
+                },
+                error: function() {
+                    console.error('Error al obtener datos del lote o bitácora');
+                    $('#volumen_inicial').val('');
+                    $('#alcohol_inicial').val('');
+                }
+            });
+        } else {
+            $('#volumen_inicial').val('');
+            $('#alcohol_inicial').val('');
+        }
     }
-}
+
     function limpiarTipo(tipo) {
         try {
             let tipoArray = JSON.parse(tipo);
