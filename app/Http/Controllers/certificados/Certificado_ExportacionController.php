@@ -507,34 +507,45 @@ public function store(Request $request)
         $new->save();
 
 
-        // === DESCONTAR BOTELLAS Y VOLUMEN ===
+        /// === DESCONTAR VOLUMEN EN LITROS AL LOTE ===
         /*$dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')->find($validated['id_dictamen']);
         $solicitud = $dictamen->inspeccione->solicitud ?? null;
 
+        $advertencia = false;
         if ($solicitud) {
-            $caracteristicas = $solicitud->caracteristicasDecodificadas();
+            $detalles = $solicitud->caracteristicasDecodificadas()['detalles'] ?? [];
+            $BotellasSolicitadas = intval($detalles[0]['cantidad_botellas'] ?? 0);
 
-            foreach ($caracteristicas['detalles'] ?? [] as $detalle) {
-                $idLote = $detalle['id_lote_envasado'] ?? null;
-                $cantBotellas = $detalle['cantidad_botellas'] ?? 0;
-                $presentacion = $detalle['presentacion'][0] ?? null;
+            if ($BotellasSolicitadas > 0) {
+                $lotes = $solicitud->lotesEnvasadoDesdeJson();
+                foreach ($lotes as $lote) {
+                    
+                    $presentacion = floatval($lote->presentacion ?? 0);
+                    $unidad = strtolower(trim($lote->unidad ?? ''));
+                    
+                    // Normalizar unidad de volumen a litros
+                    $factor = match ($unidad) {
+                        'ml' => 1/1000, 
+                        'cl' => 1/100, 
+                        'l', 'lt', 'lts', 'litros' => 1, 
+                        default => 0
+                    };
+                    if ($factor <= 0) continue;
 
-                if ($idLote && $cantBotellas > 0 && $presentacion) {
-                    $lote = lotes_envasado::find($idLote);
-                    if ($lote) {
-                        $mililitros = floatval(str_replace(['mL', 'ml', 'ML'], '', $presentacion));
-                        $litros = $mililitros / 1000;
-                        $volumenDescontar = $litros * $cantBotellas;
+                    $volUsado = $BotellasSolicitadas * $presentacion * $factor;
+                    $cantRest = intval($lote->cant_bot_restantes ?? 0);
+                    $volRest  = floatval($lote->vol_restante ?? 0);
 
-                        $lote->cant_bot_restantes = max(0, $lote->cant_bot_restantes - $cantBotellas);
-                        $lote->vol_restante = max(0, $lote->vol_restante - $volumenDescontar);
-                        $lote->save();
-                    }
+                    if ($BotellasSolicitadas > $cantRest || $volUsado > $volRest) $advertencia = true;
+
+                    // Restar botellas y volumen
+                    $lote->update([
+                        //'cant_bot_restantes' => $cantRest - $BotellasSolicitadas,
+                        'vol_restante'       => $volRest - $volUsado
+                    ]);
                 }
             }
         }*/
-
-//----------------
 
 
         $dictamenExportacion = Dictamen_Exportacion::find($new->id_dictamen);
@@ -547,7 +558,6 @@ public function store(Request $request)
         $lotes = !empty($loteIds) ? lotes_envasado::whereIn('id_lote_envasado', $loteIds)->get(): collect();
 
         foreach ($lotes as $lote){
-
             $bitacora = new BitacoraProductoTerminado();
             $bitacora->fecha = $new->fecha_emision;
             $bitacora->id_empresa = $dictamenExportacion->inspeccione->solicitud->empresa->id_empresa;
@@ -593,11 +603,17 @@ public function store(Request $request)
             $loteEnvasado = lotes_envasado::find($lote->id_lote_envasado); // Busca el registro por ID
             $loteEnvasado->cant_bot_restantes = $lote->cant_bot_restantes - $detalles[0]['cantidad_botellas'];
             $loteEnvasado->update(); // Actualiza en DB
-
-
         }
 
-        return response()->json(['message' => 'Registrado correctamente.']);
+        return response()->json([
+            'success' => true,
+            //'warning' => $advertencia,
+            'message' => /*$advertencia
+                ? 'Se registró el certificado con botellas o volumen negativos.'
+                :*/ 'Registrado correctamente.'
+        ]);
+
+        //return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
 
         return response()->json(['error' => 'Error al registrar.'. $e], 500);

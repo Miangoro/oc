@@ -1105,7 +1105,7 @@ if (array_key_exists('volumen_restante', $validated)) {
 
 // Actualiza volumen_con_agua solo si se envía
 if ($request->filled('volumen_total')) {
-    $updateData['volumen_con_agua'] = $validated['volumen_total'];
+    $updateData['volumen_sin_agua'] = $validated['volumen_total'];
 }
 
 

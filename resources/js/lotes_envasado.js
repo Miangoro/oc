@@ -38,9 +38,8 @@ $(function () {
       },
       columns: [
         { data: '' },
-        { data: 'id_lote_envasado' },
-        {
-          data: null,
+        { data: 'id_lote_envasado' }, //1
+        { data: null, //2
           searchable: true,
           orderable: false,
           render: function (data, type, row) {
@@ -63,8 +62,7 @@ $(function () {
             );
           }
         },
-        {
-          data: null,
+        { data: null, //3
           searchable: true,
           orderable: false,
           render: function (data, type, row) {
@@ -92,10 +90,9 @@ $(function () {
             );
           }
         },
-        { data: 'id_marca' },
+        { data: 'id_marca' }, //4
 
-        {
-          data: null,
+        { data: null, //5
           searchable: true,
           orderable: false,
           render: function (data, type, row) {
@@ -123,14 +120,11 @@ $(function () {
             );
           }
         },
-
-        {
-          data: function (row, type, set) {
+        { data: function (row, type, set) { //6
             return row.presentacion + ' ' + row.unidad;
           }
         },
-        {
-          data: 'cont_alc_envasado',
+        { data: 'cont_alc_envasado', //7
           render: function (data, type, row) {
             if (data) {
               return `${parseFloat(data).toFixed(2)}% Alc. Vol.`;
@@ -139,8 +133,7 @@ $(function () {
             }
           }
         },
-        {
-          data: null,
+        { data: null, //8
           searchable: true,
           orderable: false,
           render: function (data, type, row) {
@@ -170,8 +163,7 @@ $(function () {
             );
           }
         },
-        {
-          data: 'destino_lote',
+        { data: 'destino_lote', //9
           className: 'text-center',
           render: function (data, type, full, meta) {
             var destinoText = '';
@@ -201,9 +193,8 @@ $(function () {
             `;
           }
         },
-        { data: 'lugar_envasado' },
-        {
-          data: null,
+        { data: 'lugar_envasado' }, //10
+        { data: null, //11
           searchable: true,
           orderable: false,
           render: function (data, type, row) {
@@ -225,7 +216,7 @@ $(function () {
             return inicial + nuevo;
           }
         },
-        { data: 'estatus' }, //status
+        { data: 'estatus' }, //status 12
         { data: 'action' }
       ],
       columnDefs: [
@@ -248,32 +239,10 @@ $(function () {
             return `<span>${full.fake_id}</span>`;
           }
         },
-
-        {
-          // email verify
-          targets: 11,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $verified = full['estatus'];
-            var $colorRegimen;
-
-            if ($verified == 'Pendiente') {
-              $colorRegimen = 'danger'; // Azulnja
-              /*                       } else if ($verified == 'Pendiente') {
-                                            $colorRegimen = 'danger';  */
-            } else {
-              $colorRegimen = 'secondary'; // Color por defecto si no coincide con ninguno
-            }
-
-            return `${
-              $verified
-                ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-            }`;
-          }
-        },
         { //estatus
           targets: 12,
+          searchable: true,
+          orderable: false,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $estatus = full['estatus'];
