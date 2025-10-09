@@ -387,11 +387,15 @@
                 success: function(response) {
                     var contenido =
                         '<option value="" disabled selected>Selecciona un lote a granel</option>';
-
                     for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido += '<option value="' + response.lotes_granel[index].id_lote_granel +
-                            '">' +
-                            response.lotes_granel[index].nombre_lote + '</option>';
+                        // Guardamos el lote actual en una variable para mayor claridad
+                        const lote = response.lotes_granel[index];
+
+                        // Usamos template literals (comillas ``) para construir el string fácilmente
+                        contenido +=
+                            `<option value="${lote.id_lote_granel}">` +
+                            `${lote.nombre_lote} | %Alc. Vol: ${lote.cont_alc}% | Volumen: ${lote.volumen_restante}` +
+                            `</option>`;
                     }
                     if (response.lotes_granel.length === 0) {
                         contenido = '<option value="">Sin lotes registrados</option>';
@@ -422,7 +426,7 @@
 
 
                     var contenidoIns =
-                    '<option value="" disabled selected>Seleccione una instalación</option>';
+                        '<option value="" disabled selected>Seleccione una instalación</option>';
 
                     for (let index = 0; index < response.instalaciones.length; index++) {
                         var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
@@ -464,20 +468,20 @@
                     $('#alcohol_inicial').val(response.lotes_granel.cont_alc);
                     $('#id_categoria').val(response.lotes_granel.id_categoria).trigger('change');
                     $('#id_clase').val(response.lotes_granel.id_clase).trigger('change');
-                     $('#id_tipo').val('');
-                   if (Array.isArray(response.tipo)) {
-                    response.tipo.forEach(t => {
-                        $('#id_tipo').append(
-                            $('<option>', {
-                                value: t.id_tipo,
-                                text: `${t.nombre} (${t.cientifico})`,
-                                selected: true // si deseas marcarlo automáticamente
-                            })
-                        );
-                    });
-                }
+                    $('#id_tipo').val('');
+                    if (Array.isArray(response.tipo)) {
+                        response.tipo.forEach(t => {
+                            $('#id_tipo').append(
+                                $('<option>', {
+                                    value: t.id_tipo,
+                                    text: `${t.nombre} (${t.cientifico})`,
+                                    selected: true // si deseas marcarlo automáticamente
+                                })
+                            );
+                        });
+                    }
 
-                  $('#id_tipo').trigger('change');
+                    $('#id_tipo').trigger('change');
                 },
                 error: function() {
                     console.error('Error al obtener datos de graneles');

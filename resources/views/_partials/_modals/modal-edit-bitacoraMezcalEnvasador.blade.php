@@ -36,7 +36,7 @@
                                     <div class="col-md-5 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="date" class="form-control datepicker" id="edit_fecha"
-                                                name="fecha" aria-label="Fecha" >
+                                                name="fecha" aria-label="Fecha">
                                             <label for="fecha">Fecha</label>
                                         </div>
                                     </div>
@@ -94,7 +94,7 @@
                                 </div>
 
                                 <div class="row">
-                                  <div class="col-md-4 mb-4">
+                                    <div class="col-md-4 mb-4">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="edit_id_tanque"
                                                 name="id_tanque" placeholder="ID del Tanque(s)"
@@ -272,9 +272,10 @@
                 success: function(response) {
                     var contenido = "";
                     for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                            response
-                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
+                        contenido =
+                            `<option value="${response.lotes_granel[index].id_lote_granel}">` +
+                            `${response.lotes_granel[index].nombre_lote} | %Alc. Vol: ${response.lotes_granel[index].cont_alc}% | Volumen: ${response.lotes_granel[index].volumen_restante}` +
+                            `</option>` + contenido;
                     }
                     if (response.lotes_granel.length == 0) {
                         contenido = '<option value="">Sin lotes registrados</option>';

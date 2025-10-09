@@ -83,7 +83,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select onchange="obtenerDatosGraneles();" id="id_lote_granel"
                                                 name="id_lote_granel" class="select2 form-select">
@@ -92,7 +92,7 @@
                                             <label for="id_lote_granel">Lote a granel</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-8 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <select class=" form-select select2" id="id_instalacion"
                                                 name="id_instalacion" aria-label="id_instalacion">
@@ -275,45 +275,52 @@
 </div>
 
 <script>
-    function obtenerGraneles(empresa) {
-        if (empresa !== "" && empresa !== null && empresa !== undefined) {
-            $.ajax({
-                url: '/getDatosBitacora/' + empresa,
-                method: 'GET',
-                success: function(response) {
-                    var contenido = "";
-                    for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                            response
-                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
-                    }
-                    if (response.lotes_granel.length == 0) {
-                        contenido = '<option value="">Sin lotes registrados</option>';
-                    } else {}
-                    $('#id_lote_granel').html(contenido);
+function obtenerGraneles(empresa) {
+    if (empresa !== "" && empresa !== null && empresa !== undefined) {
+        $.ajax({
+            url: '/getDatosBitacora/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var contenido = "";
+                for (let index = 0; index < response.lotes_granel.length; index++) {
+                    // AQUÍ ESTÁ LA CORRECCIÓN
+                    contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
+                        response.lotes_granel[index].nombre_lote +
+                        ' | %Alc. Vol: ' + response.lotes_granel[index].cont_alc +
+                        '% | Volumen: ' + response.lotes_granel[index].volumen_restante +
+                        '</option>' + contenido;
+                }
 
-                    var contenidoI = '<option value="">Lista de instalaciones</option>';
+                if (response.lotes_granel.length == 0) {
+                    contenido = '<option value="">Sin lotes registrados</option>';
+                }
 
-                    for (let index = 0; index < response.instalaciones.length; index++) {
-                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+                $('#id_lote_granel').html(contenido);
 
-                        contenidoI += '<option value="' + response.instalaciones[index].id_instalacion +
-                            '">' +
-                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                            '</option>';
-                    }
+                var contenidoI = '<option value="">Lista de instalaciones</option>';
 
-                    if (response.instalaciones.length == 0) {
-                        contenidoI = '<option value="">Sin instalaciones registradas</option>';
-                    }
+                for (let index = 0; index < response.instalaciones.length; index++) {
+                    var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
 
-                    $('#id_instalacion').html(contenidoI).val("").trigger('change');
-                    obtenerDatosGraneles();
-                },
-                error: function() {}
-            });
-        }
+                    contenidoI += '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                        '</option>';
+                }
+
+                if (response.instalaciones.length == 0) {
+                    contenidoI = '<option value="">Sin instalaciones registradas</option>';
+                }
+
+                $('#id_instalacion').html(contenidoI).val("").trigger('change');
+                obtenerDatosGraneles();
+            },
+            error: function() {
+                // Es buena práctica manejar errores, por ejemplo:
+                console.error("Error al obtener los datos de la bitácora.");
+            }
+        });
     }
+}
 
     function limpiarTipo(tipo) {
         try {

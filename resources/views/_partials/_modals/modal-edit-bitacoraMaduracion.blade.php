@@ -283,9 +283,10 @@
                 success: function(response) {
                     var contenido = "";
                     for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                            response
-                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
+                        contenido =
+  `<option value="${response.lotes_granel[index].id_lote_granel}">` +
+  `${response.lotes_granel[index].nombre_lote} | %Alc. Vol: ${response.lotes_granel[index].cont_alc}% | Volumen: ${response.lotes_granel[index].volumen_restante}` +
+  `</option>` + contenido;
                     }
                     if (response.lotes_granel.length == 0) {
                         contenido = '<option value="">Sin lotes registrados</option>';

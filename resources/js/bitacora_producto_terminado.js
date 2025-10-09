@@ -1457,13 +1457,15 @@ $(document).ready(function () {
         var contenidoGranel = '<option value="" disabled selected>Selecciona un lote a granel</option>';
 
         for (let index = 0; index < response.lotes_granel.length; index++) {
-          contenidoGranel +=
-            '<option value="' +
-            response.lotes_granel[index].id_lote_granel +
-            '">' +
-            response.lotes_granel[index].nombre_lote +
-            '</option>';
-        }
+  // Guardamos el lote actual en una variable para mayor claridad
+  const lote = response.lotes_granel[index];
+
+  // Usamos template literals (comillas ``) para construir el string fácilmente
+  contenidoGranel +=
+    `<option value="${lote.id_lote_granel}">` +
+    `${lote.nombre_lote} | %Alc. Vol: ${lote.cont_alc}% | Volumen: ${lote.volumen_restante}` +
+    `</option>`;
+}
         if (response.lotes_granel.length === 0) {
           contenidoGranel = '<option value="">Sin lotes registrados</option>';
         }
@@ -1536,13 +1538,15 @@ $(document).ready(function () {
         var contenidoGranel = '<option value="" disabled selected>Selecciona un lote a granel</option>';
 
         for (let index = 0; index < response.lotes_granel.length; index++) {
-          contenidoGranel +=
-            '<option value="' +
-            response.lotes_granel[index].id_lote_granel +
-            '">' +
-            response.lotes_granel[index].nombre_lote +
-            '</option>';
-        }
+  // Guardamos el lote actual en una variable para mayor claridad
+  const lote = response.lotes_granel[index];
+
+  // Usamos template literals (comillas ``) para construir el string fácilmente
+  contenidoGranel +=
+    `<option value="${lote.id_lote_granel}">` +
+    `${lote.nombre_lote} | %Alc. Vol: ${lote.cont_alc}% | Volumen: ${lote.volumen_restante}` +
+    `</option>`;
+}
         if (response.lotes_granel.length === 0) {
           contenidoGranel = '<option value="">Sin lotes registrados</option>';
         }

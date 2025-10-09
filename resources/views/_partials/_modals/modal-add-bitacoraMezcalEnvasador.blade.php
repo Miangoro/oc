@@ -281,48 +281,53 @@
 </div>
 
 <script>
-    function obtenerGraneles(empresa) {
-        if (empresa !== "" && empresa !== null && empresa !== undefined) {
-            $.ajax({
-                url: '/getDatosBitacora/' + empresa,
-                method: 'GET',
-                success: function(response) {
-                    var contenido = '<option value="" disabled selected>Selecciona un lote</option>';
+function obtenerGraneles(empresa) {
+    if (empresa) { // Forma corta de verificar que no sea nulo o vacío
+        $.ajax({
+            url: '/getDatosBitacora/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                let contenido = '<option value="" disabled selected>Selecciona un lote</option>';
 
-                    if (response.lotes_granel.length > 0) {
-                        for (let index = 0; index < response.lotes_granel.length; index++) {
-                            contenido += '<option value="' + response.lotes_granel[index].id_lote_granel +
-                                '">' +
-                                response.lotes_granel[index].nombre_lote + '</option>';
-                        }
-                    } else {
-                        contenido += '<option value="">Sin lotes registrados</option>';
-                    }
+                if (response.lotes_granel && response.lotes_granel.length > 0) {
+                    // Usamos forEach para un código más limpio
+                    response.lotes_granel.forEach(lote => {
+                        // AQUÍ ESTÁ LA LÍNEA MODIFICADA
+                        // Se agregan los datos de cont_alc y volumen_restante
+                        contenido += `<option value="${lote.id_lote_granel}">` +
+                                     `${lote.nombre_lote} | %Alc. Vol: ${lote.cont_alc}% | Volumen: ${lote.volumen_restante}` +
+                                     `</option>`;
+                    });
+                } else {
+                    // Corregimos la lógica para que no se dupliquen opciones
+                    contenido = '<option value="">Sin lotes registrados</option>';
+                }
 
-                    $('#id_lote_granel').html(contenido).val(null).trigger('change');
+                // Usamos .val("") para resetear la selección de forma segura
+                $('#id_lote_granel').html(contenido).val("").trigger('change');
 
-                    var contenidoI = '<option value="">Lista de instalaciones</option>';
+                // --- Código para las instalaciones (sin cambios) ---
+                let contenidoI = '<option value="" disabled selected>Selecciona una instalación</option>';
 
-                    for (let index = 0; index < response.instalaciones.length; index++) {
-                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+                if (response.instalaciones && response.instalaciones.length > 0) {
+                    response.instalaciones.forEach(instalacion => {
+                        const tipoLimpio = limpiarTipo(instalacion.tipo);
+                        contenidoI += `<option value="${instalacion.id_instalacion}">${tipoLimpio} | ${instalacion.direccion_completa}</option>`;
+                    });
+                } else {
+                    contenidoI = '<option value="">Sin instalaciones registradas</option>';
+                }
 
-                        contenidoI += '<option value="' + response.instalaciones[index].id_instalacion +
-                            '">' +
-                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                            '</option>';
-                    }
-
-                    if (response.instalaciones.length == 0) {
-                        contenidoI = '<option value="">Sin instalaciones registradas</option>';
-                    }
-
-                    $('#id_instalacion').html(contenidoI).val("").trigger('change');
-                    obtenerDatosGraneles();
-                },
-                error: function() {}
-            });
-        }
+                $('#id_instalacion').html(contenidoI).val("").trigger('change');
+                obtenerDatosGraneles();
+            },
+            error: function() {
+                console.error("Error al cargar los datos de la bitácora.");
+                $('#id_lote_granel').html('<option value="">Error al cargar lotes</option>');
+            }
+        });
     }
+}
 
     function limpiarTipo(tipo) {
         try {
