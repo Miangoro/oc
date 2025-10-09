@@ -1015,6 +1015,51 @@ $(function () {
     ).on('input', calcular);
   });
 
+
+$(document).ready(function () {
+  // Función para calcular los valores del formulario de edición
+  function calcularEdit() {
+    // Lectura de valores de los campos de edición
+    let volumenInicialEdit = parseFloat($('#edit_volumen_inicial').val()) || 0;
+    let alcoholInicialEdit = parseFloat($('#edit_alcohol_inicial').val()) || 0;
+
+    let volumenEntradaEdit = parseFloat($('#edit_volumen_entrada').val()) || 0;
+    let alcoholEntradaEdit = parseFloat($('#edit_alcohol_entrada').val()) || 0;
+    let aguaEntradaEdit = parseFloat($('#edit_agua_entrada').val()) || 0;
+
+    let volumenSalidaEdit = parseFloat($('#edit_volumen_salida').val()) || 0;
+    let alcoholSalidaEdit = parseFloat($('#edit_alc_vol_salida').val()) || 0;
+
+    // Cálculo del volumen final
+    let volumenFinalEdit = volumenInicialEdit + volumenEntradaEdit + aguaEntradaEdit - volumenSalidaEdit;
+
+    // Variable para el alcohol final
+    let alcoholFinalEdit = 0;
+
+    // Se asegura de no dividir por cero
+    if (volumenFinalEdit > 0) {
+      // Cálculo del alcohol total
+      let alcoholTotalEdit =
+        (volumenInicialEdit * alcoholInicialEdit) +
+        (volumenEntradaEdit * alcoholEntradaEdit) -
+        (volumenSalidaEdit * alcoholSalidaEdit);
+
+      // Cálculo de la concentración final de alcohol
+      alcoholFinalEdit = alcoholTotalEdit / volumenFinalEdit;
+    }
+
+    // Muestra los resultados en los campos correspondientes
+    $('#edit_volumen_final').val(volumenFinalEdit.toFixed(2));
+    $('#edit_alc_vol_final').val(alcoholFinalEdit.toFixed(2));
+  }
+
+  // Se asigna la función 'calcularEdit' al evento 'input' de cada campo
+  $(
+    '#edit_volumen_inicial, #edit_alcohol_inicial, #edit_volumen_entrada, #edit_alcohol_entrada, #edit_agua_entrada, #edit_volumen_salida, #edit_alc_vol_salida'
+  ).on('input', calcularEdit);
+});
+
+
   $(document).ready(function () {
     $('#tipo_op').on('change', function () {
       const tipo = $(this).val();
