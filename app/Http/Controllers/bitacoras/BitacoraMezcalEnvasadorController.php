@@ -556,9 +556,9 @@ private function esJsonValido($string)
             $lote->id_instalacion = $request->id_instalacion;
             $lote->nombre_lote = $request->nombre_lote ?? 'Lote ' . now()->format('YmdHis');
             $lote->tipo_lote = 1;
-            $lote->volumen = $request->volumen_entrada ?? $request->volumen_final;
+            $lote->volumen = $request->volumen_final ?? $request->volumen_entrada;
             $lote->volumen_restante = $lote->volumen;
-            $lote->volumen_con_agua = $request->volumen_final ?? $request->volumen_entrada;
+            $lote->volumen_sin_agua = $request->volumen_entrada ?? $request->volumen_final;
             $lote->cont_alc = $request->alcohol_entrada ?? $request->alc_vol_final;
             $lote->id_tanque = $request->id_tanque ?? null;
             $lote->id_estado = 1;
