@@ -5,6 +5,7 @@ namespace App\Http\Controllers\hologramas;
 use App\Http\Controllers\Controller;
 use App\Models\activarHologramasModelo;
 use App\Models\Certificado_Exportacion;
+use App\Models\coordenadas;
 use App\Models\empresa;
 use App\Models\empresaNumCliente;
 use App\Models\marcas;
@@ -196,6 +197,20 @@ class HologramasValidacion extends Controller
       'guia' => $guias[0],
     ]);
   }
+
+   public function guardar_coordenadas(Request $request)
+    {
+        $request->validate([
+            'folio_holograma' => 'required|string',
+            'latitud' => 'required|numeric',
+            'longitud' => 'required|numeric',
+            'fecha'   => Carbon::now()
+        ]);
+
+        coordenadas::create($request->only('folio_holograma','latitud','longitud','fecha'));
+
+        return response()->json(['success' => true]);
+    }
 
 
 }

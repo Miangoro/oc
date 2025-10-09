@@ -164,3 +164,30 @@
     </div>
 
 @endsection
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const data = {
+                folio_holograma: "{{ $folio ?? 'desconocido' }}",
+                latitud: position.coords.latitude,
+                longitud: position.coords.longitude,
+                _token: "{{ csrf_token() }}"
+            };
+
+            fetch("{{ route('guardar.coordenadas') }}", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(res => console.log(res))
+            .catch(err => console.error(err));
+        });
+    } else {
+        console.log("Geolocalización no soportada");
+    }
+});
+</script>
