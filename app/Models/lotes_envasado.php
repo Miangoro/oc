@@ -19,7 +19,7 @@ class lotes_envasado extends Model
         'id_marca',
         'destino_lote',
         'cant_botellas',
-        'cant_bot_restante',
+        'cant_bot_restantes',
         'presentacion',
         'unidad',
         'volumen_total',

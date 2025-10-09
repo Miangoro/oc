@@ -508,10 +508,11 @@ public function store(Request $request)
 
 
         /// === DESCONTAR VOLUMEN EN LITROS AL LOTE ===
-        /*$dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')->find($validated['id_dictamen']);
+        $dictamen = Dictamen_Exportacion::with('inspeccione.solicitud')->find($validated['id_dictamen']);
         $solicitud = $dictamen->inspeccione->solicitud ?? null;
 
-        $advertencia = false;
+        $advertenciaExceso = false;
+        $advertenciaFaltante = false;
         if ($solicitud) {
             $detalles = $solicitud->caracteristicasDecodificadas()['detalles'] ?? [];
             $BotellasSolicitadas = intval($detalles[0]['cantidad_botellas'] ?? 0);
@@ -519,33 +520,37 @@ public function store(Request $request)
             if ($BotellasSolicitadas > 0) {
                 $lotes = $solicitud->lotesEnvasadoDesdeJson();
                 foreach ($lotes as $lote) {
-                    
-                    $presentacion = floatval($lote->presentacion ?? 0);
                     $unidad = strtolower(trim($lote->unidad ?? ''));
-                    
-                    // Normalizar unidad de volumen a litros
+                    $presentacion = $lote->presentacion;
+                    $cantRest     = $lote->cant_bot_restantes;
+                    $volRest      = $lote->vol_restante;
+
+                    // Verificar si faltan datos
                     $factor = match ($unidad) {
-                        'ml' => 1/1000, 
-                        'cl' => 1/100, 
-                        'l', 'lt', 'lts', 'litros' => 1, 
+                        'ml' => 1/1000,
+                        'cl' => 1/100,
+                        'l', 'lt', 'lts', 'litros' => 1,
                         default => 0
                     };
-                    if ($factor <= 0) continue;
 
+                    if (is_null($presentacion) || is_null($cantRest) || is_null($volRest) || $factor <= 0) {
+                        $advertenciaFaltante = true;
+                        continue; // saltar lote
+                    }
+                    
                     $volUsado = $BotellasSolicitadas * $presentacion * $factor;
-                    $cantRest = intval($lote->cant_bot_restantes ?? 0);
-                    $volRest  = floatval($lote->vol_restante ?? 0);
-
-                    if ($BotellasSolicitadas > $cantRest || $volUsado > $volRest) $advertencia = true;
+                    
+                    if ($BotellasSolicitadas > $cantRest || $volUsado > $volRest) 
+                        $advertenciaExceso  = true;
 
                     // Restar botellas y volumen
                     $lote->update([
-                        //'cant_bot_restantes' => $cantRest - $BotellasSolicitadas,
+                        'cant_bot_restantes' => $cantRest - $BotellasSolicitadas,
                         'vol_restante'       => $volRest - $volUsado
                     ]);
                 }
             }
-        }*/
+        }
 
 
         $dictamenExportacion = Dictamen_Exportacion::find($new->id_dictamen);
@@ -600,22 +605,29 @@ public function store(Request $request)
             $bitacora->tipo = 3; // Fijo
             $bitacora->save();
 
+            /*// Restar botellas al lote
             $loteEnvasado = lotes_envasado::find($lote->id_lote_envasado); // Busca el registro por ID
             $loteEnvasado->cant_bot_restantes = $lote->cant_bot_restantes - $detalles[0]['cantidad_botellas'];
             $loteEnvasado->update(); // Actualiza en DB
+            */
         }
 
+
+         // Retornar mensaje final
+        if ($advertenciaExceso) {
+            $mensaje = 'Se registró con botellas o volumen negativos.';
+        } elseif ($advertenciaFaltante) {
+            $mensaje = 'Se registró, pero algunos lotes no pudieron restarse por falta de datos.';
+        } else {
+            $mensaje = 'Registrado correctamente.';
+        }
         return response()->json([
             'success' => true,
-            //'warning' => $advertencia,
-            'message' => /*$advertencia
-                ? 'Se registró el certificado con botellas o volumen negativos.'
-                :*/ 'Registrado correctamente.'
+            'warning' => $advertenciaExceso || $advertenciaFaltante,
+            'message' => $mensaje
         ]);
 
-        //return response()->json(['message' => 'Registrado correctamente.']);
     } catch (\Exception $e) {
-
         return response()->json(['error' => 'Error al registrar.'. $e], 500);
     }
 }
