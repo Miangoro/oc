@@ -222,7 +222,8 @@ public function getDatosBitacora(empresa $empresa)
     return response()->json([
         'instalaciones' => $instalacionesConMaqui,
         'instalacionesConMaqui' => $instalacionesConMaqui,
-        'lotes_granel' => $empresa->todos_lotes_granel(),
+         'lotes_granel' => $empresa->todos_lotes_granel()->load('certificadoGranel'),
+
         'marcas' => $marcas,
         'guias' => $empresa->guias(),
         'predios' => $empresa->predios(),
