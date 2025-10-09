@@ -110,6 +110,7 @@ public function index(Request $request)
         9 => 'unidad',
         10 => 'volumen_total',
         11 => 'lugar_envasado',
+        12 => 'estatus'
     ];
 
     $limit = $request->input('length');
@@ -155,14 +156,11 @@ public function index(Request $request)
 
         // Mapeamos posibles búsquedas de texto a su valor numérico
         $estatusMap = [
-            /*'pendiente' => 0,
-            'disponible' => 1,
-            'agotado' => 2,*/
+            //coincidencia a partir de 4 letras
             0 => 'pend',
             1 => 'disp',
             2 => 'agot'
         ];
-
         // Buscar coincidencia de nombre
         $tipoEstado = null;
         foreach ($estatusMap as $clave => $valor) {

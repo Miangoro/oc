@@ -893,14 +893,35 @@ $(document).ready(function () {
         // Actualizar la tabla sin reinicializar DataTables
         dataTable.ajax.reload();
         // Mostrar alerta de éxito
-        Swal.fire({
+        /*Swal.fire({
           icon: 'success',
           title: '¡Éxito!',
           text: response.message,
           customClass: {
             confirmButton: 'btn btn-primary'
           }
-        });
+        });*/
+        // Diferenciar mensaje normal o advertencia
+        if (response.warning) {
+          Swal.fire({
+            icon: 'warning',
+            title: '¡Advertencia!',
+            text: response.message,
+            confirmButtonClass: 'btn btn-warning',
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+          });
+        } else {
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+          });
+        }
       },
       error: function (xhr) {
         console.log('Error:', xhr);
