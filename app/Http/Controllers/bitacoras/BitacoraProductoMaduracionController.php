@@ -239,6 +239,7 @@ public function index(Request $request)
             'tipo_madera' => $bitacora->tipo_madera ?? 'N/A',
             'num_recipientes' => $bitacora->num_recipientes ?? 'N/A',
             'num_recipientes_entrada' => $bitacora->num_recipientes_entrada ?? 'N/A',
+            'tipo_operacion' => $bitacora->tipo_operacion ?? 'N/A',
             'procedencia_entrada' => $bitacora->procedencia_entrada ?? 'N/A',
             'volumen_entrada' => $bitacora->volumen_entrada ?? 'N/A',
             'alcohol_entrada' => $bitacora->alcohol_entrada ?? 'N/A',

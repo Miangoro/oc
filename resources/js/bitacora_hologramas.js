@@ -139,7 +139,19 @@ $(function () {
           render: function (data, type, full, meta) {
             var $serie_entrada = full['serie_entrada'] ?? 'N/A';
             var $num_sellos_entrada = full['num_sellos_entrada'] ?? 'N/A';
+            var tipoMovimiento = full['tipo_operacion'];
+            var badgeHtml = ''; // Variable para guardar el HTML del badge
+
+            // 2. Crear el badge según el tipo de movimiento
+            if (tipoMovimiento === 'Entradas') {
+              badgeHtml = '<span class="badge rounded-pill bg-success mb-2">Entrada</span><br>';
+            } else if (tipoMovimiento === 'Entradas y salidas') {
+              badgeHtml = '<span class="badge rounded-pill bg-primary mb-2">Entradas y Salidas</span><br>';
+            }
+
+
             return (
+              badgeHtml +
               '<span class="fw-bold small">Serie: </span>' +
               '<span class="small">' +
               $serie_entrada +
@@ -158,7 +170,19 @@ $(function () {
           render: function (data, type, full, meta) {
             var $serie_salidas = full['serie_salidas'] ?? 'N/A';
             var $num_sellos_salidas = full['num_sellos_salidas'] ?? 'N/A';
+             // 1. Obtener el tipo de movimiento
+            var tipoMovimiento = full['tipo_operacion'];
+            var badgeHtml = '';
+
+            // 2. Crear el badge (con colores diferentes para distinguirlo)
+            if (tipoMovimiento === 'Salidas') {
+              badgeHtml = '<span class="badge rounded-pill bg-danger mb-2">Salida</span><br>';
+            } else if (tipoMovimiento === 'Entradas y salidas') {
+              // Usamos un color diferente (ej. 'info') para cumplir con "algo diferente pues"
+              badgeHtml = '<span class="badge rounded-pill bg-info mb-2">Entradas y Salidas</span><br>';
+            }
             return (
+              badgeHtml +
               '<span class="fw-bold small">Serie de Salidas: </span>' +
               '<span class="small">' +
               $serie_salidas +
