@@ -522,10 +522,10 @@ public function store(Request $request)
                 foreach ($lotes as $lote) {
                     $unidad = strtolower(trim($lote->unidad ?? ''));
                     $presentacion = $lote->presentacion;
-                    $cantRest     = $lote->cant_bot_restantes;
-                    $volRest      = $lote->vol_restante;
+                    $boteActual     = $lote->cant_bot_restantes;
+                    $volActual      = $lote->vol_restante;
 
-                    // Verificar si faltan datos
+                    // Factor de conversión a litros
                     $factor = match ($unidad) {
                         'ml' => 1/1000,
                         'cl' => 1/100,
@@ -533,20 +533,26 @@ public function store(Request $request)
                         default => 0
                     };
 
-                    if (is_null($presentacion) || is_null($cantRest) || is_null($volRest) || $factor <= 0) {
+                    // Validar si faltan datos
+                    if (is_null($presentacion) || is_null($boteActual) || is_null($volActual) || $factor <= 0) {
                         $advertenciaFaltante = true;
                         continue; // saltar lote
                     }
                     
+                    // Calcular volúmenes usados y restantes
                     $volUsado = $BotellasSolicitadas * $presentacion * $factor;
+                    $boteRest = $boteActual - $BotellasSolicitadas;
+                    $volRest  = $volActual - $volUsado;
                     
-                    if ($BotellasSolicitadas > $cantRest || $volUsado > $volRest) 
-                        $advertenciaExceso  = true;
+                    if ($boteRest < 0 || $volRest < 0) {
+                        $advertenciaExceso = true;
+                    }
 
                     // Restar botellas y volumen
                     $lote->update([
-                        'cant_bot_restantes' => $cantRest - $BotellasSolicitadas,
-                        'vol_restante'       => $volRest - $volUsado
+                        'cant_bot_restantes' => $boteRest,
+                        'vol_restante'       => $volRest,
+                        'estatus'            => ($boteRest <= 0 || $volRest <= 0) ? 2 : $lote->estatus
                     ]);
                 }
             }

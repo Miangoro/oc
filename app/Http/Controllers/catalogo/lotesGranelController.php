@@ -103,8 +103,6 @@ public function index(Request $request)
         $start = $request->input('start');
         $dir = $request->input('order.0.dir') ?? 'desc';
         $order = $columns[$request->input('order.0.column')] ?? 'id_lote_granel';
-        /*$totalData = LotesGranel::count();
-        $totalFiltered = $totalData;*/
         $search = $request->input('search.value');
 
 
@@ -145,21 +143,53 @@ public function index(Request $request)
         }
 
 
-
         $baseQuery = clone $query;// Clonamos el query antes de aplicar búsqueda, paginación u ordenamiento
         $totalData = $baseQuery->count();// totalData (sin búsqueda)
 
 
     // Búsqueda global
     if (!empty($search)) {
-        $query->where(function ($q) use ($search) {
+        // Convertir a minúsculas / elimina espacios al inicio y al final
+        $searchNormalized = mb_strtolower(trim($search), 'UTF-8');
+        // También elimina tildes para mejor comparación
+        $searchNormalized = strtr($searchNormalized, [
+            'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
+            'Á' => 'a', 'É' => 'e', 'Í' => 'i', 'Ó' => 'o', 'Ú' => 'u'
+        ]);
+
+        // Mapeamos posibles búsquedas de texto a su valor numérico
+        $estatusMap = [
+            //coincidencia a partir de 4 letras
+            0 => 'pend',
+            1 => 'disp',
+            2 => 'agot'
+        ];
+        // Buscar coincidencia de nombre
+        $tipoEstado = null;
+        foreach ($estatusMap as $clave => $valor) {
+            $valorNormalized = mb_strtolower($valor, 'UTF-8');
+            $valorNormalized = strtr($valorNormalized, [
+                'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u'
+            ]);
+            if (strpos($searchNormalized, $valorNormalized) !== false) {
+                $tipoEstado = $clave; // guardamos el número, no el nombre
+                break;
+            }
+        }
+
+        $query->where(function ($q) use ($search, $tipoEstado) {
             $q->where('id_lote_granel', 'LIKE', "%{$search}%")
-            ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
-            ->orWhere('folio_fq', 'LIKE', "%{$search}%")
-            ->orWhere('volumen', 'LIKE', "%{$search}%")
-            ->orWhere('cont_alc', 'LIKE', "%{$search}%")
-            ->orWhere('folio_certificado', 'LIKE', "%{$search}%")
-            ->orWhereHas('empresa', fn($q) => $q->where('razon_social', 'LIKE', "%{$search}%"));
+                ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
+                ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+                ->orWhere('volumen', 'LIKE', "%{$search}%")
+                ->orWhere('cont_alc', 'LIKE', "%{$search}%")
+                ->orWhere('folio_certificado', 'LIKE', "%{$search}%")
+                ->orWhereHas('empresa', fn($q) => $q->where('razon_social', 'LIKE', "%{$search}%"));
+
+                // Filtrar por estatus de lote si se detectó una palabra clave
+                if (!is_null($tipoEstado)) {
+                    $q->orWhere('estatus', $tipoEstado);
+                }
         });
 
         $totalFiltered = $query->count();
@@ -173,146 +203,6 @@ public function index(Request $request)
         ->limit($limit)
         ->orderBy($order, $dir)
         ->get();
-
-
-        /* ->when($empresaId, function ($query) use ($empresaId, $empresasVisibles, $esMaquilador) {
-
-                if ($esMaquilador) {
-                    // Maquilador: sus propios registros y donde es destino
-                    $query->where(function($q) use ($empresaId) {
-                        $q->where('id_empresa', $empresaId)
-                            ->orWhere('id_empresa_destino', $empresaId);
-                    });
-
-                } else {
-                    // Empresa principal
-                    $hayDestino = LotesGranel::whereIn('id_empresa', $empresasVisibles)
-                                                ->where('id_empresa_destino', $empresaId)
-                                                ->exists();
-
-                    $query->where(function($q) use ($empresaId, $empresasVisibles, $hayDestino) {
-                        if ($hayDestino) {
-                            // Solo mostrar registros donde id_empresa = su id o id_empresa_destino = su id
-                            $q->whereIn('id_empresa', $empresasVisibles)
-                                ->where(function($cond) use ($empresaId) {
-                                    $cond->where('id_empresa', $empresaId)
-                                        ->orWhere('id_empresa_destino', $empresaId);
-                                });
-                        } else {
-                            // Mostrar registros propios y de maquiladores sin destino
-                            $q->where('id_empresa', $empresaId)
-                                ->orWhere(function($q2) use ($empresasVisibles) {
-                                    $q2->whereIn('id_empresa', $empresasVisibles)
-                                    ->whereNull('id_empresa_destino');
-                                });
-                        }
-                    });
-                }
-            })
-
-
-        ->when($search, function ($query, $search) {
-            $query->where(function ($q) use ($search) {
-            $q->where('id_lote_granel', 'LIKE', "%{$search}%")
-            ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
-            ->orWhere('folio_fq', 'LIKE', "%{$search}%")
-            ->orWhere('volumen', 'LIKE', "%{$search}%")
-            ->orWhere('cont_alc', 'LIKE', "%{$search}%")
-            ->orWhere('folio_certificado', 'LIKE', "%{$search}%")
-            ->orWhereHas('empresa', function ($subQuery) use ($search) {
-                $subQuery->where('razon_social', 'LIKE', "%{$search}%");
-            })
-            ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
-                $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
-            })
-            ->orWhereHas('Organismo', function ($subQuery) use ($search) {
-                $subQuery->where('organismo', 'LIKE', "%{$search}%");
-            })
-            ->orWhereHas('categoria', function ($subQuery) use ($search) {
-                $subQuery->where('categoria', 'LIKE', "%{$search}%");
-            })
-            ->orWhereHas('clase', function ($subQuery) use ($search) {
-                $subQuery->where('clase', 'LIKE', "%{$search}%");
-            })
-            ->orWhereHas('tipos', function ($subQuery) use ($search) {
-                $subQuery->where('nombre', 'LIKE', "%{$search}%");
-            })
-            ->orWhere('ingredientes', 'LIKE', "%{$search}%")
-            ->orWhereRaw("CASE
-                WHEN tipo_lote = 1 THEN 'Certificado por OC CIDAM'
-                WHEN tipo_lote = 2 THEN 'Certificado por otro organismo'
-            END LIKE ?", ["%{$search}%"]);
-             });
-    })
-    ->offset($start)
-    ->limit($limit)
-    ->orderBy($order, $dir)
-    ->get();
-
-
-           /*  $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId) {
-        return $query->where('id_empresa', $empresaId);
-    }) *
-$totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId) {
-    $empresasVisibles = $this->obtenerEmpresasVisibles($empresaId);
-    $esMaquilador = maquiladores_model::where('id_maquilador', $empresaId)->exists();
-
-    if ($esMaquilador) {
-        $query->where(function ($q) use ($empresaId) {
-            $q->where('id_empresa', $empresaId)
-              ->orWhere('id_empresa_destino', $empresaId);
-        });
-    } else {
-        $hayDestino = LotesGranel::whereIn('id_empresa', $empresasVisibles)
-                                  ->where('id_empresa_destino', $empresaId)
-                                  ->exists();
-
-        $query->where(function($q) use ($empresaId, $empresasVisibles, $hayDestino) {
-            if ($hayDestino) {
-                $q->whereIn('id_empresa', $empresasVisibles)
-                  ->where(function($cond) use ($empresaId) {
-                      $cond->where('id_empresa', $empresaId)
-                           ->orWhere('id_empresa_destino', $empresaId);
-                  });
-            } else {
-                $q->where('id_empresa', $empresaId)
-                  ->orWhere(function($q2) use ($empresasVisibles) {
-                      $q2->whereIn('id_empresa', $empresasVisibles)
-                         ->whereNull('id_empresa_destino');
-                  });
-            }
-        });
-    }
-})
-    ->when($search, function ($query, $search) {
-                return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
-                    ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
-                    ->orWhere('folio_fq', 'LIKE', "%{$search}%")
-                    ->orWhere('volumen', 'LIKE', "%{$search}%")
-                    ->orWhere('cont_alc', 'LIKE', "%{$search}%")
-                    ->orWhere('folio_certificado', 'LIKE', "%{$search}%")
-                    ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
-                        $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('Organismo', function ($subQuery) use ($search) {
-                        $subQuery->where('organismo', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('categoria', function ($subQuery) use ($search) {
-                        $subQuery->where('categoria', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('clase', function ($subQuery) use ($search) {
-                        $subQuery->where('clase', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhereHas('tipos', function ($subQuery) use ($search) {
-                        $subQuery->where('nombre', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhere('ingredientes', 'LIKE', "%{$search}%")
-                    ->orWhereRaw("CASE
-                    WHEN tipo_lote = 1 THEN 'Certificado por OC CIDAM'
-                    WHEN tipo_lote = 2 THEN 'Certificado por otro organismo'
-                END LIKE ?", ["%{$search}%"]);
-
-            })->count();*/
 
 
 
@@ -502,15 +392,14 @@ $totalFiltered = LotesGranel::when($empresaId, function ($query) use ($empresaId
                     ? asset("files/{$numeroCliente}/certificados_granel/{$documento->url}")
                     : null;
 
-
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $lote->id_lote_granel . '">Eliminar</button>';
 
 
 
                 $data[] = $nestedData;
             }
-
         }
+
 
         return response()->json([
             'draw' => intval($request->input('draw')),
