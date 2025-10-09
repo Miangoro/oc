@@ -184,7 +184,7 @@ public function index(Request $request)
                 ->orWhereHas('lotes_envasado_granel.lotes_granel', fn($q) => $q->where('nombre_lote', 'LIKE', "%{$search}%"))
                 ->orWhereHas('empresa.empresaNumClientes', fn($q) => $q->where('numero_cliente', 'LIKE', "%{$search}%"));
 
-                // Filtrar por tipo de dictamen si se detectó una palabra clave
+                // Filtrar por estatus de lote si se detectó una palabra clave
                 if (!is_null($tipoEstado)) {
                     $q->orWhere('estatus', $tipoEstado);
                 }
@@ -201,59 +201,7 @@ public function index(Request $request)
         ->limit($limit)
         ->orderBy($order, $dir)
         ->get();
-/*
-    $limit = $request->input('length');
-    $start = $request->input('start');
-    $orderColumnIndex = $request->input('order.0.column');
-    $order = 'id_lote_envasado';
-    $dir = $request->input('order.0.dir');
 
-    $searchValue = $request->input('search.value');
-
-    $query = lotes_envasado::with(['empresa.empresaNumClientes', 'marca', 'Instalaciones', 'lotes_envasado_granel']); // Cargar relaciones necesarias
-
-
-        if ($empresaId) {
-            $query->where('id_empresa', $empresaId);
-        }
-        if (!empty($searchValue)) {
-            $query->where(function ($q) use ($searchValue) {
-                $q->where('destino_lote', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('nombre', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('sku', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('estatus', 'LIKE', "%{$searchValue}%");
-
-                $q->orWhereHas('marca', function ($qMarca) use ($searchValue) {
-                    $qMarca->where('marca', 'LIKE', "%{$searchValue}%");
-                });
-
-                $q->orWhereHas('Instalaciones', function ($qDireccion) use ($searchValue) {
-                    $qDireccion->where('direccion_completa', 'LIKE', "%{$searchValue}%");
-                });
-
-                $q->orWhereHas('empresa', function ($qEmpresa) use ($searchValue) {
-                    $qEmpresa->where('razon_social', 'LIKE', "%{$searchValue}%");
-                });
-
-                $q->orWhereHas('lotes_envasado_granel.lotes_granel', function ($qEmpresa) use ($searchValue) {
-                    $qEmpresa->where('nombre_lote', 'LIKE', "%{$searchValue}%");
-                });
-
-
-                $q->orWhereHas('empresa.empresaNumClientes', function ($q) use ($searchValue) {
-                    $q->where('numero_cliente', 'LIKE', "%{$searchValue}%");
-                });
-            });
-        }
-
-        $totalData = lotes_envasado::count();
-        $totalFiltered = $query->count();
-
-        $users = $query->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir)
-            ->get();
-*/
 
 
         //MANDA LOS DATOS AL JS
@@ -301,6 +249,7 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                     'id_lote_granel' => $nombres_lote,
 
                 ];
+
                 $data[] = $nestedData;
             }
         }
@@ -308,7 +257,8 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
 
         return response()->json([
             'draw' => intval($request->input('draw')),
-            'recordsTotal' => intval($totalData),
+            //'recordsTotal' => intval($totalData),
+            'recordsTotal' => $empresaId ? intval($totalFiltered) : intval($totalData),//total oculto a clientes
             'recordsFiltered' => intval($totalFiltered),
             'code' => 200,
             'data' => $data,

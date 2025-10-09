@@ -182,14 +182,26 @@ $(function () {
         }
       },
 
-      {
-        data: 'estatus',
-        searchable: false,
+      { data: 'estatus',
+        /*searchable: false,
         orderable: false,
         render: function (data, type, row) {
           return '<span class="badge rounded-pill bg-success">' + data + '</span>';
+        }*/
+        searchable: true,
+        orderable: false,
+        render: function (data, type, full, meta) {
+          var $estatus = full['estatus'];
+            if ($estatus == '1') {
+              return '<span class="badge rounded-pill bg-primary">Disponible</span>';
+            } else if ($estatus == '2') {
+              return '<span class="badge rounded-pill bg-danger">Agotado</span>';
+            } else {
+              return '<span class="badge rounded-pill bg-warning">Pendiente</span>';
+            }
         }
       },
+
       { data: 'actions', orderable: false, searchable: false }
     ],
     columnDefs: [
