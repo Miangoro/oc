@@ -232,8 +232,8 @@ $(function () {
             file: {
               extension: 'jpg,jpeg,png,gif',
               type: 'image/jpeg,image/png,image/gif',
-              maxSize: 25 * 1024 * 1024, // 5 MB
-              message: 'Solo se permiten imágenes de máximo 25MB'
+              maxSize: 5 * 1024 * 1024, // 5 MB
+              message: 'Solo se permiten imágenes de máximo 5MB'
             }
           },
           nombre_imagen: {
