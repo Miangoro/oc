@@ -8,11 +8,14 @@ use Illuminate\Http\Request;
 use App\Models\empresa;
 use App\Models\empresaContrato;
 use App\Models\empresaNumCliente;
+use App\Models\Documentacion_url;
+use App\Models\Documentacion;
 use App\Models\solicitud_informacion;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\marcas;
@@ -373,43 +376,90 @@ public function registrarClientes(Request $request)
     }
 }
 
+public function obtenerDocumentos($id)
+{
+    // Busca todos los documentos para el ID de la empresa proporcionado
+    $documentos = Documentacion_url::where('id_empresa', $id)->get();
+    $urls = $documentos->pluck('url', 'id_documento');
+    return response()->json($urls);
+}
+
+// ... tus 'use' statements ...
+
+// Usamos el '$id' de la URL, porque como bien dices, sí se está enviando.
+// ... tus 'use' statements ...
 
 public function registrarDocumentos(Request $request, $id)
 {
     $prospecto = empresa::findOrFail($id);
-    $documentos = $request->allFiles();
 
-    foreach ($documentos as $inputName => $file) {
-        if ($request->hasFile($inputName)) {
+    if (!$request->hasFile('documentos')) {
+        return response()->json(['message' => 'No se proporcionaron documentos para subir.'], 400);
+    }
 
-            // Carpeta específica del cliente
-            $folder = 'documentos_prospectos/' . $prospecto->id_empresa;
+    $archivosSubidos = $request->file('documentos');
 
-            // Ver cuántos archivos ya existen en esa carpeta (para numerar)
-            $existingFiles = Storage::disk('public')->files($folder);
-            $nextNumber = count($existingFiles) + 1;
+    foreach ($archivosSubidos as $id_documento => $file) {
 
-            // Crear nombre controlado: ejemplo -> 12_001_acta_constitutiva.pdf
-            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $extension = $file->getClientOriginalExtension();
-            $fileName = sprintf('%d_%03d_%s.%s', $prospecto->id_empresa, $nextNumber, Str::slug($originalName, '_'), $extension);
+        $documentoMaestro = Documentacion::find($id_documento);
+        if (!$documentoMaestro) {
+            continue;
+        }
 
-            // Guardar archivo
-            $path = $file->storeAs($folder, $fileName, 'public');
+        // 1. BUSCAR si ya existe un registro para este documento y esta empresa
+        $documentoExistente = Documentacion_url::where('id_empresa', $prospecto->id_empresa)
+                                               ->where('id_documento', $id_documento)
+                                               ->first();
 
-            // Registrar en BD
-            DB::table('empresa_documentos')->insert([
-                'id_empresa' => $prospecto->id_empresa,
-                'tipo_documento' => $inputName,
-                'ruta_archivo' => $path,
-                'created_at' => now(),
-                'updated_at' => now(),
+        // 2. SIEMPRE se guarda el archivo nuevo primero para obtener su ruta
+        $folder = 'documentos_prospectos/' . $prospecto->id_empresa;
+        $nombreOriginalSanitizado = Str::slug($documentoMaestro->nombre, '_');
+        $extension = $file->getClientOriginalExtension();
+
+        $fileName = sprintf(
+            '%d_%d_%s_%s.%s',
+            $prospecto->id_empresa,
+            $id_documento,
+            $nombreOriginalSanitizado,
+            time(),
+            $extension
+        );
+
+        $path = $file->storeAs($folder, $fileName, 'public');
+
+        // 3. DECIDIR si se actualiza un registro existente o se crea uno nuevo
+        if ($documentoExistente) {
+            // --- Lógica de ACTUALIZACIÓN ---
+
+            // A. Borrar el archivo ANTIGUO del storage para no guardar basura
+            if (Storage::disk('public')->exists($documentoExistente->url)) {
+                Storage::disk('public')->delete($documentoExistente->url);
+            }
+
+            // B. Actualizar el registro existente con la ruta del NUEVO archivo
+            $documentoExistente->update([
+                'url' => $path,
+                // Podrías actualizar otros campos si es necesario, ej:
+                // 'id_usuario_registro' => Auth::id(),
+            ]);
+
+        } else {
+            // --- Lógica de CREACIÓN (si no existía un documento previo) ---
+            Documentacion_url::create([
+                'id_documento'        => $id_documento,
+                'nombre_documento'    => $documentoMaestro->nombre,
+                'id_empresa'          => $prospecto->id_empresa,
+                'url'                 => $path, // La ruta del nuevo archivo
+                'id_relacion'         => $prospecto->id_empresa,
+                'id_doc'              => 0,
+                'fecha_vigencia'      => null,
             ]);
         }
     }
 
-    return response()->json(['message' => 'Documentos subidos con éxito'], 200);
+    return response()->json(['message' => 'Documentos procesados con éxito'], 200);
 }
+
 
 
 

@@ -188,8 +188,8 @@ $(function () {
                 <i class="text-success ri-checkbox-circle-fill"></i> Aceptar cliente
               </a>
                <a data-id="${full['id_empresa']}" data-bs-toggle="modal" data-bs-target="#modalSubirDocumentacion" href="javascript:;" class="dropdown-item subir-docs">
-        <i class="text-primary ri-file-upload-fill"></i> Subir documentación
-      </a>
+                <i class="text-primary ri-file-upload-fill"></i> Subir documentación
+              </a>
             `;
             // Acción condicional: Editar
             if (window.puedeEditarUsuario) {
@@ -1186,6 +1186,59 @@ $(function () {
       fv.revalidateField($(this).attr('name'));
     }); */
   });
+
+
+
+$(document).ready(function () {
+
+    // Se activa cuando se hace clic en cualquier botón con la clase .subir-docs
+    $(document).on('click', '.subir-docs', function () {
+
+        var prospectoId = $(this).data('id');
+        $('#prospecto_id_doc').val(prospectoId);
+
+        // Buscamos el tbody dentro del modal
+        var modalTbody = $('#modalSubirDocumentacion').find('tbody');
+
+        // 1. Limpiamos todos los enlaces (sin mostrar nada)
+        modalTbody.find('a').each(function () {
+            $(this).removeAttr('href').html('-----'); // no mostrar ícono ni texto
+        });
+
+        // 2. Hacemos la llamada AJAX
+        $.ajax({
+            url: '/obtener-documentos-empresa/' + prospectoId,
+            type: 'GET',
+            success: function (response) {
+                // response = { "1": "ruta/archivo1.pdf", "2": null, "3": "ruta/archivo3.pdf" }
+
+                for (const docId in response) {
+                    const url = response[docId];
+
+                    if (url) { // solo si existe documento
+                        const inputElement = modalTbody.find('input[name="documentos[' + docId + ']"]');
+
+                        if (inputElement.length) {
+                            const link = inputElement.closest('tr').find('a');
+                            const fullUrl = '/storage/' + url;
+
+                            // Mostrar el ícono PDF con enlace activo
+                            link.attr('href', fullUrl)
+                                .attr('target', '_blank')
+                                .html('<i class="ri-file-pdf-2-fill text-danger ri-40px"></i>');
+                        }
+                    }
+                }
+            },
+            error: function (err) {
+                console.error("Error al cargar los documentos:", err);
+            }
+        });
+    });
+
+});
+
+
 
 
   $(function () {
