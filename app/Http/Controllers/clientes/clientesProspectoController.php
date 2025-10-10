@@ -348,11 +348,14 @@ public function registrarClientes(Request $request)
         'telefono'            => 'nullable|string|max:20',
         'representante_legal' => 'nullable|string|max:255',
         'domicilio_fiscal'    => 'required|string|max:255',
+
+        'seguimiento'                      => 'nullable|array',
+        'seguimiento.estado_pago'          => 'nullable|boolean',
+        'seguimiento.visita_dictaminacion' => 'nullable|string',
     ]);
 
     DB::beginTransaction();
     try {
-        // 1️⃣ Crear empresa prospecto
         $empresa = new empresa();
         $empresa->razon_social     = $validated['razon_social'];
         $empresa->regimen          = $validated['regimen'];
@@ -360,11 +363,15 @@ public function registrarClientes(Request $request)
         $empresa->telefono         = $validated['telefono'] ?? null;
         $empresa->representante    = $validated['representante_legal'] ?? 'No aplica';
         $empresa->domicilio_fiscal = $validated['domicilio_fiscal'];
-        $empresa->tipo             = 1; // 1 = Prospecto
+        $empresa->tipo             = 1;
         $empresa->estatus          = 1;
+
+        if (!empty($validated['seguimiento'])) {
+            $empresa->seguimiento_estatus = $validated['seguimiento'];
+        }
+
         $empresa->save();
 
-        // 2️⃣ Registrar número de cliente vacío con norma NOM-070 (id_norma = 1)
         empresaNumCliente::create([
             'id_empresa'      => $empresa->id_empresa,
             'id_norma'        => 1, // NOM-070

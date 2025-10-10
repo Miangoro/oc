@@ -20,8 +20,13 @@ class empresa extends Model
         'domicilio_fiscal',
         'tipo',
         'cp',
-        'id_usuario_registro'
+        'id_usuario_registro',
+        'regimen',
+        'seguimiento_estatus'
       ];
+    protected $casts = [
+        'seguimiento_estatus' => 'array', // <-- 2. Define el cast aquí
+    ];
 
     protected static function boot()//registro automatico de usuario
     {
@@ -86,7 +91,7 @@ public function obtenerInstalaciones()
     $query = instalaciones::where('id_empresa', $this->id_empresa);
 
     $user = Auth::user();
-   
+
     if (!empty($user->id_instalacion)) {
 
         if (is_array($user->id_instalacion)) {
