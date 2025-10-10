@@ -327,38 +327,47 @@ public function revisionesPorMes(Request $request)
 }
 
 
-  public function estadisticasCertificados(Request $request)
-  {
+public function estadisticasCertificados(Request $request)
+{
     $year = $request->input('year', now()->year);
+    $id_empresa = $request->input('cliente', 0);
 
-    // Helper para contar por mes
-    $contarPorMes = function ($query) use ($year) {
-      return $query->whereYear('fecha_emision', $year)
-        ->selectRaw('MONTH(fecha_emision) as mes, COUNT(*) as total')
-        ->groupBy('mes')
-        ->pluck('total', 'mes')
-        ->toArray();
+    // Helper para contar por mes con filtro opcional de cliente
+    $contarPorMes = function ($query) use ($year, $id_empresa) {
+        return $query
+           ->when($id_empresa > 0, function ($q) use ($id_empresa) {
+                // Filtra por la relación (por ejemplo cliente->id_empresa)
+                $q->whereHas('dictamen.inspeccione.solicitud.empresa', function ($sub) use ($id_empresa) {
+                    $sub->where('id_empresa', $id_empresa);
+                });
+            })
+            ->whereYear('fecha_emision', $year)
+            ->selectRaw('MONTH(fecha_emision) as mes, COUNT(*) as total')
+            ->groupBy('mes')
+            ->pluck('total', 'mes')
+            ->toArray();
     };
 
     $instalaciones = $contarPorMes(Certificados::query());
     $granel = $contarPorMes(CertificadosGranel::query());
     $exportacion = $contarPorMes(Certificado_Exportacion::query());
 
-    // Asegura que haya un valor para cada mes (1-12), aunque sea 0
+    // Asegura que haya un valor para cada mes (1-12)
     $formatearDatos = function ($datos) {
-      $meses = array_fill(1, 12, 0); // meses del 1 al 12
-      foreach ($datos as $mes => $total) {
-        $meses[$mes] = $total;
-      }
-      return array_values($meses); // ordenados por mes
+        $meses = array_fill(1, 12, 0);
+        foreach ($datos as $mes => $total) {
+            $meses[$mes] = $total;
+        }
+        return array_values($meses);
     };
 
     return response()->json([
-      'instalaciones' => $formatearDatos($instalaciones),
-      'granel' => $formatearDatos($granel),
-      'exportacion' => $formatearDatos($exportacion),
+        'instalaciones' => $formatearDatos($instalaciones),
+        'granel' => $formatearDatos($granel),
+        'exportacion' => $formatearDatos($exportacion),
     ]);
-  }
+}
+
 
   public function estadisticasServicios(Request $request)
   {

@@ -819,8 +819,8 @@
 
   // Line Chart
   // --------------------------------------------------------------------
-  function cargarDatosCertificados(anioSeleccionado) {
-    $.get('/estadisticas/certificados', { year: anioSeleccionado }, function(data) {
+  function cargarDatosCertificados(anioSeleccionado,clienteSeleccionado) {
+    $.get('/estadisticas/certificados', { year: anioSeleccionado, cliente: clienteSeleccionado   }, function(data) {
       const lineChart = new ApexCharts(document.querySelector('#lineChart'), {
         chart: {
           type: 'line',
@@ -853,14 +853,24 @@
   // Al cambiar el año en el select
   $('#selectAnio').on('change', function() {
     const anio = $(this).val();
+    const cliente = $('#selectCliente').val();
     $('#lineChart').html(''); // Limpia el gráfico anterior
-    cargarDatosCertificados(anio);
+    cargarDatosCertificados(anio,cliente);
   });
+
+    $('#selectCliente').on('change', function() {
+    const cliente = $(this).val();
+    const anio = $('#selectAnio').val();
+    $('#lineChart').html(''); // Limpia el gráfico anterior
+    cargarDatosCertificados(anio,cliente);
+  });
+
 
   // Llamada inicial con el año actual
   $(document).ready(function () {
     const anioActual = $('#selectAnio').val();
-    cargarDatosCertificados(anioActual);
+    const cliente = $('#selectCliente').val();
+    cargarDatosCertificados(anioActual,cliente);
   });
 
     // Line Chart

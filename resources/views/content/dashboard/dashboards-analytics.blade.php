@@ -622,13 +622,17 @@
                                             <option value="{{ $i }}">{{ $i }}</option>
                                         @endfor
                                     </select>
-                                    <select id="selectCliente" class="form-select w-auto">
+                                    
+                                </div>
+                                  <div class="mb-0">
+                                    <label for="selectCliente" class="form-label">Selecciona un cliente:</label>
+                                <select id="selectCliente" class="form-select w-auto">
                                         <option value="0">Todos los clientes</option>
                                         @foreach ($clientes as $cliente)
-                                            <option value="{{ $cliente->id_cliente }}">{{ $cliente->razon_social }}</option>
+                                            <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
                                         @endforeach
                                     </select>
-                                </div>
+                                  </div>
                             </div>
                         </div>
                         <div class="card-body">
