@@ -20,6 +20,7 @@ use App\Models\solicitudesModel;
 use App\Models\solicitudTipo;
 use App\Models\User;
 use App\Models\carousel;
+use App\Models\empresa;
 use App\Models\mensajes_dashboard;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -49,6 +50,8 @@ class Analytics extends Controller
               });
     })->orderByDesc('fecha_solicitud')
     ->get();
+
+$clientes = empresa::where('tipo',2)->get();
 
  $actasSinActivarHologramas = solicitudesModel::where('id_tipo',5)->where('estatus_activado','0')->where('fecha_solicitud','>','2024-12-31')->orderByDesc('fecha_solicitud')->get();
 
@@ -247,7 +250,7 @@ $pendientesRevisarCertificadosConsejo = Revisor::where('decision', 'Pendiente')
     })->where('activo', 1)
       ->orderBy('orden')
       ->get();
-    return view('content.dashboard.dashboards-analytics', compact('empresaId','actasSinActivarHologramas','maquiladora','maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado', 'imagenes', 'mensajes'));
+    return view('content.dashboard.dashboards-analytics', compact('clientes','empresaId','actasSinActivarHologramas','maquiladora','maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado', 'imagenes', 'mensajes'));
   }
 
 public function revisionesPorMes(Request $request)

@@ -623,9 +623,10 @@
                                         @endfor
                                     </select>
                                     <select id="selectCliente" class="form-select w-auto">
-                                        @for ($i = now()->year; $i >= 2022; $i--)
-                                            <option value="{{ $i }}">{{ $i }}</option>
-                                        @endfor
+                                        <option value="0">Todos los clientes</option>
+                                        @foreach ($clientes as $cliente)
+                                            <option value="{{ $cliente->id_cliente }}">{{ $cliente->razon_social }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
