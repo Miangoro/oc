@@ -564,7 +564,11 @@
 
     <!--FIRMA DIGITAL-->
 <div>
-    
+    <div class="images-container">
+        <img src="{{ $qrCodeBase64 }}" alt="QR" width="75px" class="image-right2">
+        <img src="{{ public_path('img_pdf/Sello oc.png') }}" alt="Sello UI" class="image-right">
+    </div>
+  
     
 
         @php
