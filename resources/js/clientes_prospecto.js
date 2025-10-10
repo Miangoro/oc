@@ -1187,138 +1187,133 @@ $(function () {
     }); */
   });
 
-
-
-$(document).ready(function () {
-
+  $(document).ready(function () {
     // Se activa cuando se hace clic en cualquier botón con la clase .subir-docs
     $(document).on('click', '.subir-docs', function () {
+      var prospectoId = $(this).data('id');
+      $('#prospecto_id_doc').val(prospectoId);
 
-        var prospectoId = $(this).data('id');
-        $('#prospecto_id_doc').val(prospectoId);
+      // Buscamos el tbody dentro del modal
+      var modalTbody = $('#modalSubirDocumentacion').find('tbody');
 
-        // Buscamos el tbody dentro del modal
-        var modalTbody = $('#modalSubirDocumentacion').find('tbody');
+      // 1. Limpiamos todos los enlaces (sin mostrar nada)
+      modalTbody.find('a').each(function () {
+        $(this).removeAttr('href').html('-----'); // no mostrar ícono ni texto
+      });
 
-        // 1. Limpiamos todos los enlaces (sin mostrar nada)
-        modalTbody.find('a').each(function () {
-            $(this).removeAttr('href').html('-----'); // no mostrar ícono ni texto
-        });
+      // 2. Hacemos la llamada AJAX
+      $.ajax({
+        url: '/obtener-documentos-empresa/' + prospectoId,
+        type: 'GET',
+        success: function (response) {
+          // response = { "1": "ruta/archivo1.pdf", "2": null, "3": "ruta/archivo3.pdf" }
 
-        // 2. Hacemos la llamada AJAX
-        $.ajax({
-            url: '/obtener-documentos-empresa/' + prospectoId,
-            type: 'GET',
-            success: function (response) {
-                // response = { "1": "ruta/archivo1.pdf", "2": null, "3": "ruta/archivo3.pdf" }
+          for (const docId in response) {
+            const url = response[docId];
 
-                for (const docId in response) {
-                    const url = response[docId];
+            if (url) {
+              // solo si existe documento
+              const inputElement = modalTbody.find('input[name="documentos[' + docId + ']"]');
 
-                    if (url) { // solo si existe documento
-                        const inputElement = modalTbody.find('input[name="documentos[' + docId + ']"]');
+              if (inputElement.length) {
+                const link = inputElement.closest('tr').find('a');
+                const fullUrl = '/storage/' + url;
 
-                        if (inputElement.length) {
-                            const link = inputElement.closest('tr').find('a');
-                            const fullUrl = '/storage/' + url;
-
-                            // Mostrar el ícono PDF con enlace activo
-                            link.attr('href', fullUrl)
-                                .attr('target', '_blank')
-                                .html('<i class="ri-file-pdf-2-fill text-danger ri-40px"></i>');
-                        }
-                    }
-                }
-            },
-            error: function (err) {
-                console.error("Error al cargar los documentos:", err);
+                // Mostrar el ícono PDF con enlace activo
+                link
+                  .attr('href', fullUrl)
+                  .attr('target', '_blank')
+                  .html('<i class="ri-file-pdf-2-fill text-danger ri-40px"></i>');
+              }
             }
-        });
+          }
+        },
+        error: function (err) {
+          console.error('Error al cargar los documentos:', err);
+        }
+      });
     });
-
-});
-
-
-
+  });
 
   $(function () {
-  // Configuración CSRF para Laravel
-  $.ajaxSetup({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-  });
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
 
-  // --- SCRIPT PARA SUBIR DOCUMENTACIÓN ---
+    // --- SCRIPT PARA SUBIR DOCUMENTACIÓN ---
 
-  // 1. Capturar el ID del prospecto al abrir el modal
-  $(document).on('click', '.subir-docs', function () {
-    var prospectoId = $(this).data('id');
-    $('#prospecto_id_doc').val(prospectoId);
-  });
+    // 1. Capturar el ID del prospecto al abrir el modal
+    $(document).on('click', '.subir-docs', function () {
+      var prospectoId = $(this).data('id');
+      $('#prospecto_id_doc').val(prospectoId);
+    });
 
+    // 2. Manejar el clic del botón "Guardar Documentos"
+    $('#btnGuardarDocumentacion').on('click', function (e) {
+      e.preventDefault(); // Evitar el envío tradicional del formulario
 
-  // 2. Manejar el clic del botón "Guardar Documentos"
-  $('#btnGuardarDocumentacion').on('click', function (e) {
-    e.preventDefault(); // Evitar el envío tradicional del formulario
+      var form = $('#formDocumentacionProspecto')[0];
+      var formData = new FormData(form);
+      var prospectoId = $('#prospecto_id_doc').val();
+      formData.append('prospecto_id', prospectoId); // Asegurarse que el ID vaya en la petición
 
-    var form = $('#formDocumentacionProspecto')[0];
-    var formData = new FormData(form);
-    var prospectoId = $('#prospecto_id_doc').val();
-    formData.append('prospecto_id', prospectoId); // Asegurarse que el ID vaya en la petición
+      // Mostrar un loader mientras se suben los archivos
 
-    // Mostrar un loader mientras se suben los archivos
+  // NO RECOMENDADO
     Swal.fire({
       title: 'Subiendo documentos...',
       text: 'Por favor, espere.',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
-
-    $.ajax({
-      url: '/registrar-documentos-prospecto/' + prospectoId, // URL para guardar los documentos
-      type: 'POST',
-      data: formData,
-      processData: false, // Necesario para FormData
-      contentType: false, // Necesario para FormData
-      success: function (response) {
-        $('#modalSubirDocumentacion').modal('hide');
-        $('#formDocumentacionProspecto')[0].reset();
-        $('.datatables-users').DataTable().ajax.reload();
-
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Documentos guardados correctamente.',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
+      customClass: {
+        confirmButton: 'd-none' // <-- Esto aplicaría display: none;
       },
-      error: function (xhr) {
-        console.log('Error:', xhr.responseText);
+          didOpen: () => {
+          Swal.showLoading();
+        }
 
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Ocurrió un error al subir los documentos.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
+    });
+
+      $.ajax({
+        url: '/registrar-documentos-prospecto/' + prospectoId, // URL para guardar los documentos
+        type: 'POST',
+        data: formData,
+        processData: false, // Necesario para FormData
+        contentType: false, // Necesario para FormData
+        success: function (response) {
+          $('#modalSubirDocumentacion').modal('hide');
+          $('#formDocumentacionProspecto')[0].reset();
+          $('.datatables-users').DataTable().ajax.reload();
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Documentos guardados correctamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Ocurrió un error al subir los documentos.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+
+    // Limpiar el formulario cuando el modal se cierra
+    $('#modalSubirDocumentacion').on('hidden.bs.modal', function () {
+      $('#formDocumentacionProspecto')[0].reset();
+      $('#prospecto_id_doc').val('');
     });
   });
-
-  // Limpiar el formulario cuando el modal se cierra
-  $('#modalSubirDocumentacion').on('hidden.bs.modal', function () {
-    $('#formDocumentacionProspecto')[0].reset();
-    $('#prospecto_id_doc').val('');
-  });
-
-});
-
-
 });

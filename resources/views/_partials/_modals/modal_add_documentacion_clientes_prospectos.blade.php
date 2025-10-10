@@ -33,7 +33,8 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">2</th>
-                                    <td>Poder notarial del representante legal (Solo en caso de no estar incluido en el acta constitutiva)</td>
+                                    <td>Poder notarial del representante legal (Solo en caso de no estar incluido en el
+                                        acta constitutiva)</td>
                                     <td>
                                         <input type="file" class="form-control" name="documentos[2]">
                                     </td>
@@ -43,12 +44,13 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">3</th>
-                                    <td>Copia de identificación oficial del Titular (en caso de ser persona física) o representante legal (en caso de ser persona moral).</td>
+                                    <td>Copia de identificación oficial del Titular (en caso de ser persona física) o
+                                        representante legal (en caso de ser persona moral).</td>
                                     <td>
                                         <input type="file" class="form-control" name="documentos[3]">
                                     </td>
                                     <td class="text-center">
-                                        <a  target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -78,7 +80,7 @@
                                         <input type="file" class="form-control" name="documentos[33]">
                                     </td>
                                     <td class="text-center">
-                                        <a  target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -88,7 +90,7 @@
                                         <input type="file" class="form-control" name="documentos[76]">
                                     </td>
                                     <td class="text-center">
-                                        <a  target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -98,7 +100,7 @@
                                         <input type="file" class="form-control" name="documentos[77]">
                                     </td>
                                     <td class="text-center">
-                                        <a  target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -108,7 +110,7 @@
                                         <input type="file" class="form-control" name="documentos[78]">
                                     </td>
                                     <td class="text-center">
-                                        <a  target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -118,17 +120,18 @@
                                         <input type="file" class="form-control" name="documentos[79]">
                                     </td>
                                     <td class="text-center">
-                                        <a  target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
                                     </td>
                                 </tr>
-                                 <tr>
+                                <tr>
                                     <th scope="row">11</th>
-                                    <td>Convenio de corresponsabilidad inscrito ante el IMPI entre el comercializador y un productor autorizado</td>
+                                    <td>Convenio de corresponsabilidad inscrito ante el IMPI entre el comercializador y
+                                        un productor autorizado</td>
                                     <td>
                                         <input type="file" class="form-control" name="documentos[82]">
                                     </td>
                                     <td class="text-center">
-                                        <a  target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -138,17 +141,7 @@
                                         <input type="file" class="form-control" name="documentos[126]">
                                     </td>
                                     <td class="text-center">
-                                        <a  target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">13</th>
-                                    <td>Etiquetas Solicitud general</td>
-                                    <td>
-                                        <input type="file" class="form-control" name="documentos[60]">
-                                    </td>
-                                    <td class="text-center">
-                                        <a  target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -158,7 +151,47 @@
                                         <input type="file" class="form-control" name="documentos[43]">
                                     </td>
                                     <td class="text-center">
-                                        <a  target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">15</th>
+                                    <td>Registro COFEPRIS</td>
+                                    <td>
+                                        <input type="file" class="form-control" name="documentos[81]">
+                                    </td>
+                                    <td class="text-center">
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">16</th>
+                                    <td>Pre-registro de predios de maguey o agave</td>
+                                    <td>
+                                        <input type="file" class="form-control" name="documentos[137]">
+                                    </td>
+                                    <td class="text-center">
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">17</th>
+                                    <td>Título de la marca</td>
+                                    <td>
+                                        <input type="file" class="form-control" name="documentos[107]">
+                                    </td>
+                                    <td class="text-center">
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">18</th>
+                                    <td>Constancia de inscripción al Padrón de Bebidas Alcohólicas</td>
+                                    <td>
+                                        <input type="file" class="form-control" name="documentos[62]">
+                                    </td>
+                                    <td class="text-center">
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -168,7 +201,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="btnGuardarDocumentacion">Guardar Documentos</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarDocumentacion">Guardar
+                    Documentos</button>
             </div>
         </div>
     </div>
