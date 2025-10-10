@@ -350,7 +350,9 @@ public function registrarClientes(Request $request)
         'domicilio_fiscal'    => 'required|string|max:255',
     ]);
 
+    DB::beginTransaction();
     try {
+        // 1️⃣ Crear empresa prospecto
         $empresa = new empresa();
         $empresa->razon_social     = $validated['razon_social'];
         $empresa->regimen          = $validated['regimen'];
@@ -359,15 +361,25 @@ public function registrarClientes(Request $request)
         $empresa->representante    = $validated['representante_legal'] ?? 'No aplica';
         $empresa->domicilio_fiscal = $validated['domicilio_fiscal'];
         $empresa->tipo             = 1; // 1 = Prospecto
-        $empresa->estatus          = 1; // opcional si tienes campo estatus
+        $empresa->estatus          = 1;
         $empresa->save();
+
+        // 2️⃣ Registrar número de cliente vacío con norma NOM-070 (id_norma = 1)
+        empresaNumCliente::create([
+            'id_empresa'      => $empresa->id_empresa,
+            'id_norma'        => 1, // NOM-070
+            'numero_cliente'  => null, // vacío al crear
+        ]);
+
+        DB::commit();
 
         return response()->json([
             'success' => true,
             'message' => 'Cliente prospecto registrado correctamente',
-            'data' => $empresa
+            'data'    => $empresa
         ], 201);
     } catch (\Exception $e) {
+        DB::rollBack();
         return response()->json([
             'success' => false,
             'message' => 'Error al registrar el cliente prospecto',
@@ -375,6 +387,7 @@ public function registrarClientes(Request $request)
         ], 500);
     }
 }
+
 
 public function obtenerDocumentos($id)
 {
