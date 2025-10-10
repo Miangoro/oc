@@ -162,17 +162,17 @@ public function pdfCartaAsignacion($id, $save = false)
 {
     $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, e.created_at, info_procesos, s.fecha_registro,
     e.correo, e.telefono, p.id_producto, nc.id_norma, a.id_actividad, e.estado
-    FROM empresa e 
+    FROM empresa e
     LEFT JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
     LEFT JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
 
-    JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa) 
+    JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
     JOIN catalogo_actividad_cliente ac ON (a.id_actividad = ac.id_actividad)
 
     JOIN empresa_num_cliente nc ON (nc.id_empresa = e.id_empresa)
     WHERE nc.numero_cliente="'.$id.'" ');
 
-      
+
 
     $fecha_registro = Carbon::parse($res[0]->created_at)->translatedFormat('j \d\e F \d\e\l Y');
     // Obtener ID de la empresa
@@ -196,10 +196,10 @@ public function pdfCartaAsignacion($id, $save = false)
         'contacto'=>$contacto,
     ]);
 
-     if ($save) { 
+     if ($save) {
             // Guardar en storage/app/public/pdf/
             $fileName = "uploads/{$id}/Carta de asignación de número de cliente{$id}.pdf";
-           
+
             Storage::disk('public')->put($fileName, $pdf->output());
 
                 $documentacion_url = new Documentacion_url();
@@ -251,26 +251,38 @@ public function pdfCartaAsignacion($id, $save = false)
             'contacto'=>$contacto,
         ]);
 
-        
 
-        
+
+
         return $pdf->stream('Carta de asignación de número de cliente.pdf');
     }
 
-    public function pdfServicioPersonaFisica070($id)
-    {
-        $res = DB::select('SELECT c.fecha_vigencia, e.domicilio_fiscal, e.rfc, c.nombre_notario, c.estado_notario, c.fecha_cedula, c.idcif, c.clave_ine, c.sociedad_mercantil, c.num_instrumento, c.vol_instrumento, c.fecha_instrumento, c.num_notario, c.num_permiso,  s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
-      e.estado
-      FROM empresa e
-      JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
-      JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
-      JOIN empresa_num_cliente n ON (n.id_empresa = e.id_empresa)
-      JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
-      LEFT JOIN empresa_contrato c ON (c.id_empresa = e.id_empresa)
-      WHERE e.id_empresa=' . $id);
-        $pdf = Pdf::loadView('pdfs.prestacion_servicio_fisica', ['datos' => $res]);
-        return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 persona fisica VIGENTE.pdf');
+public function pdfServicioPersonaFisica070($id)
+{
+    $res = DB::table('empresa as e')
+        ->leftJoin('solicitud_informacion as s', 'e.id_empresa', '=', 's.id_empresa')
+        ->leftJoin('empresa_producto_certificar as p', 'p.id_empresa', '=', 'e.id_empresa')
+        ->leftJoin('empresa_num_cliente as n', 'n.id_empresa', '=', 'e.id_empresa')
+        ->leftJoin('empresa_actividad_cliente as a', 'a.id_empresa', '=', 'e.id_empresa')
+        ->leftJoin('empresa_contrato as c', 'c.id_empresa', '=', 'e.id_empresa')
+        ->where('e.id_empresa', $id)
+        ->select(
+            'c.fecha_vigencia', 'e.domicilio_fiscal', 'e.rfc', 'c.nombre_notario', 'c.estado_notario',
+            'c.fecha_cedula', 'c.idcif', 'c.clave_ine', 'c.sociedad_mercantil', 'c.num_instrumento',
+            'c.vol_instrumento', 'c.fecha_instrumento', 'c.num_notario', 'c.num_permiso',
+            's.medios', 's.competencia', 's.capacidad', 's.comentarios', 'e.representante',
+            'e.razon_social', 'e.created_at', 's.info_procesos', 's.created_at',
+            'e.correo', 'e.telefono', 'p.id_producto', 'n.id_norma', 'a.id_actividad', 'e.estado'
+        )
+        ->first();
+
+    if (!$res) {
+        return back()->with('error', 'No se encontraron datos para generar el contrato.');
     }
+
+    $pdf = Pdf::loadView('pdfs.prestacion_servicio_fisica', ['datos' => [$res]]);
+    return $pdf->stream('Contrato_servicio_fisica.pdf');
+}
 
     public function pdfServicioPersonaMoral070($id)
     {
@@ -372,7 +384,7 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
                 ->count();
         }
 
-        
+
 
         $data = [];
         if (!empty($users)) {
@@ -496,7 +508,7 @@ public function editar_cliente_confirmado(Request $request)
       $cliente ->domicilio_fiscal = $validatedData['domicilio_fiscal'];
       /* solamente es prueba  */
       $cliente->representante = $validatedData['representante'] ?? 'No aplica';
- 
+
       $cliente->estado = $validatedData['estado'];
       $cliente->cp = $validatedData['cp'];
       $cliente->rfc = $validatedData['rfc'];
@@ -515,7 +527,7 @@ public function editar_cliente_confirmado(Request $request)
       $id_empresa = $cliente->id_empresa;
 
       empresaNumCliente::where('id_empresa', $id_empresa)->delete();
-    
+
       // 2. Registrar el resto de normas, omitiendo la norma con id_norma = 3
       foreach ($validatedData['normas'] as $index => $id_norma) {
           if ($id_norma != 3 && isset($validatedData['numeros_clientes'][$index])) {
@@ -719,11 +731,11 @@ public function registrarClientes(Request $request)
             $empresaNumCliente->id_norma = $id_norma;
 
             $empresaNumCliente->save();
-           
+
             $this->pdfCartaAsignacion($numero_cliente,true);
         }
     }
-     
+
 
     //si es maquilador
     /*if($validatedData['es_maquilador']=='Si'){
@@ -767,23 +779,23 @@ public function mostrarRequisitosEvaluar($id)
 {
   $data = RequisitoEvaluar::all();
 
-  $pdf = Pdf::loadView('pdfs.requisitos_evaluar_ed7', 
+  $pdf = Pdf::loadView('pdfs.requisitos_evaluar_ed7',
     [
         'data' => $data,
     ]);
-    
+
     //nombre al descarga
     return $pdf->stream('F7.1-01-09 Requisitos a evaluar NOM-070-SCFI-2016 Ed7.pdf');
 }
 
 
     public function add_revision_requisitos($id_instalacion)
-    {   
+    {
 
      $id_cliente = instalaciones::find($id_instalacion)->id_empresa;
 
 
-        
+
 
     $actividadesEmpresa = DB::table('empresa_actividad_cliente')
     ->where('id_empresa', $id_cliente)
@@ -817,7 +829,7 @@ $preguntas = preguntasRequisitosModel::with('actividad')
     {
         try {
             $request->validate([
-            
+
                 'respuesta' => 'required|array',
                 'observaciones' => 'nullable|array',
                 'id_pregunta' => 'required|array',
