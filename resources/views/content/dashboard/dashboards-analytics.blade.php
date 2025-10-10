@@ -622,6 +622,11 @@
                                             <option value="{{ $i }}">{{ $i }}</option>
                                         @endfor
                                     </select>
+                                    <select id="selectCliente" class="form-select w-auto">
+                                        @for ($i = now()->year; $i >= 2022; $i--)
+                                            <option value="{{ $i }}">{{ $i }}</option>
+                                        @endfor
+                                    </select>
                                 </div>
                             </div>
                         </div>

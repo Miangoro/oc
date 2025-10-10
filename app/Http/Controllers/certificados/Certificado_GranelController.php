@@ -821,11 +821,17 @@ public function CertificadoGranel($id_certificado, $conMarca = true)
     $id_sustituye = json_decode($certificado->observaciones, true)['id_sustituye'] ?? null; //obtiene el valor del JSON/sino existe es null
     $nombre_id_sustituye = $id_sustituye ? CertificadosGranel::find($id_sustituye)->num_certificado ?? 'No encontrado' : '';
 
-    if ($certificado->estatus == 2) {
+    /*if ($certificado->estatus == 2) {
         $volumen = $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen_restante ?? 'No encontrado';
     }else{
         $volumen = $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen ?? 'No encontrado';
+    }*/
+    if ($certificado->estatus == 2) {
+        $volumen = $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen_restante ?? null;
+    } else {
+        $volumen = $certificado->dictamen->inspeccione->solicitud->lote_granel->volumen ?? null;
     }
+    $volumen = $volumen !== null ? number_format($volumen, 2, '.', '') : 'No encontrado';
 
     // Datos para el PDF
     $pdfData = [

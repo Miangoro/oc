@@ -116,9 +116,9 @@ $usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
     //$dictamenesEnvasado = Dictamen_Envasado::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $dictamenesExportacion = Dictamen_Exportacion::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $dictamenesPorVencer = $dictamenesInstalacion
-      ->merge($dictamenesGranel)
+      ->merge($dictamenesGranel);
       //->merge($dictamenesEnvasado)
-      ->merge($dictamenesExportacion);
+      //->merge($dictamenesExportacion);
 
     $certificadosInstalacion = Certificados::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
     $certificadosGranel = CertificadosGranel::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();

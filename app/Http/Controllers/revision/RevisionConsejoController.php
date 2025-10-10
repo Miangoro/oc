@@ -440,8 +440,9 @@ class RevisionConsejoController extends Controller
         } else {
             $preguntasQuery->where(function ($q) {
                 $q->where('id_pregunta', '<', 851)
-                ->orWhere('id_pregunta', '>', 885)
-                ->whereNotIn('id_pregunta', [910, 916]); 
+                //->orWhere('id_pregunta', '>', 885)
+                ->whereNotIn('id_pregunta', [910, 916])
+                ->whereNotIn('id_pregunta', [860, 868]); 
             });
         }
         $preguntas = $preguntasQuery->get();
