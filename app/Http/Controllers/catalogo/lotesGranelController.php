@@ -230,7 +230,17 @@ public function index(Request $request)
                 $nestedData['folio_fq'] = $lote->folio_fq ?? 'N/A';
                 $nestedData['volumen'] = $lote->volumen ?? 'N/A';
                 $nestedData['id_tanque'] = $lote->id_tanque ?? 'N/A';
-                $nestedData['volumen_restante'] = $lote->volumen_restante ?? 'N/A';
+                //$nestedData['volumen_restante'] = $lote->volumen_restante ?? 'N/A';
+                $volumen = $lote->volumen_restante ?? null;
+                    if ($volumen === null) {
+                        $nestedData['volumen_restante'] = 'N/A';
+                    } elseif (fmod($volumen, 1) == 0) {
+                        // Es entero, no mostrar decimales
+                        $nestedData['volumen_restante'] = (int)$volumen;
+                    } else {
+                        // Tiene decimales, mostrar hasta dos
+                        $nestedData['volumen_restante'] = number_format($volumen, 2, '.', '');
+                    }
                 $nestedData['cont_alc'] = $lote->cont_alc.'% Alc. Vol.' ?? 'N/A';
                 $nestedData['id_categoria'] = $lote->categoria->categoria ?? 'N/A';
                 $nestedData['id_clase'] = $lote->clase->clase ?? 'N/A';
