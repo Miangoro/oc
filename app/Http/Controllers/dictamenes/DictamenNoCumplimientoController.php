@@ -39,6 +39,7 @@ class DictamenNoCumplimientoController extends Controller
             ->whereDoesntHave('dictamenEnvasado')
             ->whereDoesntHave('dictamen')//instalaciones
             ->whereDoesntHave('dictamenExportacion')
+            ->whereDoesntHave('dictamenNoCumplimiento')
             ->where('fecha_servicio', '>', '2024-12-31')
             ->with('solicitud') // trae la relación
             ->get()
@@ -266,6 +267,11 @@ public function edit($id_dictamen)
             'fecha_vigencia' => $editar->fecha_vigencia,
             'id_firmante' => $editar->id_firmante,
             'observaciones' => $editar->observaciones,
+
+            // Datos relacionados sin tener que guardarlos en base de datos
+            'folio' => $editar->inspeccione->solicitud->folio ?? '',
+            'num_servicio' => $editar->inspeccione->num_servicio ?? '',
+            'direccion_completa' => $editar->inspeccione->solicitud->instalacion->direccion_completa ?? ''
         ]);
     } catch (\Exception $e) {
         Log::error('Error al obtener', [

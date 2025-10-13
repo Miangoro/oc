@@ -70,5 +70,10 @@ class inspecciones extends Model
         return $this->belongsTo(Dictamen_Exportacion::class, 'id_inspeccion', 'id_inspeccion');
     }
 
+    public function dictamenNoCumplimiento()
+    {
+        return $this->hasMany(Dictamen_NoCumplimiento::class, 'id_inspeccion', 'id_inspeccion');
+    }
+
 }
 
