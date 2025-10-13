@@ -586,6 +586,7 @@ Route::post('/clientes/{id}/update', [clientesProspectoController::class, 'updat
 Route::post('/registrar-clientes-prospectos', [clientesProspectoController::class, 'registrarClientes'])->name('clientes.registrarProspectos')->middleware(['auth']);
 Route::post('/registrar-documentos-prospecto/{id}', [clientesProspectoController::class, 'registrarDocumentos'])->name('clientes.registrarDocumentos')->middleware(['auth']);
 Route::get('/solicitudInfoClienteNOM-199/{id}', [clientesProspectoController::class, 'pdfNOM199'])->middleware(['auth']);
+Route::get('obtener-documentos-empresa/{id}', [clientesProspectoController::class, 'obtenerDocumentos'])->middleware(['auth']);
 
 Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente'])->middleware(['auth']);
 

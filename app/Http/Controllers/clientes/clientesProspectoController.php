@@ -432,7 +432,7 @@ public function registrarDocumentos(Request $request, $id)
                                                ->first();
 
         // 2. SIEMPRE se guarda el archivo nuevo primero para obtener su ruta
-        $folder = 'documentos_prospectos/' . $prospecto->id_empresa;
+        $folder = 'uploads/' . $prospecto->id_empresa;
         $nombreOriginalSanitizado = Str::slug($documentoMaestro->nombre, '_');
         $extension = $file->getClientOriginalExtension();
 
