@@ -43,6 +43,7 @@ class DictamenInstalacionesController extends Controller
                 $query->where('id_tipo', 14);
             })
             ->whereDoesntHave('dictamen')
+            ->whereDoesntHave('dictamenNoCumplimiento')
             ->where('fecha_servicio', '>', '2024-12-31')
             ->with('solicitud') // para acceder a la relación
             ->get()

@@ -43,6 +43,7 @@ class DictamenEnvasadoController extends Controller
                 $query->whereIn('id_tipo', [5, 8, ]);
             })
             ->whereDoesntHave('dictamenEnvasado')
+            ->whereDoesntHave('dictamenNoCumplimiento')
             ->where('fecha_servicio', '>', '2024-12-31')
             ->with('solicitud')
             ->get()

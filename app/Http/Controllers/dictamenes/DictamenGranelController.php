@@ -43,6 +43,7 @@ class DictamenGranelController extends Controller  {
                 $query->where('id_tipo', 3);
             })
             ->whereDoesntHave('dictamenGranel')
+            ->whereDoesntHave('dictamenNoCumplimiento')
             ->where('fecha_servicio', '>', '2024-12-31')
             ->with('solicitud') // para acceder a la relación
             ->get()
