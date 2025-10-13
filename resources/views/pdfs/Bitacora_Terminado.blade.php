@@ -213,7 +213,7 @@
                                 ,
                             @endif
                         @endforeach --}}
-                        {{-- @php//ORDENAR TIPOS POR GUARDADO
+                        @php//ORDENAR TIPOS POR GUARDADO
                             // IDs guardados en la base (orden original)
                             $orden = json_decode($bitacora->id_tipo ?? '[]', true); // ["8","1","2"]
                             $orden = array_map('intval', $orden); // convertir a enteros
@@ -230,7 +230,7 @@
                             @if (!$loop->last)
                                 ,
                             @endif
-                        @endforeach --}}
+                        @endforeach
                     </td>
 
                     <td>{{ $bitacora->capacidad ?? '----' }}</td>
