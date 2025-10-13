@@ -202,15 +202,7 @@
                     <td>{{ $bitacora->clases->clase ?? '----' }}</td> {{-- igual con id_clase --}}
                     <td>{{ $bitacora->ingredientes ?? '----' }}</td> {{-- ingrediente --}}
                     <td>{{ $bitacora->edad ?? '----' }}</td>
-@php//ORDENAR TIPOS POR GUARDADO
-    // IDs guardados en la base (orden original)
-    $orden = json_decode($bitacora->id_tipo ?? '[]', true); // ["8","1","2"]
-    $orden = array_map('intval', $orden); // convertir a enteros
-    // Reordenar la colección según el arreglo de IDs
-    $tiposOrdenados = $bitacora->tipos_agave->sortBy(function($tipo) use ($orden) {
-        return array_search(intval($tipo->id_tipo), $orden);
-    });
-@endphp
+
                     <td>
                         {{-- @foreach ($bitacora->tipos_agave as $tipo)
                             {{ $tipo->nombre }}
@@ -221,7 +213,14 @@
                                 ,
                             @endif
                         @endforeach --}}
-                    
+                        @php
+                            $orden = json_decode($bitacora->id_tipo ?? '[]', true);
+                            $orden = array_map('intval', $orden);
+                            $tipos = $bitacora->tipos_agave ?? collect(); // asegurar colección
+                            $tiposOrdenados = $tipos->sortBy(function($tipo) use ($orden) {
+                                return array_search(intval($tipo->id_tipo), $orden);
+                            });
+                        @endphp
                         @foreach ($tiposOrdenados as $tipo)
                             {{ $tipo->nombre }}
                             @if ($tipo->cientifico)
