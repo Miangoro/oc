@@ -11,9 +11,13 @@
 @section('vendor-script')
     @vite(['resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js'])
     <style>
+        .card-datatable.table-responsive {
+            overflow: visible !important;
+        }
+
         .opaco {
             /*     opacity: 0.5;
-        transition: opacity 0.3s ease; */
+            transition: opacity 0.3s ease; */
             opacity: 0.5;
             cursor: pointer;
         }
@@ -144,8 +148,7 @@
 
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button disabled class="btn btn-primary me-1 d-none" type="button"
-                            id="btnSpinnerV">
+                        <button disabled class="btn btn-primary me-1 d-none" type="button" id="btnSpinnerV">
                             <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
                             Validando...
                         </button>
