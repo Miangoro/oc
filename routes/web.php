@@ -588,7 +588,6 @@ Route::post('/registrar-documentos-prospecto/{id}', [clientesProspectoController
 Route::get('/solicitudInfoClienteNOM-199/{id}', [clientesProspectoController::class, 'pdfNOM199'])->middleware(['auth']);
 
 Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente'])->middleware(['auth']);
-Route::get('/obtener-documentos-empresa/{id}', [clientesProspectoController::class, 'obtenerDocumentos']);
 
 
 Route::get('/lista_empresas/{id}', [getFuncionesController::class, 'find_clientes_prospecto'])->middleware(['auth']);

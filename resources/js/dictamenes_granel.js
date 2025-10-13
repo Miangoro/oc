@@ -708,10 +708,12 @@ $(function () {
     });
   });
 
+
+
   ///REEXPEDIR
-  let isLoadingData = false;
-  let fieldsValidated = [];
-  $(document).ready(function () {
+let isLoadingData = false;
+let fieldsValidated = [];
+$(document).ready(function () {
     $(document).on('click', '.reexpedir', function () {
       var id_dictamen = $(this).data('id');
       console.log('ID Dictamen para reexpedir:', id_dictamen);
@@ -759,11 +761,25 @@ $(function () {
             return;
           }
 
+          //obtener la inspeccion ya asignada
+          const $select = $('#rex_id_inspeccion');
+          // Eliminar opciones anteriores agregadas dinámicamente, pero dejar los disponibles
+          $select.find('option[data-dinamico="true"]').remove();
+
+          // Si la inspeccion guardada no está en los disponibles, agregarlo temporalmente
+          if (!$select.find(`option[value="${datos.id_inspeccion}"]`).length) {
+            const texto = `${datos.num_servicio} | ${datos.folio ?? 'Sin folio'} | ${datos.direccion_completa}`;
+            $select.append(`<option value="${datos.id_inspeccion}" selected data-dinamico="true">${texto}</option>`);
+          } else {
+            $select.val(datos.id_inspeccion).trigger('change');
+          }
+
+          // Asignar valores a los campos del formulario
           $('#rex_id_inspeccion').val(datos.id_inspeccion).trigger('change');
           $('#rex_numero_dictamen').val(datos.num_dictamen);
-          $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
           $('#rex_fecha_emision').val(datos.fecha_emision);
           $('#rex_fecha_vigencia').val(datos.fecha_vigencia);
+          $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
 
           $('#accion_reexpedir').trigger('change');
           isLoadingData = false;
@@ -945,7 +961,9 @@ $(function () {
         }
       });
     });
-  });
+});
+
+
 
   ///FORMATO PDF DICTAMEN
   $(document).on('click', '.pdfDictamen', function () {

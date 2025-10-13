@@ -929,6 +929,19 @@ $(document).ready(function () {
               return;
           }
 
+          //obtener la inspeccion ya asignada
+          const $select = $('#rex_id_inspeccion');
+          // Eliminar opciones anteriores agregadas dinámicamente, pero dejar los disponibles
+          $select.find('option[data-dinamico="true"]').remove();
+
+          // Si la inspeccion guardada no está en los disponibles, agregarlo temporalmente
+          if (!$select.find(`option[value="${datos.id_inspeccion}"]`).length) {
+            const texto = `${datos.num_servicio} | ${datos.folio ?? 'Sin folio'} | ${datos.direccion_completa}`;
+            $select.append(`<option value="${datos.id_inspeccion}" selected data-dinamico="true">${texto}</option>`);
+          } else {
+            $select.val(datos.id_inspeccion).trigger('change');
+          }
+
           $('#rex_id_inspeccion').val(datos.id_inspeccion).trigger('change');
           $('#rex_numero_dictamen').val(datos.num_dictamen);
           $('#rex_id_firmante').val(datos.id_firmante).trigger('change');
