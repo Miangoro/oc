@@ -175,6 +175,7 @@
                     <td>{{ $bitacora->loteBitacora->clase->clase ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora?->ingredientes ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora?->edad ?? '----' }}</td>
+                    
                     <td>
                         {{-- @if ($bitacora->loteBitacora && $bitacora->loteBitacora->tiposRelacionados->isNotEmpty())
                             {!! $bitacora->loteBitacora->tiposRelacionados->map(function ($tipo) {
@@ -184,31 +185,31 @@
                             ---
                         @endif --}}
                         @php
-    // IDs guardados en la base (orden original)
-    $orden = json_decode($bitacora->id_tipo ?? '[]', true);
-    $orden = array_map('intval', $orden);
+                            // IDs guardados en la base (orden original)
+                            $orden = json_decode($bitacora->id_tipo ?? '[]', true);
+                            $orden = array_map('intval', $orden);
 
-    // Asegurar que haya tipos relacionados
-    $tipos = $bitacora->loteBitacora->tiposRelacionados ?? collect();
+                            // Asegurar que haya tipos relacionados
+                            $tipos = $bitacora->loteBitacora->tiposRelacionados ?? collect();
 
-    // Reordenar según el arreglo de IDs
-    $tiposOrdenados = $tipos->sortBy(function($tipo) use ($orden) {
-        return array_search(intval($tipo->id_tipo), $orden);
-    });
-@endphp
-    @if ($tiposOrdenados->isNotEmpty())
-        @foreach ($tiposOrdenados as $tipo)
-            {{ $tipo->nombre }}
-            @if ($tipo->cientifico)
-                <em>({{ $tipo->cientifico }})</em>
-            @endif
-            @if (!$loop->last)
-                ,
-            @endif
-        @endforeach
-    @else
-        ---
-    @endif
+                            // Reordenar según el arreglo de IDs
+                            $tiposOrdenados = $tipos->sortBy(function($tipo) use ($orden) {
+                                return array_search(intval($tipo->id_tipo), $orden);
+                            });
+                        @endphp
+                            @if ($tiposOrdenados->isNotEmpty())
+                                @foreach ($tiposOrdenados as $tipo)
+                                    {{ $tipo->nombre }}
+                                    @if ($tipo->cientifico)
+                                        <em>({{ $tipo->cientifico }})</em>
+                                    @endif
+                                    @if (!$loop->last)
+                                        ,
+                                    @endif
+                                @endforeach
+                            @else
+                                ---
+                            @endif
                     </td>
 
                     <td>{{ $bitacora->loteBitacora?->folio_fq ?? '----' }}</td>
