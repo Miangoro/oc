@@ -588,7 +588,7 @@ public function update(Request $request, $id_dictamen)
 ///FUNCION REEXPEDIR
 public function reexpedir(Request $request)
 {
-    //try {
+    try {
         $request->validate([
             'accion_reexpedir' => 'required|in:1,2',
             'observaciones' => 'nullable|string',
@@ -638,13 +638,13 @@ public function reexpedir(Request $request)
         }
 
         return response()->json(['message' => 'Procesado correctamente.']);
-    /*} catch (\Exception $e) {
+    } catch (\Exception $e) {
         Log::error('Error al reexpedir', [
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
         return response()->json(['error' => 'Error al procesar.'], 500);
-    }*/
+    }
 }
 
 
