@@ -17,17 +17,32 @@
 
                     </div>
 
+                    <div class="row">
+                        <div class="col-12 mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <select id="id_contacto" name="id_contacto" class="select2 form-select"
+                                    data-allow-clear="true">
+                                    <option value="" disabled selected>Seleccione una opción</option>
+                                    @foreach ($usuarios as $usuario)
+                                        <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_contacto">Persona de contacto CIDAM</label>
+                            </div>
+                        </div>
 
-                    <div class="col-12">
-                        <div class="form-floating form-floating-outline">
-                            <select id="id_contacto" name="id_contacto" class="select2 form-select"
-                                data-allow-clear="true">
-                                <option value="" disabled selected>Seleccione una opción</option>
-                                @foreach ($usuarios as $usuario)
-                                    <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
-                                @endforeach
-                            </select>
-                            <label for="id_contacto">Persona de contacto CIDAM</label>
+                        <div class="col-md-12 mb-2">
+                            <div class="form-floating form-floating-outline select2-primary">
+                                <select class="form-select select2" id="actividad" name="actividad[]"
+                                    data-placeholder="Seleccione una o más actividades" aria-label="actividad" multiple>
+                                    <option value="">Seleccione una actividad</option>
+                                    @foreach ($actividadesClientes as $actividad)
+                                        <option value="{{ $actividad->id_actividad }}">{{ $actividad->actividad }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label for="normas">Actividad</label>
+                            </div>
                         </div>
                     </div>
 
@@ -159,16 +174,15 @@
                     </div>
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button disabled class="btn btn-primary me-1 d-none" type="button"
-                            id="btnSpinner">
+                        <button disabled class="btn btn-primary me-1 d-none" type="button" id="btnSpinner">
                             <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
                             Registrando...
                         </button>
                         <button type="submit" class="btn btn-primary" id="btnAdd"><i
                                 class="ri-add-line me-1"></i>
                             Registrar</button>
-                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal"
-                            aria-label="Close"><i class="ri-close-line me-1"></i> Cancelar</button>
+                        <button type="reset" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="ri-close-line me-1"></i> Cancelar</button>
                     </div>
 
                 </form>

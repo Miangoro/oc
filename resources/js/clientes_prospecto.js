@@ -422,6 +422,23 @@ $(function () {
     });
   }
 
+    $(document).ready(function () {
+    var dt_user_table = $('.datatables-users'),
+      select2Elements = $('.select2'),
+      userView = baseUrl + 'app/user/view/account';
+    initializeSelect2(select2Elements);
+  });
+
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+
   // Delete Record
   $(document).on('click', '.delete-record', function () {
     var user_id = $(this).data('empresa_id'),
@@ -799,7 +816,7 @@ $(function () {
       }
     });
   });
-
+//validacion cliente para confrimado
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -927,6 +944,13 @@ $(function () {
               callback: function (input) {
                 return $('#regimenTipo').val() === 'Persona moral' ? input.value.trim() !== '' : true;
               }
+            }
+          }
+        },
+        'actividad[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor selecciona al menos una actividad.'
             }
           }
         }

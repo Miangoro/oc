@@ -11,6 +11,9 @@ use App\Models\empresaNumCliente;
 use App\Models\Documentacion_url;
 use App\Models\Documentacion;
 use App\Models\solicitud_informacion;
+use App\Models\catalogo_actividad_cliente;
+use App\Models\empresa_actividad;
+// ... tus otros modelos como empresa, empresaNumCliente, etc.
 use App\Models\User;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -32,12 +35,14 @@ class clientesProspectoController extends Controller
     $notVerified = 10;
     // $usersUnique = $empresas->unique(['estado']);
     $userDuplicates = 40;
+    $actividadesClientes = catalogo_actividad_cliente::all();
     return view('clientes.find_clientes_prospecto_view', [
       'verified' => $verified,
       'notVerified' => $notVerified,
       'userDuplicates' => $userDuplicates,
       'usuarios' => $usuarios,
       'empresas' => $empresas,
+      'actividadesClientes' => $actividadesClientes,
     ]);
 
   }
@@ -89,7 +94,17 @@ class clientesProspectoController extends Controller
  */
 
 public function aceptarCliente(Request $request) {
-    DB::transaction(function() use ($request) {
+    /* dd($request->all()); */
+      // Definimos las rutas ANTES de la transacción para validar
+    $ruta_antigua = 'public/uploads/' . $request->id_empresa;
+
+    // IMPORTANTE: Decidir qué número de cliente usar para la carpeta.
+    // Usaremos el primero que venga en la solicitud.
+    $nuevo_nombre_carpeta = $request->numero_cliente[0];
+    $ruta_nueva = 'public/uploads/' . $nuevo_nombre_carpeta;
+
+    DB::transaction(function() use ($request, $ruta_antigua, $ruta_nueva) {
+
         for ($i = 0; $i < count($request->numero_cliente); $i++) {
             $cliente = empresaNumCliente::where('id_empresa', $request->id_empresa)
                 ->where('id_norma', $request->id_norma[$i])
@@ -130,6 +145,33 @@ public function aceptarCliente(Request $request) {
         $empresa->tipo = 2;
         $empresa->id_contacto = $request->id_contacto;
         $empresa->save();
+
+         // ==========================================================
+        // ===== CÓDIGO PARA GUARDAR ACTIVIDADES ====
+        // ==========================================================
+        // 1. Borramos las actividades anteriores para sincronizar.
+        empresa_actividad::where('id_empresa', $request->id_empresa)->delete();
+
+        // 2. Verificamos que se haya enviado un array de actividades.
+        if ($request->has('actividad') && is_array($request->actividad)) {
+            // 3. Recorremos el array y creamos un registro por cada actividad.
+            foreach ($request->actividad as $id_actividad) {
+                empresa_actividad::create([
+                    'id_empresa'   => $request->id_empresa,
+                    'id_actividad' => $id_actividad,
+                ]);
+            }
+        }
+        // =======================================================
+        // ===== TERMINA CÓDIGO PARA LAS ACTIVIDADES =====
+        // ========================================================
+
+         // Verificamos si la carpeta del prospecto realmente existe
+        if (Storage::exists($ruta_antigua)) {
+            // Renombramos la carpeta. Si la nueva ya existe, arrojará un error.
+            Storage::move($ruta_antigua, $ruta_nueva);
+        }
+
     });
 
     return response()->json('Validada');
@@ -396,11 +438,28 @@ public function registrarClientes(Request $request)
 }
 
 
-public function obtenerDocumentos($id)
+/* public function obtenerDocumentos($id)
 {
     // Busca todos los documentos para el ID de la empresa proporcionado
     $documentos = Documentacion_url::where('id_empresa', $id)->get();
     $urls = $documentos->pluck('url', 'id_documento');
+    return response()->json($urls);
+} */
+public function obtenerDocumentos($id)
+{
+    // Busca todos los documentos para el ID de la empresa proporcionado
+    $documentos = Documentacion_url::where('id_empresa', $id)->get();
+
+    // Usamos mapWithKeys para transformar la colección y construir la ruta completa
+    $urls = $documentos->mapWithKeys(function ($documento) use ($id) {
+        // Construimos la ruta: 'uploads/{id_empresa}/{nombre_archivo.ext}'
+        $rutaCompleta = 'uploads/' . $id . '/' . $documento->url;
+
+        // Retornamos un array asociativo para este elemento
+        // La clave será el id_documento y el valor será la ruta completa
+        return [$documento->id_documento => $rutaCompleta];
+    });
+
     return response()->json($urls);
 }
 
@@ -449,30 +508,31 @@ public function registrarDocumentos(Request $request, $id)
 
         // 3. DECIDIR si se actualiza un registro existente o se crea uno nuevo
         if ($documentoExistente) {
-            // --- Lógica de ACTUALIZACIÓN ---
+         // --- Lógica de ACTUALIZACIÓN ---
 
-            // A. Borrar el archivo ANTIGUO del storage para no guardar basura
-            if (Storage::disk('public')->exists($documentoExistente->url)) {
-                Storage::disk('public')->delete($documentoExistente->url);
+            // A. Borrar el archivo ANTIGUO del storage
+            // ¡CAMBIO IMPORTANTE! Reconstruimos la ruta completa para poder borrarlo.
+            $rutaAntigua = 'uploads/' . $prospecto->id_empresa . '/' . $documentoExistente->url;
+
+            if (Storage::disk('public')->exists($rutaAntigua)) {
+                Storage::disk('public')->delete($rutaAntigua);
             }
-
-            // B. Actualizar el registro existente con la ruta del NUEVO archivo
+            // B. Actualizar el registro con el nombre del NUEVO archivo
+            // ¡CAMBIO IMPORTANTE! Guardamos solo $fileName, no la ruta completa.
             $documentoExistente->update([
-                'url' => $path,
-                // Podrías actualizar otros campos si es necesario, ej:
-                // 'id_usuario_registro' => Auth::id(),
+                'url' => $fileName,
             ]);
-
         } else {
-            // --- Lógica de CREACIÓN (si no existía un documento previo) ---
+          // --- Lógica de CREACIÓN ---
+            // ¡CAMBIO IMPORTANTE! Guardamos solo $fileName, no la ruta completa.
             Documentacion_url::create([
-                'id_documento'        => $id_documento,
-                'nombre_documento'    => $documentoMaestro->nombre,
-                'id_empresa'          => $prospecto->id_empresa,
-                'url'                 => $path, // La ruta del nuevo archivo
-                'id_relacion'         => $prospecto->id_empresa,
-                'id_doc'              => 0,
-                'fecha_vigencia'      => null,
+                'id_documento'     => $id_documento,
+                'nombre_documento' => $documentoMaestro->nombre,
+                'id_empresa'       => $prospecto->id_empresa,
+                'url'              => $fileName, // <- Aquí está el cambio
+                'id_relacion'      => $prospecto->id_empresa,
+                'id_doc'           => 0,
+                'fecha_vigencia'   => null,
             ]);
         }
     }
