@@ -336,6 +336,7 @@ class BitacoraProductoTerminadoController extends Controller
           }
         $bitacoras = BitacoraProductoTerminado::with([
             'empresaBitacora.empresaNumClientes',
+            'granel',
             'firmante',
             'marca',
             'categorias',
