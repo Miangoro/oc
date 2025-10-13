@@ -670,11 +670,15 @@ public function agregarResultados(Request $request)
 
                             // Selecciona revisor aleatorio tipo 2 activo, excepto el inspector
                             $excluirId = $inspeccion->id_inspector;
-                            $revisor = User::where('tipo', 2)
-                                ->where('estatus', 'Activo')
-                                ->where('id', '<>', $excluirId)
-                                ->where('id', '<>', 12) //se excluye a amairany por solicitud de Gil
-                                ->orWhereIn('id', [319, 335, 344])
+                            $excluirTipo2 = [$excluirId, 12, 353];//tipo 2 a excluir amairany,ricardo
+                            $incluirManual = [319, 335, 344];//incluir tipo 1 gil, Sylvana, Elizabeth
+                            $revisor = User::where(function($query) use ($excluirTipo2, $incluirManual) {
+                                // Usuarios tipo 2, activos, excluyendo ciertos IDs
+                                $query->where('tipo', 2)
+                                    ->where('estatus', 'Activo')
+                                    ->whereNotIn('id', $excluirTipo2)
+                                    ->orWhereIn('id', $incluirManual);
+                                })
                                 ->inRandomOrder()
                                 ->first();
 
