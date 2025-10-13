@@ -197,7 +197,12 @@
                     <td>{{ $bitacora->granel->nombre_lote ?? '----' }}</td>
                     <td><b>{{ $bitacora->envasado->nombre ?? '----' }}</b></td>
                     <td>{{ $bitacora->folio_fq ?? '----' }}</td> {{-- num_analisis_fq --}}
-                    <td>{{ $bitacora->granel->certificadoGranel->num_certificado ?? '----' }}</td> {{-- num_certificado --}}
+                    <td>{{-- num_certificado --}}
+                        {{-- {{ $bitacora->granel->certificadoGranel->num_certificado ?? '----' }} --}}
+                        {{ $bitacora->granel?->certificadoGranel?->num_certificado
+                            ?? $bitacora->granel?->folio_certificado 
+                            ?? ''}}
+                    </td>
                     <td>{{ $bitacora->categorias->categoria ?? '----' }}</td> {{-- puedes mapear esto desde id_categoria si quieres mostrar nombre --}}
                     <td>{{ $bitacora->clases->clase ?? '----' }}</td> {{-- igual con id_clase --}}
                     <td>{{ $bitacora->ingredientes ?? '----' }}</td> {{-- ingrediente --}}
