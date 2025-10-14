@@ -19,7 +19,7 @@
                                     <option value="" disabled selected>Elige la solicitud de entrega</option>
                                     @foreach ($ModelsSolicitudHolograma as $solicitud)
                                         <option value="{{ $solicitud->id_solicitud }}">{{ $solicitud->folio }} |
-                                            {{ $solicitud->marcas->marca }} |
+                                            {{ $marca = $solicitud->marcas?->marca }} |
                                             {{ number_format($solicitud->folio_inicial) }} -
                                             {{ number_format($solicitud->folio_final) }}</option>
                                     @endforeach
