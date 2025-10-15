@@ -373,7 +373,7 @@ public function index(Request $request)
                 $nestedData['fecha_corte'] = isset($caracteristicas['fecha_corte']) ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i') : 'N/A';
                 ///TIPO MAGUEY
                 $idTipoMagueyMuestreo = $caracteristicas['id_tipo_maguey'] ?? null;
-                if ($idTipoMagueyMuestreo) {
+                /*if ($idTipoMagueyMuestreo) {
                     if (is_array($idTipoMagueyMuestreo)) {
                         $idTipoMagueyMuestreo = implode(',', $idTipoMagueyMuestreo);
                     }
@@ -386,7 +386,36 @@ public function index(Request $request)
                     }
                 } else {
                     $nestedData['id_tipo_maguey'] = 'N/A';
+                }*/
+                if ($idTipoMagueyMuestreo) {
+                    if (is_array($idTipoMagueyMuestreo)) {
+                        $idTipoMagueyMuestreo = implode(',', $idTipoMagueyMuestreo);
+                    }
+                    $idTipoMagueyMuestreoArray = explode(',', $idTipoMagueyMuestreo);
+
+                    // Convertir a string para evitar problemas de coincidencia
+                    $idTipoMagueyMuestreoArray = array_map('strval', $idTipoMagueyMuestreoArray);
+
+                    // Obtenemos nombre de todos los tipos de maguey (clave = id)
+                    $tiposMagueyDB = tipos::whereIn('id_tipo', $idTipoMagueyMuestreoArray)
+                        ->pluck('nombre', 'id_tipo')
+                        ->mapWithKeys(fn($nombre, $id) => [strval($id) => $nombre])
+                        ->toArray();
+
+                    // Mapear en el mismo orden que el array original
+                    $tiposMagueyOrdenados = array_map(function($tipoId) use ($tiposMagueyDB) {
+                        return $tiposMagueyDB[$tipoId] ?? 'Desconocido';
+                    }, $idTipoMagueyMuestreoArray);
+
+                    if (!empty($tiposMagueyOrdenados)) {
+                        $nestedData['id_tipo_maguey'] = implode(', ', $tiposMagueyOrdenados);
+                    } else {
+                        $nestedData['id_tipo_maguey'] = 'N/A';
+                    }
+                } else {
+                    $nestedData['id_tipo_maguey'] = 'N/A';
                 }
+                
 
                 $nestedData['id_categoria'] = isset($caracteristicas['id_categoria']) ? categorias::find($caracteristicas['id_categoria'])->categoria : 'N/A';
                 $nestedData['id_clase'] = isset($caracteristicas['id_clase']) ? clases::find($caracteristicas['id_clase'])->clase : 'N/A';
