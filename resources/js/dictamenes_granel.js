@@ -372,13 +372,13 @@ $(function () {
             }
           }
         },
-        /*num_dictamen: {
+        num_dictamen: {
           validators: {
             notEmpty: {
               message: 'El número de dictamen es obligatorio.'
             }
           }
-        },*/
+        },
         id_firmante: {
           validators: {
             notEmpty: {
@@ -444,7 +444,6 @@ $(function () {
           });
         },
         error: function (xhr) {
-          //console.log('Error:', xhr);
           const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
           if (isDev) {
               console.log('Error:', xhr);

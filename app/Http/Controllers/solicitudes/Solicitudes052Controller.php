@@ -415,7 +415,7 @@ public function storeVigilanciaProduccion(Request $request)
         'fecha_solicitud' => 'nullable|date',
         'fecha_visita' => 'required|date',
         'id_instalacion' => 'required|integer',
-        'nombre_produccion' => 'required|string|max:255',
+        'nombre_produccion' => 'nullable|string|max:255',
         'etapa_proceso' => 'nullable|string|max:255',
         'cantidad_pinas' => 'nullable|integer|min:1',
         'info_adicional' => 'nullable|string',
@@ -426,11 +426,11 @@ public function storeVigilanciaProduccion(Request $request)
 
     try {
         // 1. Obtener empresa y número de cliente
-        $empresa = Empresa::with("empresaNumClientes")
+        $empresa = empresa::with("empresaNumClientes")
             ->where("id_empresa", $validated['id_empresa'])
             ->firstOrFail();
 
-        $numeroCliente = $empresa->empresaNumCliente
+        $numeroCliente = $empresa->empresaNumClientes
             ?->pluck('numero_cliente')
             ?->first(fn($num) => !empty($num));
 

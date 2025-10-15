@@ -139,7 +139,6 @@ $(function () {
     'Emisión de certificado de cumplimiento de instalaciones',
   ];
 
-
   // 2. Generar los botones dinámicamente
   const filtroButtons = filtros.map(filtro => ({
     text: filtro,
@@ -159,8 +158,66 @@ $(function () {
   });
 
 
-  // Inicializar DataTable
-  var dt_instalaciones_table = $('.datatables-solicitudes052').DataTable({
+
+  //FUNCION FECHAS
+  $(document).ready(function () {
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      todayHighlight: true,
+      language: 'es'
+    });
+  });
+  /*$(document).ready(function () {
+    flatpickr(".flatpickr-datetime", {
+        dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
+        enableTime: false,   // Desactiva la  hora
+        allowInput: true,    // Permite al usuario escribir la fecha manualmente
+        locale: "es",        // idioma a español
+    });
+  });*/
+  //Date picker
+  $(document).ready(function () {
+    const flatpickrDateTime = document.querySelectorAll('.flatpickr-datetime');
+
+    if (flatpickrDateTime.length) {
+      flatpickrDateTime.forEach(element => {
+        // Inicializar flatpickr para cada input
+        flatpickr(element, {
+          enableTime: true, // Habilitar selección de tiempo
+          time_24hr: true, // Mostrar tiempo en formato 24 horas
+          dateFormat: 'Y-m-d H:i',
+          locale: 'es',
+          allowInput: true
+        });
+      });
+    }
+  });
+
+
+//Función para inicializar Select2
+function initializeSelect2($elements) {
+  $elements.each(function () {
+    var $this = $(this);
+    select2Focus($this);
+    $this.wrap('<div class="position-relative"></div>').select2({
+      dropdownParent: $this.parent()
+    });
+  });
+}
+initializeSelect2($('.select2'));
+
+
+// ajax setup
+$.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
+
+//FUNCIONALIDAD DE LA VISTA datatable
+var dt_instalaciones_table = $('.datatables-solicitudes052').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
@@ -509,41 +566,134 @@ $(function () {
         }
       }
     }
-  });
+});
 
 
-  var dt_user_table = $('.datatables-solicitudes052'),
-    select2Elements = $('.select2');
 
-  // Función para inicializar Select2 en elementos específicos
-  function initializeSelect2($elements) {
-    $elements.each(function () {
-      var $this = $(this);
-      select2Focus($this);
-      $this.wrap('<div class="position-relative"></div>').select2({
-        dropdownParent: $this.parent(),
-        language: 'es'
+
+
+
+///REGISTRAR SOLICITUD vigilancia en produccion
+$(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Validación del formulario Vigilancia en produccion
+    const FormAddSoli052VigilanciaProduccion = document.getElementById('FormAddSoli052VigilanciaProduccion');
+    const fv5 = FormValidation.formValidation(FormAddSoli052VigilanciaProduccion, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha y hora de visita.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una instalación.'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'//clases del formulario
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      var formData = new FormData(FormAddSoli052VigilanciaProduccion);
+
+      $('#btnRegisVigiPro').addClass('d-none');
+      $('#btnSpinnerVigilanciaProduccion').removeClass('d-none');
+      
+      $.ajax({
+        url: '/solicitudes052/vigilancia-produccion/add',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#btnRegisVigiPro').removeClass('d-none');
+          $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
+          $('#ModalAddSoli052VigilanciaProduccion').modal('hide');
+          FormAddSoli052VigilanciaProduccion.reset();
+          $('.select2').val(null).trigger('change');
+          //$('.datatables-solicitudes052').DataTable().ajax.reload();
+          dt_instalaciones_table.ajax.reload();//Recarga los datos del datatable
+
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            //text: 'Solicitud vigilancia registrado exitosamente.',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-primary'
+            }
+          });
+        },
+        error: function (xhr) {
+          //console.log('Error Completo:', xhr);
+          //console.warn('Advertencia:', xhr.responseJSON);
+          /*let errorText = JSON.parse(xhr.responseText);
+              console.log('Mensaje Text:', errorText.message);*/
+        // Para desarrollador: revisar en consola (solo en desarrollo)
+        /*if (process.env.NODE_ENV !== 'production') { FORMA 1
+            console.log('Error Completo:', xhr);
+        }*/
+        const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);//FORMA 2
+        if (isDev) {
+            console.log('Error Completo:', xhr);
+        }
+
+          let errorJSON = xhr.responseJSON?.message || "Error al registrar.";
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: errorJSON,
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+
+          $('#btnRegisVigiPro').removeClass('d-none');
+          $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
+        }
       });
     });
-  }
 
-  initializeSelect2(select2Elements);
-  //funcion para los datepickers formato año/mes/dia
-  $(document).ready(function () {
-    $('.datepicker').datepicker({
-      format: 'yyyy-mm-dd',
-      autoclose: true,
-      todayHighlight: true,
-      language: 'es'
+    // Revalidar campos al cambiar
+    $('#id_empresa_vigilancia, #fecha_visita_vigi, #id_instalacion_vigi').on('change', function () {
+        fv5.revalidateField($(this).attr('name'));
     });
-  });
 
-  // Configuración CSRF para Laravel
-  $.ajaxSetup({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-  });
+    // Limpiar formulario y validación al cerrar el modal
+    $('#ModalAddSoli052VigilanciaProduccion').on('hidden.bs.modal', function () {
+        FormAddSoli052VigilanciaProduccion.reset();// Resetear los campos del formulario
+        fv5.resetForm(true);// Limpiar validaciones y errores
+        $('.select2').val(null).trigger('change');// Si tienes Select2, también limpiar selección
+    });
+
+});
+
+
 
 
 
@@ -2875,117 +3025,7 @@ $(document).ready(function () {
 
 
 
-///REGISTRAR SOLICITUD vigilancia en produccion
-$(function () {
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
 
-    // Validación del formulario Vigilancia en produccion
-    const FormAddSoli052VigilanciaProduccion = document.getElementById('FormAddSoli052VigilanciaProduccion');
-    const fv5 = FormValidation.formValidation(FormAddSoli052VigilanciaProduccion, {
-      fields: {
-        id_empresa: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una empresa.'
-            }
-          }
-        },
-        fecha_visita: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese la fecha y hora de visita.'
-            }
-          }
-        },
-        id_instalacion: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una instalación.'
-            }
-          }
-        }
-      },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating'//clases del formulario
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function () {
-      var formData = new FormData(FormAddSoli052VigilanciaProduccion);
-
-      $('#btnRegisVigiPro').addClass('d-none');
-      $('#btnSpinnerVigilanciaProduccion').removeClass('d-none');
-      
-      $.ajax({
-        url: '/solicitudes052/vigilancia-produccion/add',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          $('#btnRegisVigiPro').removeClass('d-none');
-          $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
-          $('#ModalAddSoli052VigilanciaProduccion').modal('hide');
-          FormAddSoli052VigilanciaProduccion.reset();
-          $('.select2').val(null).trigger('change');
-          //$('.datatables-solicitudes052').DataTable().ajax.reload();
-          dt_instalaciones_table.ajax.reload();//Recarga los datos del datatable
-
-          // Mostrar alerta de éxito
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            //text: 'Solicitud vigilancia registrado exitosamente.',
-            text: response.message,
-            customClass: {
-              confirmButton: 'btn btn-primary'
-            }
-          });
-        },
-        error: function (xhr) {
-          //console.log('Error Completo:', xhr);
-          //console.warn('Advertencia:', xhr.responseJSON);
-          /*let errorText = JSON.parse(xhr.responseText);
-              console.log('Mensaje Text:', errorText.message);*/
-        // Para desarrollador: revisar en consola (solo en desarrollo)
-        /*if (process.env.NODE_ENV !== 'production') { FORMA 1
-            console.log('Error Completo:', xhr);
-        }*/
-        const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);//FORMA 2
-        if (isDev) {
-            console.log('Error Completo:', xhr);
-        }
-
-          let errorJSON = xhr.responseJSON?.message || "Error al registrar.";
-            Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: errorJSON,
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-
-          $('#btnRegisVigiPro').removeClass('d-none');
-          $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
-        }
-      });
-    });
-
-    // Revalidar campos al cambiar
-    $('#id_empresa_vigilancia, #fecha_visita_vigi, #id_instalacion_vigi').on('change', function () {
-        fv5.revalidateField($(this).attr('name'));
-    });
-});
 
 
 
@@ -4604,23 +4644,7 @@ $(function () {
     });
   });
 
-  //Date picker
-  $(document).ready(function () {
-    const flatpickrDateTime = document.querySelectorAll('.flatpickr-datetime');
-
-    if (flatpickrDateTime.length) {
-      flatpickrDateTime.forEach(element => {
-        // Inicializar flatpickr para cada input
-        flatpickr(element, {
-          enableTime: true, // Habilitar selección de tiempo
-          time_24hr: true, // Mostrar tiempo en formato 24 horas
-          dateFormat: 'Y-m-d H:i',
-          locale: 'es',
-          allowInput: true
-        });
-      });
-    }
-  });
+  
 
   $(function () {
     // Configuración CSRF para Laravel

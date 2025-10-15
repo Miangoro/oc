@@ -211,8 +211,17 @@ public function index(Request $request)
 
             foreach ($predios as $predio) {
 
-              $hasSolicitud = $predio->solicitudes()->where('id_tipo', 10)->exists();
-              $solicitud = $predio->solicitudes()->where('id_tipo', 10)->first();
+                /*$hasSolicitud = $predio->solicitudes()->where('id_tipo', 10)->exists();
+                $solicitud = $predio->solicitudes()->where('id_tipo', 10)->first();*/
+                $hasSolicitud = $predio->solicitudes()
+                    ->where('id_tipo', 10)
+                    ->where('habilitado', 1)
+                    ->exists();
+
+                $solicitud = $predio->solicitudes()
+                    ->where('id_tipo', 10)
+                    ->where('habilitado', 1)
+                    ->first();
 
                 $nestedData['id_predio'] = $predio->id_predio;
                 $nestedData['fake_id'] = ++$ids;
