@@ -418,7 +418,7 @@ public function index(Request $request)
                 $idTipoMagueyMuestreo = $caracteristicas['id_tipo_maguey'] ?? null;
                 $nestedData['presentacion'] = $presentacion ?? 'N/A';
 
-                if ($idTipoMagueyMuestreo) {
+                /*if ($idTipoMagueyMuestreo) {
                     if (is_array($idTipoMagueyMuestreo)) {
                         $idTipoMagueyMuestreo = implode(',', $idTipoMagueyMuestreo);
                     }
@@ -426,6 +426,34 @@ public function index(Request $request)
                     $tiposMaguey = tipos::whereIn('id_tipo', $idTipoMagueyMuestreoArray)->pluck('nombre')->toArray();
                     if ($tiposMaguey) {
                         $nestedData['id_tipo_maguey'] = implode(', ', $tiposMaguey);
+                    } else {
+                        $nestedData['id_tipo_maguey'] = 'N/A';
+                    }
+                } else {
+                    $nestedData['id_tipo_maguey'] = 'N/A';
+                }*/
+                if ($idTipoMagueyMuestreo) {
+                    if (is_array($idTipoMagueyMuestreo)) {
+                        $idTipoMagueyMuestreo = implode(',', $idTipoMagueyMuestreo);
+                    }
+                    $idTipoMagueyMuestreoArray = explode(',', $idTipoMagueyMuestreo);
+
+                    // Convertir a string para evitar problemas de coincidencia
+                    $idTipoMagueyMuestreoArray = array_map('strval', $idTipoMagueyMuestreoArray);
+
+                    // Obtenemos nombre de todos los tipos de maguey (clave = id)
+                    $tiposMagueyDB = tipos::whereIn('id_tipo', $idTipoMagueyMuestreoArray)
+                        ->pluck('nombre', 'id_tipo')
+                        ->mapWithKeys(fn($nombre, $id) => [strval($id) => $nombre])
+                        ->toArray();
+
+                    // Mapear en el mismo orden que el array original
+                    $tiposMagueyOrdenados = array_map(function($tipoId) use ($tiposMagueyDB) {
+                        return $tiposMagueyDB[$tipoId] ?? 'Desconocido';
+                    }, $idTipoMagueyMuestreoArray);
+
+                    if (!empty($tiposMagueyOrdenados)) {
+                        $nestedData['id_tipo_maguey'] = implode(', ', $tiposMagueyOrdenados);
                     } else {
                         $nestedData['id_tipo_maguey'] = 'N/A';
                     }
