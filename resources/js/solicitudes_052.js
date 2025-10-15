@@ -2957,7 +2957,11 @@ $(function () {
           /*let errorText = JSON.parse(xhr.responseText);
               console.log('Mensaje Text:', errorText.message);*/
         // Para desarrollador: revisar en consola (solo en desarrollo)
-        if (process.env.NODE_ENV !== 'production') {
+        /*if (process.env.NODE_ENV !== 'production') { FORMA 1
+            console.log('Error Completo:', xhr);
+        }*/
+        const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);//FORMA 2
+        if (isDev) {
             console.log('Error Completo:', xhr);
         }
 
