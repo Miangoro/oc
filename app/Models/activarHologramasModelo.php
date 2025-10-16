@@ -63,11 +63,11 @@ public function tipos()
 {
     // Si el campo es JSON (array de IDs)
     if (is_array($this->id_tipo)) {
-        return \App\Models\tipos::whereIn('id_tipo', $this->id_tipo)->get();
+        return tipos::whereIn('id_tipo', $this->id_tipo)->get();
     }
 
     // Si sigue siendo entero (compatibilidad con datos viejos)
-    return \App\Models\tipos::where('id_tipo', $this->id_tipo)->get();
+    return tipos::where('id_tipo', $this->id_tipo)->get();
 }
 
 
