@@ -98,7 +98,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select multiple class=" form-select select2" id="id_tipo" name="id_tipo[]"
+                                <select multiple class=" form-select select2" id="id_tipo" name="id_tipo"
                                     aria-label="tipo">
                                     <option value="" disabled>Elige un tipo</option>
                                     @foreach ($tipos as $tipo)
