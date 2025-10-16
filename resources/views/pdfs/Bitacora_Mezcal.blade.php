@@ -228,7 +228,7 @@
                     <td>{{ $bitacora->destino_salidas ?? '----' }}</td>
                     <td>{{ $bitacora->volumen_final ?? '----' }}</td>
                     <td>{{ $bitacora->alcohol_final ?? '----' }}</td>
-                    <td>{{ $bitacora->observaciones ?? '----' }}</td>
+                    <td style="font-size: 10px !important">{{ $bitacora->observaciones ?? '----' }}</td>
                     <td style="padding: 0; text-align: center;">
                         @if ($bitacora->id_firmante != 0 && $bitacora->firmante)
                             @php
