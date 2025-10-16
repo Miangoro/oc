@@ -61,16 +61,15 @@ class activarHologramasModelo extends Model
 
 public function tipos()
 {
-    return $this->hasMany(\App\Models\tipos::class, 'id_tipo', 'id_tipo')
-        ->when(is_array($this->id_tipo), function ($query) {
-            // Si id_tipo es un array JSON, usar whereIn
-            $query->whereIn('id_tipo', $this->id_tipo);
-        })
-        ->when(is_numeric($this->id_tipo), function ($query) {
-            // Si id_tipo es un solo entero, usar where normal
-            $query->where('id_tipo', $this->id_tipo);
-        });
+    // Si el campo es JSON (array de IDs)
+    if (is_array($this->id_tipo)) {
+        return \App\Models\tipos::whereIn('id_tipo', $this->id_tipo)->get();
+    }
+
+    // Si sigue siendo entero (compatibilidad con datos viejos)
+    return \App\Models\tipos::where('id_tipo', $this->id_tipo)->get();
 }
+
 
 
 public function activarHologramasDesdeVariasSolicitudes($solicitudes, $folios)
