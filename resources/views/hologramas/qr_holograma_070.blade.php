@@ -46,9 +46,14 @@
                             <tr>
                                 <td class="td"><b>TIPO DE AGAVE</b></td>
                                 <td class="td">
-                                    {!! optional($datosHolograma->tipos)->map(function($tipo) {
-                                        return $tipo->nombre . ($tipo->cientifico ? ' (<i>' . $tipo->cientifico . '</i>)' : '');
-                                    })->implode(', ') !!}
+                                    {!! $datosHolograma->tipos
+    ? $datosHolograma->tipos->map(function ($tipo) {
+        return e($tipo->nombre) . 
+            ($tipo->cientifico ? ' (<i>' . e($tipo->cientifico) . '</i>)' : '');
+    })->implode(', ')
+    : 'Sin tipo asignado'
+!!}
+
                                 </td>
 
                                 
