@@ -393,9 +393,10 @@ public function PDFBitacoraMezcal(Request $request)
     }
 
      if(!empty($instalacionId)){
-        $domicilio_instalacion = 'Todas las instalaciones';
+        $domicilio_instalacion =  $bitacoras[0]->instalacion->direccion_completa ?? '';
     }else{
-       $domicilio_instalacion =  $bitacoras[0]->instalacion->direccion_completa ?? '';
+       
+        $domicilio_instalacion = 'Todas las instalaciones';
     }
 
     $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaSeleccionada','domicilio_instalacion'))
