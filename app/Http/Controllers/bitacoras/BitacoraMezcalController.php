@@ -351,6 +351,8 @@ public function PDFBitacoraMezcal(Request $request)
 
     $title = 'PRODUCTOR';
 
+   
+
     // Armar IDs de empresa (con maquiladores)
     $idsEmpresas = $empresaId ? [$empresaId] : [];
     if ($empresaId) {
@@ -390,7 +392,13 @@ public function PDFBitacoraMezcal(Request $request)
         ], 404);
     }
 
-    $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaSeleccionada'))
+     if(!empty($instalacionId)){
+        $domicilio_instalacion = 'Todas las instalaciones';
+    }else{
+       $domicilio_instalacion =  $bitacoras[0]->instalacion->direccion_completa ?? '';
+    }
+
+    $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaSeleccionada','domicilio_instalacion'))
         ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
 
     return $pdf->stream('Bitácora Mezcal a Granel.pdf');
