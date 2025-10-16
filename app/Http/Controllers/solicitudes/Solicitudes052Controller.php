@@ -557,7 +557,7 @@ public function storeVigilanciaProduccion(Request $request)
 
 
 ///OBTENER SOLICITUDES
-public function obtenerSolicituD052($id_solicitud)
+public function obtenerSolicitud052($id_solicitud)
 {
     // Buscar los datos necesarios en la tabla "solicitudes"
     $solicitud = Solicitudes052::find($id_solicitud);
@@ -612,9 +612,233 @@ public function obtenerSolicituD052($id_solicitud)
         'instalaciones' => $instalaciones,
         'documentos' => $documentos,
         'numero_cliente' => $numero_cliente,
-
-        //'id_empresa_destino' => $solicitud->id_empresa_destino,
     ]);
+}
+///ACTUALIZAR SOLICITUDES
+public function updateSolicitud052(Request $request, $id_solicitud)
+{
+        // Encuentra la solicitud por ID
+        $solicitud = Solicitudes052::find($id_solicitud);
+
+        if (!$solicitud) {
+            return response()->json(['success' => false, 'message' => 'Solicitud no encontrada'], 404);
+        }
+
+        // Verifica el tipo de formulario
+        $formType = $request->input('form_type');
+
+        switch ($formType) {
+            case 'vigilanciaenproduccion':
+                // Validar solo los campos que sí estás enviando
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                    'nombre_produccion' => 'nullable|string|max:255',
+                    'etapa_proceso' => 'nullable|string|max:255',
+                    'cantidad_pinas' => 'nullable|integer|min:1',
+                    'info_adicional' => 'nullable|string',
+                    'documento_guias.*' => 'nullable|file|max:10240', // 10MB por archivo
+                ]);
+
+                // Actualizar la solicitud con solo los datos actuales
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => json_encode([
+                        'nombre_produccion' => $request->nombre_produccion,
+                        'etapa_proceso' => $request->etapa_proceso,
+                        'cantidad_pinas' => $request->cantidad_pinas,
+                    ]),
+                ]);
+
+                /*
+                if ($request->hasFile('documento_guias')) {
+                    // 1. Obtener el número de cliente
+                    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->id_empresa)->first();
+                    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                        return !empty($numero);
+                    });
+
+                    if (!$numeroCliente) {
+                        return response()->json(['message' => 'No se encontró un número de cliente válido'], 422);
+                    }
+
+                    // 2. Eliminar archivos anteriores del disco y registros de la base
+                    $documentosAnteriores = DB::table('documentacion_url')
+                        ->where('id_relacion', $solicitud->id_solicitud)
+                        ->where('id_documento', 71)
+                        ->get();
+
+                    foreach ($documentosAnteriores as $doc) {
+                        Storage::disk('public')->delete("uploads/{$numeroCliente}/{$doc->url}");
+                    }
+
+                    DB::table('documentacion_url')
+                        ->where('id_relacion', $solicitud->id_solicitud)
+                        ->where('id_documento', 71)
+                        ->delete();
+
+                    // 3. Guardar nuevos archivos
+                    $carpetaDestino = "uploads/{$numeroCliente}";
+
+                    if (!Storage::disk('public')->exists($carpetaDestino)) {
+                        Storage::disk('public')->makeDirectory($carpetaDestino);
+                    }
+
+                    foreach ($request->file('documento_guias') as $file) {
+                        $extension = $file->getClientOriginalExtension();
+                        $nombreOriginal = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                        $nombreSeguro = preg_replace('/[^A-Za-z0-9_\-]/', '-', $nombreOriginal); // sanitiza el nombre
+                        $nombreArchivo = "Guía de traslado de agave {$nombreSeguro}_" . uniqid() . '.' . $extension;
+
+                        $ruta = $file->storeAs($carpetaDestino, $nombreArchivo, 'public');
+
+                        DB::table('documentacion_url')->insert([
+                            'id_documento' => 71,
+                            'nombre_documento' => 'Guía de traslado de agave',
+                            'id_empresa' => $solicitud->id_empresa,
+                            'id_relacion' => $solicitud->id_solicitud,
+                            'url' => $nombreArchivo,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+                  }
+                  */
+                break;
+
+            case 'muestreoloteagranel':
+                // Validar datos 
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                    'info_adicional' => 'nullable|string'
+                ]);
+                // Preparar el JSON para guardar en `caracteristicas`
+                $caracteristicasJson = [
+                    'id_lote_granel' => $request->id_lote_granel_muestreo,
+                    'tipo_analisis' => $request->tipo_analisis,
+                    'id_categoria' => $request->id_categoria_muestreo,
+                    'id_clase' => $request->id_clase_muestreo,
+                    'id_tipo_maguey' => $request->id_tipo_maguey_muestreo,
+                    'analisis' => $request->analisis_muestreo,
+                    'cont_alc' => $request->volumen_muestreo,
+                    'id_certificado_muestreo' => $request->id_certificado_muestreo,
+                ];
+
+                // Convertir el array a JSON
+                $jsonContent = json_encode($caracteristicasJson);
+
+                // Actualizar datos específicos
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
+                ]);
+
+                break;
+
+            case 'LiberacionProductoTerminado':
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                    'info_adicional' => 'nullable|string'
+                ]);
+
+                $caracteristicasJson = [
+                    'id_lote_envasado' => $request->id_lote_envasado,
+                    'cantidad_botellas' => $request->cantidad_botellas,
+                    'presentacion' => $request->presentacion,
+                    'cantidad_pallets' => $request->cantidad_pallets,
+                    'cajas_por_pallet' => $request->cajas_por_pallet,
+                    'botellas_por_caja' => $request->botellas_por_caja,
+                    'hologramas_utilizados' => $request->hologramas_utilizados,
+                    'hologramas_mermas' => $request->hologramas_mermas,
+                ];
+                $jsonContent = json_encode($caracteristicasJson);
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
+                ]);
+                break;
+
+            case 'emisionCertificadoVentaNacional'://emision certificado 
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'nullable|integer|exists:instalaciones,id_instalacion',
+                    'info_adicional' => 'nullable|string'
+                ]);
+                $caracteristicasJson = [
+                  'id_dictamen_envasado' => $request->id_dictamen_envasado,
+                  'id_lote_envasado' => $request->id_lote_envasado,
+                  'cantidad_cajas' => $request->cantidad_cajas,
+                  'cantidad_botellas' => $request->cantidad_botellas,
+                  'cont_alc' => $request->cont_alc,
+                ];
+                $jsonContent = json_encode($caracteristicasJson);
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
+                ]);
+                break;
+            
+            case 'dictaminacion':
+                // Validar datos para dictaminación
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_solicitud' => 'nullable|date',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                    'info_adicional' => 'nullable|string|max:5000',
+                ]);
+                // Preparar el JSON para guardar en `caracteristicas`
+                $caracteristicasJson = [
+                    'clases' => $request->clases,
+                    'categorias' => $request->categorias,
+                    'renovacion' => $request->renovacion,
+                ];
+
+                // Convertir el array a JSON
+                $jsonContent = json_encode($caracteristicasJson);
+                // Actualizar datos específicos para dictaminación
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_solicitud' => $request->fecha_solicitud,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
+                ]);
+                break;
+
+
+            default:
+                return response()->json(['success' => false, 'message' => 'Tipo de solicitud no reconocido'], 400);
+        }
+
+    return response()->json(['success' => true, 'message' => 'Solicitud actualizada correctamente']);
 }
 
 
