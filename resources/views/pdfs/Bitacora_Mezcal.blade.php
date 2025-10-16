@@ -115,6 +115,9 @@
             <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
                 <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
             </p>
+            <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
+                INSTALACIÓN: <span style="color: red;">&nbsp; {{ $bitacora[0]->instalacion->direccion_completa ?? 'Sin definir' }} </span>
+            </p>
         </div>
         {{-- Logo OC (comentado) --}}
         <div style="width: 25%; float: left; text-align: right;">

@@ -1117,7 +1117,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
                                             <td>
                                                 {!! $observacionesConEnlaces !!}
 
-                                                @if (!empty($datos->certificado->hologramas()))
+                                                @if (empty($observacionesConEnlaces))
                                                     @php 
                                                         $hologramas = $datos->certificado->hologramas();
                                                         $tipoHolograma = 'sin solicitud';
