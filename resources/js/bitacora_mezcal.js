@@ -578,6 +578,8 @@ $(function () {
     const empresaId = $('#filtroEmpresa').val();
     const instalacionId = $('#filtroInstalacion').val();
 
+    alert(instalacionId);
+
     if (!empresaId) {
       Swal.fire({
         icon: 'warning',
