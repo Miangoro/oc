@@ -172,7 +172,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $bitacora->fecha ? \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('d \d\e F \d\e Y') : '----'  }}</td>
                     <td>{{ $bitacora->loteBitacora?->id_tanque ?? '----' }}</td>
-                    <td style="color:darkblue;"><b>{{ $bitacora->loteBitacora?->nombre_lote ?? '----' }}</b></td>
+                    <td style="color:darkblue; font-family: 'calibri-bold';">{{ $bitacora->loteBitacora?->nombre_lote ?? '----' }}</td>
                     <td>{{ $bitacora->operacion_adicional ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora->categoria->categoria ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora->clase->clase ?? '----' }}</td>
