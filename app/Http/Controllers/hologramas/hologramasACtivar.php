@@ -266,7 +266,7 @@ class hologramasActivar extends Controller
         $loteEnvasado->clase = $request->clase;
         $loteEnvasado->contenido = $request->contenido;
         $loteEnvasado->no_lote_envasado = $request->no_lote_envasado;
-        $loteEnvasado->id_tipo = $request->id_tipo;
+        $loteEnvasado->id_tipo = json_encode($request->id_tipo);
         $loteEnvasado->lugar_produccion = $request->lugar_produccion;
         $loteEnvasado->lugar_envasado = $request->lugar_envasado;
         $loteEnvasado->id_solicitud = $request->id_solicitudActivacion;
@@ -326,7 +326,7 @@ class hologramasActivar extends Controller
             $loteEnvasado->clase = $request->edit_clase;
             $loteEnvasado->contenido = $request->edit_contenido;
             $loteEnvasado->no_lote_envasado = $request->edit_no_lote_envasado;
-            $loteEnvasado->id_tipo = $request->edit_id_tipo;
+            $loteEnvasado->id_tipo =  json_encode($request->edit_id_tipo);
             $loteEnvasado->lugar_produccion = $request->edit_lugar_produccion;
             $loteEnvasado->lugar_envasado = $request->edit_lugar_envasado;
             // Actualizar los rangos de folios
