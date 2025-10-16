@@ -116,7 +116,7 @@
                 <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
             </p>
             <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
-                INSTALACIÓN: <span style="color: red;">&nbsp; {{ $bitacora[0]->instalacion ?? 'Sin definir' }} </span>
+                INSTALACIÓN: <span style="color: red;">&nbsp; {{ $bitacora[0] ?? 'Sin definir' }} </span>
             </p>
         </div>
         {{-- Logo OC (comentado) --}}
