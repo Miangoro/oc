@@ -328,6 +328,8 @@ public function PDFBitacoraMezcal(Request $request)
 
     $id_instalacion = $request->id_instalacion;
 
+    dd($id_instalacion);
+
         // Si el usuario tiene varias instalaciones, aquí las tienes como array
     $idsInstalaciones = $user->id_instalacion ?? [];
     if ($user->tipo === 3 && empty($idsInstalaciones)) {
