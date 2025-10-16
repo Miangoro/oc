@@ -33,6 +33,11 @@ class activarHologramasModelo extends Model
 
     ];
 
+    protected $casts = [
+    'id_tipo' => 'array',
+];
+
+
     public function inspeccion()
     {
         return $this->belongsTo(inspecciones::class, 'id_inspeccion');
