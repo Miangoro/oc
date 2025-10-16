@@ -326,6 +326,8 @@ public function PDFBitacoraMezcal(Request $request)
 {
     $user = Auth::user();
 
+    $id_instalacion = $request->id_instalacion;
+
         // Si el usuario tiene varias instalaciones, aquí las tienes como array
     $idsInstalaciones = $user->id_instalacion ?? [];
     if ($user->tipo === 3 && empty($idsInstalaciones)) {
@@ -362,7 +364,7 @@ public function PDFBitacoraMezcal(Request $request)
         }
     }
 
-    $bitacoras = BitacoraMezcal::with([
+    $bitacoras = BitacoraMezcal::with(['instalacion',
         'empresaBitacora.empresaNumClientes',
         'firmante',
     ])
@@ -370,8 +372,11 @@ public function PDFBitacoraMezcal(Request $request)
     ->when(!empty($idsEmpresas), function ($query) use ($idsEmpresas) {
         $query->whereIn('id_empresa', $idsEmpresas);
     })
-    ->when(!empty($idsInstalaciones), function ($query) use ($idsInstalaciones) {
+    /*->when(!empty($idsInstalaciones), function ($query) use ($idsInstalaciones) {
         $query->whereIn('id_instalacion', $idsInstalaciones);
+    })*/
+    ->when(!empty($id_instalacion), function ($query) use ($id_instalacion) {
+        $query->where('id_instalacion', $id_instalacion);
     })
     ->orderBy('id', 'desc')
     ->get();
