@@ -371,12 +371,16 @@ public function PDFBitacoraMezcal(Request $request)
     ->when(!empty($idsEmpresas), function ($query) use ($idsEmpresas) {
         $query->whereIn('id_empresa', $idsEmpresas);
     })
-    /*->when(!empty($idsInstalaciones), function ($query) use ($idsInstalaciones) {
-        $query->whereIn('id_instalacion', $idsInstalaciones);
-    })*/
     ->when(!empty($instalacionId), function ($query) use ($instalacionId) {
+        // 🔹 Si se seleccionó una instalación específica, usar solo esa
         $query->where('id_instalacion', $instalacionId);
     })
+    ->when(empty($instalacionId) && !empty($idsInstalaciones), function ($query) use ($idsInstalaciones) {
+        // 🔹 Si no hay una instalación específica, pero sí un listado de permitidas
+        $query->whereIn('id_instalacion', $idsInstalaciones);
+    })
+    // 🔹 Si ambos están vacíos, no se agrega ningún filtro (muestra todo)
+
     ->orderBy('id', 'desc')
     ->get();
 
