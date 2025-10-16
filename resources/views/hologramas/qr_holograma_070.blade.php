@@ -101,7 +101,7 @@
                                 <td class="td">{{ $datosHolograma->contenido}} % Alc. Vol</td>
                             </tr>
                             <tr>
-                                <td class="td"><b>CONTENIDO NETO POR BOTELLA (ml/L)</b></td>
+                                <td class="td"><b>CONTENIDO NETO POR BOTELLA (mL/L)</b></td>
                                 <td class="td">{{ $datosHolograma->cont_neto}} {{ $datosHolograma->unidad}}</td>
                             </tr>
                         </tbody>
