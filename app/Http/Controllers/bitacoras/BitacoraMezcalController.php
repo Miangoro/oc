@@ -326,9 +326,7 @@ public function PDFBitacoraMezcal(Request $request)
 {
     $user = Auth::user();
 
-    $id_instalacion = $request->id_instalacion;
-    
-
+  
         // Si el usuario tiene varias instalaciones, aquí las tienes como array
     $idsInstalaciones = $user->id_instalacion ?? [];
     if ($user->tipo === 3 && empty($idsInstalaciones)) {
@@ -376,8 +374,8 @@ public function PDFBitacoraMezcal(Request $request)
     /*->when(!empty($idsInstalaciones), function ($query) use ($idsInstalaciones) {
         $query->whereIn('id_instalacion', $idsInstalaciones);
     })*/
-    ->when(!empty($id_instalacion), function ($query) use ($id_instalacion) {
-        $query->where('id_instalacion', $id_instalacion);
+    ->when(!empty($instalacionId), function ($query) use ($instalacionId) {
+        $query->where('id_instalacion', $instalacionId);
     })
     ->orderBy('id', 'desc')
     ->get();
