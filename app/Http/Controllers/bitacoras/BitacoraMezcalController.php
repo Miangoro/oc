@@ -327,8 +327,7 @@ public function PDFBitacoraMezcal(Request $request)
     $user = Auth::user();
 
     $id_instalacion = $request->id_instalacion;
-
-    dd($id_instalacion);
+    
 
         // Si el usuario tiene varias instalaciones, aquí las tienes como array
     $idsInstalaciones = $user->id_instalacion ?? [];
