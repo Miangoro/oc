@@ -457,7 +457,12 @@ private function esJsonValido($string)
         ])->whereIn('tipo', [2, 3])
         ->when($empresaId, function ($query) use ($idsEmpresas) {
             $query->whereIn('id_empresa', $idsEmpresas);
-        }) ->when(!empty($idsInstalaciones), function ($query) use ($idsInstalaciones) {
+        })  ->when(!empty($instalacionId), function ($query) use ($instalacionId) {
+        // 🔹 Si se seleccionó una instalación específica, usar solo esa
+        $query->where('id_instalacion', $instalacionId);
+    })
+    ->when(empty($instalacionId) && !empty($idsInstalaciones), function ($query) use ($idsInstalaciones) {
+        // 🔹 Si no hay una instalación específica, pero sí un listado de permitidas
         $query->whereIn('id_instalacion', $idsInstalaciones);
     })
 
@@ -486,11 +491,18 @@ private function esJsonValido($string)
             }
         } */
           if ($bitacoras->isEmpty()) {
-              return response()->json([
-                  'message' => 'No hay registros de bitácora para los filtros seleccionados.'
-              ], 404);
-          }
-        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaSeleccionada'))
+                return response()->json([
+                    'message' => 'No hay registros de bitácora para los filtros seleccionados.'
+                ], 404);
+            }
+                if(!empty($instalacionId)){
+            $domicilio_instalacion =  $bitacoras[0]->instalacion->direccion_completa ?? '';
+        }else{
+        
+            $domicilio_instalacion = 'Todas las instalaciones';
+        }
+
+        $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaSeleccionada','domicilio_instalacion'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');
         return $pdf->stream('Bitácora Mezcal a Granel.pdf');
     }
