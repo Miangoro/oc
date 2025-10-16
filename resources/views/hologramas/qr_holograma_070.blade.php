@@ -100,6 +100,10 @@
                                 <td class="td"><b>CONTENIDO ALCOHÓLICO</b></td>
                                 <td class="td">{{ $datosHolograma->contenido}} % Alc. Vol</td>
                             </tr>
+                            <tr>
+                                <td class="td"><b>Contenido neto por botellas (ml/L)</b></td>
+                                <td class="td">{{ $datosHolograma->cont_neto}} % Alc. Vol</td>
+                            </tr>
                         </tbody>
                     </table>
                    <!-- <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;"class="alert">
