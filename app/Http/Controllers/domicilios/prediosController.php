@@ -217,7 +217,6 @@ public function index(Request $request)
                     ->where('id_tipo', 10)
                     ->where('habilitado', 1)
                     ->exists();
-
                 $solicitud = $predio->solicitudes()
                     ->where('id_tipo', 10)
                     ->where('habilitado', 1)

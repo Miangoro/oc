@@ -13,6 +13,7 @@ class solicitudes_eliminadas extends Model
         'motivo',
         'responsable',
         'fecha_eliminacion',
+        'tipo'
     ];
 
     public $timestamps = false;

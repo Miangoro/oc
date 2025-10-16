@@ -124,6 +124,7 @@ public function index(Request $request)
     ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_granel.id_inspeccion')
     ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
+    ->leftJoin('certificados_granel', 'certificados_granel.id_dictamen', '=', 'dictamenes_granel.id_dictamen')
     ->select('dictamenes_granel.*', 'empresa.razon_social');
 
     // Filtro por empresa (propia + maquiladores)
@@ -155,6 +156,7 @@ public function index(Request $request)
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
             ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhere('certificados_granel.num_certificado', 'LIKE', "%{$search}%")
             ->orWhereRaw("DATE_FORMAT(dictamenes_granel.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
 
             foreach ($loteGranelIds as $idLoteGran) {//Buscar lote granel

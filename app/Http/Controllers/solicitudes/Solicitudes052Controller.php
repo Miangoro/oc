@@ -5,6 +5,7 @@ namespace App\Http\Controllers\solicitudes;
 use App\Http\Controllers\Controller;
 use App\Models\Solicitudes052;
 use App\Models\SolicitudTipo052;
+use App\Models\solicitudes_eliminadas;
 use App\Models\empresa;
 use App\Models\maquiladores_model;
 use App\Models\categorias;
@@ -393,7 +394,6 @@ public function index(Request $request)
             'data' => $data ?? [],
             //'message' => empty($data) ? 'No tienes solicitudes asignadas.' : null,
         ]);
-        
 }
 
 
@@ -403,6 +403,31 @@ public function getSolicitudesTipos()
 {
     $solicitudesTipos = SolicitudTipo052::orderBy('orden', 'asc')->get();
     return response()->json($solicitudesTipos);
+}
+
+
+
+///ELIMINAR SOLICITUD(inhabilitar)
+public function destroy(Request $request, $id_solicitud)
+{
+    $solicitud = Solicitudes052::find($id_solicitud);
+    if (!$solicitud) {
+        return abort(404, 'Registro no encontrado.');
+    }
+    // Guardar motivo recibido del request
+    $motivo = $request->input('reason', 'Sin motivo especificado');
+    // Registrar en tabla solicitudes_eliminadas
+    solicitudes_eliminadas::create([
+        'id_solicitud' => $id_solicitud,
+        'motivo' => $motivo,
+        'responsable'       => Auth::id(),
+        'fecha_eliminacion' => Carbon::now(), 
+        'tipo' => 2
+    ]);
+    // Deshabilitar la solicitud
+    $solicitud->habilitado = 0;
+    $solicitud->save();
+    return response()->json(['success' => 'Solicitud eliminada correctamente']);
 }
 
 
@@ -441,11 +466,28 @@ public function storeVigilanciaProduccion(Request $request)
             ], 422);
         }
 
+        //para folio consecutivo
+        $consecutivo = DB::table('solicitudes_052')
+            ->select('folio')
+            ->where('folio', 'like', 'SOL052-%')
+            ->orderByDesc('id_solicitud')
+            ->first();
+        // Consecutivo seguro
+        $ultimoFolio = $consecutivo->folio ?? null;
+        $numero = 1; // Por defecto
+        if ($ultimoFolio && str_contains($ultimoFolio, '-')) {
+            $partes = explode('-', $ultimoFolio);
+            $ultimoNumero = end($partes);
+            $numero = (int) $ultimoNumero + 1;
+        }
+        $numero = str_pad($numero, 5, '0', STR_PAD_LEFT);
+        $folio = "SOL052-$numero";
+
         // 2. Guardar solicitud
         $VigilanciaProdu = new Solicitudes052();
-        $VigilanciaProdu->folio = Helpers::generarFolioSolicitud();
+        $VigilanciaProdu->folio = $folio;
         $VigilanciaProdu->id_empresa = $validated['id_empresa'];
-        $VigilanciaProdu->id_tipo = 2;
+        $VigilanciaProdu->id_tipo = 1;
         $VigilanciaProdu->id_predio = 0;
         $VigilanciaProdu->fecha_solicitud = $validated['fecha_solicitud'];
         $VigilanciaProdu->fecha_visita = $validated['fecha_visita'];
@@ -510,6 +552,69 @@ public function storeVigilanciaProduccion(Request $request)
             'message' => 'Ocurrió un error al registrar la solicitud.'
         ], 500);
     }
+}
+
+
+
+///OBTENER SOLICITUDES
+public function obtenerSolicituD052($id_solicitud)
+{
+    // Buscar los datos necesarios en la tabla "solicitudes"
+    $solicitud = Solicitudes052::find($id_solicitud);
+    if (!$solicitud) {
+        return abort(404, 'Registro no encontrado.');
+    }
+  
+    // Obtener todos los documentos
+    $documentos = $solicitud->documentacion_completa;
+
+    // Obtener instalaciones relacionadas con la empresa de la solicitud
+    $instalaciones = Instalaciones::where('id_empresa', $solicitud->id_empresa)->get();
+    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $solicitud->id_empresa)->first();
+    $numero_cliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
+    
+    // Obtener las características decodificadas (si existen)
+    $caracteristicas = $solicitud->caracteristicas
+        ? json_decode($solicitud->caracteristicas, true)
+        : null;
+
+    // Verificar si hay características para procesar
+    if ($caracteristicas) {
+        $categoria = isset($caracteristicas['id_categoria'])
+            ? categorias::find($caracteristicas['id_categoria'])
+            : null;
+        $marcas = isset($caracteristicas['id_marca'])
+            ? marcas::find($caracteristicas['id_marca'])
+            : null;
+        $clase = isset($caracteristicas['id_clase'])
+            ? clases::find($caracteristicas['id_clase'])
+            : null;
+        $tipoMagueyIds = isset($caracteristicas['id_tipo_maguey'][0])
+            ? explode(',', $caracteristicas['id_tipo_maguey'][0])
+            : [];
+        $tiposMaguey = tipos::whereIn('id_tipo', $tipoMagueyIds)->get();
+        $tipoMagueyConcatenados = $tiposMaguey->map(function ($tipo) {
+            return $tipo->nombre . ' (' . $tipo->cientifico . ')';
+        })->toArray();
+        $caracteristicas['categoria'] = $categoria->categoria ?? 'N/A';
+        $caracteristicas['clase'] = $clase->clase ?? 'N/A';
+        $caracteristicas['marca'] = $marcas->marca ?? 'N/A';
+        $caracteristicas['nombre'] = $tipoMagueyConcatenados;
+    }
+
+
+    return response()->json([
+        'success' => true,
+        'data' => $solicitud,
+        'caracteristicas' => $caracteristicas,
+        'instalaciones' => $instalaciones,
+        'documentos' => $documentos,
+        'numero_cliente' => $numero_cliente,
+
+        //'id_empresa_destino' => $solicitud->id_empresa_destino,
+    ]);
 }
 
 

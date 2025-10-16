@@ -29,11 +29,11 @@
 @section('page-script')
     @vite(['resources/js/solicitudes_052.js'])
     <script>
-          window.puedeAgregarSolicitud = @json(auth()->user()->can('Registrar solicitudes 052'));
-          window.puedeEditarSolicitud= @json(auth()->user()->can('Editar solicitudes 052'));
-          /* window.puedeEliminarSolicitud = @json(auth()->user()->can('Eliminar solicitudes 052'));
-          window.puedeValidarSolicitud = @json(auth()->user()->can('Validar solicitudes 052'));
-          window.puedeExportarSolicitud = @json(auth()->user()->can('Exportar solicitudes 052')); */
+        window.puedeAgregarSolicitud = @json(auth()->user()->can('Registrar solicitudes 052'));
+        window.puedeEditarSolicitud= @json(auth()->user()->can('Editar solicitudes 052'));
+        window.puedeEliminarSolicitud = @json(auth()->user()->can('Eliminar solicitudes 052'));
+        /*window.puedeValidarSolicitud = @json(auth()->user()->can('Validar solicitudes 052'));
+        window.puedeExportarSolicitud = @json(auth()->user()->can('Exportar solicitudes 052')); */
     </script> 
 @endsection
 
@@ -83,23 +83,3 @@
 </div>
 @endsection
 
-
-<script>
-    /*document.addEventListener('DOMContentLoaded', function() {
-        // Función para obtener parámetros de la URL
-        function getParameterByName(name) {
-            const url = window.location.href;
-            const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
-            const results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
-
-        // Verificar si el modal debe abrirse
-        const modalToOpen = getParameterByName('abrirModal');
-        if (modalToOpen === 'nuevaSolicitud') {
-            $('#verSolicitudes').modal('show'); // Abrir modal
-        }
-    });*/
-</script>

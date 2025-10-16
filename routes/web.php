@@ -1023,6 +1023,8 @@ Route::middleware(['auth'])->controller(Solicitudes052Controller::class)->group(
 
     Route::get('/solicitudes-historial-052', 'UserManagement')->name('solicitudes-historial-052');
     Route::resource('/solicitudes052-list', Solicitudes052Controller::class);
+    Route::delete('/solicitudes052/{id_solicitud}', 'destroy')->name('solicitud052-list.destroy');
+    Route::get('/solicitudes052/{id_solicitud}',  'obtenerSolicituD052')->name('obtener-solicitud052');
     //registrar solicitudes
     Route::post('/solicitudes052/vigilancia-produccion/add', 'storeVigilanciaProduccion')->name('add-vigilancia-produccion');
 });

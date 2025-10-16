@@ -127,6 +127,21 @@ $(function () {
   // Definir la URL base
   //var baseUrl = window.location.origin + '/';
 
+  // Verificamos el permiso del boton DataTable
+  let botonesPermiso = [];
+  if (puedeAgregarSolicitud) {
+    botonesPermiso.push({
+      text: '<i class="ri-add-line ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nueva solicitud</span>',
+        className: 'add-new btn btn-primary waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4  mt-md-0',
+        attr: {
+          'data-bs-toggle': 'modal',
+          'data-bs-dismiss': 'modal',
+          'data-bs-target': '#verSolicitudes'
+        }
+    });
+  }
+
+
   const ahora = new Date();
   // 1. Declarar primero los filtros
   const filtros = [
@@ -206,7 +221,6 @@ function initializeSelect2($elements) {
   });
 }
 initializeSelect2($('.select2'));
-
 
 // ajax setup
 $.ajaxSetup({
@@ -477,16 +491,15 @@ var dt_instalaciones_table = $('.datatables-solicitudes052').DataTable({
                     data-tipo="${full['tipo']}"
                     data-id-tipo="${full['id_tipo']}"
                     data-razon-social="${full['razon_social']}"
-                    class="cursor-pointer dropdown-item text-dark edit-record-tipo">
+                    class="cursor-pointer dropdown-item text-dark editar">
                     <i class="text-warning ri-edit-fill"></i> Editar
                   </a>`;
           }
-          /*if (puedeEliminarSolicitud) {
-            dropdown += `
-                    <a data-id="${full['id']}" data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">
-                      <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
-                    </a>`;
-          }*/
+          if (puedeEliminarSolicitud) {
+            dropdown += `<a data-id="${full['id']}" data-id-solicitud="${full['id_solicitud']}"
+              class="dropdown-item text-danger cursor-pointer eliminar">
+              <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>`;
+          }
 
           dropdown +=
             `</div>
@@ -522,7 +535,8 @@ var dt_instalaciones_table = $('.datatables-solicitudes052').DataTable({
       }
     },
 
-    buttons: [
+    buttons: botonesPermiso,
+    /*buttons: [
       {
         text: '<i class="ri-add-line ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nueva solicitud</span>',
         className: 'add-new btn btn-primary waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4  mt-md-0',
@@ -532,8 +546,9 @@ var dt_instalaciones_table = $('.datatables-solicitudes052').DataTable({
           'data-bs-target': '#verSolicitudes'
         }
       }
-    ],
-    // For responsive popup
+    ],*/
+
+    ///PAGINA RESPONSIVA
     responsive: {
       details: {
         display: $.fn.dataTable.Responsive.display.modal({
@@ -570,130 +585,84 @@ var dt_instalaciones_table = $('.datatables-solicitudes052').DataTable({
 
 
 
+//ELIMINAR SOLICITUDES
+$(document).on('click', '.eliminar', function () {
+    var id_solicitudes = $(this).data('id-solicitud');
+    console.log(id_solicitudes);
+    $('.modal').modal('hide');
 
-
-
-///REGISTRAR SOLICITUD vigilancia en produccion
-$(function () {
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-
-    // Validación del formulario Vigilancia en produccion
-    const FormAddSoli052VigilanciaProduccion = document.getElementById('FormAddSoli052VigilanciaProduccion');
-    const fv5 = FormValidation.formValidation(FormAddSoli052VigilanciaProduccion, {
-      fields: {
-        id_empresa: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una empresa.'
-            }
-          }
-        },
-        fecha_visita: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese la fecha y hora de visita.'
-            }
-          }
-        },
-        id_instalacion: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una instalación.'
-            }
-          }
-        }
+    // Confirmación con SweetAlert
+    Swal.fire({
+      title: '¿Está seguro?',
+      //text: 'No podrá revertir este evento',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-primary me-3',
+        cancelButton: 'btn btn-label-secondary'
       },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating'//clases del formulario
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function () {
-      var formData = new FormData(FormAddSoli052VigilanciaProduccion);
-
-      $('#btnRegisVigiPro').addClass('d-none');
-      $('#btnSpinnerVigilanciaProduccion').removeClass('d-none');
-      
-      $.ajax({
-        url: '/solicitudes052/vigilancia-produccion/add',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          $('#btnRegisVigiPro').removeClass('d-none');
-          $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
-          $('#ModalAddSoli052VigilanciaProduccion').modal('hide');
-          FormAddSoli052VigilanciaProduccion.reset();
-          $('.select2').val(null).trigger('change');
-          //$('.datatables-solicitudes052').DataTable().ajax.reload();
-          dt_instalaciones_table.ajax.reload();//Recarga los datos del datatable
-
-          // Mostrar alerta de éxito
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            //text: 'Solicitud vigilancia registrado exitosamente.',
-            text: response.message,
-            customClass: {
-              confirmButton: 'btn btn-primary'
-            }
-          });
-        },
-        error: function (xhr) {
-          //console.log('Error Completo:', xhr);
-          //console.warn('Advertencia:', xhr.responseJSON);
-          /*let errorText = JSON.parse(xhr.responseText);
-              console.log('Mensaje Text:', errorText.message);*/
-        // Para desarrollador: revisar en consola (solo en desarrollo)
-        /*if (process.env.NODE_ENV !== 'production') { FORMA 1
-            console.log('Error Completo:', xhr);
-        }*/
-        const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);//FORMA 2
-        if (isDev) {
-            console.log('Error Completo:', xhr);
+      html: `
+        <label for="delete-reason" style="margin-bottom: 5px;">Escriba el motivo de la eliminación:</label>
+        <input id="delete-reason" class="swal2-input" placeholder="Escriba el motivo de la eliminación" required>
+      `,
+      preConfirm: () => {
+        const reason = Swal.getPopup().querySelector('#delete-reason').value;
+        if (!reason) {
+          Swal.showValidationMessage('Debe proporcionar un motivo para eliminar');
+          return false;
         }
-
-          let errorJSON = xhr.responseJSON?.message || "Error al registrar.";
+        return reason; // Devuelve el motivo si es válido
+      },
+      buttonsStyling: false
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        const reason = result.value; // El motivo ingresado por el usuario
+        // Solicitud de eliminación
+        $.ajax({
+          type: 'DELETE',
+          url: `${baseUrl}solicitudes052/${id_solicitudes}`, // Ajusta la URL aquí
+          data: { reason: reason }, // Envía el motivo al servidor si es necesario
+          success: function () {
+            dt_instalaciones_table.ajax.reload();
+            // Mostrar mensaje de éxito
             Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: errorJSON,
+              icon: 'success',
+              title: '¡Eliminado!',
+              text: '¡La solicitud ha sido eliminada correctamente!',
               customClass: {
-                confirmButton: 'btn btn-danger'
+                confirmButton: 'btn btn-primary'
               }
             });
+          },
+          error: function(xhr) {
+            // Solo mostrar en consola si es desarrollo
+            const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+            if (isDev) console.log('Error al eliminar:', xhr);
 
-          $('#btnRegisVigiPro').removeClass('d-none');
-          $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
-        }
-      });
+            let errorJSON = xhr.responseJSON?.message || "Hubo un problema al eliminar el registro.";
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: errorJSON,
+                customClass: { confirmButton: 'btn btn-danger' }
+            });
+          }
+        });
+        
+      } else if (result.dismiss === Swal.DismissReason.cancel) {//cancelar operacion
+        Swal.fire({
+          title: '¡Cancelado!',
+          text: 'La solicitud no ha sido eliminada',
+          icon: 'info',
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      }
     });
-
-    // Revalidar campos al cambiar
-    $('#id_empresa_vigilancia, #fecha_visita_vigi, #id_instalacion_vigi').on('change', function () {
-        fv5.revalidateField($(this).attr('name'));
-    });
-
-    // Limpiar formulario y validación al cerrar el modal
-    $('#ModalAddSoli052VigilanciaProduccion').on('hidden.bs.modal', function () {
-        FormAddSoli052VigilanciaProduccion.reset();// Resetear los campos del formulario
-        fv5.resetForm(true);// Limpiar validaciones y errores
-        $('.select2').val(null).trigger('change');// Si tienes Select2, también limpiar selección
-    });
-
 });
-
-
 
 
 
@@ -725,103 +694,116 @@ $(document).on('click', '.pdfSolicitud', function () {
 
 
 
-
-//ELIMINAR SOLICITUDES
-$(document).on('click', '.delete-recordes', function () {
-    var id_solicitudes = $(this).data('id-solicitud');
-    console.log(id_solicitudes);
-    $('.modal').modal('hide');
-
-    // Confirmación con SweetAlert
-    Swal.fire({
-      title: '¿Está seguro?',
-      text: 'No podrá revertir este evento',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-      customClass: {
-        confirmButton: 'btn btn-primary me-3',
-        cancelButton: 'btn btn-label-secondary'
-      },
-      html: `
-        <label for="delete-reason" style="margin-bottom: 5px;">Escriba el motivo de la eliminación:</label>
-        <input id="delete-reason" class="swal2-input" placeholder="Escriba el motivo de la eliminación" required>
-      `,
-      preConfirm: () => {
-        const reason = Swal.getPopup().querySelector('#delete-reason').value;
-        if (!reason) {
-          Swal.showValidationMessage('Debe proporcionar un motivo para eliminar');
-          return false;
+///REGISTRAR SOLICITUD vigilancia en produccion
+// Validación del formulario Vigilancia en produccion
+const FormAddSoli052VigilanciaProduccion = document.getElementById('FormAddSoli052VigilanciaProduccion');
+const fv5 = FormValidation.formValidation(FormAddSoli052VigilanciaProduccion, {
+  fields: {
+    id_empresa: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione una empresa.'
         }
-        return reason; // Devuelve el motivo si es válido
-      },
-      buttonsStyling: false
-    }).then(function (result) {
-      if (result.isConfirmed) {
-        const reason = result.value; // El motivo ingresado por el usuario
-        // Solicitud de eliminación
-        $.ajax({
-          type: 'DELETE',
-          //url: `${baseUrl}solicitudes-lista/${id_solicitudes}`, // Ajusta la URL aquí
-          data: { reason: reason }, // Envía el motivo al servidor si es necesario
-          success: function () {
-            dt_instalaciones_table.ajax.reload();
-            // Mostrar mensaje de éxito
-            Swal.fire({
-              icon: 'success',
-              title: '¡Eliminado!',
-              text: '¡La solicitud ha sido eliminada correctamente!',
-              customClass: {
-                confirmButton: 'btn btn-success'
-              }
-            });
-          },
-          error: function (xhr, textStatus, errorThrown) {
-            console.error('Error al eliminar:', textStatus, errorThrown);
-            let errorMsg = 'Hubo un problema al eliminar el registro.';
-
-            // Intentar extraer un mensaje de error del JSON que devuelve el servidor
-            try {
-              const response = JSON.parse(xhr.responseText);
-              if (response.error) {
-                errorMsg = response.error;
-              } else if (response.message) {
-                errorMsg = response.message;
-              }
-            } catch (e) {
-              // Si no es JSON válido, usar el mensaje genérico
-            }
-
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: errorMsg,
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          }
-        });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: 'Cancelado',
-          text: 'La solicitud no ha sido eliminada',
-          icon: 'info',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
       }
-    });
+    },
+    fecha_visita: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese la fecha y hora de visita.'
+        }
+      }
+    },
+    id_instalacion: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione una instalación.'
+        }
+      }
+    }
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger(),
+    bootstrap5: new FormValidation.plugins.Bootstrap5({
+      eleValidClass: '',
+      eleInvalidClass: 'is-invalid',
+      rowSelector: '.form-floating'//clases del formulario
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton(),
+    autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function () {
+  var formData = new FormData(FormAddSoli052VigilanciaProduccion);
+
+  $('#btnRegisVigiPro').addClass('d-none');
+  $('#btnSpinnerVigilanciaProduccion').removeClass('d-none');
+  
+  $.ajax({
+    url: '/solicitudes052/vigilancia-produccion/add',
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      $('#btnRegisVigiPro').removeClass('d-none');
+      $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
+      $('#ModalAddSoli052VigilanciaProduccion').modal('hide');
+      FormAddSoli052VigilanciaProduccion.reset();
+      $('.select2').val(null).trigger('change');
+      //$('.datatables-solicitudes052').DataTable().ajax.reload();
+      dt_instalaciones_table.ajax.reload();//Recarga los datos del datatable
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        //text: 'Solicitud vigilancia registrado exitosamente.',
+        text: response.message,
+        customClass: {
+          confirmButton: 'btn btn-primary'
+        }
+      });
+    },
+    error: function (xhr) {
+      //console.log('Error Completo:', xhr);
+      //console.warn('Advertencia:', xhr.responseJSON);
+      /*let errorText = JSON.parse(xhr.responseText);
+          console.log('Mensaje Text:', errorText.message);*/
+    // Para desarrollador: revisar en consola (solo en desarrollo)
+    /*if (process.env.NODE_ENV !== 'production') { FORMA 1
+        console.log('Error Completo:', xhr);
+    }*/
+    const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);//FORMA 2
+    if (isDev) {
+        console.log('Error Completo:', xhr);
+    }
+
+      let errorJSON = xhr.responseJSON?.message || "Error al registrar.";
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: errorJSON,
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+
+      $('#btnRegisVigiPro').removeClass('d-none');
+      $('#btnSpinnerVigilanciaProduccion').addClass('d-none');
+    }
+  });
+});
+
+// Limpiar formulario y validación al cerrar el modal
+$('#ModalAddSoli052VigilanciaProduccion').on('hidden.bs.modal', function () {
+    FormAddSoli052VigilanciaProduccion.reset();// Resetear campos
+    fv5.resetForm(true);// Limpiar validaciones
+    $('.select2').val(null).trigger('change');// Limpiar Select2
 });
 
 
 
-
 ///OBTENER DATOS SOLICITUDES
-$(document).ready(function () {
-    $(document).on('click', '.edit-record-tipo', function () {
+$(document).on('click', '.editar', function () {
       // Obtenemos los datos del botón
       const id_solicitud = $(this).data('id-solicitud');
       const id_tipo = parseInt($(this).data('id-tipo')); // Convertir a número
@@ -834,37 +816,26 @@ $(document).ready(function () {
 
       // Validamos el tipo y configuramos el modal correspondiente
       if (id_tipo === 1) {
-        modal = $('#editSolicitudMuestreoAgave');
+        modal = $('#ModalEditSoli052VigilanciaProduccion');
       } else if (id_tipo === 2) {
-        modal = $('#editVigilanciaProduccion');
-      } else if (id_tipo === 3) {
         modal = $('#editMuestreoLoteAgranel');
-      } else if (id_tipo === 4) {
-        modal = $('#editVigilanciaTraslado');
-      } else if (id_tipo === 5) {
-        modal = $('#editInspeccionEnvasado');
-      } else if (id_tipo === 7) {
-        modal = $('#editInspeccionIngresoBarricada');
-      } else if (id_tipo === 8) {
+      } else if (id_tipo === 3) {
         modal = $('#editLiberacionProducto');
-      } else if (id_tipo === 9) {
-        modal = $('#editInspeccionLiberacion');
-      } else if (id_tipo === 10) {
-        modal = $('#editClienteModalTipo10');
-      } else if (id_tipo === 11) {
-        modal = $('#editPedidoExportacion');
-      } else if (id_tipo === 13) {
+      } else if (id_tipo === 4) {
         modal = $('#editSolicitudEmisionCertificado');
-      } else if (id_tipo === 14) {
+      } else if (id_tipo === 5) {
         modal = $('#editSolicitudDictamen');
+      } else if (id_tipo === 6) {
+        modal = $('#');//Pendiente
       } else {
         console.error('Tipo no válido:', id_tipo);
         return; // Salimos si el tipo no es válido
       }
 
-      // Hacemos la solicitud para obtener los datos
+
+      // Hacemos la solicitud AJAX para obtener los datos
       $.ajax({
-        url: `/datos-solicitud/${id_solicitud}`, // Ruta única
+        url: `/solicitudes052/${id_solicitud}`, // Ruta única
         method: 'GET',
         dataType: 'json',
         success: function (response) {
@@ -1402,8 +1373,9 @@ $(document).ready(function () {
           console.error('Error en la solicitud:', error);
         }
       });
-    });
 });
+
+
 
 
 

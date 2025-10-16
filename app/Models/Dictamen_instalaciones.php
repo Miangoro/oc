@@ -43,7 +43,8 @@ class Dictamen_instalaciones extends Model
 
         Public function certificado()
         {
-            return $this->belongsTo(Certificados::class, 'id_dictamen', 'id_dictamen');   
+            return $this->belongsTo(Certificados::class, 'id_dictamen', 'id_dictamen')
+                ->where('estatus', '!=', 1); //se agrego la linea   
         }  
         
         public function firmante()

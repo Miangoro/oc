@@ -123,6 +123,7 @@ public function index(Request $request)
     ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
     ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa')
     ->leftJoin('instalaciones', 'instalaciones.id_instalacion', '=', 'dictamenes_instalaciones.id_instalacion')
+    ->leftJoin('certificados', 'certificados.id_dictamen', '=', 'dictamenes_instalaciones.id_dictamen')
     ->select('dictamenes_instalaciones.*', 'empresa.razon_social');
 
     // Filtro por empresa (incluye maquiladores si quieres)
@@ -174,6 +175,7 @@ public function index(Request $request)
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
             ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
             ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+            ->orWhere('certificados.num_certificado', 'LIKE', "%{$search}%")
             ->orWhereRaw("DATE_FORMAT(dictamenes_instalaciones.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"])
             ->orWhere('instalaciones.direccion_completa', 'LIKE', "%{$search}%");
 
