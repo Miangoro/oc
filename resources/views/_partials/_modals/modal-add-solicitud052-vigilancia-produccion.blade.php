@@ -22,7 +22,7 @@
                                             | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
-                                <label for="id_empresa">Cliente</label>
+                                <label>Cliente</label>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -52,7 +52,6 @@
                             </div>
                         </div>
                     </div>
-                    {{-- segunda sección correcion --}}
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
@@ -125,6 +124,9 @@
 
             <div class="modal-body p-8">
                 <form id="FormEditSoli052VigilanciaProduccion">
+                    <input type="hidden" name="id_solicitud" id="edit_id_solicitud_vig">
+                    <input type="hidden" name="form_type" value="vigilanciaenproduccion">
+                    
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
@@ -138,25 +140,24 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="id_empresa_vigilancia_edit">Cliente</label>
+                                <label for="">Cliente</label>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
                                     name="fecha_solicitud" id="fecha_solicitud_edit" autocomplete="off" value="">
-                                <label for="fecha_solicitud_edit">Fecha y hora de la solicitud</label>
+                                <label for="">Fecha y hora de la solicitud</label>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
                                     id="fecha_visita_vigi_edit" type="text" name="fecha_visita" autocomplete="off" value="" />
-                                <label for="fecha_visita_vigi_edit">Fecha y hora sugerida para la inspección</label>
+                                <label for="">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6">
@@ -168,13 +169,12 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="nombre_produccion_edit"
                                     name="nombre_produccion" placeholder="Nombre de la producción o tapada" value=""/>
-                                <label for="nombre_produccion_edit">Nombre de la producción o tapada</label>
+                                <label for="">Nombre de la producción o tapada</label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -185,7 +185,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
@@ -202,22 +201,21 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional_edit"
                                 placeholder="Observaciones..." autocomplete="off"></textarea>
-                            <label for="info_adicional_edit">Información adicional sobre la actividad</label>
+                            <label for="">Información adicional sobre la actividad</label>
                         </div>
                     </div>
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button disabled class="btn btn-primary me-1 d-none" type="button"
-                            id="btnSpinnerVigilanciaProduccionEdit">
+                            id="btnSpinnerEditVigilanciaProduccion">
                             <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
                             Editando...
                         </button>
-                        <button type="submit" class="btn btn-primary" id="btnEditVigiPro"><i class="ri-edit-line me-1"></i>
+                        <button type="submit" class="btn btn-primary" id="btnEditVigiProd"><i class="ri-edit-line me-1"></i><!--ri-pencil-fill-->
                             Editar</button>
                         <button type="reset" class="btn btn-danger btnCancelar" data-bs-dismiss="modal"
                             aria-label="Close"><i class="ri-close-line me-1"></i> Cancelar</button>
