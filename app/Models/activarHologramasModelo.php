@@ -70,6 +70,20 @@ public function tipos()
     return tipos::where('id_tipo', $this->id_tipo)->get();
 }
 
+// Dentro de activarHologramasModelo
+public function getTiposAttribute()
+{
+    // Verifica si existe id_tipo y es un array
+    $ids = $this->id_tipo ?? [];
+
+    if (!is_array($ids)) {
+        $ids = [$ids]; // si es un solo entero, lo convertimos en array
+    }
+
+    return tipos::whereIn('id_tipo', $ids)->get();
+}
+
+
 
 
 public function activarHologramasDesdeVariasSolicitudes($solicitudes, $folios)
