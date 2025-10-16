@@ -45,14 +45,14 @@
                             
                             <tr>
                                 <td class="td"><b>TIPO DE AGAVE</b></td>
-                                <td class="td">
+                                <td class="td"> {{ $datosHolograma->tipos }}
                                     {!! $datosHolograma->tipos
-    ? $datosHolograma->tipos->map(function ($tipo) {
-        return e($tipo->nombre) . 
-            ($tipo->cientifico ? ' (<i>' . e($tipo->cientifico) . '</i>)' : '');
-    })->implode(', ')
-    : 'Sin tipo asignado'
-!!}
+                                    ? $datosHolograma->tipos->map(function ($tipo) {
+                                        return e($tipo->nombre) . 
+                                            ($tipo->cientifico ? ' (<i>' . e($tipo->cientifico) . '</i>)' : '');
+                                    })->implode(', ')
+                                    : 'Sin tipo asignado'
+                                !!}
 
                                 </td>
 
