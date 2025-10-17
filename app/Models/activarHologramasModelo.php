@@ -61,13 +61,20 @@ class activarHologramasModelo extends Model
 
 public function tipos()
 {
-    // Si el campo es JSON (array de IDs)
-    if (is_array($this->id_tipo)) {
-        return tipos::whereIn('id_tipo', $this->id_tipo)->get();
+    $ids = $this->id_tipo;
+
+    // Si es JSON (array de IDs)
+    if (is_array($ids)) {
+        // Convertir a enteros o strings según el tipo de tus IDs
+        $ids = array_map('intval', $ids);
+
+        return \App\Models\tipos::whereIn('id_tipo', $ids)
+            ->orderByRaw('FIELD(id_tipo, ' . implode(',', $ids) . ')') // mantiene el orden
+            ->get();
     }
 
     // Si sigue siendo entero (compatibilidad con datos viejos)
-    return tipos::where('id_tipo', $this->id_tipo)->get();
+    return \App\Models\tipos::where('id_tipo', $ids)->get();
 }
 
 // Dentro de activarHologramasModelo

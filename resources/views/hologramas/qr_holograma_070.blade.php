@@ -47,8 +47,8 @@
                                 <td class="td"><b>TIPO DE AGAVE</b></td>
                                 <td class="td"> 
                                     {!! $datosHolograma->tipos->map(function($tipo) {
-    return e($tipo->nombre) . ($tipo->cientifico ? ' (<i>' . e($tipo->cientifico) . '</i>)' : '');
-})->implode(', ') !!}
+                                        return e($tipo->nombre) . ($tipo->cientifico ? ' (<i>' . e($tipo->cientifico) . '</i>)' : '');
+                                    })->implode(', ') !!}
 
                                 </td>
 
