@@ -80,14 +80,33 @@ public function tipos()
 // Dentro de activarHologramasModelo
 public function getTiposAttribute()
 {
-    // Verifica si existe id_tipo y es un array
     $ids = $this->id_tipo ?? [];
 
+    // Si viene como string con un solo id (compatibilidad)
     if (!is_array($ids)) {
-        $ids = [$ids]; // si es un solo entero, lo convertimos en array
+        // si está vacío o nulo, devolver colección vacía
+        if ($ids === null || $ids === '') {
+            return collect();
+        }
+        $ids = [$ids];
     }
 
-    return tipos::whereIn('id_tipo', $ids)->get();
+    // Normalizar a enteros o strings según necesites (aquí uso integers)
+    $ids = array_values(array_map('intval', $ids));
+
+    if (empty($ids)) {
+        return collect();
+    }
+
+    // Construir placeholders para bindings: ?,?,?
+    $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+    // Usamos orderByRaw con bindings para FIELD(...) y evitar inyección
+    // Nota: ajusta 'id_tipo' si en la tabla de tipos tu PK tiene otro nombre
+    $query = \App\Models\tipos::whereIn('id_tipo', $ids)
+        ->orderByRaw("FIELD(id_tipo, {$placeholders})", $ids);
+
+    return $query->get();
 }
 
 
