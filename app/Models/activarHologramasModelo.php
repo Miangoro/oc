@@ -68,13 +68,13 @@ public function tipos()
         // Convertir a enteros o strings según el tipo de tus IDs
         $ids = array_map('intval', $ids);
 
-        return \App\Models\tipos::whereIn('id_tipo', $ids)
+        return tipos::whereIn('id_tipo', $ids)
             ->orderByRaw('FIELD(id_tipo, ' . implode(',', $ids) . ')') // mantiene el orden
             ->get();
     }
 
     // Si sigue siendo entero (compatibilidad con datos viejos)
-    return \App\Models\tipos::where('id_tipo', $ids)->get();
+    return tipos::where('id_tipo', $ids)->get();
 }
 
 // Dentro de activarHologramasModelo
