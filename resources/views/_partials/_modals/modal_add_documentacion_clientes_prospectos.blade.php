@@ -194,6 +194,16 @@
                                         <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th scope="row">139</th>
+                                    <td>Contrato de prestación de servicios para la verificación de etiquetas</td>
+                                    <td>
+                                        <input type="file" class="form-control" name="documentos[139]">
+                                    </td>
+                                    <td class="text-center">
+                                        <a target="_blank"><i class="fas fa-file-pdf text-danger fs-4"></i>--</a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
