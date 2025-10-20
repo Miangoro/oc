@@ -126,12 +126,20 @@ $(function () {
 
             var $foto;
             if ($foto_usuario.trim() !== '') {
-              $foto = '<div class="avatar me-2"><img src="/storage/' + $foto_usuario + '" class="rounded-circle" width="32" height="32"></div>';
+              $foto = '<div class="avatar"><img src="/storage/' + $foto_usuario + '"  class="rounded-circle" ></div>';
             } else {
               $foto = '<span class="avatar-initial rounded-circle bg-label-' + $state + ' me-2">' + $initials + '</span>';
             }
 
-            return '<div class="d-flex align-items-center">' + $foto + '<div class="user-email">' + $id_revisor + '</div></div>';
+            return '<div class="d-flex justify-content-start align-items-center user-name">' +
+                      '<div class="avatar-wrapper">' +
+                        '<div class="avatar avatar-sm me-3">' + $foto + '</div>' +
+                      '</div>' +
+                      '<div class="d-flex flex-column">' +
+                        '<span class="fw-medium">' + $id_revisor + '</span>' +
+                      '</div>' +
+                  '</div>';
+            //return '<div class="d-flex align-items-center">' + $foto + '<div class="user-email">' + $id_revisor + '</div></div>';
             //return '<span class="user-email">' + $id_revisor + '</span>';
           }
         },
