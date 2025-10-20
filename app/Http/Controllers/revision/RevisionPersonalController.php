@@ -191,10 +191,18 @@ class RevisionPersonalController extends Controller
             /*$fechaVencimiento = $revisor->certificado ? $revisor->certificado->fecha_vencimiento : null;
             $fechaCreacion = $revisor->created_at;
             $fechaActualizacion = $revisor->updated_at;*/
+            
+            //Nombre y Numero empresa
+            $empresa = $revisor->certificado->dictamen->inspeccione->solicitud->empresa ?? null;
+            $numero_cliente = optional($empresa?->empresaNumClientes->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente)))->numero_cliente ?? 'No encontrado';
+            $razon_social = $empresa?->razon_social ?? 'No encontrado';
             return [
                 'fake_id' => ++$start,
                 'id_revision' => $revisor->id_revision,
+                'numero_cliente' => $numero_cliente,
+                'razon_social' => $razon_social,
                 'id_revisor' => $nameRevisor,
+                'foto_usuario' => $revisor->user->profile_photo_path ?? '',
                 'id_revisor2' => $revisor->id_revisor2,
                 'observaciones' => $revisor->observaciones,
                 'num_certificado' => $revisor->certificado ? $revisor->certificado->num_certificado : null,

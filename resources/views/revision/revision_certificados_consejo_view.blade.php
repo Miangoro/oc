@@ -174,6 +174,7 @@
                     <th>#</th>
                     <th>Tipo</th>
                     <th>Certificado</th>
+                    <th>Cliente</th>
                     <th>Revisor</th>
                     <th>Fecha asignación</th>
                     <th>Fecha revisión</th>

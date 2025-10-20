@@ -102,8 +102,7 @@ $(function () {
             return `<span>${full.fake_id}</span>`;
           }
         },
-        {
-          // User full name
+        { //nombre y foto
           targets: 2,
           responsivePriority: 4,
           render: function (data, type, full, meta) {

@@ -16,12 +16,20 @@ $(function () {
         { data: 'fake_id' },          //1
         { data: '' },    //2
         { data: 'num_certificado' },  //3
-        { data: 'id_revisor' },       //4
-        { data: 'created_at' },       //5
-        { data: 'updated_at' },       //6
-        { data: 'PDF' },              //7
-        { data: 'decision' },         //8
-        { data: 'actions' }           //9
+        { data: null, //cliente (4)
+          render: function (data, type, row) {
+            return `
+              <strong>${data.numero_cliente}</strong><br>
+                  <span style="font-size:11px">${data.razon_social}<span>
+              `;
+          }
+        },
+        { data: 'id_revisor' },       //5
+        { data: 'created_at' },       //6
+        { data: 'updated_at' },       //7
+        { data: 'PDF' },              //8
+        { data: 'decision' },         //9
+        { data: 'actions' }           //10
       ],
       columnDefs: [
         {
@@ -85,17 +93,35 @@ $(function () {
 
         },
         {//Revisor
-          targets: 4,
+          targets: 5,
           searchable: true,
           orderable: false,
           render: function (data, type, full, meta) {
             var $id_revisor = full['id_revisor'];
-            return '<span class="user-email">' + $id_revisor + '</span>';
+            var $foto_usuario = full['foto_usuario'] || '';
+
+            // Colores aleatorios para las iniciales
+            var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
+            var $state = states[Math.floor(Math.random() * states.length)];
+
+            // Obtener iniciales seguras (evita error si el campo está vacío)
+            var $initials = (String($id_revisor).match(/\b\w/g) || []);
+            $initials = (($initials.shift() || '') + ($initials.pop() || '')).toUpperCase();
+
+            var $foto;
+            if ($foto_usuario.trim() !== '') {
+              //$foto = '<div class="avatar me-2"><img src="/storage/' + $foto_usuario + '" class="rounded-circle" width="32" height="32"></div>';
+              $foto = '<div class="avatar me-2"><img src="/storage/' + $foto_usuario + '" class="rounded-circle"></div>';
+            } else {
+              $foto = '<span class="avatar-initial rounded-circle bg-label-' + $state + ' me-2">' + $initials + '</span>';
+            }
+
+            return '<div class="d-flex align-items-center">' + $foto + '<div class="user-email">' + $id_revisor + '</div></div>';
           }
         },
 
         {
-          targets: 5,
+          targets: 6,
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
@@ -104,7 +130,7 @@ $(function () {
           }
         },
         {
-          targets: 6,
+          targets: 7,
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
@@ -113,7 +139,7 @@ $(function () {
           }
         },
         {
-          targets: 7,
+          targets: 8,
           className: 'text-center',
           searchable: false,
           orderable: false,
@@ -138,7 +164,7 @@ $(function () {
           }
         },
         {
-          targets: 8,
+          targets: 9,
           orderable: 0,
           render: function (data, type, full, meta) {
             let $decision = full['decision'];
@@ -171,9 +197,8 @@ $(function () {
             return `<span class="badge rounded-pill bg-${$colorDesicion}">${$nombreDesicion}</span>`;
           }
         },
-        {
-          // Actions
-          targets: 9,
+        {// Actions
+          targets: 10,
           searchable: false,
           orderable: false,
           title: 'Acciones',
