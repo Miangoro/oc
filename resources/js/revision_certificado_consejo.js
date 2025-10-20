@@ -139,8 +139,6 @@ $(function () {
                         '<span class="fw-medium">' + $id_revisor + '</span>' +
                       '</div>' +
                   '</div>';
-            //return '<div class="d-flex align-items-center">' + $foto + '<div class="user-email">' + $id_revisor + '</div></div>';
-            //return '<span class="user-email">' + $id_revisor + '</span>';
           }
         },
 

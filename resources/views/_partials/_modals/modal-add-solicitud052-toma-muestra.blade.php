@@ -8,7 +8,7 @@
             </div>
 
             <div class="modal-body p-8">
-                <form id="FormAddSoli052TomaMuestra">
+                <form id="FormAddSoli052TomaMuestra" data-type="toma-muestra">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">

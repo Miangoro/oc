@@ -9,7 +9,7 @@
             </div>
 
             <div class="modal-body p-8">
-                <form id="FormAddSoli052VigilanciaProduccion">
+                <form id="FormAddSoli052VigilanciaProduccion" data-type="vigilancia-produccion">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">

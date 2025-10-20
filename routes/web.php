@@ -1024,11 +1024,13 @@ Route::middleware(['auth'])->controller(Solicitudes052Controller::class)->group(
     Route::get('/solicitudes-historial-052', 'UserManagement')->name('solicitudes-historial-052');
     Route::resource('/solicitudes052-list', Solicitudes052Controller::class);
     Route::delete('/solicitudes052/{id_solicitud}', 'destroy')->name('eliminar-solicitud052');
+    
     Route::get('/solicitudes052/{id_solicitud}',  'obtenerSolicitud052')->name('obtener-solicitud052');
     Route::post('/solicitudes052/{id_solicitud}', 'updateSolicitud052');
-    //registrar solicitudes
     
+    //registrar solicitudes
     Route::post('/solicitudes052/vigilancia-produccion/add', 'storeVigilanciaProduccion')->name('add-vigilancia-produccion');
+    Route::post('/solicitudes052/toma-muestra/add', 'storeTomaMuestra')->name('add-vigilancia-produccion');
 });
 
 

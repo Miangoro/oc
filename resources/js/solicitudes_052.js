@@ -688,7 +688,7 @@ $(document).on('click', '.pdfSolicitud', function () {
 });
 
 
-
+/*
 ///REGISTRAR SOLICITUD vigilancia en produccion
 // Validación del formulario Vigilancia en produccion
 const FormAddSoli052VigilanciaProduccion = document.getElementById('FormAddSoli052VigilanciaProduccion');
@@ -766,7 +766,7 @@ const fv5 = FormValidation.formValidation(FormAddSoli052VigilanciaProduccion, {
     // Para desarrollador: revisar en consola (solo en desarrollo)
     /*if (process.env.NODE_ENV !== 'production') { FORMA 1
         console.log('Error Completo:', xhr);
-    }*/
+    }****
     const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);//FORMA 2
     if (isDev) {
         console.log('Error Completo:', xhr);
@@ -794,9 +794,112 @@ $('#ModalAddSoli052VigilanciaProduccion').on('hidden.bs.modal', function () {
     fv5.resetForm(true);// Limpiar validaciones
     $('.select2').val(null).trigger('change');// Limpiar Select2
 });
+*/
+
+
+// Configurar validaciones por tipo de solicitud
+const validationRules = {
+    'vigilancia-produccion': {
+        id_empresa: { validators: { notEmpty: { message: 'Seleccione una empresa.' } } }
+    },
+    'toma-muestra': {
+        fecha_visita: { validators: { notEmpty: { message: 'Ingrese fecha de visita.' } } },
+        id_instalacion: { validators: { notEmpty: { message: 'Seleccione instalación.' } } }
+    },
+    /*'liberacion-producto': {
+        // campos y validaciones específicas
+    }*/
+    // Agrega más tipos según necesites
+};
+
+// Inicializar todos los formularios automáticamente
+$('form[data-type]').each(function () {
+    const $form = $(this);
+    const type = $form.data('type');
+    const fields = validationRules[type] || {}; // obtiene las reglas según tipo
+
+    // Identificar botones según el formulario
+    const submitBtn = $form.find('button[type="submit"]');
+    const spinnerBtn = $form.find('button[id^="btnSpinner"]');
+
+    // Inicializar validación
+    const fv = FormValidation.formValidation($form[0], {
+        fields: fields,
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: '.form-floating'
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+    }).on('core.form.valid', function () {
+        const formData = new FormData($form[0]);
+
+        // Mostrar spinner
+        submitBtn.addClass('d-none');
+        spinnerBtn.removeClass('d-none');
+
+        $.ajax({
+            url: `/solicitudes052/${type}/add`, // URL dinámica según data-type
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                // Restaurar botones
+                submitBtn.removeClass('d-none');
+                spinnerBtn.addClass('d-none');
+
+                // Resetear formulario y recargar tabla
+                $form[0].reset();
+                $form.find('.select2').val(null).trigger('change');
+                if (typeof dt_instalaciones_table !== 'undefined') {
+                    dt_instalaciones_table.ajax.reload();
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.message,
+                    customClass: { 
+                      confirmButton: 'btn btn-primary'
+                    }
+                });
+
+                $form.closest('.modal').modal('hide');// Cerrar modal
+            },
+            error: function (xhr) {
+                // Restaurar botones
+                submitBtn.removeClass('d-none');
+                spinnerBtn.addClass('d-none');
+
+                const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+                if (isDev) console.log('Error Completo:', xhr);
+                const errorJSON = xhr.responseJSON?.message || "Error al registrar.";
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: errorJSON,
+                    customClass: { confirmButton: 'btn btn-danger' }
+                });
+            }
+        });
+    });
+
+    //Reset completo al cerrar modal
+    $form.closest('.modal').on('hidden.bs.modal', function () {
+        $form[0].reset();
+        fv.resetForm(true);
+        $form.find('.select2').val(null).trigger('change');
+    });
+});
 
 
 
+//---------------------------------------------------------por ahosa solo arriba
 ///OBTENER DATOS SOLICITUDES
 $(document).on('click', '.editar', function () {
   const id_solicitud = $(this).data('id-solicitud');

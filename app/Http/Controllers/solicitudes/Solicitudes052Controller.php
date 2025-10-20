@@ -553,9 +553,93 @@ public function storeVigilanciaProduccion(Request $request)
         ], 500);
     }
 }
+public function storeTomaMuestra(Request $request)
+{
+    $validated = $request->validate([
+        'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+        'fecha_solicitud' => 'nullable|date',
+        'fecha_visita' => 'required|date',
+        'id_instalacion' => 'required|integer',
+
+        'analisis_muestreo' => 'nullable|string|max:255',
+        'info_adicional' => 'nullable|string',
+        
+    ]);
+
+    DB::beginTransaction(); // Inicia la transacción
+
+    try {
+        // 1. Obtener empresa y número de cliente
+        $empresa = empresa::with("empresaNumClientes")
+            ->where("id_empresa", $validated['id_empresa'])
+            ->firstOrFail();
+
+        $numeroCliente = $empresa->empresaNumClientes
+            ?->pluck('numero_cliente')
+            ?->first(fn($num) => !empty($num));
+
+        if (!$numeroCliente) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró un número de cliente válido'
+            ], 422);
+        }
+
+        //para folio consecutivo
+        $consecutivo = DB::table('solicitudes_052')
+            ->select('folio')
+            ->where('folio', 'like', 'SOL052-%')
+            ->orderByDesc('id_solicitud')
+            ->first();
+        // Consecutivo seguro
+        $ultimoFolio = $consecutivo->folio ?? null;
+        $numero = 1; // Por defecto
+        if ($ultimoFolio && str_contains($ultimoFolio, '-')) {
+            $partes = explode('-', $ultimoFolio);
+            $ultimoNumero = end($partes);
+            $numero = (int) $ultimoNumero + 1;
+        }
+        $numero = str_pad($numero, 5, '0', STR_PAD_LEFT);
+        $folio = "SOL052-$numero";
+
+        // 2. Guardar solicitud
+        $VigilanciaProdu = new Solicitudes052();
+        $VigilanciaProdu->folio = $folio;
+        $VigilanciaProdu->id_empresa = $validated['id_empresa'];
+        $VigilanciaProdu->id_tipo = 2;
+        $VigilanciaProdu->id_predio = 0;
+        $VigilanciaProdu->fecha_solicitud = $validated['fecha_solicitud'];
+        $VigilanciaProdu->fecha_visita = $validated['fecha_visita'];
+        $VigilanciaProdu->id_instalacion = $validated['id_instalacion'];
+        $VigilanciaProdu->info_adicional = $validated['info_adicional'] ?? null;
+        $VigilanciaProdu->id_usuario_registro = Auth::id();
+        $VigilanciaProdu->caracteristicas = json_encode([
+            'analisis_muestreo' => $validated['analisis_muestreo'],
+        ]);
+        $VigilanciaProdu->save();
+
+        DB::commit(); // Confirma toda la transacción
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Solicitud de toma de muestra correctamente.'
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack(); // Deshace todo si algo falla
+        return response()->json([
+            'success' => false,
+            'message' => 'Ocurrió un error al registrar la solicitud.'
+        ], 500);
+    }
+}
 
 
 
+
+
+
+//---------------------------------------------------------por ahosa solo arriba
 ///OBTENER SOLICITUDES
 public function obtenerSolicitud052($id_solicitud)
 {
