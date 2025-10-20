@@ -371,8 +371,7 @@ var dt_instalaciones_table = $('.datatables-solicitudes052').DataTable({
     ],
 
     columnDefs: [
-      {
-        // For Responsive
+      { // For Responsive
         className: 'control',
         searchable: false,
         orderable: false,
@@ -382,7 +381,6 @@ var dt_instalaciones_table = $('.datatables-solicitudes052').DataTable({
           return '';
         }
       },
-
       {
         targets: 1,
         searchable: false,
@@ -408,8 +406,7 @@ var dt_instalaciones_table = $('.datatables-solicitudes052').DataTable({
         searchable: false,
         orderable: false
       },
-      {
-        //inspector asignado
+      { //inspector asignado
         targets: 9,
         render: function (data, type, full, meta) {
           var $name = full['inspector'];
@@ -440,18 +437,17 @@ var dt_instalaciones_table = $('.datatables-solicitudes052').DataTable({
           return $row_output;
         }
       },
-      {//caracteristicas
+      { //caracteristicas
         targets: 10,
         searchable: false,
         orderable: false
       },
-      {///columna 'estatus'
+      { //'estatus'
         targets: 13,
         orderable: false,
         searchable: false
       },
-      {
-        // Acciones
+      { // Acciones
         targets: -1,
         title: 'Acciones',
         searchable: false,
@@ -496,7 +492,7 @@ var dt_instalaciones_table = $('.datatables-solicitudes052').DataTable({
                   </a>`;
           }
           if (puedeEliminarSolicitud) {
-            dropdown += `<a data-id="${full['id']}" data-id-solicitud="${full['id_solicitud']}"
+            dropdown += `<a data-id-solicitud="${full['id_solicitud']}" 
               class="dropdown-item text-danger cursor-pointer eliminar">
               <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>`;
           }
@@ -587,8 +583,7 @@ var dt_instalaciones_table = $('.datatables-solicitudes052').DataTable({
 
 //ELIMINAR SOLICITUDES
 $(document).on('click', '.eliminar', function () {
-    var id_solicitudes = $(this).data('id-solicitud');
-    console.log(id_solicitudes);
+  var id_solicitud = $(this).data('id-solicitud');
     $('.modal').modal('hide');
 
     // Confirmación con SweetAlert
@@ -622,7 +617,7 @@ $(document).on('click', '.eliminar', function () {
         // Solicitud de eliminación
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}solicitudes052/${id_solicitudes}`, // Ajusta la URL aquí
+          url: `${baseUrl}solicitudes052/${id_solicitud}`,
           data: { reason: reason }, // Envía el motivo al servidor si es necesario
           success: function () {
             dt_instalaciones_table.ajax.reload();

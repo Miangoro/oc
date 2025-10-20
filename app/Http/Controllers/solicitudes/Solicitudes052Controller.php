@@ -422,7 +422,7 @@ public function destroy(Request $request, $id_solicitud)
         'motivo' => $motivo,
         'responsable'       => Auth::id(),
         'fecha_eliminacion' => Carbon::now(), 
-        'tipo' => 2
+        //'tipo' => 2
     ]);
     // Deshabilitar la solicitud
     $solicitud->habilitado = 0;
