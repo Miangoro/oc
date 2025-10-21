@@ -24,35 +24,38 @@ class CertificadosExport implements FromCollection, WithHeadings, WithEvents, Wi
         $this->filtros = $filtros;
     }
 
-    public function collection()
-    {
-        $query = Certificado_Exportacion::query()
-            ->leftJoin('dictamenes_exportacion', 'dictamenes_exportacion.id_dictamen', '=', 'certificados_exportacion.id_dictamen')
-            ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
-            ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
-            ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa');
-            //->select('empresa.razon_social', 'certificados_exportacion.num_certificado', 'certificados_exportacion.fecha_emision', 'certificados_exportacion.fecha_vigencia', 'certificados_exportacion.estatus');
+public function collection()
+{
+    $query = Certificado_Exportacion::query()
+        ->leftJoin('dictamenes_exportacion', 'dictamenes_exportacion.id_dictamen', '=', 'certificados_exportacion.id_dictamen')
+        ->leftJoin('inspecciones', 'inspecciones.id_inspeccion', '=', 'dictamenes_exportacion.id_inspeccion')
+        ->leftJoin('solicitudes', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+        ->leftJoin('empresa', 'empresa.id_empresa', '=', 'solicitudes.id_empresa');
 
-        // Aplicar filtros
-        if (!empty($this->filtros['id_empresa'])) {
-            $query->where('empresa.id_empresa', $this->filtros['id_empresa']);
-        }
-
-        if (!empty($this->filtros['anio'])) {
-            $query->whereYear('certificados_exportacion.fecha_emision', $this->filtros['anio']);
-        }
-
-        if (!empty($this->filtros['mes'])) {
-            $query->whereMonth('certificados_exportacion.fecha_emision', $this->filtros['mes']);
-        }
-
-        if (!empty($this->filtros['estatus'])) {
-            $query->where('certificados_exportacion.estatus', $this->filtros['estatus']);
-        }
-
-        // Ordenar por empresa
-        return $query->orderBy('certificados_exportacion.fecha_emision', 'asc')->get();
+    // Filtros dinámicos
+    if (!empty($this->filtros['id_empresa'])) {
+        $query->where('empresa.id_empresa', $this->filtros['id_empresa']);
     }
+
+    if (!empty($this->filtros['anio'])) {
+        $query->whereYear('certificados_exportacion.fecha_emision', $this->filtros['anio']);
+    }
+
+    if (!empty($this->filtros['mes'])) {
+        $query->whereMonth('certificados_exportacion.fecha_emision', $this->filtros['mes']);
+    }
+
+    if (!empty($this->filtros['estatus'])) {
+        $query->where('certificados_exportacion.estatus', $this->filtros['estatus']);
+    }
+
+    if (!empty($this->filtros['tipo'])) {
+        $query->where('solicitudes.caracteristicas->tipo_solicitud', $this->filtros['tipo']);
+    }
+
+    return $query->orderBy('certificados_exportacion.fecha_emision', 'asc')->get();
+}
+
 
     public function headings(): array
 {

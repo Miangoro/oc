@@ -448,7 +448,7 @@ public function exportarDirectorio(Request $request)
 ///FUNCION EXPORTAR EXCEL
 public function exportar(Request $request)
 {
-    $filtros = $request->only(['id_empresa', 'anio', 'mes', 'estatus']);
+    $filtros = $request->only(['id_empresa', 'anio', 'mes', 'estatus','tipo']);
     return Excel::download(new CertificadosExport($filtros), '.xlsx');
 }
 

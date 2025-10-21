@@ -89,11 +89,9 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <select class="form-select" id="tipo" name="tipo">
                                     <option value="">Todos</option>
-                                    <option value="1">Reexpedidos</option>
-                                    <option value="2">Cancelados</option>
-                                    <option value="3">Combinados</option>
+                                    <option value="2">Combinados</option>
                                 </select>
-                                <label for="mes">Tipo de certificado</label>
+                                <label for="tipo">Tipo de certificado</label>
                             </div>
                         </div>
 
