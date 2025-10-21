@@ -203,7 +203,7 @@ public function index(Request $request)
             ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
             ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
             ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
-            //->orWhere('solicitudes.caracteristicas', 'LIKE', '%"no_pedido":"%' . $search . '%"%')
+            ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"tipo_solicitud":"1"%' . $search . '%"%')
             ->orWhereRaw("solicitudes.caracteristicas COLLATE utf8mb4_unicode_ci LIKE ?", ["%{$search}%"])//aplica todo el JSON
             /*->orWhereRaw("LOWER( 
                 REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
