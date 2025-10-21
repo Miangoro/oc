@@ -11,7 +11,7 @@ class SolicitudesTipoController extends Controller
 {
     public function UserManagement()
     {
-        $solicitudesTipos = solicitudTipo::orderBy('orden', 'asc')->get();
+        $solicitudesTipos = solicitudTipo::orderBy('orden', 'asc')->where('id_tipo','!=',16)->get();
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         return view('solicitudes.solicitudes-tipo_view', compact('solicitudesTipos','empresas'));
     }
