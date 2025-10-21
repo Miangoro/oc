@@ -184,41 +184,57 @@ public function index(Request $request)
 
 
     // Búsqueda Global
-    if (!empty($search)) {//solo se aplica si hay búsqueda global
-        //Buscar lote envasado y granel
-        $loteIds = DB::table('lotes_envasado')
-            ->select('id_lote_envasado')
-            ->where('nombre', 'LIKE', "%{$search}%")
-            ->union(
-                DB::table('lotes_envasado_granel')
-                    ->join('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'lotes_envasado_granel.id_lote_granel')
-                    ->select('lotes_envasado_granel.id_lote_envasado')
-                    ->where('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
-                )
-            ->pluck('id_lote_envasado')
-            ->toArray();
+// Búsqueda Global
+if (!empty($search)) {
+    // Buscar lote envasado y granel
+    $loteIds = DB::table('lotes_envasado')
+        ->select('id_lote_envasado')
+        ->where('nombre', 'LIKE', "%{$search}%")
+        ->union(
+            DB::table('lotes_envasado_granel')
+                ->join('lotes_granel', 'lotes_granel.id_lote_granel', '=', 'lotes_envasado_granel.id_lote_granel')
+                ->select('lotes_envasado_granel.id_lote_envasado')
+                ->where('lotes_granel.nombre_lote', 'LIKE', "%{$search}%")
+        )
+        ->pluck('id_lote_envasado')
+        ->toArray();
 
-        $query->where(function ($q) use ($search, $loteIds) {
+    $query->where(function ($q) use ($search, $loteIds) {
+
+        // 🎯 Filtro especial: si el usuario escribe “Combinado”
+        if (strtolower(trim($search)) === 'combinado') {
+            $q->where('solicitudes.caracteristicas', 'LIKE', '%"tipo_solicitud":"2"%');
+        }
+
+        // 🎯 Filtro especial: si el usuario escribe “Nacional”
+        elseif (strtolower(trim($search)) === 'nacional') {
+            $q->where('solicitudes.caracteristicas', 'LIKE', '%"tipo_solicitud":"2"%');
+        }
+
+        // 🎯 Filtro especial: si el usuario escribe “Exportación” o “Exportacion”
+        elseif (in_array(strtolower(trim($search)), ['exportacion', 'exportación'])) {
+            $q->where('solicitudes.caracteristicas', 'LIKE', '%"tipo_solicitud":"3"%');
+        }
+
+        // 🔍 Búsqueda general
+        else {
             $q->where('certificados_exportacion.num_certificado', 'LIKE', "%{$search}%")
-            ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
-            ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
-            ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
-            ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"tipo_solicitud":"1"%' . $search . '%"%')
-            ->orWhereRaw("solicitudes.caracteristicas COLLATE utf8mb4_unicode_ci LIKE ?", ["%{$search}%"])//aplica todo el JSON
-            /*->orWhereRaw("LOWER( 
-                REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
-                JSON_UNQUOTE(JSON_EXTRACT(solicitudes.caracteristicas, '$.\"no_pedido\"')),
-                'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u') ) LIKE ?", ["%{$search}%"])*/
-
-            ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
-            ->orWhere('direcciones.pais_destino', 'LIKE', "%{$search}%")
-            ->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+              ->orWhere('dictamenes_exportacion.num_dictamen', 'LIKE', "%{$search}%")
+              ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+              ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+              ->orWhereRaw("solicitudes.caracteristicas COLLATE utf8mb4_unicode_ci LIKE ?", ["%{$search}%"])
+              ->orWhere('empresa.razon_social', 'LIKE', "%{$search}%")
+              ->orWhere('direcciones.pais_destino', 'LIKE', "%{$search}%")
+              ->orWhereRaw("DATE_FORMAT(certificados_exportacion.fecha_emision, '%d de %M del %Y') LIKE ?", ["%$search%"]);
 
             // Buscar por cada id_lote_envasado dentro del JSON de caracteristicas
             foreach ($loteIds as $idLote) {
                 $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
             }
-        });
+        }
+    });
+
+
 
         $totalFiltered = $query->count();
     } else {
