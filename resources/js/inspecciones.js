@@ -416,8 +416,9 @@ $(function () {
             '<div class="dropdown-menu dropdown-menu-end m-0">';
 
             if (puedeAsignarRevisor) {
-              // Mostrar botón solo si hay inspección y no hay revisión o está pendiente
-              if (full['id_inspeccion'] && full['url_acta'] != 'Sin subir' &&
+              //Mostrar botón si hay inspección y acta
+              if (full['id_inspeccion'] && full['url_acta'] != 'Sin subir' && 
+                //si no hay revisión o está pendiente
                 (!full['ultima_revision'] || full['ultima_revision']['decision'] === 'Pendiente')) {
                   acciones += `<a data-id="${full['id_inspeccion']}" data-folio="${full['num_servicio']}"
                                   data-bs-toggle="modal" data-bs-target="#asignarRevisorModal"
@@ -728,7 +729,6 @@ $('#asignarRevisorModal').on('shown.bs.modal', function () {
         width: '100%'
     });
 });
-
 ///ASIGNAR REVISOR
 $('#asignarRevisorForm').on('submit', function (e) {
     e.preventDefault();
@@ -753,7 +753,6 @@ $('#asignarRevisorForm').on('submit', function (e) {
         });
     });
 });
-
 
 
 

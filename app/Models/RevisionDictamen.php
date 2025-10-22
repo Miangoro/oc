@@ -60,41 +60,6 @@ class RevisionDictamen extends Model
     }
 
 
-    /*public function dictamenInstalacion()
-    {
-        return $this->belongsTo(Dictamen_instalaciones::class, 'id_dictamen', 'id_dictamen');
-    }
-    
-    public function dictamenGranel()
-    {
-        return $this->belongsTo(Dictamen_Granel::class, 'id_dictamen', 'id_dictamen');
-    }
-
-    public function dictamenEnvasado()
-    {
-        return $this->belongsTo(Dictamen_Envasado::class, 'id_dictamen', 'id_dictamen_envasado');
-    }
-
-    public function dictamenExportacion()
-    {
-        return $this->belongsTo(Dictamen_Exportacion::class, 'id_dictamen', 'id_dictamen');
-    }
-
-    public function getDictamenAttribute()
-    {
-        switch ($this->tipo_dictamen) {
-            case 1:
-                return $this->dictamenInstalacion()->first();
-            case 2:
-                return $this->dictamenGranel()->first();
-            case 3:
-                return $this->dictamenEnvasado()->first();
-            case 4:
-                return $this->dictamenExportacion()->first();
-            default:
-                return null;
-        }
-    }*/
 
 
     //talvez...
@@ -129,5 +94,7 @@ class RevisionDictamen extends Model
         return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_certificado')->where('id_documento',133);
     }
 */
-    
+
+
+
 }

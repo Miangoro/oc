@@ -527,7 +527,7 @@ public function revisores($id_inspeccion)
 
     return response()->json($revisores);
 }
-// Asignar revisor a una revisión
+//ASIGNAR REVISOR DE ACTA
 public function asignarRevisor(Request $request)
 {
     $request->validate([
@@ -570,6 +570,7 @@ public function asignarRevisor(Request $request)
         return response()->json(['message' => 'No se puede asignar revisión.'], 400);
     }
 
+    
     // Notificación al revisor
     $revisor = User::find($request->id_revisor);
     if ($revisor) {
@@ -760,9 +761,8 @@ public function agregarResultados(Request $request)
                     $documentacion_url = Documentacion_url::where('id_relacion', $request->id_solicitud)
                         ->where('id_documento', 69)
                         ->first();
-                } // fin acta
+                }
                 
-
                 if ($documentacion_url) {
                     $existingFilePath = 'uploads/' . $numeroCliente . '/actas/' . $documentacion_url->url;
                     if (Storage::disk('public')->exists($existingFilePath)) {
@@ -841,6 +841,7 @@ public function agregarResultados(Request $request)
 
     // return response()->json(['success' => true, 'mensaje' => $mensaje]);
 }
+
 
 
     // Método para obtener una guía por ID
