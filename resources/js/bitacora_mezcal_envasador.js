@@ -203,7 +203,7 @@ $(function () {
             var $volumen_salidas = full['volumen_salidas'] ?? 'N/A';
             var $alcohol_salidas = full['alcohol_salidas'] ?? 'N/A';
             var $destino_salidas = full['destino_salidas'] ?? 'N/A';
-             var $agua_entrada = full['agua_salida'] ?? 'N/A';
+            var $agua_salida = full['agua_salida'] ?? 'N/A';
             // 1. Obtener el tipo de movimiento
             var tipoMovimiento = full['tipo_movimiento'];
             var badgeHtml = '';
@@ -230,9 +230,9 @@ $(function () {
               '<span class="small">' +
               $destino_salidas +
               '</span>' +
-               '<br><span class="fw-bold small">Agua Salida: </span>' +
+              '<br><span class="fw-bold small">Agua Salida: </span>' +
               '<span class="small">' +
-              $agua_entrada +
+              $agua_salida +
               '</span>'
             );
           }
@@ -443,18 +443,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== ''
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -810,10 +810,10 @@ $(function () {
       fv.revalidateField($(this).attr('name'));
     });
 
-$('#tipo_op').on('change', function () {
-    let tipo = $(this).val();
+    $('#tipo_op').on('change', function () {
+      let tipo = $(this).val();
 
-    if (tipo === 'Entradas') {
+      if (tipo === 'Entradas') {
         $('#nombre_entrada').removeClass('d-none');
         $('#select_lote').addClass('d-none');
 
@@ -821,23 +821,23 @@ $('#tipo_op').on('change', function () {
         $('#id_lote_granel').val(null).trigger('change');
 
         // Quitar validación del select
-        try { fv.removeField('id_lote_granel'); } catch(e) {}
+        try { fv.removeField('id_lote_granel'); } catch (e) { }
 
         // Agregar validación del nombre de lote
         try {
-            fv.addField('nombre_lote', {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingrese el nombre del lote'
-                    }
-                }
-            });
-        } catch(e) {}
+          fv.addField('nombre_lote', {
+            validators: {
+              notEmpty: {
+                message: 'Por favor ingrese el nombre del lote'
+              }
+            }
+          });
+        } catch (e) { }
 
         // Revalidar
         fv.revalidateField('nombre_lote');
 
-    } else {
+      } else {
         $('#nombre_entrada').addClass('d-none');
         $('#select_lote').removeClass('d-none');
 
@@ -845,23 +845,23 @@ $('#tipo_op').on('change', function () {
         $('#nombre_lote').val('');
 
         // Quitar validación del nombre
-        try { fv.removeField('nombre_lote'); } catch(e) {}
+        try { fv.removeField('nombre_lote'); } catch (e) { }
 
         // Agregar validación del select
         try {
-            fv.addField('id_lote_granel', {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor seleccione el lote'
-                    }
-                }
-            });
-        } catch(e) {}
+          fv.addField('id_lote_granel', {
+            validators: {
+              notEmpty: {
+                message: 'Por favor seleccione el lote'
+              }
+            }
+          });
+        } catch (e) { }
 
         // Revalidar
         fv.revalidateField('id_lote_granel');
-    }
-});
+      }
+    });
 
   });
 
@@ -954,13 +954,6 @@ $('#tipo_op').on('change', function () {
           validators: {
             notEmpty: {
               message: 'Selecciona un tipo de operación'
-            }
-          }
-        },
-        destino: {
-          validators: {
-            notEmpty: {
-              message: 'Ingresa el destino.'
             }
           }
         },
@@ -1068,96 +1061,138 @@ $('#tipo_op').on('change', function () {
     ).on('input', calcular);
   });
   $(document).ready(function () {
-  // Función para calcular los valores del formulario de edición
-  function calcularEdit() {
-    // Lectura de valores de los campos de edición
-    let volumenInicialEdit = parseFloat($('#edit_volumen_inicial').val()) || 0;
-    let alcoholInicialEdit = parseFloat($('#edit_alcohol_inicial').val()) || 0;
+    // Función para calcular los valores del formulario de edición
+    function calcularEdit() {
+      // Lectura de valores de los campos de edición
+      let volumenInicialEdit = parseFloat($('#edit_volumen_inicial').val()) || 0;
+      let alcoholInicialEdit = parseFloat($('#edit_alcohol_inicial').val()) || 0;
 
-    let volumenEntradaEdit = parseFloat($('#edit_volumen_entrada').val()) || 0;
-    let alcoholEntradaEdit = parseFloat($('#edit_alcohol_entrada').val()) || 0;
-    let aguaEntradaEdit = parseFloat($('#edit_agua_entrada').val()) || 0;
+      let volumenEntradaEdit = parseFloat($('#edit_volumen_entrada').val()) || 0;
+      let alcoholEntradaEdit = parseFloat($('#edit_alcohol_entrada').val()) || 0;
+      let aguaEntradaEdit = parseFloat($('#edit_agua_entrada').val()) || 0;
 
-    let volumenSalidaEdit = parseFloat($('#edit_volumen_salida').val()) || 0;
-    let alcoholSalidaEdit = parseFloat($('#edit_alc_vol_salida').val()) || 0;
+      let volumenSalidaEdit = parseFloat($('#edit_volumen_salida').val()) || 0;
+      let alcoholSalidaEdit = parseFloat($('#edit_alc_vol_salida').val()) || 0;
 
-    // Cálculo del volumen final
-    let volumenFinalEdit = volumenInicialEdit + volumenEntradaEdit + aguaEntradaEdit - volumenSalidaEdit;
+      // Cálculo del volumen final
+      let volumenFinalEdit = volumenInicialEdit + volumenEntradaEdit + aguaEntradaEdit - volumenSalidaEdit;
 
-    // Variable para el alcohol final
-    let alcoholFinalEdit = 0;
+      // Variable para el alcohol final
+      let alcoholFinalEdit = 0;
 
-    // Se asegura de no dividir por cero
-    if (volumenFinalEdit > 0) {
-      // Cálculo del alcohol total (producto del volumen por la concentración de alcohol)
-      let alcoholTotalEdit =
-        (volumenInicialEdit * alcoholInicialEdit) +
-        (volumenEntradaEdit * alcoholEntradaEdit) -
-        (volumenSalidaEdit * alcoholSalidaEdit);
+      // Se asegura de no dividir por cero
+      if (volumenFinalEdit > 0) {
+        // Cálculo del alcohol total (producto del volumen por la concentración de alcohol)
+        let alcoholTotalEdit =
+          (volumenInicialEdit * alcoholInicialEdit) +
+          (volumenEntradaEdit * alcoholEntradaEdit) -
+          (volumenSalidaEdit * alcoholSalidaEdit);
 
-      // Cálculo de la concentración final de alcohol
-      alcoholFinalEdit = alcoholTotalEdit / volumenFinalEdit;
+        // Cálculo de la concentración final de alcohol
+        alcoholFinalEdit = alcoholTotalEdit / volumenFinalEdit;
+      }
+
+      // Muestra los resultados en los campos correspondientes
+      $('#edit_volumen_final').val(volumenFinalEdit.toFixed(2));
+      $('#edit_alc_vol_final').val(alcoholFinalEdit.toFixed(2));
     }
 
-    // Muestra los resultados en los campos correspondientes
-    $('#edit_volumen_final').val(volumenFinalEdit.toFixed(2));
-    $('#edit_alc_vol_final').val(alcoholFinalEdit.toFixed(2));
-  }
+    // Se asigna la función 'calcularEdit' al evento 'input' de cada campo
+    $(
+      '#edit_volumen_inicial, #edit_alcohol_inicial, #edit_volumen_entrada, #edit_alcohol_entrada, #edit_agua_entrada, #edit_volumen_salida, #edit_alc_vol_salida'
+    ).on('input', calcularEdit);
+  });
 
-  // Se asigna la función 'calcularEdit' al evento 'input' de cada campo
-  $(
-    '#edit_volumen_inicial, #edit_alcohol_inicial, #edit_volumen_entrada, #edit_alcohol_entrada, #edit_agua_entrada, #edit_volumen_salida, #edit_alc_vol_salida'
-  ).on('input', calcularEdit);
+$(document).ready(function () {
+
+    // --- Funciones para resetear los campos (versión "Agregar") ---
+
+    // Función para limpiar los campos de Entradas
+    function resetCamposEntradasAdd() {
+        // Encuentra todos los inputs dentro del contenedor y limpia su valor
+        $('#displayEntradas').find('input').val('');
+        // Si tuvieras selects, etc., también los añadirías aquí
+    }
+
+    // Función para limpiar los campos de Salidas
+    function resetCamposSalidasAdd() {
+        // Encuentra todos los inputs dentro del contenedor y limpia su valor
+        $('#displaySalidas').find('input').val('');
+    }
+
+    // --- Tu lógica original, con las llamadas a las funciones de reseteo ---
+
+    $('#tipo_op').on('change', function () {
+        const tipo = $(this).val();
+
+        if (tipo == 'Entradas') {
+            resetCamposSalidasAdd(); // Resetea Salidas porque se va a ocultar
+            $('#displaySalidas').fadeOut(100, function () {
+                $(this).css('display', 'none');
+                $('#displayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
+            });
+        } else if (tipo == 'Salidas') {
+            resetCamposEntradasAdd(); // Resetea Entradas porque se va a ocultar
+
+            // (Nota: Limpié un poco tu lógica original aquí para que sea igual a la de 'Entradas' pero a la inversa,
+            // la línea .stop(true, true).hide() que tenías antes era innecesaria y podía causar un parpadeo)
+            $('#displayEntradas').fadeOut(100, function () {
+                $(this).css('display', 'none');
+                $('#displaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
+            });
+        } else if (tipo == 'Entradas y salidas') {
+            // No reseteamos nada, solo mostramos ambos
+            $('#displayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 300);
+            $('#displaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 400);
+        } else {
+            // Opción por defecto ("Selecciona...")
+            resetCamposEntradasAdd(); // Resetea ambos
+            resetCamposSalidasAdd();  // Resetea ambos
+            $('#displayEntradas, #displaySalidas').fadeOut(200);
+        }
+    });
+
+    // Oculta ambos al cargar la página
+    $('#displayEntradas, #displaySalidas').hide();
 });
 
   $(document).ready(function () {
-    $('#tipo_op').on('change', function () {
-      const tipo = $(this).val();
+    function resetCamposEntradas() {
+      $('#editDisplayEntradas').find('input').val('');
+    }
+    function resetCamposSalidas() {
+      $('#editDisplaySalidas').find('input').val('');
+    }
 
-      if (tipo == 'Entradas') {
-        $('#displaySalidas').fadeOut(100, function () {
-          $(this).css('display', 'none');
-          $('#displayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
-        });
-      } else if (tipo == 'Salidas') {
-        $('#displayEntradas, #displaySalidas').stop(true, true).hide();
 
-        $('#displayEntradas').fadeOut(100, function () {
-          $(this).css('display', 'none');
-          $('#displaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
-        });
-      } else if (tipo == 'Entradas y salidas') {
-        $('#displayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 300);
-        $('#displaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 400);
-      } else {
-        $('#displayEntradas, #displaySalidas').fadeOut(200);
-      }
-    });
-    $('#displayEntradas, #displaySalidas').hide();
-  });
-
-  $(document).ready(function () {
     $('#edit_tipo_op').on('change', function () {
       const tipo = $(this).val();
 
       if (tipo == 'Entradas') {
+        resetCamposSalidas(); // Resetea Salidas porque se va a ocultar
         $('#editDisplaySalidas').fadeOut(100, function () {
           $(this).css('display', 'none');
           $('#editDisplayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
       } else if (tipo == 'Salidas') {
+        resetCamposEntradas(); // Resetea Entradas porque se va a ocultar
         $('#editDisplayEntradas').fadeOut(100, function () {
           $(this).css('display', 'none');
           $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 200);
         });
       } else if (tipo == 'Entradas y salidas') {
+        // No reseteamos nada, solo mostramos ambos
         $('#editDisplayEntradas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 300);
         $('#editDisplaySalidas').css({ opacity: 0, display: 'block' }).animate({ opacity: 1 }, 400);
       } else {
+        // Opción por defecto ("Selecciona...")
+        resetCamposEntradas(); // Resetea ambos
+        resetCamposSalidas();  // Resetea ambos
         $('#editDisplayEntradas, #editDisplaySalidas').fadeOut(200);
       }
     });
 
+    // Oculta ambos al cargar la página
     $('#editDisplayEntradas, #editDisplaySalidas').hide();
   });
 
