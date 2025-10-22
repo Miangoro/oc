@@ -10,7 +10,7 @@
 
 
 @section('vendor-style')
-    @vite(['resources/assets/vendor/libs/apex-charts/apex-charts.scss', 'resources/assets/vendor/libs/swiper/swiper.scss'])
+    @vite(['resources/assets/vendor/libs/apex-charts/apex-charts.scss', 'resources/assets/vendor/libs/swiper/swiper.scss','resources/assets/vendor/libs/sweetalert2/sweetalert2.scss'])
 @endsection
 
 @section('page-style')
@@ -30,12 +30,14 @@
 @endsection
 
 @section('vendor-script')
-    @vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js', 'resources/assets/vendor/libs/swiper/swiper.js', 'resources/assets/vendor/libs/swiper/swiper.js'])
+    @vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js', 'resources/assets/vendor/libs/swiper/swiper.js', 'resources/assets/vendor/libs/swiper/swiper.js','resources/assets/vendor/libs/sweetalert2/sweetalert2.js'])
 @endsection
 
 @section('page-script')
     <script>
         const revisionesMesURL = "{{ route('estadisticas.revisiones-mes') }}";
+
+        window.puedeAsignarRevisor = @json(auth()->user()->can('Asignar revisor de acta'));
     </script>
 
     @vite(['resources/assets/js/dashboards-analytics.js', 'resources/assets/js/ui-carousel.js'])
@@ -410,6 +412,20 @@
                                 <h4 class="mb-0">{{ $solicitudesSinDictamen->count() }}</h4>
                             </div>
                             <h6 class="mb-0 fw-normal">Pendiente de crear dictamen</h6>
+
+
+                            <!--REVISIONES PENDIENTES UI-->
+                            <hr>
+                            <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                                data-bs-target="#modalRevisionActa">
+                                <div class="avatar me-4">
+                                    <span class="avatar-initial rounded-3 bg-label-warning"><i
+                                            class="ri-file-warning-line ri-24px"></i></span>
+                                </div>
+                                <h4 class="mb-0">{{ $revisionActa->count() }}</h4>
+                            </div>
+                            <h6 class="mb-0 fw-normal">Pendiente revision de acta</h6>
+
 
                             <hr>
                             <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
@@ -1339,6 +1355,115 @@
                 </div>
             </div>
         </div>
+
+
+        <!--MODAL REVISIONES PENDIENTES UI-->
+        <div class="modal fade" id="modalRevisionActa" tabindex="-1" aria-labelledby="modalDictamenLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDictamenLabel">
+                            Inspecciones pendientes de asignar revision del acta
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        @if ($revisionActa->count())
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Folio</th>
+                                            <th>Servicio</th>
+                                            <th>Tipo</th>
+                                            <th>Revisor</th>
+                                            <th>estatus</th>
+                                            <th>Opciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($revisionActa as $inspeccion)
+                                            <tr>
+                                                <td><strong>{{ $inspeccion->solicitud->folio }}</strong></td>
+                                                <td>{!! $inspeccion->num_servicio ?? "<span class='badge bg-danger'>Sin asignar</span>" !!}</td>
+                                                <td>{{ $inspeccion->solicitud->tipo_solicitud->tipo ?? '—' }}</td>
+                                                <td>{{ $inspeccion->ultima_revision['usuario'] ?? 'Sin revisión' }}</td>
+                                                <td>
+                                                    {{ $inspeccion->ultima_revision['decision'] ?? 'Sin revisión' }}
+                                                </td>
+                                                <td>
+
+     @if ($inspeccion->id_inspeccion 
+        && $inspeccion->url_acta != 'Sin subir'
+        && (!$inspeccion->ultima_revision || $inspeccion->ultima_revision['decision'] === 'Pendiente'))
+        <div class="d-flex align-items-center gap-50">
+            <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end m-0">
+                <a data-id="{{ $inspeccion->id_inspeccion }}" 
+                data-folio="{{ $inspeccion->num_servicio }}"
+                data-bs-toggle="modal" 
+                data-bs-target="#asignarRevisorModal"
+                class="dropdown-item waves-effect text-dark">
+                <i class="text-warning ri-user-search-fill"></i> Asignar revisor acta
+                </a>
+            </div>
+        </div>
+    @else
+        Asigna un servicio y sube un acta
+    @endif
+    }
+
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="alert alert-info mb-0">No hay revision de actas pendientes</div>
+                        @endif
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--MODAL ASIGNAR REVISION DEL ACTA-->
+<div class="modal fade" id="asignarRevisorModal" tabindex="-1" aria-labelledby="asignarRevisorModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary pb-4">
+        <h5 class="modal-title text-white" id="asignarRevisorModalLabel">Asignar revisor <span id="folio_servicio"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="asignarRevisorForm">
+            @csrf
+            <input type="hidden" name="id_inspeccion" id="id_inspeccion">
+
+          <div class="form-floating form-floating-outline mb-3">
+            <select class="form-select select2" id="id_revisor" name="id_revisor">
+                <option value="" disabled selected>Selecciona un revisor</option>
+            </select>
+            <label>Personal de la UI</label>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"><i class="ri-user-add-line"></i> Asignar revisor</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
         <!-- Modal -->
         <div class="modal fade" id="modalCertificadosSinEscaner" tabindex="-1" aria-labelledby="modalCertificadosLabel"

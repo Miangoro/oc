@@ -13,6 +13,8 @@
 @section('page-script')
     @vite(['resources/js/inspecciones.js'])
     <script>
+        window.puedeAsignarRevisor = @json(auth()->user()->can('Asignar revisor de acta'));
+
         document.addEventListener('DOMContentLoaded', function() {
             const certificacionSelectAdd = document.getElementById('certificacion');
             const certificadoOtrosDivAdd = document.getElementById('certificado-otros');
@@ -127,52 +129,78 @@
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- Users List Table -->
-    <div class="card">
-        <div class="card-header pb-0">
-            <h3 class="card-title mb-0 fw-bold">Inspecciones de la Unidad de Inspección</h3>
-        </div>
-        <div class="card-datatable table-responsive">
-            <table style="font-size: 14px" class="datatables-users table table-bordered  table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th></th>
-                        <th>Folio</th>
-                        <th>No. de servicio</th>
-                        <th>Cliente</th>
-                        {{-- <th>Fecha de solicitud</th> --}}
-                        <th>Solicitud</th>
-                        <th>Domicilio de inspección</th>
-                        <th>Fecha y hora de visita estimada</th>
-                        <th>Inspector asignado</th>
-                        <th>Características</th>
-                        <th>Fecha y hora de inspección</th>
-                        <th>Acta</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-
-
-
-
-
-        <!-- Modal -->
-        @include('_partials._modals.modal-pdfs-frames')
-        @include('_partials._modals.modal-expediente-servicio')
-        @include('_partials._modals.modal-validad-solicitud')
-        @include('_partials._modals.modal-add-asignar-inspector')
-        @include('_partials._modals.modal-trazabilidad')
-        @include('_partials._modals.modal-add-resultados-inspeccion')
-        @include('_partials._modals.modal-export-excel-inspecciones')
-
-        {{-- @include('_partials/_modals/modal-add-asignar-revisor') --}}
-
-
-        <!-- Modal -->
-
+<!-- Users List Table -->
+<div class="card">
+    <div class="card-header pb-0">
+        <h3 class="card-title mb-0 fw-bold">Inspecciones de la Unidad de Inspección</h3>
     </div>
+    <div class="card-datatable table-responsive">
+        <table style="font-size: 14px" class="datatables-users table table-bordered  table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th></th>
+                    <th>Folio</th>
+                    <th>No. de servicio</th>
+                    <th>Cliente</th>
+                    {{-- <th>Fecha de solicitud</th> --}}
+                    <th>Solicitud</th>
+                    <th>Domicilio de inspección</th>
+                    <th>Fecha y hora de visita estimada</th>
+                    <th>Inspector asignado</th>
+                    <th>Características</th>
+                    <th>Fecha y hora de inspección</th>
+                    <th>Acta</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+
+    <!-- Modal -->
+    @include('_partials._modals.modal-pdfs-frames')
+    @include('_partials._modals.modal-expediente-servicio')
+    @include('_partials._modals.modal-validad-solicitud')
+    @include('_partials._modals.modal-add-asignar-inspector')
+    @include('_partials._modals.modal-trazabilidad')
+    @include('_partials._modals.modal-add-resultados-inspeccion')
+    @include('_partials._modals.modal-export-excel-inspecciones')
+
+    {{-- @include('_partials/_modals/modal-add-asignar-revisor') --}}
+
+</div>
+
+
+<!--MODAL ASIGNAR REVISION DEL ACTA-->
+<div class="modal fade" id="asignarRevisorModal" tabindex="-1" aria-labelledby="asignarRevisorModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary pb-4">
+        <h5 class="modal-title text-white" id="asignarRevisorModalLabel">Asignar revisor <span id="folio_servicio"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="asignarRevisorForm">
+          <input type="hidden" name="id_inspeccion" id="id_inspeccion">
+
+          <div class="form-floating form-floating-outline mb-3">
+            <select class="form-select select2" id="id_revisor" name="id_revisor">
+                <option value="" disabled selected>Selecciona un revisor</option>
+            </select>
+            <label>Personal de la UI</label>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"><i class="ri-user-add-line"></i> Asignar revisor</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 @endsection
 
 <script>

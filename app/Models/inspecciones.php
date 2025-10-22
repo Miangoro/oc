@@ -75,5 +75,12 @@ class inspecciones extends Model
         return $this->hasMany(Dictamen_NoCumplimiento::class, 'id_inspeccion', 'id_inspeccion');
     }
 
+    public function revisionesActas()
+    {
+        return $this->hasMany(RevisionDictamen::class, 'id_inspeccion', 'id_inspeccion');
+    }
+   
+
+
 }
 

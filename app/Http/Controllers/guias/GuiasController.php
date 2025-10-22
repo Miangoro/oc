@@ -173,11 +173,17 @@ public function index(Request $request)
                     'numero_cliente' => $numero_cliente, // Asignar numero_cliente
                     'id_predio' => '<b>'.$user->predios->num_predio.'</b><br>'.$user->predios->nombre_predio,
                     
+                    'comprador' => 
+                        "<b>Comprador: </b>" .$user->nombre_cliente."<br>".
+                        "<b>Domicilio: </b>" .$user->domicilio."<br>",
                     'caracteristicas' => 
                         "<b>Plantas actuales: </b>" .$user->numero_plantas."<br>".
                         "<b>No. anterior: </b>" .$user->num_anterior."<br>".
                         "<b>Comercializadas: </b>" .$user->num_comercializadas."<br>".
-                        "<b>Mesmas: </b>" .$user->mermas_plantas,
+                        "<b>Mermas: </b>" .$user->mermas_plantas."<br>".
+                        "<b>%ART: </b>" .$user->art."<br>".
+                        "<b>Kg. maguey: </b>" .$user->kg_maguey."<br>".
+                        "<b>Fecha ingreso: </b>" .$user->fecha_ingreso,
                     /*'numero_plantas' => $user->numero_plantas,
                     'num_anterior' => $user->num_anterior,
                     'num_comercializadas' => $user->num_comercializadas,

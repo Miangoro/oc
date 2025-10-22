@@ -83,6 +83,20 @@
                         </div>
                     </div>
 
+                    <div class="row">
+
+                        <div class="col-md-6 mb-4">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select class="form-select" id="tipo" name="tipo">
+                                    <option value="">Todos</option>
+                                    <option value="2">Combinados</option>
+                                </select>
+                                <label for="tipo">Tipo de certificado</label>
+                            </div>
+                        </div>
+
+                    </div>
+
 
                     <!-- Botones del modal -->
                     <div class="col-12 mt-4 d-flex flex-wrap justify-content-between align-items-center gap-3">

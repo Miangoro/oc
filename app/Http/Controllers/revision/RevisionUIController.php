@@ -269,6 +269,11 @@ public function registrar(Request $request)
         return response()->json(['message' => 'El registro no fue encontrado.'], 404);
     }
 
+     // Validar que administrador o revisor asignado puedan agregar
+    if (!in_array(Auth::id(), [1, 319, $revisor->id_revisor])) {
+        return response()->json(['message' => 'No tienes permisos para registrar esta revisión.'], 403);
+    }
+
 /*
     // Obtener el historial de respuestas como array
     $historialRespuestas = $revisor->respuestas ?? [];
@@ -396,7 +401,8 @@ public function editar(Request $request)
         }
 
         // Validar que administrador o revisor asignado puedan editar
-        if (Auth::id() != 1 && $revisor->id_revisor != Auth::id()) {
+        //if (Auth::id() != 1 && $revisor->id_revisor != Auth::id()) {
+        if (!in_array(Auth::id(), [1, 319, $revisor->id_revisor])) {
             return response()->json(['message' => 'No tienes permisos para editar esta revisión.'], 403);
         }
 

@@ -873,6 +873,66 @@
     cargarDatosCertificados(anioActual,cliente);
   });
 
+
+
+$.ajaxSetup({
+  headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+///obtener revisores UI
+$(document).on('click', 'a[data-bs-target="#asignarRevisorModal"]', function () {
+    const idInspeccion = $(this).data('id');
+    const folio = $(this).data('folio');
+
+    $('#folio_servicio').html(`<span class="badge bg-info">${folio}</span>`);
+    $('#id_inspeccion').val(idInspeccion);
+
+    // Limpiar select
+    $('#id_revisor').html('<option value="" disabled selected>Selecciona un revisor</option>').trigger('change');
+
+    // AJAX para obtener revisores
+    $.get('/revisores-disponibles/' + idInspeccion, function (revisores) {
+        revisores.forEach(r => {
+            $('#id_revisor').append(`<option value="${r.id}">${r.name}</option>`);
+        });
+        $('#id_revisor').trigger('change');
+    });
+});
+// Inicializar select2 al mostrar modal
+$('#asignarRevisorModal').on('shown.bs.modal', function () {
+    $('#id_revisor').select2({
+        dropdownParent: $('#asignarRevisorModal'),
+        width: '100%'
+    });
+});
+///ASIGNAR REVISOR
+$('#asignarRevisorForm').on('submit', function (e) {
+    e.preventDefault();
+    const formData = $(this).serialize();
+
+    $.post('/asignar-revisor-acta', formData, function (res) {
+        $('#asignarRevisorModal').modal('hide');
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Revisor asignado correctamente.',
+            customClass: { confirmButton: 'btn btn-primary' }
+        
+        }).then(() => {
+            // Recargar la página solo después de cerrar el alert
+            location.reload();
+        });
+    }).fail(function (xhr) {
+        $('#asignarRevisorModal').modal('hide');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error inesperado, intentalo mas tarde'
+        });
+    });
+});
+
     // Line Chart
   // --------------------------------------------------------------------
   function cargarDatosServicios(anioSeleccionado) {
@@ -932,6 +992,15 @@ $(document).ready(function () {
         });
     });
 });
+
+
+
+
+
+
+
+
+
 
 
 

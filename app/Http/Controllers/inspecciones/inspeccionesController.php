@@ -73,6 +73,7 @@ class inspeccionesController extends Controller
             ->where('estatus', 'Activo')
             ->get(); // Obtener todos los organismos
 
+    
         return view('inspecciones.find_inspecciones_view', compact('solicitudesTipos','instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos', 'equipos','todasSolicitudes', 'solcitudesSinInspeccion'));
     }
 
@@ -269,7 +270,8 @@ public function index(Request $request)
                     ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
                     : 'N/A';
                 $nestedData['numero_cliente'] = $numero_cliente;
-                $nestedData['id_inspeccion'] = $solicitud->inspeccion->id_inspeccion ?? '0';
+                $nestedData['id_inspeccion'] = $solicitud->inspeccion->id_inspeccion ?? 0;
+                
                 $nestedData['id_empresa'] = $solicitud->empresa->id_empresa ?? '0';
                 $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
                 $nestedData['id_acta'] = $solicitud->inspeccion->actas_inspeccion->id_acta ?? 'N/A';
@@ -502,6 +504,89 @@ public function index(Request $request)
 
 
 
+//obtener lista de revisores excepto quien realiza servicio
+public function revisores($id_inspeccion)
+{
+    $inspeccion = inspecciones::find($id_inspeccion);
+    if (!$inspeccion) {
+        return response()->json([], 404);
+    }
+
+    $excluirId = $inspeccion->id_inspector; // quien subió el acta
+    $excluirTipo2 = [$excluirId, 12, 353]; // otros a excluir
+    $incluirManual = [319, 335, 344]; // incluir manualmente tipo 1
+
+    $revisores = User::where(function($query) use ($excluirTipo2, $incluirManual) {
+        $query->where(function($q) use ($excluirTipo2) {
+            $q->where('tipo', 2)
+            ->where('estatus', 'Activo')
+            ->whereNotIn('id', $excluirTipo2);
+        })
+        ->orWhereIn('id', $incluirManual);
+    })->get();
+
+    return response()->json($revisores);
+}
+// Asignar revisor a una revisión
+public function asignarRevisor(Request $request)
+{
+    $request->validate([
+        'id_inspeccion' => 'required|integer',
+        'id_revisor'    => 'required|integer',
+    ]);
+
+    $inspeccion = inspecciones::find($request->id_inspeccion);
+    if (!$inspeccion) {
+        //return response()->json(['message' => 'Inspección no encontrada.'], 404);
+         return abort(404, 'Registro no encontrado.');
+    }
+
+
+    // Buscar la última revisión de esta inspección
+    $ultimaRevision = RevisionDictamen::where('id_inspeccion', $inspeccion->id_inspeccion)
+        ->orderByDesc('numero_revision')
+        ->first();
+
+    // Primera revisión
+    if (!$ultimaRevision) {
+        // Crear primera revisión
+        $revision = RevisionDictamen::create([
+            'tipo_revision'   => 1,
+            'id_revisor'      => $request->id_revisor,
+            'id_inspeccion'   => $inspeccion->id_inspeccion,
+            'numero_revision' => 1,
+            'es_correccion'   => 'no',
+            'tipo_solicitud'  => $inspeccion->solicitud?->id_tipo ?? 0,
+        ]);
+
+    } elseif ($ultimaRevision->decision === 'Pendiente') {
+        // Actualizar revisor de la revisión pendiente
+        $ultimaRevision->update([
+            'id_revisor' => $request->id_revisor
+        ]);
+        $revision = $ultimaRevision;
+
+    } else {
+        return response()->json(['message' => 'No se puede asignar revisión.'], 400);
+    }
+
+    // Notificación al revisor
+    $revisor = User::find($request->id_revisor);
+    if ($revisor) {
+        $revisor->notify(new GeneralNotification([
+            'title'   => 'Revisión de acta',
+            'message' => 'Se te ha asignado el acta ' . $inspeccion->num_servicio,
+            'url'     => "/revision/ver/{$revision->id_revision}",
+        ]));
+    }
+
+
+    return response()->json(['message' => 'Revisor asignado correctamente.']);
+}
+
+
+
+
     public function destroy($id_instalacion)
     {
         try {
@@ -675,80 +760,6 @@ public function agregarResultados(Request $request)
                     $documentacion_url = Documentacion_url::where('id_relacion', $request->id_solicitud)
                         ->where('id_documento', 69)
                         ->first();
-
-                    /// ASIGNAR REVISION AUTOMATICA
-                    //if ($sol->inspeccion && $sol->id_tipo != 8) { // Verifica que exista la inspección
-                    if ($sol->inspeccion) {
-                        $inspeccion = $sol->inspeccion;
-                    
-                        // Buscar la última revisión de esta inspección
-                        $ultimaRevision = RevisionDictamen::where('id_inspeccion', $inspeccion->id_inspeccion)
-                            ->orderByDesc('numero_revision')
-                            ->first();
-
-                        $asignarRevision = false;
-                        $esCorreccion = 'no';
-                        $nuevoNumeroRevision = 1;
-                        $revisorId = null;
-
-                        // Primera revisión
-                        if (!$ultimaRevision) { 
-                            $asignarRevision = true;
-                            $esCorreccion = 'no';
-                            $nuevoNumeroRevision = 1;
-
-                            // Selecciona revisor aleatorio tipo 2 activo, excepto el inspector
-                            $excluirId = $inspeccion->id_inspector;
-                            $excluirTipo2 = [$excluirId, 12, 353];//tipo 2 a excluir amairany,ricardo
-                            $incluirManual = [319, 335, 344];//incluir tipo 1 gil, Sylvana, Elizabeth
-                            $revisor = User::where(function($query) use ($excluirTipo2, $incluirManual) {
-                                // Usuarios tipo 2, activos, excluyendo ciertos IDs
-                                $query->where('tipo', 2)
-                                    ->where('estatus', 'Activo')
-                                    ->whereNotIn('id', $excluirTipo2)
-                                    ->orWhereIn('id', $incluirManual);
-                                })
-                                ->inRandomOrder()
-                                ->first();
-
-                            $revisorId = $revisor?->id ?? 0;
-
-                        // Corrección
-                        } elseif ($ultimaRevision->decision === 'negativa') {
-                            $asignarRevision = true;
-                            $esCorreccion = 'si';
-                            $nuevoNumeroRevision = $ultimaRevision->numero_revision + 1;
-
-                            // Usar el mismo revisor que registró la negativa
-                            $revisorId = $ultimaRevision->id_revisor;
-                        }
-                        // Si la última revisión es Pendiente o Positiva → no se asigna nada
-
-                        if ($asignarRevision) {
-                            // Crear la revisión automática
-                            $revision = RevisionDictamen::create([
-                                'tipo_revision'   => 1,
-                                'id_revisor'      => $revisorId ?? 0,
-                                'id_inspeccion'   => $inspeccion->id_inspeccion,
-                                'numero_revision' => $nuevoNumeroRevision,
-                                'es_correccion'   => $esCorreccion,
-                                'tipo_solicitud'  => $sol->id_tipo ?? 0,
-                            ]);
-
-                            // Notificación al revisor
-                            if ($revisorId) {
-                                $url_clic = "/revision/ver/{$revision->id_revision}";
-                                $titulo = 'Revisión de acta' . ($esCorreccion === 'si' ? ' CORRECCIÓN' : '');
-
-                                $revisor = User::find($revisorId);
-                                $revisor->notify(new GeneralNotification([
-                                    'title'   => $titulo,
-                                    'message' => 'Se te ha asignado el acta ' . $inspeccion->num_servicio,
-                                    'url'     => $url_clic,
-                                ]));
-                            }
-                        }
-                    }//fin revision automatica
                 } // fin acta
                 
 
@@ -780,9 +791,6 @@ public function agregarResultados(Request $request)
 
                 foreach ($solicitudesAdicionales as $idAdicional) {
                     // Verificar si ya existe el registro
-
-
-
                         $nuevoDoc = new Documentacion_url();
                         $nuevoDoc->id_relacion = $idAdicional;
                         $nuevoDoc->id_documento = $request->id_documento[$index];
@@ -794,7 +802,41 @@ public function agregarResultados(Request $request)
 
                 }
             }
-        }
+
+
+            ///ASIGNAR REVISION AUTOMATICA AL SUBIR DOCUMENTOS, SI LA ULTIMA FUE NEGATIVA 
+            if ($sol->inspeccion) {
+                $inspeccion = $sol->inspeccion;
+            
+            // Buscar la última revisión de esta inspección
+            $ultimaRevision = RevisionDictamen::where('id_inspeccion',$inspeccion->id_inspeccion)
+                ->orderByDesc('numero_revision')
+                ->first();
+
+                // Solo asignar automáticamente si la última revisión fue negativa
+                if ($ultimaRevision && $ultimaRevision->decision === 'negativa') {
+                    $revision = RevisionDictamen::create([
+                        'tipo_revision'   => 1,
+                        'id_revisor'      => $ultimaRevision->id_revisor, // mismo revisor
+                        'id_inspeccion'   => $inspeccion->id_inspeccion,
+                        'numero_revision' => $ultimaRevision->numero_revision + 1,
+                        'es_correccion'   => 'si',
+                        'tipo_solicitud'  => $sol->id_tipo ?? 0,
+                    ]);
+
+                    // Notificación al revisor
+                    $revisor = User::find($ultimaRevision->id_revisor);
+                    if ($revisor) {
+                        $revisor->notify(new GeneralNotification([
+                            'title'   => 'Revisión de acta CORRECCIÓN',
+                            'message' => 'Se te ha asignado el acta ' . $inspeccion->num_servicio,
+                            'url'     => "/revision/ver/{$revision->id_revision}",
+                        ]));
+                    }
+                }
+            }//fin revision automatica
+
+        }//fin for
     }
 
     // return response()->json(['success' => true, 'mensaje' => $mensaje]);

@@ -200,7 +200,7 @@ public function index(Request $request)
     
     // Filtro especial para usuario 49
     if ($userId == 49) {
-        $query->where('solicitudes.id_tipo', 11);
+        $query->where('solicitudes.id_tipo', 11)->Orwhere('solicitudes.id_tipo', 16);
     }
 
 
