@@ -182,7 +182,8 @@ public function index(Request $request)
                         "<b>Comercializadas: </b>" .$user->num_comercializadas."<br>".
                         "<b>Mesmas: </b>" .$user->mermas_plantas."<br>".
                         "<b>%ART: </b>" .$user->art."<br>".
-                        "<b>Kg. maguey: </b>" .$user->kg_magey,
+                        "<b>Kg. maguey: </b>" .$user->kg_magey."<br>".
+                        "<b>Fecha ingreso: </b>" .$user->fecha_ingreso,
                     /*'numero_plantas' => $user->numero_plantas,
                     'num_anterior' => $user->num_anterior,
                     'num_comercializadas' => $user->num_comercializadas,
