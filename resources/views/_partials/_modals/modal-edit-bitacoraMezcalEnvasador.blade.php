@@ -198,11 +198,19 @@
                                             <label for="alc_vol_salida">% Alc. Vol.</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-12 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="edit_destino"
                                                 name="destino" placeholder="Destino" aria-label="Destino" required>
                                             <label for="destino">Destino</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" step="0.01" class="form-control"
+                                                id="edit_agua_salida" name="agua_salida"
+                                                placeholder="Agua agregada (L)" aria-label="Agua entrada">
+                                            <label for="agua_entrada">Agua agregada (L)</label>
                                         </div>
                                     </div>
                                 </div>

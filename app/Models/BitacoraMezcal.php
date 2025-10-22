@@ -36,6 +36,7 @@ class BitacoraMezcal extends Model
         'volumen_salidas',
         'alcohol_salidas',
         'destino_salidas',
+        'agua_salida',
 
         //INVENTARIO FINAL
         'volumen_final',

@@ -203,6 +203,7 @@ $(function () {
             var $volumen_salidas = full['volumen_salidas'] ?? 'N/A';
             var $alcohol_salidas = full['alcohol_salidas'] ?? 'N/A';
             var $destino_salidas = full['destino_salidas'] ?? 'N/A';
+             var $agua_entrada = full['agua_salida'] ?? 'N/A';
             // 1. Obtener el tipo de movimiento
             var tipoMovimiento = full['tipo_movimiento'];
             var badgeHtml = '';
@@ -228,6 +229,10 @@ $(function () {
               '<br><span class="fw-bold small">Destino de Salidas: </span>' +
               '<span class="small">' +
               $destino_salidas +
+              '</span>' +
+               '<br><span class="fw-bold small">Agua Salida: </span>' +
+              '<span class="small">' +
+              $agua_entrada +
               '</span>'
             );
           }
@@ -886,6 +891,7 @@ $('#tipo_op').on('change', function () {
           $('#edit_volumen_entrada').val(bitacora.volumen_entrada);
           $('#edit_alcohol_entrada').val(bitacora.alcohol_entrada);
           $('#edit_agua_entrada').val(bitacora.agua_entrada);
+          $('#edit_agua_salida').val(bitacora.agua_salida);
           $('#edit_volumen_salida').val(bitacora.volumen_salida);
           $('#edit_alc_vol_salida').val(bitacora.alc_vol_salida);
           $('#edit_destino').val(bitacora.destino);

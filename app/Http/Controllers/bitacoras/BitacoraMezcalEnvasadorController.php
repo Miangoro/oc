@@ -316,6 +316,8 @@ class BitacoraMezcalEnvasadorController extends Controller
                 'volumen_entrada' => $bitacora->volumen_entrada ?? 'N/A',
                 'alcohol_entrada' => $bitacora->alcohol_entrada ?? 'N/A',
                 'agua_entrada' => $bitacora->agua_entrada ?? 'N/A',
+                'agua_salida' => $bitacora->agua_salida ?? 'N/A',
+
                 'id_firmante' => $bitacora->id_firmante ?? 'N/A',
                 // Salidas
                 'volumen_salidas' => $bitacora->volumen_salidas ?? 'N/A',
@@ -498,7 +500,7 @@ private function esJsonValido($string)
                 if(!empty($instalacionId)){
             $domicilio_instalacion =  $bitacoras[0]->instalacion->direccion_completa ?? '';
         }else{
-        
+
             $domicilio_instalacion = 'Todas las instalaciones';
         }
 
@@ -525,6 +527,7 @@ private function esJsonValido($string)
             'volumen_entrada'=> 'nullable|numeric|min:0',
             'alcohol_entrada' => 'nullable|numeric|min:0',
             'agua_entrada' => 'nullable|numeric|min:0',
+            'agua_salida' => 'nullable|numeric|min:0',
             'volumen_salida' => 'nullable|numeric|min:0' ,
             'alc_vol_salida' => 'nullable|numeric|min:0',
             'destino' => 'nullable|string|max:255',
@@ -549,7 +552,9 @@ private function esJsonValido($string)
             $bitacora->procedencia_entrada  = $request->procedencia_entrada ?? 0;
             $bitacora->volumen_entrada  = $request->volumen_entrada ?? 0;
             $bitacora->alcohol_entrada  = $request->alcohol_entrada ?? 0;
-            $bitacora->agua_entrada  = $request->agua_entrada ?? 0;
+            /* $bitacora->agua_entrada  = $request->agua_entrada ?? 0; */
+            $bitacora->agua_entrada   = $request->agua_entrada;
+            $bitacora->agua_salida = $request->agua_salida;
             $bitacora->volumen_salidas = $request->volumen_salida ?? 0;
             $bitacora->alcohol_salidas = $request->alc_vol_salida ?? 0;
             $bitacora->destino_salidas = $request->destino ?? 0;
@@ -633,6 +638,7 @@ private function esJsonValido($string)
                     'volumen_entrada'   =>    $bitacora->volumen_entrada,
                     'alcohol_entrada'  =>     $bitacora->alcohol_entrada,
                     'agua_entrada' => $bitacora->agua_entrada,
+                    'agua_salida' => $bitacora->agua_salida,
                     'volumen_salida' => $bitacora->volumen_salidas,
                     'alc_vol_salida' => $bitacora->alcohol_salidas,
                     'destino' => $bitacora->destino_salidas,
@@ -667,6 +673,7 @@ private function esJsonValido($string)
               'volumen_entrada'=> 'nullable|numeric|min:0',
               'alcohol_entrada' => 'nullable|numeric|min:0',
               'agua_entrada' => 'nullable|numeric|min:0',
+              'agua_salida' => 'nullable|numeric|min:0',
               'volumen_salida' => 'nullable|numeric|min:0' ,
               'alc_vol_salida' => 'nullable|numeric|min:0',
               'destino' => 'nullable|string|max:255',
@@ -692,7 +699,8 @@ private function esJsonValido($string)
               'procedencia_entrada' => $request->procedencia_entrada ?? 0,
               'volumen_entrada'=> $request->volumen_entrada ?? 0,
               'alcohol_entrada' => $request->alcohol_entrada ?? 0,
-              'agua_entrada' => $request->agua_entrada ?? 0,
+              'agua_entrada'  => $request->agua_entrada,
+              'agua_salida'  => $request->agua_salida,
               'volumen_salidas'   => $request->volumen_salida ?? 0,
               'alcohol_salidas'   => $request->alc_vol_salida ?? 0,
               'destino_salidas'  => $request->destino ?? 0,
