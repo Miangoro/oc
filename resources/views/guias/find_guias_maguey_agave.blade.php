@@ -14,7 +14,6 @@
   'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
   'resources/assets/vendor/libs/spinkit/spinkit.scss',
   'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss'
-
 ])
 @endsection
 
@@ -31,7 +30,6 @@
   'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
   'resources/assets/vendor/libs/sweetalert2/sweetalert2.js',
   'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js',
-
 ])
 @endsection
 
@@ -45,6 +43,7 @@
 </script>
 @vite(['resources/js/guias_maguey_agave.js'])
 @endsection
+
 
 @section('content')
 
@@ -60,17 +59,11 @@
         <thead class="table-dark">
           <tr>
             <th></th>
-            {{-- <th>#</th> --}}
             <th>Predio</th>
             <th>Cliente</th>
             <th>Folio</th>
             <th>Folio de solicitud</th>
-            {{-- <th>Cantidad guias</th> --}}
             <th>Guias</th>
-            {{--<th>Plantas actuales</th>
-            <th>No. anterior</th>
-            <th>Comercializadas</th>
-            <th>No. mermas</th> --}}
             <th>Comprador</th>
             <th>Caracteristicas</th>
             <th>Doc. Adjuntos</th>
@@ -126,14 +119,12 @@
 </div>
 
 
-<!-- Modal -->
-@include('_partials/_modals/modal-pdfs-frames')
-@include('_partials/_modals/modal-add-guias-agave')
+  <!-- Modal -->
+  @include('_partials/_modals/modal-pdfs-frames')
+  @include('_partials/_modals/modal-add-guias-agave')
 
-@include('_partials/_modals/modal-ver-guias-registardas')
+  @include('_partials/_modals/modal-ver-guias-registardas')
 
-@include('_partials/_modals/modal-export-excel-guias')
-<!-- /Modal -->
-
+  @include('_partials/_modals/modal-export-excel-guias')
 
 @endsection
