@@ -57,8 +57,12 @@ if (dt_user_table.length) {
         { data: 'num_anterior' },
         { data: 'num_comercializadas' },
         { data: 'mermas_plantas' }, */
-
-        { data: null,
+        { data: null, //6
+          render: function (data, type, row) {
+            return `<small>${data.comprador}</small>`;
+          }
+        },
+        { data: null, //7
           render: function (data, type, row) {
             return `<small>${data.caracteristicas}</small>`;
           }
@@ -99,7 +103,7 @@ if (dt_user_table.length) {
           }
         }, */
         {
-          targets: 7,
+          targets: 8,
           render: function (data, type, full, meta) {
             let documentos = '';
 

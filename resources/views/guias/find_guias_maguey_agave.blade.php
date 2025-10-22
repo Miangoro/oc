@@ -71,6 +71,7 @@
             <th>No. anterior</th>
             <th>Comercializadas</th>
             <th>No. mermas</th> --}}
+            <th>Comprador</th>
             <th>Caracteristicas</th>
             <th>Doc. Adjuntos</th>
             <th>Acciones</th>
