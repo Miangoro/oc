@@ -13,6 +13,7 @@
                 <form id="addNewCliente" class="row g-5" onsubmit="return false">
                     <input name="id_empresa" type="hidden" id="empresaID">
                     <input type="hidden" id="regimenTipo" name="regimenTipo">
+                    
                     <div class="contenido">
 
                     </div>

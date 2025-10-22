@@ -56,11 +56,10 @@ class getFuncionesController extends Controller
    public function find_clientes_prospecto($id)
 {
     $normas = DB::table('empresa_num_cliente as n')
-        ->join('catalogo_norma_certificar as c', 'n.id_norma', '=', 'c.id_norma')
-        ->where('n.id_empresa', $id)
-        ->where('c.id_norma', '!=', 2)
-        ->select('c.norma', 'c.id_norma')
-        ->get();
+      ->join('catalogo_norma_certificar as c', 'n.id_norma', '=', 'c.id_norma')
+      ->where('n.id_empresa', $id)
+      ->select('c.norma', 'c.id_norma')
+      ->get();
 
     return response()->json([
         'normas' => $normas,
