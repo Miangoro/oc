@@ -822,122 +822,139 @@ $(document).ready(function () {
 
 
 
-  ///AGREGAR NUEVO REGISTRO
-  //const form = document.getElementById('FormAgregar');
-  //Validación del formulario por "name"
-  const fv = FormValidation.formValidation(FormAgregar, {
-    fields: {
-      id_dictamen: {
-        validators: {
-          notEmpty: {
-            message: 'El número de dictamen es obligatorio.'
-          }
+///AGREGAR NUEVO REGISTRO
+//const form = document.getElementById('FormAgregar');
+//Validación del formulario por "name"
+const fv = FormValidation.formValidation(FormAgregar, {
+  fields: {
+    id_dictamen: {
+      validators: {
+        notEmpty: {
+          message: 'El número de dictamen es obligatorio.'
         }
-      },
-      num_certificado: {
-        validators: {
-          notEmpty: {
-            message: 'El número de certificado es obligatorio.'
-          }
-        }
-      },
-      id_firmante: {
-        validators: {
-          notEmpty: {
-            message: 'Seleccione una opcion'
-          }
-        }
-      },
-      fecha_emision: {
-        validators: {
-          date: {
-            format: 'YYYY-MM-DD',
-            message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-          }
-        }
-      },
-      fecha_vigencia: {
-        validators: {
-          date: {
-            format: 'YYYY-MM-DD',
-            message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-          }
-        }
-      },
+      }
     },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        eleInvalidClass: 'is-invalid',
-        rowSelector: '.form-floating'//clases del formulario
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function (e) {
+    num_certificado: {
+      validators: {
+        notEmpty: {
+          message: 'El número de certificado es obligatorio.'
+        }
+      }
+    },
+    id_firmante: {
+      validators: {
+        notEmpty: {
+          message: 'Seleccione una opcion'
+        }
+      }
+    },
+    fecha_emision: {
+      validators: {
+        date: {
+          format: 'YYYY-MM-DD',
+          message: 'Ingresa una fecha válida (yyyy-mm-dd).',
+        }
+      }
+    },
+    fecha_vigencia: {
+      validators: {
+        date: {
+          format: 'YYYY-MM-DD',
+          message: 'Ingresa una fecha válida (yyyy-mm-dd).',
+        }
+      }
+    },
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger(),
+    bootstrap5: new FormValidation.plugins.Bootstrap5({
+      eleValidClass: '',
+      eleInvalidClass: 'is-invalid',
+      rowSelector: '.form-floating'//clases del formulario
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton(),
+    autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  var formData = new FormData(FormAgregar);
+  //deshabilita el boton al guardar
+  const $submitBtn = $(FormAgregar).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');// Cambiar nombre
 
-    var formData = new FormData(FormAgregar);
-    $.ajax({
-      url: '/creaCerExp',
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        console.log('Error222:', response);
-        $('#ModalAgregar').modal('hide');//modal
-        $('#FormAgregar')[0].reset();//formulario
-        $('.select2').val(null).trigger('change'); //Reset del select2
+  $.ajax({
+    url: '/creaCerExp',
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      console.log('Error222:', response);
+      $('#ModalAgregar').modal('hide');//modal
+      $('#FormAgregar')[0].reset();//formulario
+      $('.select2').val(null).trigger('change'); //Reset del select2
 
-        // Actualizar la tabla sin reinicializar DataTables
-        dataTable.ajax.reload();
-        // Mostrar alerta de éxito
-        /*Swal.fire({
+      // Actualizar la tabla sin reinicializar DataTables
+      dataTable.ajax.reload();
+      // Mostrar alerta de éxito
+      /*Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.message,
+        customClass: {
+          confirmButton: 'btn btn-primary'
+        }
+      });*/
+      // Diferenciar mensaje normal o advertencia
+      if (response.warning) {
+        Swal.fire({
+          icon: 'warning',
+          title: '¡Advertencia!',
+          text: response.message,
+          confirmButtonClass: 'btn btn-warning',
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      } else {
+        Swal.fire({
           icon: 'success',
           title: '¡Éxito!',
           text: response.message,
           customClass: {
             confirmButton: 'btn btn-primary'
           }
-        });*/
-        // Diferenciar mensaje normal o advertencia
-        if (response.warning) {
-          Swal.fire({
-            icon: 'warning',
-            title: '¡Advertencia!',
-            text: response.message,
-            confirmButtonClass: 'btn btn-warning',
-            customClass: {
-              confirmButton: 'btn btn-primary'
-            }
-          });
-        } else {
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.message,
-            customClass: {
-              confirmButton: 'btn btn-primary'
-            }
-          });
-        }
-      },
-      error: function (xhr) {
-        console.log('Error:', xhr);
-        console.log('Error2:', xhr.responseText);
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
         });
       }
-    });
+
+      $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');//boton habilitado
+    },
+    error: function (xhr) {
+      console.log('Error:', xhr);
+      console.log('Error2:', xhr.responseText);
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al registrar.',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+
+      $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');//boton habilitado
+    }
   });
+});
+// Reset boton Y formulario al cerrar modal
+$('#ModalAgregar').on('hidden.bs.modal', function () {
+    // Limpiar formulario y validaciones
+    fv.resetForm(true);
+    $('.select2').val(null).trigger('change');
+
+    const $btn = $(this).find('button[type="submit"]');
+    $btn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');//boton habilitado
+});
+
 
 
 
@@ -1194,9 +1211,9 @@ $(document).ready(function () {
 
 
   ///REEXPEDIR
-  let isLoadingData = false;
-  let fieldsValidated = [];
-  $(document).ready(function () {
+let isLoadingData = false;
+let fieldsValidated = [];
+$(document).ready(function () {
 
     $(document).on('click', '.reexpedir', function () {
       var id_certificado = $(this).data('id');
@@ -1397,8 +1414,15 @@ $(document).ready(function () {
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
-    }).on('core.form.valid', function () {
+    //}).on('core.form.valid', function () {
+    });
+    // Evitar duplicados al enviar
+    validatorReexpedir.off('core.form.valid').on('core.form.valid', function () {
+
       const formData = $(formReexpedir).serialize();
+      //deshabilita el boton al guardar
+      const $submitBtn = $(formReexpedir).find('button[type="submit"]');
+      $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');
 
       $.ajax({
         url: $(formReexpedir).attr('action'),
@@ -1435,11 +1459,13 @@ $(document).ready(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+        },
+        complete: function () {
+          $submitBtn.prop('disabled', false).html('Registrar');
         }
       });
     });
-
-  });
+});
 
 
 
@@ -1710,8 +1736,11 @@ $(document).ready(function () {
   ///ASIGNAR REVISION
   $('#asignarRevisorForm').on('submit', function (e) {
     e.preventDefault();
-
     const formData = new FormData(this);
+    //deshabilita el boton al guardar
+    const $submitBtn = $(this).find('button[type="submit"]');
+    $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');
+
     const idCertificado = $('#id_certificado').val();
     formData.append('id_certificado', idCertificado);
 
@@ -1719,6 +1748,7 @@ $(document).ready(function () {
     const nombreDoc = $('#nombre_documento').val();
     if (archivo && !nombreDoc) {
       Swal.fire({ icon: 'warning', title: 'Falta el nombre del documento' });
+      $submitBtn.prop('disabled', false).html('Asignar revisión');
       return;
     }
 
@@ -1751,7 +1781,10 @@ $(document).ready(function () {
           title: 'Error',
           text: xhr.responseJSON?.message || 'Error inesperado.'
         });
-      }
+      },
+      complete: function () {
+            $submitBtn.prop('disabled', false).html('Asignar revisión');
+        }
     });
   });
 
@@ -1916,6 +1949,9 @@ $(document).ready(function () {
   $('#FormCertificadoFirmado').on('submit', function (e) {
     e.preventDefault();
     var formData = new FormData(this);
+    //deshabilita el boton al guardar
+    const $submitBtn = $(this).find('button[type="submit"]');
+    $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');// Cambiar nombre
 
     $.ajax({
       url: '/certificados/exportacion/documento',
@@ -1963,7 +1999,11 @@ $(document).ready(function () {
           });
         }
 
-      }
+      },
+      complete: function () {
+            // Reset botón
+            $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');
+        }
     });
 
   });
@@ -2219,6 +2259,9 @@ Estimado cliente, envío a usted el siguiente pre certificado con codificación 
   //REGISTRAR VISTO BUENO
   $(document).on('submit', '#formVobo', function (e) {
     e.preventDefault();
+    //deshabilita el boton al guardar
+    const $submitBtn = $(this).find('button[type="submit"]');
+    $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');
 
     $.ajax({
       url: '/certificados/guardar-vobo',
@@ -2253,7 +2296,11 @@ Estimado cliente, envío a usted el siguiente pre certificado con codificación 
             confirmButton: 'btn btn-danger'
           }
         });
-      }
+      },
+      complete: function () {
+            // Reset botón
+            $submitBtn.prop('disabled', false).html('Registrar');
+        }
     });
   });
 

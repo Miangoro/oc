@@ -21,7 +21,6 @@ use App\Models\solicitudTipo;
 use App\Models\User;
 use App\Models\carousel;
 use App\Models\empresa;
-use App\Models\RevisionDictamen;
 use App\Models\mensajes_dashboard;
 
 use Carbon\Carbon;
@@ -108,8 +107,6 @@ $revisiones = Revisor::select(
 // 2. Obtener usuarios
 $userIds = $revisiones->pluck('user_id')->unique();
 $usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
-
-
 
 
     $hoy = Carbon::today(); // Solo la fecha, sin hora.
@@ -235,7 +232,8 @@ $serviciosInstalacion = SolicitudesModel::with(['inspeccion', 'instalacion'])
 
 
 $pendientesRevisarCertificadosConsejo = Revisor::where('decision', 'Pendiente')
-    ->where('id_revisor', auth()->id())
+    //->where('id_revisor', auth()->id())
+    ->where('id_revisor', Auth::id())
     ->get();
 
 
@@ -243,46 +241,46 @@ $pendientesRevisarCertificadosConsejo = Revisor::where('decision', 'Pendiente')
     $maquiladora = maquiladores_model::with('maquiladora')->where('id_maquilador',$empresaId)->get();
     $imagenes = carousel::orderBy('orden')->get();
     $mensajes = mensajes_dashboard::where(function($query) {
-    $query->where('id_usuario_destino', auth()->id())
+    //$query->where('id_usuario_destino', auth()->id())
+    $query->where('id_usuario_destino', Auth::id())
               ->orWhereNull('id_usuario_destino'); // globales
     })->where('activo', 1)
       ->orderBy('orden')
       ->get();
 
 
-
     ///REVISIONES UI
-        /// REVISIONES UI
-        $revisionActa = inspecciones::with(['solicitud'])
-            ->where('fecha_servicio', '>', '2025-09-01')
-            ->get()
-            ->map(function ($inspeccion) {
-                // Última revisión si existe
-                $ultimaRevision = $inspeccion->revisionesActas
-                    ->sortByDesc('numero_revision')
-                    ->first();
+    $revisionActa = inspecciones::with(['solicitud'])
+        ->where('fecha_servicio', '>', '2025-09-01')
+        ->get()
+        ->map(function ($inspeccion) {
+            // Última revisión si existe
+            $ultimaRevision = $inspeccion->revisionesActas
+                ->sortByDesc('numero_revision')
+                ->first();
 
-                $inspeccion->ultima_revision = $ultimaRevision ? [
-                    'numero_revision' => $ultimaRevision->numero_revision,
-                    'decision'        => $ultimaRevision->decision,
-                    'usuario'         => $ultimaRevision->user->name ?? 'Sin asignar',
-                ] : null;
+            $inspeccion->ultima_revision = $ultimaRevision ? [
+                'numero_revision' => $ultimaRevision->numero_revision,
+                'decision'        => $ultimaRevision->decision,
+                'usuario'         => $ultimaRevision->user->name ?? 'Sin asignar',
+            ] : null;
 
-                // URL del acta (69)
-                $urls = $inspeccion->solicitud->documentacion(69)->pluck('url')->toArray();
-                $inspeccion->url_acta = empty($urls) ? 'Sin subir' : implode(', ', $urls);
+            // URL del acta (69)
+            $urls = $inspeccion->solicitud->documentacion(69)->pluck('url')->toArray();
+            $inspeccion->url_acta = empty($urls) ? 'Sin subir' : implode(', ', $urls);
 
-                return $inspeccion;
-            })
-            ->filter(function ($inspeccion) {
-                // Mantener si no tiene revisiones o la última está pendiente
-                return $inspeccion->revisionesActas->isEmpty() 
-                    || ($inspeccion->ultima_revision && $inspeccion->ultima_revision['decision'] === 'Pendiente');
-            })
-            ->sortByDesc(function ($inspeccion) {
-                // Ordenar por número de folio
-                return intval(substr($inspeccion->solicitud->folio ?? 'SOL-0', 4));
-            });
+            return $inspeccion;
+        })
+        ->filter(function ($inspeccion) {
+            // Mantener si no tiene revisiones o la última está pendiente
+            return $inspeccion->revisionesActas->isEmpty() 
+                || ($inspeccion->ultima_revision && $inspeccion->ultima_revision['decision'] === 'Pendiente');
+        })
+        ->sortByDesc(function ($inspeccion) {
+            // Ordenar por número de folio
+            return intval(substr($inspeccion->solicitud->folio ?? 'SOL-0', 4));
+        });
+
 
     return view('content.dashboard.dashboards-analytics', compact('clientes','empresaId','actasSinActivarHologramas','maquiladora','maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado', 'imagenes', 'mensajes', 'revisionActa'));
   }
@@ -322,7 +320,8 @@ public function revisionesPorMes(Request $request)
         $expo = $grupo->where('tipo_certificado', 3)->where('decision', '!=', 'Pendiente')->sum('total');
         $pendientes = $grupo->where('decision', 'Pendiente')->sum('total');
 
-        $classTd = $revisor?->id == auth()->id() ? 'bg-primary text-white fw-bold' : '';
+        //$classTd = $revisor?->id == auth()->id() ? 'bg-primary text-white fw-bold' : '';
+        $classTd = $revisor?->id == Auth::id() ? 'bg-primary text-white fw-bold' : '';
 
         $rolBadge = match ($rol) {
             'Personal' => 'bg-label-info',
@@ -362,6 +361,7 @@ public function revisionesPorMes(Request $request)
 
     return response()->json(['html' => $html]);
 }
+
 
 
 public function estadisticasCertificados(Request $request)

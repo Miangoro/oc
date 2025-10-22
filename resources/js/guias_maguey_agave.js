@@ -689,7 +689,7 @@ $(function () {
               confirmButton: 'btn btn-primary'
             }
           });
-          $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');//boton deshabilitado
+          $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');//boton habilitado
         },
         error: function (xhr) {
           Swal.fire({
@@ -700,7 +700,7 @@ $(function () {
               confirmButton: 'btn btn-danger'
             }
           });
-           $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');//boton deshabilitado
+           $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');//boton habilitado
         }
 
       });
