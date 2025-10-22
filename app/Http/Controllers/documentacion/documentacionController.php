@@ -83,6 +83,9 @@ class documentacionController extends Controller
       'Productor de Mezcal' => 'Productor de mezcal.png',
       'Envasador de Mezcal' => 'Envasador de mezcal.png',
       'Comercializador de Mezcal' => 'Comercializador de mezcal.png',
+      'Productor de bebidas alcohólicas que contienen Mezcal' => 'Comercializador de mezcal.png',
+      'Envasador de bebidas alcohólicas que contienen Mezcal' => 'Comercializador de mezcal.png',
+      'Comercializador de bebidas alcohólicas que contienen Mezcal' => 'Comercializador de mezcal.png',
     
   ];
 
