@@ -1394,7 +1394,7 @@
                                                     {{ $inspeccion->ultima_revision['decision'] ?? 'Sin revisión' }}
                                                 </td>
                                                 <td>
-
+@can('Asignar revisor de acta')
      @if ($inspeccion->id_inspeccion 
         && $inspeccion->url_acta != 'Sin subir'
         && (!$inspeccion->ultima_revision || $inspeccion->ultima_revision['decision'] === 'Pendiente'))
@@ -1414,8 +1414,7 @@
     @else
         Asigna un servicio y sube un acta
     @endif
-    }
-
+@endcan
                                                 </td>
                                             </tr>
                                         @endforeach

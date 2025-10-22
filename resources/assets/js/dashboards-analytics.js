@@ -875,6 +875,7 @@
 
 
 
+//ASIGNAR REVISOR DESDE EL INICIO
 $.ajaxSetup({
   headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -933,7 +934,9 @@ $('#asignarRevisorForm').on('submit', function (e) {
     });
 });
 
-    // Line Chart
+
+
+// Line Chart
   // --------------------------------------------------------------------
   function cargarDatosServicios(anioSeleccionado) {
     $.get('/estadisticas/servicios', { year: anioSeleccionado }, function(data) {
