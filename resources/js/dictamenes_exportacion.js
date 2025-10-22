@@ -1193,6 +1193,80 @@ $(document).on('click', '.pdfActa', function () {
 
 
 
+/*
+///DESACTIVAR BOTON DE REGISTRO GLOBAL
+$(document).ready(function () {
+  // Intercepta todos los formularios con botón submit
+  $(document).on('submit', 'form', function (e) {
+    e.preventDefault();
+
+    const $form = $(this);
+    const $submitBtn = $form.find('button[type="submit"]');
+
+    // Evitar doble submit
+    if ($submitBtn.prop('disabled')) return;
+
+    // Deshabilitar el botón y mostrar loader
+    const originalBtnText = $submitBtn.html();
+    $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');
+
+    // Revisar si tiene FormData (para archivos) o serialize() normal
+    let ajaxData;
+    let processData = true;
+    let contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
+    if ($form.find('input[type="file"]').length > 0) {
+      ajaxData = new FormData(this);
+      processData = false;
+      contentType = false;
+    } else {
+      ajaxData = $form.serialize();
+    }
+
+    $.ajax({
+      url: $form.attr('action'),
+      method: $form.attr('method') || 'POST',
+      data: ajaxData,
+      processData: processData,
+      contentType: contentType,
+      success: function (response) {
+        // Opcional: cerrar modal si existe
+        $form.closest('.modal').modal('hide');
+        // Reset del formulario
+        $form[0].reset();
+        // Recargar cualquier DataTable que esté presente
+        if (typeof dataTable !== 'undefined') dataTable.ajax.reload(null, false);
+
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.message || 'Guardado correctamente',
+          customClass: { confirmButton: 'btn btn-primary' }
+        });
+      },
+      error: function (jqXHR) {
+        let errorMessage = 'No se pudo registrar. Por favor, verifica los datos.';
+        try {
+          let response = JSON.parse(jqXHR.responseText);
+          errorMessage = response.message || errorMessage;
+        } catch (e) {  }
+
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: errorMessage,
+          customClass: { confirmButton: 'btn btn-danger' }
+        });
+      },
+      complete: function () {
+        // Volver a habilitar el botón
+        $submitBtn.prop('disabled', false).html(originalBtnText);
+      }
+    });
+  });
+});
+*/
+
+
 
 
 });//end-function(jquery)
