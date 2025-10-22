@@ -180,7 +180,7 @@ public function index(Request $request)
                         "<b>Plantas actuales: </b>" .$user->numero_plantas."<br>".
                         "<b>No. anterior: </b>" .$user->num_anterior."<br>".
                         "<b>Comercializadas: </b>" .$user->num_comercializadas."<br>".
-                        "<b>Mesmas: </b>" .$user->mermas_plantas."<br>".
+                        "<b>Mermas: </b>" .$user->mermas_plantas."<br>".
                         "<b>%ART: </b>" .$user->art."<br>".
                         "<b>Kg. maguey: </b>" .$user->kg_magey."<br>".
                         "<b>Fecha ingreso: </b>" .$user->fecha_ingreso,
