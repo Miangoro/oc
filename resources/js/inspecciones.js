@@ -413,7 +413,21 @@ $(function () {
           let acciones =
             '<div class="d-flex align-items-center gap-50">' +
             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-            '<div class="dropdown-menu dropdown-menu-end m-0">' +
+            '<div class="dropdown-menu dropdown-menu-end m-0">';
+
+            if (puedeAsignarRevisor) {
+              // Mostrar botón solo si hay inspección y no hay revisión o está pendiente
+              if (full['id_inspeccion'] && full['url_acta'] != 'Sin subir' &&
+                (!full['ultima_revision'] || full['ultima_revision']['decision'] === 'Pendiente')) {
+                  acciones += `<a data-id="${full['id_inspeccion']}" data-folio="${full['num_servicio']}"
+                                  data-bs-toggle="modal" data-bs-target="#asignarRevisorModal"
+                                  class="dropdown-item waves-effect text-dark">
+                                  <i class="text-warning ri-user-search-fill"></i> Asignar revisor acta
+                              </a>`;
+              }
+            }
+            
+            acciones +=
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Trazabilidad</a>` +
             // Botón de Validar Solicitud
             `<a
@@ -430,20 +444,6 @@ $(function () {
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${full['razon_social']}', '${full['folio_info']}','${full['inspectorName']}','${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['id_inspeccion']}', '${full['tipo']}', '${full['razon_social']}', '${full['id_tipo']}','${full['folio_info']}', '${full['num_servicio_info']}','${full['inspectorName']}')" href="javascript:;" class="dropdown-item"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>`;
 
-            // Mostrar "Asignar revisión" solo si existe inspección y acta
-            /*if (full['id_inspeccion'] !== '0' && full['url_acta'] !== 'Sin subir') {
-              acciones +=
-                `<a data-id-solicitud="${full['id_solicitud']}" 
-                    data-id-inspeccion="${full['id_inspeccion']}" 
-                    data-folio="${full['num_servicio']}" 
-                    data-tipo="${full['tipo']}"
-                    data-id-acta="${full['id_acta']}"
-                    data-bs-toggle="modal" 
-                    data-bs-target="#asignarRevisorModal"
-                    class="dropdown-item waves-effect text-black asignar-revision">
-                    <i class="ri-user-search-fill text-warning"></i> Asignar revisión
-                </a>`;
-            }*/
 
             //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['tipo_instalacion']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
             //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="editModalActaProduccion('${full['id_acta']}')" href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px textStatus"></i>Editar Acta</a>` +
@@ -674,31 +674,86 @@ $(function () {
 
 
 
-  ///FORMATO PDF SOLICITUD SERVICIOS
-  $(document).on('click', '.pdfSolicitud', function () {
-    var id = $(this).data('id');
-    var folio = $(this).data('folio');
-    var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
-    var iframe = $('#pdfViewer');
-    var spinner = $('#cargando');
+///FORMATO PDF SOLICITUD SERVICIOS
+$(document).on('click', '.pdfSolicitud', function () {
+  var id = $(this).data('id');
+  var folio = $(this).data('folio');
+  var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
 
-    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-    spinner.show();
-    iframe.hide();
+  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+  spinner.show();
+  iframe.hide();
 
-    //Cargar el PDF con el ID
-    iframe.attr('src', pdfUrl);
-    //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', pdfUrl).show();
+  //Cargar el PDF con el ID
+  iframe.attr('src', pdfUrl);
+  //Configurar el botón para abrir el PDF en una nueva pestaña
+  $("#NewPestana").attr('href', pdfUrl).show();
 
-    $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
-    $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
-    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-    iframe.on('load', function () {
-      spinner.hide();
-      iframe.show();
-    });
+  $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
+  $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
+  //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+  iframe.on('load', function () {
+    spinner.hide();
+    iframe.show();
   });
+});
+
+
+
+///obtener revisores UI
+$(document).on('click', 'a[data-bs-target="#asignarRevisorModal"]', function () {
+    const idInspeccion = $(this).data('id');
+    const folio = $(this).data('folio');
+
+    $('#folio_servicio').html(`<span class="badge bg-info">${folio}</span>`);
+    $('#id_inspeccion').val(idInspeccion);
+
+    // Limpiar select
+    $('#id_revisor').html('<option value="" disabled selected>Selecciona un revisor</option>').trigger('change');
+
+    // AJAX para obtener revisores
+    $.get('/revisores-disponibles/' + idInspeccion, function (revisores) {
+        revisores.forEach(r => {
+            $('#id_revisor').append(`<option value="${r.id}">${r.name}</option>`);
+        });
+        $('#id_revisor').trigger('change');
+    });
+});
+// Inicializar select2 al mostrar modal
+$('#asignarRevisorModal').on('shown.bs.modal', function () {
+    $('#id_revisor').select2({
+        dropdownParent: $('#asignarRevisorModal'),
+        width: '100%'
+    });
+});
+
+///ASIGNAR REVISOR
+$('#asignarRevisorForm').on('submit', function (e) {
+    e.preventDefault();
+    const formData = $(this).serialize();
+
+    $.post('/asignar-revisor-acta', formData, function (res) {
+        $('#asignarRevisorModal').modal('hide');
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: res.message,
+            customClass: { confirmButton: 'btn btn-primary' }
+        });
+        $('#asignarRevisorForm')[0].reset();
+        $('.datatables-users').DataTable().ajax.reload();
+    }).fail(function (xhr) {
+        $('#asignarRevisorModal').modal('hide');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: xhr.responseJSON?.message || 'Error inesperado.'
+        });
+    });
+});
+
 
 
 
@@ -2505,94 +2560,6 @@ $(function () {
 
 
 
-
-
-
-
-///ASIGNAR REVISOR
-/*
-// Manejar el clic en los enlaces con clase "validar-solicitudes"
-  $(document).on('click', '.asignar-revision', function () {
-    var id_solicitud = $(this).data('id-solicitud');
-    var idInspeccion = $(this).data('id-inspeccion');
-    var folio = $(this).data('folio');
-    var tipo_solicitud = $(this).data('tipo');
-    
-  // PASAR DATOS AL MODAL al abrir
-  $('#asignarRevisorModal').on('show.bs.modal', function (event) {
-    const button = $(event.relatedTarget); // botón que abrió el modal
-    const idInspeccion = button.data('id-inspeccion');
-    const folio = button.data('folio');
-
-    // Asignar valores al modal
-    $('#id_inspeccion').val(idInspeccion);
-    $('#folio').html(folio ? `<span class="badge bg-info">${folio}</span>` : '');
-
-    // Reset del formulario y Select2
-    $('#asignarRevisorForm')[0].reset();
-    $('.select2').val(null).trigger('change');
-
-    // Mostrar formulario
-    $('#asignarRevisorForm').show();
-  });
-
-  // Función para actualizar estilo visual de Select2 si quieres "fondo amarillo cuando vacío"
-  function actualizarEstiloVisualSelects() {
-    $('.select2').each(function () {
-      const container = $(this).next('.select2-container');
-      if (!$(this).val()) {
-        container.addClass('select2-empty');
-      } else {
-        container.removeClass('select2-empty');
-      }
-    });
-  }
-
-  // Aplicar estilo al cambiar selección
-  $('.select2').on('change', actualizarEstiloVisualSelects);
-  actualizarEstiloVisualSelects();
-
-  // SUBMIT DEL FORMULARIO
-  $('#asignarRevisorForm').on('submit', function (e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-
-    // Asegurarse de enviar el _token
-    formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
-
-    $.ajax({
-      url: '/revision/asignar-ui',
-      method: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function(res){
-        console.log(res);
-        $('#asignarRevisorModal').modal('hide');
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: res.message,
-          customClass: { confirmButton: 'btn btn-primary' }
-        });
-        $('#asignarRevisorForm')[0].reset();
-        $('.select2').val(null).trigger('change');
-        actualizarEstiloVisualSelects();
-        $('.datatables-users').DataTable().ajax.reload();
-      },
-      error: function(xhr){
-        $('#asignarRevisorModal').modal('hide');
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: xhr.responseJSON?.message || 'Error inesperado.'
-        });
-      }
-    });
-  });
-
-});
-*/
 
 
 

@@ -895,6 +895,9 @@ Route::get('/etiqueta-barrica/{id_inspeccion}', 'etiqueta_barrica')->name('etiqu
    /*  Route::get('/getDatosSolicitud/{id_solicitud}',  'getDatosSolicitud')->name('getDatosSolicitud'); */
     //borrar documentos 69 y 70
     Route::delete('/eliminar-acta/{id_solicitud}/{id_documento}/{id}', [inspeccionesController::class, 'eliminarActa']);
+
+    Route::get('/revisores-disponibles/{id_inspeccion}', 'revisores')->name('revisor UI');
+    Route::post('/asignar-revisor-acta', 'asignarRevisor')->name('asignar-revisor-acta');
 });
 
 //-------------------HOLOGRAMAS - SOLICITUD DE HOLOGRAMAS-------------------

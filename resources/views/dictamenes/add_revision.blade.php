@@ -38,6 +38,8 @@
 
 @php
   use App\Helpers\Helpers;
+  use Illuminate\Support\Facades\Auth;
+  $userId = Auth::id();
 @endphp
 
 <style>
@@ -259,9 +261,11 @@
     </div>
 
         <div class="d-flex justify-content-center mt-3">
+          @if( $userId == 1 || $userId == 319 || $userId == $revision->id_revisor ) 
             <button type="submit" class="btn btn-primary me-2 waves-effect waves-light">
                 <i class="ri-add-line"></i> Registrar {{ $revision->numero_revision }}ª revisión
             </button>
+          @endif
             <a href="/revision/unidad_inspeccion" class="btn btn-danger waves-effect">
                 <i class="ri-close-line"></i> Cancelar
             </a>

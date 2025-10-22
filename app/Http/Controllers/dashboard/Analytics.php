@@ -21,7 +21,9 @@ use App\Models\solicitudTipo;
 use App\Models\User;
 use App\Models\carousel;
 use App\Models\empresa;
+use App\Models\RevisionDictamen;
 use App\Models\mensajes_dashboard;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +31,7 @@ use Illuminate\Support\Facades\DB;
 
 class Analytics extends Controller
 {
+
   public function index()
   {
     //$datos = solicitudesModel::All();
@@ -109,7 +112,6 @@ $usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
 
 
 
-
     $hoy = Carbon::today(); // Solo la fecha, sin hora.
     $fechaLimite = $hoy->copy()->addDays(5); // Fecha límite en 5 días.
 
@@ -142,7 +144,6 @@ $usuarios = User::whereIn('id', $userIds)->get()->keyBy('id');
     $certificadoInstalacionesSinEscaneado = Certificados::whereDoesntHave('certificadoEscaneado')->orderByDesc('fecha_emision')->get();
 
 
-
     $empresaId = Auth::user()?->empresa?->id_empresa;
 
 $TotalCertificadosExportacionPorMes = Certificado_Exportacion::with('dictamen.inspeccione.solicitud')
@@ -172,9 +173,6 @@ $TotalCertificadosExportacionPorMes = Certificado_Exportacion::with('dictamen.in
 
 
 
-
-
-
 // Traer las inspecciones futuras con su inspector
 $inspecciones = inspecciones::with('inspector')
     ->whereHas('inspector') // asegura que tenga inspector
@@ -201,7 +199,6 @@ $marcasConHologramas = marcas::with('solicitudHolograma')
         $q->where('id_empresa', $empresaId); // <-- filtro en la tabla de la relación
     })
     ->get();
-
 
 
 
@@ -236,6 +233,7 @@ $serviciosInstalacion = SolicitudesModel::with(['inspeccion', 'instalacion'])
     });
 
 
+
 $pendientesRevisarCertificadosConsejo = Revisor::where('decision', 'Pendiente')
     ->where('id_revisor', auth()->id())
     ->get();
@@ -250,8 +248,47 @@ $pendientesRevisarCertificadosConsejo = Revisor::where('decision', 'Pendiente')
     })->where('activo', 1)
       ->orderBy('orden')
       ->get();
-    return view('content.dashboard.dashboards-analytics', compact('clientes','empresaId','actasSinActivarHologramas','maquiladora','maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado', 'imagenes', 'mensajes'));
+
+
+
+    ///REVISIONES UI
+        /// REVISIONES UI
+        $revisionActa = inspecciones::with(['solicitud'])
+            ->where('fecha_servicio', '>', '2025-09-01')
+            ->get()
+            ->map(function ($inspeccion) {
+                // Última revisión si existe
+                $ultimaRevision = $inspeccion->revisionesActas
+                    ->sortByDesc('numero_revision')
+                    ->first();
+
+                $inspeccion->ultima_revision = $ultimaRevision ? [
+                    'numero_revision' => $ultimaRevision->numero_revision,
+                    'decision'        => $ultimaRevision->decision,
+                    'usuario'         => $ultimaRevision->user->name ?? 'Sin asignar',
+                ] : null;
+
+                // URL del acta (69)
+                $urls = $inspeccion->solicitud->documentacion(69)->pluck('url')->toArray();
+                $inspeccion->url_acta = empty($urls) ? 'Sin subir' : implode(', ', $urls);
+
+                return $inspeccion;
+            })
+            ->filter(function ($inspeccion) {
+                // Mantener si no tiene revisiones o la última está pendiente
+                return $inspeccion->revisionesActas->isEmpty() 
+                    || ($inspeccion->ultima_revision && $inspeccion->ultima_revision['decision'] === 'Pendiente');
+            })
+            ->sortByDesc(function ($inspeccion) {
+                // Ordenar por número de folio
+                return intval(substr($inspeccion->solicitud->folio ?? 'SOL-0', 4));
+            });
+
+    return view('content.dashboard.dashboards-analytics', compact('clientes','empresaId','actasSinActivarHologramas','maquiladora','maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado', 'imagenes', 'mensajes', 'revisionActa'));
   }
+
+
+
 
 public function revisionesPorMes(Request $request)
 {
