@@ -25,7 +25,7 @@ class Guias extends Model
         'mermas_plantas',
         'edad',
         'art',
-        'kg_magey',
+        'kg_maguey',
         'no_lote_pedido',
         'fecha_corte',
         'observaciones',
