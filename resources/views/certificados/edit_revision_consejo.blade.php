@@ -770,7 +770,7 @@
                                                 Col. Otra no especificada en el catálogo.
                                                 C.P. 58341. Morelia, Michoacán. México.</td>
                                         @elseif($pregunta->filtro == 'alcance')
-                                            <td> NOM070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones.</td>
+                                            <td> NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones.</td>
                                         @elseif($pregunta->filtro == 'cliente')
                                             <td>
                                                 {{ $datos?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->filter(fn($cliente) => !empty($cliente->numero_cliente))->first()?->numero_cliente ?? 'Sin asignar' }}
