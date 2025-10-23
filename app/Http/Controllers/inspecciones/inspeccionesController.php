@@ -202,8 +202,14 @@ public function index(Request $request)
                 });
 
                 //Buscar lote envasado -> granel
-                foreach ($loteIds as $idLote) {
+                /* foreach ($loteIds as $idLote) {
                     $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
+                } */
+               foreach ($loteIds as $idLote) {
+                $q->orWhere(function ($sub) use ($idLote) {
+                    $sub->where('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%')
+                    ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLote . '"%');
+                });
                 }
                 //Buscar lote envasado
                 foreach ($loteEnvIds as $idLoteEnv) {
