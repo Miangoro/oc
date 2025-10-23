@@ -251,7 +251,7 @@ $(function () {
             if (estatus == 1) {
               return `
                 <button class="btn btn-sm btn-danger disabled">
-                  <i class="ri-close-line ri-20px me-1"></i> Cancelado
+                  <i class="ri-close-line ri-20px me-1"></i>Cancelado
                 </button>
               `;
             }

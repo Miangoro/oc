@@ -589,7 +589,7 @@ public function exportarDirectorio(Request $request)
                 $request->validate([
                     'id_certificado' => 'required|exists:certificados,id_certificado',
                     'id_dictamen' => 'required|integer',
-                    'num_certificado' => 'required|string|min:19',
+                    'num_certificado' => 'required|string|min:8',
                     'fecha_emision' => 'required|date',
                     'fecha_vigencia' => 'required|date',
                     'maestro_mezcalero' => 'nullable|string|max:60',
@@ -606,8 +606,8 @@ public function exportarDirectorio(Request $request)
                 $observacionesActuales['observaciones'] = $request->observaciones; //Actualiza solo 'observaciones'
                 $reexpedir->observaciones = json_encode($observacionesActuales);
                 $reexpedir->save();
-
                 return response()->json(['message' => 'Cancelado correctamente.']);
+                
             } else if ($request->accion_reexpedir == '2') {
                 $reexpedir->estatus = 1;
                 $observacionesActuales = json_decode($reexpedir->observaciones, true);

@@ -354,96 +354,96 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            // Si está cancelado
-            if (full['estatus'] == 1) {
-              if (window.puedeVerTrazabilidadCertificadoGranel) {
-                return `
-                  <div class="d-flex align-items-center gap-50">
-                    <button class="btn btn-sm btn-danger disabled">Cancelado</button>
-                    <div class="dropdown-menu dropdown-menu-end m-0">
-                      <a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
-                        data-bs-toggle="modal" data-bs-target="#ModalTracking"
-                        class="dropdown-item waves-effect text-black trazabilidad">
-                        <i class="ri-history-line text-secondary"></i> Trazabilidad
-                      </a>
-                    </div>
-                  </div>
-                `;
-              } else {
-                return `<button class="btn btn-sm btn-danger disabled">Cancelado</button>`;
-              }
-            }
-
-            // Acciones si no está cancelado
+            let cancelado = full['estatus'] == 1;
             let acciones = '';
 
-            if (window.puedeEditarCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar"
-                              data-bs-toggle="modal" data-bs-target="#ModalEditar">
-                              <i class="ri-edit-box-line ri-20px text-info"></i> Editar
-                            </a>`;
+            // Construir acciones según permisos
+            if (cancelado) {
+                /*if (window.puedeSubirCertificadoGranel) {
+                    acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
+                                    class="dropdown-item waves-effect text-dark subirPDF"
+                                    data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
+                                    <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF
+                                </a>`;
+                }*/
+                if (window.puedeVerTrazabilidadCertificadoGranel) {
+                    acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
+                                    data-bs-toggle="modal" data-bs-target="#ModalTracking"
+                                    class="dropdown-item waves-effect text-black trazabilidad">
+                                    <i class="ri-history-line text-secondary"></i> Trazabilidad
+                                </a>`;
+                }
+            } else {
+                /*if (window.puedeEditarCertificadoGranel) {
+                    acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar"
+                                    data-bs-toggle="modal" data-bs-target="#ModalEditar">
+                                    <i class="ri-edit-box-line ri-20px text-info"></i> Editar
+                                </a>`;
+                }*/
+                /*if (window.puedeSubirCertificadoGranel) {
+                    acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
+                                    class="dropdown-item waves-effect text-dark subirPDF"
+                                    data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
+                                    <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF
+                                </a>`;
+                }
+                if (window.puedeAsignarRevisorCertificadoGranel) {
+                    acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
+                                    class="dropdown-item waves-effect text-black"
+                                    data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">
+                                    <i class="ri-user-search-fill text-warning"></i> Asignar revisor
+                                </a>`;
+                }*/
+                if (window.puedeVerTrazabilidadCertificadoGranel) {
+                    acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
+                                    data-bs-toggle="modal" data-bs-target="#ModalTracking"
+                                    class="dropdown-item waves-effect text-black trazabilidad">
+                                    <i class="ri-history-line text-secondary"></i> Trazabilidad
+                                </a>`;
+                }
+                /*if (window.puedeReexpedirCertificadoGranel) {
+                    acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir"
+                                    data-bs-toggle="modal" data-bs-target="#ModalReexpedir">
+                                    <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar
+                                </a>`;
+                }
+                if (window.puedeEliminarCertificadoGranel) {
+                    acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar">
+                                    <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
+                                </a>`;
+                }*/
             }
 
-            if (window.puedeSubirCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-dark subirPDF"
-                              data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
-                              <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF
-                            </a>`;
-            }
-
-            if (window.puedeAsignarRevisorCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
-                              class="dropdown-item waves-effect text-black"
-                              data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">
-                              <i class="ri-user-search-fill text-warning"></i> Asignar revisor
-                            </a>`;
-            }
-
-            if (window.puedeVerTrazabilidadCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
-                              data-bs-toggle="modal" data-bs-target="#ModalTracking"
-                              class="dropdown-item waves-effect text-black trazabilidad">
-                              <i class="ri-history-line text-secondary"></i> Trazabilidad
-                            </a>`;
-            }
-
-            if (window.puedeReexpedirCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir"
-                              data-bs-toggle="modal" data-bs-target="#ModalReexpedir">
-                              <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar
-                            </a>`;
-            }
-
-            if (window.puedeEliminarCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar">
-                              <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
-                            </a>`;
-            }
-
-            // Si no tiene permisos
+            // Casos de botones según estatus y permisos
             if (!acciones.trim()) {
-              return `
-                <button class="btn btn-sm btn-secondary" disabled>
-                  <i class="ri-lock-line ri-20px me-1"></i> Opciones
-                </button>
-              `;
+                if (cancelado) {
+                    // Cancelado sin permisos
+                    return `<button class="btn btn-sm btn-danger" disabled>
+                                <i class="ri-close-line ri-20px me-1"></i>Cancelado
+                            </button>`;
+                } else {
+                    // Activo sin permisos
+                    return `<button class="btn btn-sm btn-secondary" disabled>
+                                <i class="ri-lock-2-line ri-20px me-1"></i>Opciones
+                            </button>`;
+                }
+            } else {
+                // Activo o cancelado con permisos
+                return `<div class="d-flex align-items-center gap-50">
+                            <button class="btn btn-sm btn-${cancelado ? 'danger' : 'info'} dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="${cancelado ? 'ri-close-line' : 'ri-settings-5-fill'} ri-20px me-1"></i>
+                                ${cancelado ? 'Cancelado' : 'Opciones'}
+                                ${cancelado ? '' : '<i class="ri-arrow-down-s-fill ri-20px"></i>'}
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end m-0">
+                                ${acciones}
+                            </div>
+                        </div>`;
             }
-
-            // Si tiene acciones
-            return `
-              <div class="d-flex align-items-center gap-50">
-                <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                  <i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end m-0">
-                  ${acciones}
-                </div>
-              </div>
-            `;
           }
-
         }
       ],
+
       order: [[1, 'desc']],
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
@@ -1169,19 +1169,18 @@ $('#asignarRevisorForm').on('submit', function (e) {
           }
 
           let cert = datos.certificado;
+          //obtener el dictamen ya asignado
+          const $select = $('#rex_id_dictamen');
+          // Eliminar opciones anteriores agregadas dinámicamente, pero dejar los disponibles
+          $select.find('option[data-dinamico="true"]').remove();
 
-//obtener el dictamen ya asignado
-const $select = $('#rex_id_dictamen');
-// Eliminar opciones anteriores agregadas dinámicamente, pero dejar los disponibles
-$select.find('option[data-dinamico="true"]').remove();
-
-// Si el dictamen guardado no está en los disponibles, agregarlo temporalmente
-if (!$select.find(`option[value="${cert.id_dictamen}"]`).length) {
-    const texto = `${datos.num_dictamen} | ${datos.folio ?? 'Sin folio'}`;
-    $select.append(`<option value="${cert.id_dictamen}" selected data-dinamico="true">${texto}</option>`);
-} else {
-    $select.val(cert.id_dictamen).trigger('change');
-}
+          // Si el dictamen guardado no está en los disponibles, agregarlo temporalmente
+          if (!$select.find(`option[value="${cert.id_dictamen}"]`).length) {
+              const texto = `${datos.num_dictamen} | ${datos.folio ?? 'Sin folio'}`;
+              $select.append(`<option value="${cert.id_dictamen}" selected data-dinamico="true">${texto}</option>`);
+          } else {
+              $select.val(cert.id_dictamen).trigger('change');
+          }
 
           $('#rex_id_dictamen').val(cert.id_dictamen).trigger('change');
           $('#rex_numero_certificado').val(cert.num_certificado);
@@ -1264,8 +1263,8 @@ if (!$select.find(`option[value="${cert.id_dictamen}"]`).length) {
               message: 'El número de certificado es obligatorio.'
             },
             stringLength: {
-              min: 19,
-              message: 'Debe tener al menos 19 caracteres.'
+              min: 8,
+              message: 'Debe tener al menos 8 caracteres.'
             }
           }
         },

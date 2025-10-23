@@ -488,12 +488,13 @@ public function reexpedir(Request $request)
 
         if ($request->accion_reexpedir == '2') {
             $request->validate([
-            'id_firmante' => 'required|integer',
-            'id_dictamen' => 'required|integer',
-            'num_certificado' => 'required|string|min:19',
-            'fecha_emision' => 'required|date',
-            'fecha_vigencia' => 'required|date',
-            'observaciones' => 'nullable|string',
+                'id_certificado' => 'required|exists:certificados_granel,id_certificado',
+                'id_dictamen' => 'required|integer',
+                'num_certificado' => 'required|string|min:8',
+                'id_firmante' => 'required|integer',
+                'fecha_emision' => 'required|date',
+                'fecha_vigencia' => 'required|date',
+                //'observaciones' => 'nullable|string',
             ]);
         }
 
@@ -502,7 +503,7 @@ public function reexpedir(Request $request)
         $solicitud_emision = solicitudesModel::where('id_predio', $request->id_certificado)
             ->where('id_tipo', 12)
             ->first();
-        $dictamen = Dictamen_Granel::with('inspeccione.solicitud')->find($request['id_dictamen']);
+        $dictamen = Dictamen_Granel::with('inspeccione')->find($request->id_dictamen);
         $idLoteGranel = $dictamen->inspeccione->solicitud->id_lote_granel ?? null;
 
 

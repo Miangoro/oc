@@ -1220,7 +1220,7 @@ $(document).ready(function () {
       var id_certificado = $(this).data('id');
       var num_certificado = $(this).data('folio');
 
-      console.log('ID para reexpedir:', id_certificado);
+      //console.log('ID para reexpedir:', id_certificado);
       $('#rex_id_certificado').val(id_certificado);
       $('#tituloreexpedido').html('Reexpedir/Cancelar certificado <span class="badge bg-info">' + num_certificado + '</span>');
       $('#ModalReexpedir').modal('show');
