@@ -352,115 +352,127 @@ $(function () {
     });
   }
 
-  ///AGREGAR
-  $(function () {
-    // Configuración CSRF para Laravel
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
 
-    // Inicializar FormValidation
-    const form = document.getElementById('FormAgregar');
-    const fv = FormValidation.formValidation(form, {
-      fields: {
-        id_inspeccion: {
-          validators: {
-            notEmpty: {
-              message: 'El número de servicio es obligatorio.'
-            }
-          }
-        },
-        num_dictamen: {
-          validators: {
-            notEmpty: {
-              message: 'El número de dictamen es obligatorio.'
-            }
-          }
-        },
-        id_firmante: {
-          validators: {
-            notEmpty: {
-              message: 'El nombre del firmante es obligatorio.'
-            }
-          }
-        },
-        fecha_emision: {
-          validators: {
-            notEmpty: {
-              message: 'La fecha de emisión es obligatoria.'
-            },
-            date: {
-              format: 'YYYY-MM-DD',
-              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-            }
-          }
-        },
-        fecha_vigencia: {
-          validators: {
-            notEmpty: {
-              message: 'La fecha de vigencia es obligatoria.'
-            },
-            date: {
-              format: 'YYYY-MM-DD',
-              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-            }
+
+///AGREGAR
+$(function () {
+  // Configuración CSRF para Laravel
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
+  // Inicializar FormValidation
+  const form = document.getElementById('FormAgregar');
+  const fv = FormValidation.formValidation(form, {
+    fields: {
+      id_inspeccion: {
+        validators: {
+          notEmpty: {
+            message: 'El número de servicio es obligatorio.'
           }
         }
       },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating'
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function () {
-      var formData = new FormData(form);
-      $.ajax({
-        url: '/dictamenes-granel',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          // Ocultar el modal y resetear el formulario
-          $('#ModalAgregar').modal('hide');
-          $('#FormAgregar')[0].reset();
-          $('.select2').val(null).trigger('change');
-          dataTable.ajax.reload();
-          // Mostrar mensaje de éxito
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.message,
-            customClass: {
-              confirmButton: 'btn btn-primary'
-            }
-          });
-        },
-        error: function (xhr) {
-          const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
-          if (isDev) {
-              console.log('Error:', xhr);
+      num_dictamen: {
+        validators: {
+          notEmpty: {
+            message: 'El número de dictamen es obligatorio.'
           }
-          // Mostrar mensaje de error
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al registrar.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
         }
-      });
+      },
+      id_firmante: {
+        validators: {
+          notEmpty: {
+            message: 'El nombre del firmante es obligatorio.'
+          }
+        }
+      },
+      fecha_emision: {
+        validators: {
+          notEmpty: {
+            message: 'La fecha de emisión es obligatoria.'
+          },
+          date: {
+            format: 'YYYY-MM-DD',
+            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+          }
+        }
+      },
+      fecha_vigencia: {
+        validators: {
+          notEmpty: {
+            message: 'La fecha de vigencia es obligatoria.'
+          },
+          date: {
+            format: 'YYYY-MM-DD',
+            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+          }
+        }
+      }
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        eleInvalidClass: 'is-invalid',
+        rowSelector: '.form-floating'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    var formData = new FormData(form);
+
+  //deshabilita el boton al guardar
+  const $submitBtn = $(form).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');// Cambiar nombre
+
+    $.ajax({
+      url: '/dictamenes-granel',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Ocultar el modal y resetear el formulario
+        $('#ModalAgregar').modal('hide');
+        $('#FormAgregar')[0].reset();
+        $('.select2').val(null).trigger('change');
+        dataTable.ajax.reload();
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.message,
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      },
+      error: function (xhr) {
+        const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+        if (isDev) {
+            console.log('Error:', xhr);
+        }
+        // Mostrar mensaje de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al registrar.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      },
+      complete: function() {
+        $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');
+      }
     });
   });
+});
+
+
 
   ///ELIMINAR
   $(document).on('click', '.eliminar', function () {

@@ -373,119 +373,131 @@ $(function () {
     });
   }
 
-  ///AGREGAR
-  $(function () {
-    // Configuración CSRF para Laravel
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
 
-    // Inicializar FormValidation
-    const form = document.getElementById('FormAgregar');
-    const fv = FormValidation.formValidation(form, {
-      fields: {
-        id_inspeccion: {
-          validators: {
-            notEmpty: {
-              message: 'El número de servicio es obligatorio.'
-            }
-          }
-        },
-        num_dictamen: {
-          validators: {
-            notEmpty: {
-              message: 'El número de dictamen es obligatorio.'
-            }
-          }
-        },
-        id_firmante: {
-          validators: {
-            notEmpty: {
-              message: 'El nombre del firmante es obligatorio.'
-            }
-          }
-        },
-        fecha_emision: {
-          validators: {
-            notEmpty: {
-              message: 'La fecha de emisión es obligatoria.'
-            },
-            date: {
-              format: 'YYYY-MM-DD',
-              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-            }
-          }
-        },
-        fecha_vigencia: {
-          validators: {
-            notEmpty: {
-              message: 'La fecha de vigencia es obligatoria.'
-            },
-            date: {
-              format: 'YYYY-MM-DD',
-              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-            }
+
+///AGREGAR
+$(function () {
+  // Configuración CSRF para Laravel
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
+  // Inicializar FormValidation
+  const form = document.getElementById('FormAgregar');
+  const fv = FormValidation.formValidation(form, {
+    fields: {
+      id_inspeccion: {
+        validators: {
+          notEmpty: {
+            message: 'El número de servicio es obligatorio.'
           }
         }
       },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating'
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function () {
-      var formData = new FormData(form);
-      $.ajax({
-        url: '/dictamenes-envasado',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          // Ocultar y resetear el formulario
-          $('#ModalAgregar').modal('hide');
-          $('#FormAgregar')[0].reset();
-          $('.select2').val(null).trigger('change');
-          dataTable.ajax.reload(); //Recarga los datos del datatable
-
-          // Mostrar alerta de éxito
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.message,
-            customClass: {
-              confirmButton: 'btn btn-primary'
-            }
-          });
-        },
-        error: function (xhr) {
-          console.log('Error:', xhr);
-          // Mostrar alerta de error
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al registrar.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
+      num_dictamen: {
+        validators: {
+          notEmpty: {
+            message: 'El número de dictamen es obligatorio.'
+          }
         }
-      });
+      },
+      id_firmante: {
+        validators: {
+          notEmpty: {
+            message: 'El nombre del firmante es obligatorio.'
+          }
+        }
+      },
+      fecha_emision: {
+        validators: {
+          notEmpty: {
+            message: 'La fecha de emisión es obligatoria.'
+          },
+          date: {
+            format: 'YYYY-MM-DD',
+            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+          }
+        }
+      },
+      fecha_vigencia: {
+        validators: {
+          notEmpty: {
+            message: 'La fecha de vigencia es obligatoria.'
+          },
+          date: {
+            format: 'YYYY-MM-DD',
+            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+          }
+        }
+      }
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        eleInvalidClass: 'is-invalid',
+        rowSelector: '.form-floating'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    var formData = new FormData(form);
+
+  //deshabilita el boton al guardar
+  const $submitBtn = $(form).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');// Cambiar nombre
+
+    $.ajax({
+      url: '/dictamenes-envasado',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Ocultar y resetear el formulario
+        $('#ModalAgregar').modal('hide');
+        $('#FormAgregar')[0].reset();
+        $('.select2').val(null).trigger('change');
+        dataTable.ajax.reload(); //Recarga los datos del datatable
+
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.message,
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      },
+      error: function (xhr) {
+        console.log('Error:', xhr);
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al registrar.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      },
+      complete: function() {
+        $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');
+      }
     });
-    // Inicializar select2 OCULTO
-    //$('#id_empresa, #id_inspeccion, #id_lote_envasado, #fecha_emision, #fecha_vigencia, #fecha_servicio, #id_firmante').on('change', function () {
-    /*$('#id_inspeccion, #fecha_emision, #fecha_vigencia, #id_firmante').on('change', function () {
-        // Revalidar el campo cuando se cambia el valor del select2
-            fv.revalidateField($(this).attr('name'));
-    });*/
   });
+  // Inicializar select2 OCULTO
+  //$('#id_empresa, #id_inspeccion, #id_lote_envasado, #fecha_emision, #fecha_vigencia, #fecha_servicio, #id_firmante').on('change', function () {
+  /*$('#id_inspeccion, #fecha_emision, #fecha_vigencia, #id_firmante').on('change', function () {
+      // Revalidar el campo cuando se cambia el valor del select2
+          fv.revalidateField($(this).attr('name'));
+  });*/
+});
+
+
 
   ///ELIMINAR
   $(document).on('click', '.eliminar', function () {

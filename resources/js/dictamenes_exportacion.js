@@ -513,9 +513,9 @@ if (dt_user_table.length) {
 
 ///AGREGAR
 // Validación del formulario
-/*const form = document.getElementById('FormAgregar');//id del formulario
-const fv = FormValidation.formValidation(form, {*///se define el formulario
-FormValidation.formValidation(FormAgregar, {
+/*const form = document.getElementById('FormAgregar');//id del formulario*/
+const fv = FormValidation.formValidation(FormAgregar, {//se define el formulario
+//FormValidation.formValidation(FormAgregar, {
   fields: {
     'id_inspeccion': {
       validators: {
@@ -572,9 +572,12 @@ FormValidation.formValidation(FormAgregar, {
     autoFocus: new FormValidation.plugins.AutoFocus()
   }
 }).on('core.form.valid', function (e) {
-
   var formData = new FormData(FormAgregar);
-  console.log('Envio de datos:', Object.fromEntries(formData.entries()));// Imprimir los datos para verificar
+
+  //deshabilita el boton al guardar
+  const $submitBtn = $(FormAgregar).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');// Cambiar nombre
+
   $.ajax({
       url: '/registrar',
       type: 'POST',
@@ -610,9 +613,20 @@ FormValidation.formValidation(FormAgregar, {
             confirmButton: 'btn btn-danger'
           }
         });
+      },
+      complete: function() {
+        $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');
       }
   });
+});
+// Reset boton Y formulario al cerrar modal
+$('#ModalAgregar').on('hidden.bs.modal', function () {
+    // Limpiar formulario y validaciones
+    fv.resetForm(true);
+    $('.select2').val(null).trigger('change');
 
+    const $submitBtn = $(this).find('button[type="submit"]');
+    $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');//boton habilitado
 });
 
 
@@ -1193,78 +1207,8 @@ $(document).on('click', '.pdfActa', function () {
 
 
 
-/*
-///DESACTIVAR BOTON DE REGISTRO GLOBAL
-$(document).ready(function () {
-  // Intercepta todos los formularios con botón submit
-  $(document).on('submit', 'form', function (e) {
-    e.preventDefault();
 
-    const $form = $(this);
-    const $submitBtn = $form.find('button[type="submit"]');
 
-    // Evitar doble submit
-    if ($submitBtn.prop('disabled')) return;
-
-    // Deshabilitar el botón y mostrar loader
-    const originalBtnText = $submitBtn.html();
-    $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');
-
-    // Revisar si tiene FormData (para archivos) o serialize() normal
-    let ajaxData;
-    let processData = true;
-    let contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
-    if ($form.find('input[type="file"]').length > 0) {
-      ajaxData = new FormData(this);
-      processData = false;
-      contentType = false;
-    } else {
-      ajaxData = $form.serialize();
-    }
-
-    $.ajax({
-      url: $form.attr('action'),
-      method: $form.attr('method') || 'POST',
-      data: ajaxData,
-      processData: processData,
-      contentType: contentType,
-      success: function (response) {
-        // Opcional: cerrar modal si existe
-        $form.closest('.modal').modal('hide');
-        // Reset del formulario
-        $form[0].reset();
-        // Recargar cualquier DataTable que esté presente
-        if (typeof dataTable !== 'undefined') dataTable.ajax.reload(null, false);
-
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: response.message || 'Guardado correctamente',
-          customClass: { confirmButton: 'btn btn-primary' }
-        });
-      },
-      error: function (jqXHR) {
-        let errorMessage = 'No se pudo registrar. Por favor, verifica los datos.';
-        try {
-          let response = JSON.parse(jqXHR.responseText);
-          errorMessage = response.message || errorMessage;
-        } catch (e) {  }
-
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: errorMessage,
-          customClass: { confirmButton: 'btn btn-danger' }
-        });
-      },
-      complete: function () {
-        // Volver a habilitar el botón
-        $submitBtn.prop('disabled', false).html(originalBtnText);
-      }
-    });
-  });
-});
-*/
 
 
 

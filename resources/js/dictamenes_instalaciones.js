@@ -400,191 +400,205 @@ $(function () {
     });
   }
 
-  ///AGREGAR
-  $(function () {
-    // Configuración CSRF para Laravel
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
 
-    // Inicializar FormValidation
-    const form = document.getElementById('FormAgregar');
-    const fv = FormValidation.formValidation(form, {
-      fields: {
-        id_inspeccion: {
-          validators: {
-            notEmpty: {
-              message: 'El número de servicio es obligatorio.'
-            }
-          }
-        },
-        tipo_dictamen: {
-          validators: {
-            notEmpty: {
-              message: 'El tipo de dictamen es obligatorio.'
-            }
-          }
-        },
-        num_dictamen: {
-          validators: {
-            notEmpty: {
-              message: 'El número de dictamen es obligatorio.'
-            }
-          }
-        },
-        id_firmante: {
-          validators: {
-            notEmpty: {
-              message: 'El nombre del firmante es obligatorio.'
-            }
-          }
-        },
-        fecha_emision: {
-          validators: {
-            notEmpty: {
-              message: 'La fecha de emisión es obligatoria.'
-            },
-            date: {
-              format: 'YYYY-MM-DD',
-              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-            }
-          }
-        },
-        fecha_vigencia: {
-          validators: {
-            notEmpty: {
-              message: 'La fecha de vigencia es obligatoria.'
-            },
-            date: {
-              format: 'YYYY-MM-DD',
-              message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-            }
+
+///AGREGAR
+$(function () {
+  // Configuración CSRF para Laravel
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
+  // Inicializar FormValidation
+  const form = document.getElementById('FormAgregar');
+  const fv = FormValidation.formValidation(form, {
+    fields: {
+      id_inspeccion: {
+        validators: {
+          notEmpty: {
+            message: 'El número de servicio es obligatorio.'
           }
         }
       },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating'
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
+      tipo_dictamen: {
+        validators: {
+          notEmpty: {
+            message: 'El tipo de dictamen es obligatorio.'
+          }
+        }
+      },
+      num_dictamen: {
+        validators: {
+          notEmpty: {
+            message: 'El número de dictamen es obligatorio.'
+          }
+        }
+      },
+      id_firmante: {
+        validators: {
+          notEmpty: {
+            message: 'El nombre del firmante es obligatorio.'
+          }
+        }
+      },
+      fecha_emision: {
+        validators: {
+          notEmpty: {
+            message: 'La fecha de emisión es obligatoria.'
+          },
+          date: {
+            format: 'YYYY-MM-DD',
+            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+          }
+        }
+      },
+      fecha_vigencia: {
+        validators: {
+          notEmpty: {
+            message: 'La fecha de vigencia es obligatoria.'
+          },
+          date: {
+            format: 'YYYY-MM-DD',
+            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+          }
+        }
       }
-    }).on('core.form.valid', function () {
-      var formData = new FormData(form);
-      $.ajax({
-        url: '/insta',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          // Ocultar y resetear el formulario
-          $('#ModalAgregar').modal('hide');
-          $('#FormAgregar')[0].reset();
-          $('.select2').val(null).trigger('change');
-          dataTable.ajax.reload(); //Recarga los datos del datatable
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        eleInvalidClass: 'is-invalid',
+        rowSelector: '.form-floating'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    var formData = new FormData(form);
 
-          // Mostrar alerta de éxito
+  //deshabilita el boton al guardar
+  const $submitBtn = $(form).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');// Cambiar nombre
+
+    $.ajax({
+      url: '/insta',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Ocultar y resetear el formulario
+        $('#ModalAgregar').modal('hide');
+        $('#FormAgregar')[0].reset();
+        $('.select2').val(null).trigger('change');
+        dataTable.ajax.reload(); //Recarga los datos del datatable
+
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.message,
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      },
+      error: function (xhr) {
+        console.log('Error:', xhr);
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al registrar.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      },
+      complete: function() {
+        $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');
+      }
+    });
+  });
+});
+
+
+
+///ELIMINAR
+$(document).on('click', '.eliminar', function () {
+  var id_dictamen = $(this).data('id');
+  var dtrModal = $('.dtr-bs-modal.show');
+
+  // Ocultar modal responsivo en pantalla pequeña si está abierto
+  if (dtrModal.length) {
+    dtrModal.modal('hide');
+  }
+
+  // SweetAlert para confirmar la eliminación
+  Swal.fire({
+    title: '¿Está seguro?',
+    text: 'No podrá revertir este evento',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+    cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+    customClass: {
+      confirmButton: 'btn btn-primary me-2',
+      cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+  }).then(function (result) {
+    if (result.isConfirmed) {
+      // Enviar solicitud DELETE al servidor
+      $.ajax({
+        type: 'DELETE',
+        url: `${baseUrl}insta/${id_dictamen}`,
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+          dataTable.draw(false); //Actualizar la tabla, "null,false" evita que vuelva al inicio
+          // Mostrar SweetAlert de éxito
           Swal.fire({
             icon: 'success',
-            title: '¡Éxito!',
+            title: '¡Exito!',
             text: response.message,
             customClass: {
               confirmButton: 'btn btn-primary'
             }
           });
         },
-        error: function (xhr) {
-          console.log('Error:', xhr);
-          // Mostrar alerta de error
+        error: function (error) {
+          console.log(error);
+          // Mostrar SweetAlert de error
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al registrar.',
+            text: 'Error al eliminar.',
             customClass: {
               confirmButton: 'btn btn-danger'
             }
           });
         }
       });
-    });
-  });
-
-  ///ELIMINAR
-  $(document).on('click', '.eliminar', function () {
-    var id_dictamen = $(this).data('id');
-    var dtrModal = $('.dtr-bs-modal.show');
-
-    // Ocultar modal responsivo en pantalla pequeña si está abierto
-    if (dtrModal.length) {
-      dtrModal.modal('hide');
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      // Acción cancelar
+      Swal.fire({
+        title: '¡Cancelado!',
+        text: 'La eliminación ha sido cancelada.',
+        icon: 'info',
+        customClass: {
+          confirmButton: 'btn btn-primary'
+        }
+      });
     }
-
-    // SweetAlert para confirmar la eliminación
-    Swal.fire({
-      title: '¿Está seguro?',
-      text: 'No podrá revertir este evento',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
-      cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
-      customClass: {
-        confirmButton: 'btn btn-primary me-2',
-        cancelButton: 'btn btn-danger'
-      },
-      buttonsStyling: false
-    }).then(function (result) {
-      if (result.isConfirmed) {
-        // Enviar solicitud DELETE al servidor
-        $.ajax({
-          type: 'DELETE',
-          url: `${baseUrl}insta/${id_dictamen}`,
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
-          success: function (response) {
-            dataTable.draw(false); //Actualizar la tabla, "null,false" evita que vuelva al inicio
-            // Mostrar SweetAlert de éxito
-            Swal.fire({
-              icon: 'success',
-              title: '¡Exito!',
-              text: response.message,
-              customClass: {
-                confirmButton: 'btn btn-primary'
-              }
-            });
-          },
-          error: function (error) {
-            console.log(error);
-            // Mostrar SweetAlert de error
-            Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al eliminar.',
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          }
-        });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // Acción cancelar
-        Swal.fire({
-          title: '¡Cancelado!',
-          text: 'La eliminación ha sido cancelada.',
-          icon: 'info',
-          customClass: {
-            confirmButton: 'btn btn-primary'
-          }
-        });
-      }
-    });
   });
+});
+
+
 
   ///EDITAR
   $(function () {

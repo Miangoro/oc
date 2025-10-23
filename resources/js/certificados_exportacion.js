@@ -877,6 +877,7 @@ const fv = FormValidation.formValidation(FormAgregar, {
   }
 }).on('core.form.valid', function (e) {
   var formData = new FormData(FormAgregar);
+  
   //deshabilita el boton al guardar
   const $submitBtn = $(FormAgregar).find('button[type="submit"]');
   $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');// Cambiar nombre
