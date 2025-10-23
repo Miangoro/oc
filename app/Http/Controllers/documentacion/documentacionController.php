@@ -148,10 +148,18 @@ class documentacionController extends Controller
           $documentosActividad = "Generales Productor Contiene Mezcal";
         }
 
+        if ($actividad->id_actividad == 6) {
+          $documentosActividad = "Generales Envasador Contiene Mezcal";
+        }
+
         if ($actividad->id_actividad == 7) {
+          $documentosActividad = "Generales Comercializador Contiene Mezcal";
+        }
+
+      /*  if ($actividad->id_actividad == 7) {
           $documentosActividad = "Generales Comercializador Mezcal";
           $documentosActividadMarca =  "->orWhere('subtipo', 'Marcas')";
-        }
+        }*/
 
 
 
