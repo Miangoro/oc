@@ -144,8 +144,8 @@ class documentacionController extends Controller
           $act_instalacion = "Comercializadora";
         }
 
-        if ($actividad->id_actividad == 6) {
-          $documentosActividad = "Generales Envasador Mezcal";
+        if ($actividad->id_actividad == 5) {
+          $documentosActividad = "Generales Productor Contiene Mezcal";
         }
 
         if ($actividad->id_actividad == 7) {
