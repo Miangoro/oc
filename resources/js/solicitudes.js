@@ -172,6 +172,7 @@ const ahora = new Date();
                       `;
             case 5:
               return `<br><span class="fw-bold  small">Envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
+                      <br><span class="fw-bold  small">Marca:</span><span class="small"> ${data.marca || 'N/A'}</span>
                       <br><span class="fw-bold  small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
             case 7:
               return `<br><span class="fw-bold  small">Granel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>

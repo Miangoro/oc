@@ -270,8 +270,14 @@ public function index(Request $request)
                 ->orWhereHas('inspeccion', fn($q) => $q->where('num_servicio', 'LIKE', "%{$search}%"))
                 ->orWhereHas('inspeccion.inspector', fn($q) => $q->where('name', 'LIKE', "%{$search}%"));
 
-            foreach ($loteIds as $idLote) {//Buscar lote envasado -> granel
+            /*foreach ($loteIds as $idLote) {//Buscar lote envasado -> granel
                 $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%');
+            }*/
+            foreach ($loteIds as $idLote) {
+            $q->orWhere(function ($sub) use ($idLote) {
+                $sub->where('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":' . $idLote . '%')
+                    ->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLote . '"%');
+            });
             }
             foreach ($loteEnvIds as $idLoteEnv) {//Buscar lote envasado
                 $q->orWhere('solicitudes.caracteristicas', 'LIKE', '%"id_lote_envasado":"' . $idLoteEnv . '"%');
