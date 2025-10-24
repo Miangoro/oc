@@ -497,24 +497,21 @@ private function esJsonValido($string)
                     'message' => 'No hay registros de bitácora para los filtros seleccionados.'
                 ], 404);
             }
-               /*  if(!empty($instalacionId)){
+                if(!empty($instalacionId)){
             $domicilio_instalacion =  $bitacoras[0]->instalacion->direccion_completa ?? '';
         }else{
 
-            $domicilio_instalacion = 'Todas las instalaciones';
-        } */
-       if (!empty($instalacionId)) {
-    // Si el usuario seleccionó una instalación específica
-    $domicilio_instalacion = $bitacoras[0]->instalacion->direccion_completa ?? '';
-} else {
-    // Si NO seleccionó instalación, mostrar todas las direcciones únicas
-    $domicilio_instalacion = $bitacoras
-        ->pluck('instalacion.direccion_completa') // obtén las direcciones
-        ->filter() // elimina nulos
-        ->unique() // evita duplicados
-        ->implode(', '); // une en una sola cadena
-}
+            //$domicilio_instalacion = 'Todas las instalaciones';
+            // Obtenemos los IDs de instalaciones del usuario (puede ser array o null)
+            $instalacionesIds = Auth::user()->id_instalacion ?? [];
 
+            // Obtenemos las instalaciones
+            $instalacionesUsuario = instalaciones::whereIn('id_instalacion', $instalacionesIds)->get();
+
+            // Concatenamos las direcciones separadas por coma
+            $domicilio_instalacion = $instalacionesUsuario->pluck('direccion_completa')->implode(', ');
+
+        }
 
         $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaSeleccionada','domicilio_instalacion'))
             ->setPaper([0, 0, 1190.55, 1681.75], 'landscape');

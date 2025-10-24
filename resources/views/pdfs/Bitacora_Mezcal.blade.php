@@ -115,7 +115,7 @@
             <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
                 <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
             </p>
-            <p style="font-size: px; margin-top: 5px; font-family: 'calibri-bold';">
+            <p style="font-size: px; margin-top: -21px; font-family: 'calibri-bold';  margin-bottom: 15px;">
                 INSTALACIÓN: <span style="color: red;">&nbsp; {{  $domicilio_instalacion ?? 'Sin definir' }} </span>
             </p>
         </div>
