@@ -140,6 +140,14 @@ class BitacoraMezcalEnvasadorController extends Controller
        if (Auth::check() && Auth::user()->tipo == 3 && !empty($instalacionAuth)) {
                 $query->whereIn('id_instalacion', $instalacionAuth);
             }
+
+            $user = Auth::user();
+            $id_usuario = $user->id;
+            
+                if($id_usuario == 46) {
+                    $query->where('id_firmante', '!=', 0);
+                }
+                        
          if ($empresaId) {
               $empresa = empresa::find($empresaId);
 
@@ -166,6 +174,7 @@ class BitacoraMezcalEnvasadorController extends Controller
               }
           }
          $filteredQuery = clone $query;
+
         if (!empty($search)) {
             $filteredQuery->where(function ($q) use ($search) {
                 $lower = strtolower($search);
