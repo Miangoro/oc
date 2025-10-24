@@ -596,7 +596,7 @@ $loteGranel = $datos->certificado->dictamen->inspeccione->solicitud->lote_granel
         }
     }
 @endphp
-@if($datos->certificado->dictamen->inspeccione->solicitud->id_empresa == 105 || $datos->certificado->dictamen->inspeccione->solicitud->id_empresa == 140 )
+@if($datos->certificado->dictamen->inspeccione->solicitud->id_empresa == 105)
     @foreach($lotesProcedencia as $lote)
         @php
             $documentos = \App\Models\Documentacion_url::where('id_relacion', $lote->id_lote_granel)

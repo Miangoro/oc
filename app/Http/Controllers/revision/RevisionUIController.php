@@ -59,7 +59,7 @@ public function index(Request $request)
 
 
     // Si no es admin(ID especial) solo ve sus revisiones
-    $admins = [1, 7, 9, 319, 335];
+    $admins = [1, 6, 7, 9, 319, 335];
     if (!in_array($userId, $admins)) {
         $query->where('id_revisor', $userId);
     }
