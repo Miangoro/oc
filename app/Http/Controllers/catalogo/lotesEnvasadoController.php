@@ -228,12 +228,20 @@ public function index(Request $request)
                     ->pluck('loteGranel.nombre_lote'); // Obtén los nombres de los lotes
                 
                 //dictamen relacionado
-                $dictamen = Dictamen_Envasado::where('id_lote_envasado', $user->id_lote_envasado)
+                $dictamenes = Dictamen_Envasado::where('id_lote_envasado', $user->id_lote_envasado)
+                    ->where('estatus', '!=', 1) // ignorar estatus 1
                     ->orderByDesc('id_dictamen_envasado')
-                    ->first();
-                $idDictamen = $dictamen->id_dictamen_envasado ?? null;
-                $urlDictamen = $idDictamen ? url("dictamen_envasado/{$idDictamen}") : null;
-                $numeroDic = $dictamen->num_dictamen ?? null;
+                    ->get();
+                $dictamenLinks = [];
+                foreach ($dictamenes as $d) {
+                    $url = url("dictamen_envasado/{$d->id_dictamen_envasado}");
+                    $num = $d->num_dictamen;
+                    // Creamos array de links
+                    $dictamenLinks[] = [
+                        'num' => $num,
+                        'url' => $url
+                    ];
+                }
 
                 $nestedData = [
                     'id_lote_envasado' => $user->id_lote_envasado,
@@ -257,8 +265,7 @@ public function index(Request $request)
                     'estatus' => $user->estatus,
                     'id_lote_granel' => $nombres_lote,
 
-                    'id_dictamen' => $urlDictamen, // ruta completa
-                    'num_dictamen' => $numeroDic
+                    'dictamenes' => $dictamenLinks //todos los dictámenes
                 ];
 
                 $data[] = $nestedData;

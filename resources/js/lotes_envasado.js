@@ -215,12 +215,14 @@ $(function () {
            
             // Dictamen como enlace 
             let dictamen = '';
-            if (row.id_dictamen) {
-              dictamen = `<a href="${row.id_dictamen}" class="text-primary" target="_blank">${row.num_dictamen}</a>`;
+            if (row.dictamenes && row.dictamenes.length > 0) {
+                dictamen += row.dictamenes
+                    .map(d => `<a href="${d.url}" class="text-primary" target="_blank">${d.num}</a>`)
+                    .join(', '); // <-- separados por comas
             } else {
-              dictamen = 'Sin dictamen';
+                dictamen = 'Sin dictamen';
             }
-            
+
             return inicial + nuevo + '<br><b>Dictamen: </b>'+dictamen;
           }
         },
