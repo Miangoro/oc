@@ -12,7 +12,9 @@ use App\Http\Controllers\Controller;
 use App\Models\lotes_envasado_granel;
 use Illuminate\Http\Request;
 use App\Models\Documentacion_url;
+use App\Models\Dictamen_Envasado;
 use App\Models\empresaNumCliente;
+
 use Illuminate\Support\Facades\DB;
 use App\Models\BitacoraMezcal;
 use App\Models\tipos;
@@ -182,7 +184,9 @@ public function index(Request $request)
                 ->orWhereHas('Instalaciones', fn($q) => $q->where('direccion_completa', 'LIKE', "%{$search}%"))
                 ->orWhereHas('marca', fn($q) => $q->where('marca', 'LIKE', "%{$search}%"))
                 ->orWhereHas('lotes_envasado_granel.lotes_granel', fn($q) => $q->where('nombre_lote', 'LIKE', "%{$search}%"))
-                ->orWhereHas('empresa.empresaNumClientes', fn($q) => $q->where('numero_cliente', 'LIKE', "%{$search}%"));
+                ->orWhereHas('empresa.empresaNumClientes', fn($q) => $q->where('numero_cliente', 'LIKE', "%{$search}%"))
+                //dictamen
+                ->orWhereHas('dictamenEnvasado', fn($q) => $q->where('num_dictamen', 'LIKE', "%{$search}%")); 
 
                 // Filtrar por estatus de lote si se detectó una palabra clave
                 if (!is_null($tipoEstado)) {
@@ -224,10 +228,12 @@ public function index(Request $request)
                     ->pluck('loteGranel.nombre_lote'); // Obtén los nombres de los lotes
                 
                 //dictamen relacionado
-                $nestedData['num_certificado'] = $lote->certificadoGranel?->num_certificado
-                    ?? $lote?->folio_certificado
-                    ?? 'Sin certificado';
-
+                $dictamen = Dictamen_Envasado::where('id_lote_envasado', $user->id_lote_envasado)
+                    ->orderByDesc('id_dictamen_envasado')
+                    ->first();
+                $idDictamen = $dictamen->id_dictamen_envasado ?? null;
+                $urlDictamen = $idDictamen ? url("dictamen_envasado/{$idDictamen}") : null;
+                $numeroDic = $dictamen->num_dictamen ?? null;
 
                 $nestedData = [
                     'id_lote_envasado' => $user->id_lote_envasado,
@@ -250,8 +256,9 @@ public function index(Request $request)
                     'cantt_botellas' => $cantt_botellas,
                     'estatus' => $user->estatus,
                     'id_lote_granel' => $nombres_lote,
-                    'id_dictamen' => $user?->dictamenEnvasado?->id_dictamen_envasado ?? 'No encontrado',
-                    'num_dictamen' => $user?->dictamenEnvasado?->num_dictamen ?? 'No encontrado',
+
+                    'id_dictamen' => $urlDictamen, // ruta completa
+                    'num_dictamen' => $numeroDic
                 ];
 
                 $data[] = $nestedData;

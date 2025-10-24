@@ -212,22 +212,16 @@ $(function () {
                 row.nuevo +
                 '</span>';
             }
-            //dictamen
-            /*let dictamen = '<br><b>Dictamen: </b>' + 
-               (row.dictamen
-                 ? `<a href="#" class="text-success pdfDictamen" data-id="${row.dictamen.id_lote_envasado}">${row.dictamen.num_dictamen}</a>`
-                 : 'Sin dictamen');*/
-              //<i data-id="'+row.dictamen.num_dictamen+'" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-toggle="modal" data-bs-target="#mostrarPdf"></i>
+           
+            // Dictamen como enlace 
             let dictamen = '';
-if (row.id_dictamen && row.id_dictamen !== 'No encontrado') {
-    dictamen = `<small class="fw-bold">${row.num_dictamen}</small>
-    <br><span class="fw-bold">Dictamen:</span> ${row.num_dictamen}
-    <i data-id="${row.id_dictamen}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i>`;
-} else {
-    dictamen = 'Sin dictamen';
-}
-
-            return inicial + nuevo + dictamen;
+            if (row.id_dictamen) {
+              dictamen = `<a href="${row.id_dictamen}" class="text-primary" target="_blank">${row.num_dictamen}</a>`;
+            } else {
+              dictamen = 'Sin dictamen';
+            }
+            
+            return inicial + nuevo + '<br><b>Dictamen: </b>'+dictamen;
           }
         },
         { data: 'estatus' }, //status 12
@@ -257,7 +251,6 @@ if (row.id_dictamen && row.id_dictamen !== 'No encontrado') {
           targets: 12,
           searchable: true,
           orderable: false,
-          responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $estatus = full['estatus'];
               if ($estatus == '1') {
@@ -1600,27 +1593,37 @@ $(document).on('click', '.trazabilidad', function () {
 
 
 
-///FORMATO PDF DICTAMEN
+
+
+///PDF DICTAMEN
 $(document).on('click', '.pdfDictamen', function () {
-  var id = $(this).data('id');
-  var pdfUrl = '/dictamen_granel/' + id; //Ruta del PDF
+  var pdfUrl = $(this).data('id'); // Ahora contiene la ruta completa del PDF
+  if (!pdfUrl) return;
+
   var iframe = $('#pdfViewer');
   var spinner = $('#cargando');
-  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+
   spinner.show();
   iframe.hide();
-  //Cargar el PDF con el ID
+
   iframe.attr('src', pdfUrl);
-  //Configurar el botón para abrir el PDF en una nueva pestaña
+
+  // Botón para abrir en nueva pestaña
   $('#NewPestana').attr('href', pdfUrl).show();
-  $('#titulo_modal').text('Dictamen de Cumplimiento NOM Mezcal a Granel');
+
+  $('#titulo_modal').text('Dictamen de Cumplimiento NOM de Mezcal Envasado');
   $('#subtitulo_modal').text('PDF del Dictamen');
-  //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+
+  $('#mostrarPdf').modal('show');
+
   iframe.on('load', function () {
     spinner.hide();
     iframe.show();
   });
 });
+
+
+
 
 
 
