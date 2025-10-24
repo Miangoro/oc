@@ -112,10 +112,10 @@
                     }
                 }
             @endphp
-            <p style="font-size: 20px; margin-top: 15px; font-family: 'calibri-bold';">
+            <p style="font-size: 20px; margin-top: 5px; font-family: 'calibri-bold';">
                 <span style="color: red;">&nbsp; {{ $numeroCliente }} - {{ $razon }} </span>
             </p>
-            <p style="font-size: px; margin-top: 5px; font-family: 'calibri-bold';">
+            <p style="font-size: px; margin-top: 2px; font-family: 'calibri-bold';  margin-bottom: 8px;">
                 INSTALACIÓN: <span style="color: red;">&nbsp; {{  $domicilio_instalacion ?? 'Sin definir' }} </span>
             </p>
         </div>
