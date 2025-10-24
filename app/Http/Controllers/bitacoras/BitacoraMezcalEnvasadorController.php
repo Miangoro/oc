@@ -433,6 +433,7 @@ private function esJsonValido($string)
         $empresaSeleccionada = empresa::with('empresaNumClientes')->find($empresaId);
         $instalacionId = $request->query('instalacion');
         $title = 'ENVASADOR'; // Cambia a 'Envasador' si es necesario
+        $id_usuario = $user->id;
 
         $idsEmpresas = [$empresaId];
         if ($empresaId) {
@@ -466,6 +467,11 @@ private function esJsonValido($string)
     ->when(empty($instalacionId) && !empty($idsInstalaciones), function ($query) use ($idsInstalaciones) {
         // 🔹 Si no hay una instalación específica, pero sí un listado de permitidas
         $query->whereIn('id_instalacion', $idsInstalaciones);
+    })
+
+    ->when(empty($id_usuario), function ($query) use ($id_usuario) {
+        // 🔹 Si no hay una instalación específica, pero sí un listado de permitidas
+        $query->where('id_firmante','!=' , 0);
     })
 
        /*  ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
