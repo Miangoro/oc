@@ -474,7 +474,7 @@ private function esJsonValido($string)
                 $query->where('id_instalacion', $instalacionId);
             }
         }) */
-        ->orderBy('id', 'desc')
+        ->orderBy('fecha', 'desc')
         ->get();
         /* $empresaPadre = null;
         if ($empresaId) {
