@@ -19,8 +19,6 @@ use App\Models\lotes_envasado;
 use App\Models\solicitudesModel;
 use App\Models\Documentacion_url;
 use Carbon\Carbon;
-
-
 use Illuminate\Http\Request;
 use Spatie\Activitylog\Models\Activity;
 
@@ -159,6 +157,7 @@ class TrazabilidadController extends Controller
 
 
     
+
 
 private function determinarTipoBloque($log, $attributes)
 {
@@ -567,6 +566,7 @@ if ($certificadoCancelado && $certificadoCancelado->estatus == 1) {
 
 
 
+
 ///TRAZABILIDAD LOTES GRANEL
 public function lotesGranel($id)
 {
@@ -879,18 +879,25 @@ $totalCajas = 0;
 
                     $caracteristicas = 'N/A';
                     if ($detalleActual) {
-                        $caracteristicas = "{$botellasBase} botellas / {$cajasBase} cajas";
-                        $totalBotellas += $botellasBase;
-                        $totalCajas += $cajasBase;
+                        // Si esta cancelado
+                        if ($certificado->estatus == 1) {
+                            $caracteristicas = "0 botellas / 0 cajas";
+                        } else {
+                            // Sumar y mostrar si no esta cancelado
+                            $caracteristicas = "{$botellasBase} botellas / {$cajasBase} cajas";
+                            $totalBotellas += $botellasBase;
+                            $totalCajas += $cajasBase;
+                        }
                     }
 
                     $certificadosTabla[] = [
                         'fecha' => Carbon::parse($certificado->fecha_emision)->format('Y-m-d'),
-                        'certificado' => $certificado->num_certificado . $pdfIcon,
+                        'certificado' => $certificado->num_certificado. ($certificado->estatus == 1 
+                            ? " <span class='text-danger'>(Cancelado)</span>" 
+                            : ""). $pdfIcon,
                         'caracteristicas' => $caracteristicas,
                         'lote' => $lote
                     ];
-
                 }
             }
         }

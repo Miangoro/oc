@@ -1597,37 +1597,6 @@ $(document).on('click', '.trazabilidad', function () {
 
 
 
-///PDF DICTAMEN
-$(document).on('click', '.pdfDictamen', function () {
-  var pdfUrl = $(this).data('id'); // Ahora contiene la ruta completa del PDF
-  if (!pdfUrl) return;
-
-  var iframe = $('#pdfViewer');
-  var spinner = $('#cargando');
-
-  spinner.show();
-  iframe.hide();
-
-  iframe.attr('src', pdfUrl);
-
-  // Botón para abrir en nueva pestaña
-  $('#NewPestana').attr('href', pdfUrl).show();
-
-  $('#titulo_modal').text('Dictamen de Cumplimiento NOM de Mezcal Envasado');
-  $('#subtitulo_modal').text('PDF del Dictamen');
-
-  $('#mostrarPdf').modal('show');
-
-  iframe.on('load', function () {
-    spinner.hide();
-    iframe.show();
-  });
-});
-
-
-
-
-
 
 
 

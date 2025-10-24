@@ -229,7 +229,7 @@ public function index(Request $request)
                 
                 //dictamen relacionado
                 $dictamenes = Dictamen_Envasado::where('id_lote_envasado', $user->id_lote_envasado)
-                    ->where('estatus', '!=', 1) // ignorar estatus 1
+                    ->where('estatus', '!=', 1) // ignorar cancelados
                     ->orderByDesc('id_dictamen_envasado')
                     ->get();
                 $dictamenLinks = [];
