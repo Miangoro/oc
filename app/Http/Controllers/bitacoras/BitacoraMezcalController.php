@@ -383,7 +383,7 @@ public function PDFBitacoraMezcal(Request $request)
     })
     // 🔹 Si ambos están vacíos, no se agrega ningún filtro (muestra todo)
 
-    ->orderBy('fecha', 'desc')
+    ->orderByRaw("to_date(fecha, 'DD/MM/YYYY') DESC")
     ->get();
 
     if ($bitacoras->isEmpty()) {
