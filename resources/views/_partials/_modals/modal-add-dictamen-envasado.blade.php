@@ -95,7 +95,7 @@
                                 <select class=" form-select unidad" id="unidad" name="unidad" aria-label="Unidad">
                                     <option value="mL">Mililitros</option>
                                     <option value="L">Litros</option>
-                                    <option value="cL">Centrilitros</option>
+                                    <option value="cL">Centilitros</option>
                                 </select>
                                 <label for="unidad">Unidad</label>
                             </div>
@@ -232,7 +232,7 @@
                                 <select class=" form-select unidad" id="edit_unidad" name="unidad" aria-label="Unidad">
                                     <option value="mL">Mililitros</option>
                                     <option value="L">Litros</option>
-                                    <option value="cL">Centrilitros</option>
+                                    <option value="cL">Centilitros</option>
                                 </select>
                                 <label for="unidad">Unidad</label>
                             </div>

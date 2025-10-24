@@ -200,7 +200,6 @@ $(function () {
           render: function (data, type, row) {
             var inicial = '';
             var nuevo = '';
-
             if (row.inicial && row.inicial !== 'N/A') {
               inicial =
                 '<br><span class="fw-bold text-dark small">SKU inicial:</span><span class="small"> ' +
@@ -213,7 +212,22 @@ $(function () {
                 row.nuevo +
                 '</span>';
             }
-            return inicial + nuevo;
+            //dictamen
+            /*let dictamen = '<br><b>Dictamen: </b>' + 
+               (row.dictamen
+                 ? `<a href="#" class="text-success pdfDictamen" data-id="${row.dictamen.id_lote_envasado}">${row.dictamen.num_dictamen}</a>`
+                 : 'Sin dictamen');*/
+              //<i data-id="'+row.dictamen.num_dictamen+'" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen" data-bs-toggle="modal" data-bs-target="#mostrarPdf"></i>
+            let dictamen = '';
+if (row.id_dictamen && row.id_dictamen !== 'No encontrado') {
+    dictamen = `<small class="fw-bold">${row.num_dictamen}</small>
+    <br><span class="fw-bold">Dictamen:</span> ${row.num_dictamen}
+    <i data-id="${row.id_dictamen}" class="ri-file-pdf-2-fill text-danger ri-28px cursor-pointer pdfDictamen"></i>`;
+} else {
+    dictamen = 'Sin dictamen';
+}
+
+            return inicial + nuevo + dictamen;
           }
         },
         { data: 'estatus' }, //status 12
@@ -372,6 +386,12 @@ $(function () {
       }
     });
   }
+
+
+
+
+
+
 
   // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
@@ -602,6 +622,9 @@ $(function () {
       });
     }
 });
+
+
+
 
 
 
@@ -1573,6 +1596,30 @@ $(document).on('click', '.trazabilidad', function () {
       });
     }); 
 
+});
+
+
+
+///FORMATO PDF DICTAMEN
+$(document).on('click', '.pdfDictamen', function () {
+  var id = $(this).data('id');
+  var pdfUrl = '/dictamen_granel/' + id; //Ruta del PDF
+  var iframe = $('#pdfViewer');
+  var spinner = $('#cargando');
+  //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+  spinner.show();
+  iframe.hide();
+  //Cargar el PDF con el ID
+  iframe.attr('src', pdfUrl);
+  //Configurar el botón para abrir el PDF en una nueva pestaña
+  $('#NewPestana').attr('href', pdfUrl).show();
+  $('#titulo_modal').text('Dictamen de Cumplimiento NOM Mezcal a Granel');
+  $('#subtitulo_modal').text('PDF del Dictamen');
+  //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+  iframe.on('load', function () {
+    spinner.hide();
+    iframe.show();
+  });
 });
 
 

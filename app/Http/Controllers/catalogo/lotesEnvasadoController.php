@@ -212,8 +212,7 @@ public function index(Request $request)
             foreach ($users as $user) {
 
                 $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $user->id_empresa)->first();
-
-$numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first(fn($numero) => !empty($numero));
+                $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first(fn($numero) => !empty($numero));
 
                 $sku = json_decode($user->sku, true); // Decodifica el JSON en un array
                 $inicial = isset($sku['inicial']) ? $sku['inicial'] : 0; // Obtén el valor de 'inicial' del JSON
@@ -223,7 +222,11 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                     ->with('loteGranel') // Carga la relación
                     ->get()
                     ->pluck('loteGranel.nombre_lote'); // Obtén los nombres de los lotes
-
+                
+                //dictamen relacionado
+                $nestedData['num_certificado'] = $lote->certificadoGranel?->num_certificado
+                    ?? $lote?->folio_certificado
+                    ?? 'Sin certificado';
 
 
                 $nestedData = [
@@ -247,7 +250,8 @@ $numero_cliente = $empresa?->empresaNumClientes?->pluck('numero_cliente')->first
                     'cantt_botellas' => $cantt_botellas,
                     'estatus' => $user->estatus,
                     'id_lote_granel' => $nombres_lote,
-
+                    'id_dictamen' => $user?->dictamenEnvasado?->id_dictamen_envasado ?? 'No encontrado',
+                    'num_dictamen' => $user?->dictamenEnvasado?->num_dictamen ?? 'No encontrado',
                 ];
 
                 $data[] = $nestedData;
