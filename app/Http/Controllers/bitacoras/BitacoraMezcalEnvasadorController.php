@@ -501,7 +501,16 @@ private function esJsonValido($string)
             $domicilio_instalacion =  $bitacoras[0]->instalacion->direccion_completa ?? '';
         }else{
 
-            $domicilio_instalacion = 'Todas las instalaciones';
+            //$domicilio_instalacion = 'Todas las instalaciones';
+            // Obtenemos los IDs de instalaciones del usuario (puede ser array o null)
+            $instalacionesIds = Auth::user()->id_instalacion ?? [];
+
+            // Obtenemos las instalaciones
+            $instalacionesUsuario = instalaciones::whereIn('id_instalacion', $instalacionesIds)->get();
+
+            // Concatenamos las direcciones separadas por coma
+            $domicilio_instalacion = $instalacionesUsuario->pluck('direccion_completa')->implode(', ');
+
         }
 
         $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal', compact('bitacoras', 'title', 'empresaSeleccionada','domicilio_instalacion'))
