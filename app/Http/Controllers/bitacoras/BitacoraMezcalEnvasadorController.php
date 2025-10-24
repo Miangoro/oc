@@ -469,10 +469,10 @@ private function esJsonValido($string)
         $query->whereIn('id_instalacion', $idsInstalaciones);
     })
 
-    ->when(empty($id_usuario), function ($query) use ($id_usuario) {
-        // 🔹 Si no hay una instalación específica, pero sí un listado de permitidas
-        $query->where('id_firmante','!=' , 0);
+    ->when($id_usuario == 46, function ($query) {
+        $query->where('id_firmante', '!=', 0);
     })
+
 
        /*  ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
             $query->where('id_empresa', $empresaId);
