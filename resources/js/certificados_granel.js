@@ -670,6 +670,11 @@ $(document).ready(function () {
       }
     }).on('core.form.valid', function (e) {
       var formData = new FormData(form);
+
+    //deshabilita el boton al guardar
+    const $submitBtn = $(form).find('button[type="submit"]');
+    $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');// Cambiar nombre
+
       $.ajax({
         url: '/certificados/granel',
         type: 'POST',
@@ -705,6 +710,9 @@ $(document).ready(function () {
               confirmButton: 'btn btn-danger'
             }
           });
+        },
+        complete: function() {
+          $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');
         }
       });
     });

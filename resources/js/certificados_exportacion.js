@@ -893,8 +893,6 @@ const fv = FormValidation.formValidation(FormAgregar, {
           }
         });
       }
-
-      $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');//boton habilitado
     },
     error: function (xhr) {
       console.log('Error:', xhr);
@@ -908,8 +906,9 @@ const fv = FormValidation.formValidation(FormAgregar, {
           confirmButton: 'btn btn-danger'
         }
       });
-
-      $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');//boton habilitado
+    },
+    complete: function() {
+      $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');
     }
   });
 });

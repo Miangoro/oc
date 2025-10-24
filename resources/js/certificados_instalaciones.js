@@ -687,8 +687,12 @@ $(function () {
       autoFocus: new FormValidation.plugins.AutoFocus()
     }
   }).on('core.form.valid', function () {
-
     var formData = new FormData(form);
+
+    //deshabilita el boton al guardar
+    const $submitBtn = $(form).find('button[type="submit"]');
+    $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');// Cambiar nombre
+
     $.ajax({
       url: '/certificados-list',
       type: 'POST',
@@ -722,9 +726,11 @@ $(function () {
             confirmButton: 'btn btn-danger'
           }
         });
+      },
+      complete: function() {
+        $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');
       }
     });
-
   });
 
 });

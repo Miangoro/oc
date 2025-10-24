@@ -544,9 +544,13 @@ const fv = FormValidation.formValidation(formAdd, {
       autoFocus: new FormValidation.plugins.AutoFocus()
     }
 }).on('core.form.valid', function (e) {
-
   //enviar el formulario cuando pase la validación
   var formData = new FormData(formAdd);
+
+  //deshabilita el boton al guardar
+  const $submitBtn = $(formAdd).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-4-line"></i> Guardando...');// Cambiar nombre
+
     $.ajax({
       url: '/crear',
       type: 'POST',
@@ -584,6 +588,9 @@ const fv = FormValidation.formValidation(formAdd, {
             confirmButton: 'btn btn-danger'
           }
         });
+      },
+      complete: function() {
+        $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');
       }
     });
 });
