@@ -347,8 +347,7 @@ $(function () {
         `;*/
           }
         },
-        {
-          // Actions
+        { // Actions
           targets: -1,
           title: 'Acciones',
           searchable: false,
@@ -357,89 +356,79 @@ $(function () {
             let cancelado = full['estatus'] == 1;
             let acciones = '';
 
-            // Construir acciones según permisos
+            //Construir acciones según permisos
             if (cancelado) {
-                /*if (window.puedeSubirCertificadoGranel) {
-                    acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
-                                    class="dropdown-item waves-effect text-dark subirPDF"
-                                    data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
-                                    <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF
-                                </a>`;
-                }*/
-                if (window.puedeVerTrazabilidadCertificadoGranel) {
-                    acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
-                                    data-bs-toggle="modal" data-bs-target="#ModalTracking"
-                                    class="dropdown-item waves-effect text-black trazabilidad">
-                                    <i class="ri-history-line text-secondary"></i> Trazabilidad
-                                </a>`;
-                }
+              if (window.puedeSubirCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
+                    class="dropdown-item waves-effect text-dark subirPDF"
+                    data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
+                    <i class="ri-upload-2-line text-secondary"></i> Adjuntar PDF</a>`;
+              }
+              if (window.puedeVerTrazabilidadCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
+                    class="dropdown-item waves-effect text-black trazabilidad"
+                    data-bs-toggle="modal" data-bs-target="#ModalTracking">
+                    <i class="ri-history-line text-secondary"></i> Trazabilidad</a>`;
+              }
+                
             } else {
-                /*if (window.puedeEditarCertificadoGranel) {
-                    acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-dark editar"
-                                    data-bs-toggle="modal" data-bs-target="#ModalEditar">
-                                    <i class="ri-edit-box-line ri-20px text-info"></i> Editar
-                                </a>`;
-                }*/
-                /*if (window.puedeSubirCertificadoGranel) {
-                    acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
-                                    class="dropdown-item waves-effect text-dark subirPDF"
-                                    data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
-                                    <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF
-                                </a>`;
-                }
-                if (window.puedeAsignarRevisorCertificadoGranel) {
-                    acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
-                                    class="dropdown-item waves-effect text-black"
-                                    data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">
-                                    <i class="ri-user-search-fill text-warning"></i> Asignar revisor
-                                </a>`;
-                }*/
-                if (window.puedeVerTrazabilidadCertificadoGranel) {
-                    acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
-                                    data-bs-toggle="modal" data-bs-target="#ModalTracking"
-                                    class="dropdown-item waves-effect text-black trazabilidad">
-                                    <i class="ri-history-line text-secondary"></i> Trazabilidad
-                                </a>`;
-                }
-                /*if (window.puedeReexpedirCertificadoGranel) {
-                    acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black reexpedir"
-                                    data-bs-toggle="modal" data-bs-target="#ModalReexpedir">
-                                    <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar
-                                </a>`;
-                }
-                if (window.puedeEliminarCertificadoGranel) {
-                    acciones += `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar">
-                                    <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
-                                </a>`;
-                }*/
+              if (window.puedeEditarCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" 
+                    class="dropdown-item waves-effect text-dark editar"
+                    data-bs-toggle="modal" data-bs-target="#ModalEditar">
+                    <i class="ri-edit-box-line text-info"></i> Editar</a>`;
+              }
+              if (window.puedeSubirCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
+                    class="dropdown-item waves-effect text-dark subirPDF"
+                    data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
+                    <i class="ri-upload-2-line text-secondary"></i> Adjuntar PDF</a>`;
+              }
+              if (window.puedeAsignarRevisorCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
+                    class="dropdown-item waves-effect text-black"
+                    data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">
+                    <i class="ri-user-search-fill text-warning"></i> Asignar revisor</a>`;
+              }
+              if (window.puedeVerTrazabilidadCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
+                    class="dropdown-item waves-effect text-black trazabilidad"
+                    data-bs-toggle="modal" data-bs-target="#ModalTracking">
+                    <i class="ri-history-line text-secondary"></i> Trazabilidad</a>`;
+              }
+              if (window.puedeReexpedirCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" 
+                    class="dropdown-item waves-effect text-black reexpedir"
+                    data-bs-toggle="modal" data-bs-target="#ModalReexpedir">
+                    <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>`;
+              }
+              if (window.puedeEliminarCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" 
+                    class="dropdown-item waves-effect text-black eliminar">
+                    <i class="ri-delete-bin-7-line text-danger"></i> Eliminar</a>`;
+              }
             }
 
-            // Casos de botones según estatus y permisos
+
+            //🔒 Botones sin permisos deshabilitados
             if (!acciones.trim()) {
-                if (cancelado) {
-                    // Cancelado sin permisos
-                    return `<button class="btn btn-sm btn-danger" disabled>
-                                <i class="ri-close-line ri-20px me-1"></i>Cancelado
-                            </button>`;
-                } else {
-                    // Activo sin permisos
-                    return `<button class="btn btn-sm btn-secondary" disabled>
-                                <i class="ri-lock-2-line ri-20px me-1"></i>Opciones
-                            </button>`;
-                }
-            } else {
-                // Activo o cancelado con permisos
-                return `<div class="d-flex align-items-center gap-50">
-                            <button class="btn btn-sm btn-${cancelado ? 'danger' : 'info'} dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                <i class="${cancelado ? 'ri-close-line' : 'ri-settings-5-fill'} ri-20px me-1"></i>
-                                ${cancelado ? 'Cancelado' : 'Opciones'}
-                                ${cancelado ? '' : '<i class="ri-arrow-down-s-fill ri-20px"></i>'}
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end m-0">
-                                ${acciones}
-                            </div>
-                        </div>`;
+                return cancelado
+                    ? `<button class="btn btn-sm btn-danger" disabled><i class="ri-close-line ri-20px me-1"></i>Cancelado</button>`
+                    : `<button class="btn btn-sm btn-secondary" disabled><i class="ri-lock-2-line ri-20px me-1"></i>Opciones</button>`;
             }
+
+            //✅ Botones con permisos
+            return `<div class="d-flex align-items-center gap-50">
+                      <button class="btn btn-sm btn-${cancelado ? 'danger' : 'info'} 
+                        dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="${cancelado ? 'ri-close-line' : 'ri-settings-5-fill'} ri-20px me-1"></i>
+                          ${cancelado ? 'Cancelado' : 'Opciones'} 
+                          ${cancelado ? '' : '<i class="ri-arrow-down-s-fill ri-20px"></i>'}
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end m-0">
+                          ${acciones}
+                      </div>
+                  </div>`;
           }
         }
       ],

@@ -413,141 +413,108 @@ $(function () {
           }
         },
 
-        {
-          // Actions
+        { // Actions
           targets: -1,
           title: 'Acciones',
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            // Si está cancelado, solo mostrar trazabilidad si tiene permiso
-            if (full['estatus'] == 1) {
+            let cancelado = full['estatus'] == 1;
+            let acciones = '';
+
+            //Construir acciones según permisos
+            if (cancelado) {
+              if (window.puedeSubirCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
+                    class="dropdown-item waves-effect text-dark subirPDF"
+                    data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
+                    <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>`;
+              }
+              if (window.puedeVerDocumentacionCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
+                    class="dropdown-item waves-effect text-dark documentos"    
+                    data-bs-toggle="modal" data-bs-target="#ModalDocumentos">
+                    <i class="ri-folder-line ri-20px text-secondary"></i> Ver documentación</a>`;
+              }
               if (window.puedeVerTrazabilidadCertificadoGranel) {
-                return `
-                <div class="d-flex align-items-center gap-50">
-                  <button class="btn btn-sm btn-danger disabled">Cancelado</button>
-                  <div class="dropdown-menu dropdown-menu-end m-0">
-                    <a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
-                      data-bs-toggle="modal" data-bs-target="#ModalTracking"
-                      class="dropdown-item waves-effect text-black trazabilidad">
-                      <i class="ri-history-line text-secondary"></i> Trazabilidad
-                    </a>
-                  </div>
-                </div>
-              `;
-              } else {
-                return `<button class="btn btn-sm btn-danger disabled">Cancelado</button>`;
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
+                    class="dropdown-item waves-effect text-black trazabilidad"
+                    data-bs-toggle="modal" data-bs-target="#ModalTracking">
+                    <i class="ri-history-line text-secondary"></i> Trazabilidad</a>`;
+              }
+                
+            } else {
+              if (window.puedeEditarCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
+                    class="dropdown-item waves-effect text-dark editar"
+                    data-bs-toggle="modal" data-bs-target="#ModalEditar">
+                    <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>`;
+              }
+              if (window.puedeSubirCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
+                    class="dropdown-item waves-effect text-dark subirPDF"
+                    data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
+                    <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>`;
+              }
+              if (window.puedeVerDocumentacionCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
+                    class="dropdown-item waves-effect text-dark documentos"    
+                    data-bs-toggle="modal" data-bs-target="#ModalDocumentos">
+                    <i class="ri-folder-line ri-20px text-secondary"></i> Ver documentación</a>`;
+              }
+              if (window.puedeAsignarRevisorCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
+                    class="dropdown-item waves-effect text-dark"
+                    data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">
+                    <i class="text-warning ri-user-search-fill"></i> Asignar revisor</a>`;
+              }
+
+              if (window.puedeDarVoBoCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" 
+                    class="dropdown-item waves-effect text-dark VoBo"
+                    data-bs-toggle="modal" data-bs-target="#ModalVoBo">
+                    <i class="ri-edit-box-line ri-20px text-light"></i> Vo. Bo.</a>`;
+              }
+              if (window.puedeVerTrazabilidadCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
+                    class="dropdown-item waves-effect text-black trazabilidad"
+                    data-bs-toggle="modal" data-bs-target="#ModalTracking">
+                    <i class="ri-history-line text-secondary"></i> Trazabilidad</a>`;
+              }
+              if (window.puedeReexpedirCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
+                    class="dropdown-item waves-effect text-black reexpedir"
+                    data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor">
+                    <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>`;
+              }
+              if (window.puedeEliminarCertificadoGranel) {
+                acciones += `<a data-id="${full['id_certificado']}"
+                    class="dropdown-item waves-effect text-black eliminar">
+                    <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>`;
               }
             }
 
-            let acciones = '';
 
-            if (window.puedeEditarCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
-                          data-bs-toggle="modal" data-bs-target="#ModalEditar"
-                          href="javascript:;" class="dropdown-item text-dark editar">
-                          <i class="ri-edit-box-line ri-20px text-info"></i> Editar
-                        </a>`;
-            }
-
-            if (window.puedeSubirCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
-                          class="dropdown-item waves-effect text-dark subirPDF"
-                          data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
-                          <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF
-                        </a>`;
-            }
-
-            if (window.puedeVerDocumentacionCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
-                        data-bs-toggle="modal" data-bs-target="#ModalDocumentos"
-                        href="javascript:;" class="dropdown-item text-dark documentos">
-                        <i class="ri-folder-line ri-20px text-secondary"></i> Ver documentación
-                      </a>`;
-            }
-            if (window.puedeAsignarRevisorCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
-                          data-bs-toggle="modal" data-bs-target="#asignarRevisorModal"
-                          class="dropdown-item waves-effect text-dark">
-                          <i class="text-warning ri-user-search-fill"></i> Asignar revisor
-                        </a>`;
-            }
-
-            if (window.puedeDarVoBoCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" data-bs-toggle="modal"
-                          data-bs-target="#ModalVoBo" href="javascript:;" class="dropdown-item text-dark VoBo">
-                          <i class="ri-edit-box-line ri-20px text-light"></i> Vo. Bo.
-                        </a>`;
-            }
-
-            if (window.puedeVerTrazabilidadCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
-                          data-bs-toggle="modal" data-bs-target="#ModalTracking"
-                          class="dropdown-item waves-effect text-black trazabilidad">
-                          <i class="ri-history-line text-secondary"></i> Trazabilidad
-                        </a>`;
-            }
-
-            if (window.puedeReexpedirCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}"
-                          data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor"
-                          class="dropdown-item waves-effect text-black reexpedir">
-                          <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar
-                        </a>`;
-            }
-
-            if (window.puedeEliminarCertificadoGranel) {
-              acciones += `<a data-id="${full['id_certificado']}"
-                          class="dropdown-item waves-effect text-black eliminar">
-                          <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
-                        </a>`;
-            }
-
-            // Si no tiene permisos visibles
+            //🔒 Botones sin permisos deshabilitados
             if (!acciones.trim()) {
-              return `
-              <button class="btn btn-sm btn-secondary" disabled>
-                <i class="ri-lock-line ri-20px me-1"></i> Opciones
-              </button>
-            `;
+                return cancelado
+                    ? `<button class="btn btn-sm btn-danger" disabled><i class="ri-close-line ri-20px me-1"></i>Cancelado</button>`
+                    : `<button class="btn btn-sm btn-secondary" disabled><i class="ri-lock-2-line ri-20px me-1"></i>Opciones</button>`;
             }
 
-            return `
-            <div class="d-flex align-items-center gap-50">
-              <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                <i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>
-              </button>
-              <div class="dropdown-menu dropdown-menu-end m-0">
-                ${acciones}
-              </div>
-            </div>
-          `;
+            //✅ Botones con permisos
+            return `<div class="d-flex align-items-center gap-50">
+                      <button class="btn btn-sm btn-${cancelado ? 'danger' : 'info'} 
+                        dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="${cancelado ? 'ri-close-line' : 'ri-settings-5-fill'} ri-20px me-1"></i>
+                          ${cancelado ? 'Cancelado' : 'Opciones'} 
+                          ${cancelado ? '' : '<i class="ri-arrow-down-s-fill ri-20px"></i>'}
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end m-0">
+                          ${acciones}
+                      </div>
+                  </div>`;
           }
-
-          /*           render: function (data, type, full, meta) {
-                      return (
-                        '<div class="d-flex align-items-center gap-50">' +
-                        `<button class="btn btn-sm dropdown-toggle hide-arrow ` + (full['estatus'] == 1 ? 'btn-danger' : 'btn-info') + `" data-bs-toggle="dropdown">` +
-                        (full['estatus'] == 1 ? 'Cancelado' : '<i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>') +
-                        '</button>' +
-          
-                        '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                        ( full['estatus'] == 1 ?  //Mostrar solo trazabilidad si está cancelado
-                          `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>`
-                        :// Mostrar todas las opciones
-                          `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar"> <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-                          `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-dark subirPDF" data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">` + '<i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>' +
-                          `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalDocumentos" href="javascript:;" class="dropdown-item text-dark documentos"> <i class="ri-folder-line ri-20px text-secondary"></i> Ver documentación</a>` +
-                          `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-dark"> <i class="text-warning ri-user-search-fill"></i> Asignar revisor </a>` +
-                          `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalVoBo" href="javascript:;" class="dropdown-item text-dark VoBo"> <i class="ri-edit-box-line ri-20px text-light"></i> Vo. Bo.</a>` +
-                          `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalTracking"  class="dropdown-item waves-effect text-black trazabilidad"> <i class="ri-history-line text-secondary"></i> Trazabilidad</a>` +
-                          `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor" class="dropdown-item waves-effect text-black reexpedir"> <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>` +
-                          `<a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>`
-                        ) +
-                        '</div>' +
-                        '</div>'
-                      );
-                    } */
         }
       ],
 

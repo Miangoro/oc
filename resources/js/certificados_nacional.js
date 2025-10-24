@@ -327,85 +327,77 @@ if (dt_user_table.length) {
           }
         },
 
-        {
-          // Actions
+        { // Actions
           targets: -1,
           title: 'Acciones',
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            // Si está cancelado
-            if (full['estatus'] == 1) {
-              return `
-                <div class="d-flex align-items-center gap-50">
-                  <button class="btn btn-sm btn-danger disabled">Cancelado</button>
-                </div>
-              `;
-            }
-
-            // Acciones basadas en permisos
+            let cancelado = full['estatus'] == 1;
             let acciones = '';
 
-            if (window.puedeEditarCertificadoVentaNacional) {
-              acciones += `
-                <a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#ModalEditar"
-                  href="javascript:;" class="dropdown-item text-dark editar">
-                  <i class="ri-edit-box-line ri-20px text-info"></i> Editar
-                </a>`;
+            //Construir acciones según permisos
+            if (cancelado) {
+              if (window.puedeSubirCertificadoVentaNacional) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
+                    class="dropdown-item waves-effect text-dark subirPDF"
+                    data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
+                    <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>`;
+              }
+
+            } else {
+              if (window.puedeEditarCertificadoVentaNacional) {
+                acciones += `<a data-id="${full['id_certificado']}" 
+                    class="dropdown-item waves-effect text-dark editar"
+                    data-bs-toggle="modal" data-bs-target="#ModalEditar">
+                    <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>`;
+              }
+              if (window.puedeSubirCertificadoVentaNacional) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
+                    class="dropdown-item waves-effect text-dark subirPDF"
+                    data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
+                    <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF</a>`;
+              }
+              if (window.puedeAsignarRevisorCertificadoVentaNacional) {
+                acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" 
+                    class="dropdown-item waves-effect text-dark"
+                    data-bs-toggle="modal" data-bs-target="#asignarRevisorModal">
+                    <i class="text-warning ri-user-search-fill"></i> Asignar revisor</a>`;
+              }
+              if (window.puedeReexpedirCertificadoVentaNacional) {
+                acciones += `<a data-id="${full['id_certificado']}" 
+                    class="dropdown-item waves-effect text-black reexpedir"
+                    data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor">
+                    <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>`;
+              }
+              if (window.puedeEliminarCertificadoVentaNacional) {
+                acciones += `<a data-id="${full['id_certificado']}" 
+                    class="dropdown-item waves-effect text-black eliminar">
+                    <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>`;
+              }
             }
 
-            if (window.puedeSubirCertificadoVentaNacional) {
-              acciones += `<a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" class="dropdown-item waves-effect text-dark subirPDF"
-                              data-bs-toggle="modal" data-bs-target="#ModalCertificadoFirmado">
-                              <i class="ri-upload-2-line ri-20px text-secondary"></i> Adjuntar PDF
-                            </a>`;
-            }
 
-            if (window.puedeAsignarRevisorCertificadoVentaNacional) {
-              acciones += `
-                <a data-id="${full['id_certificado']}" data-folio="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal"
-                  class="dropdown-item waves-effect text-dark">
-                  <i class="text-warning ri-user-search-fill"></i> Asignar revisor
-                </a>`;
-            }
-
-            if (window.puedeReexpedirCertificadoVentaNacional) {
-              acciones += `
-                <a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAddReexCerExpor"
-                  class="dropdown-item waves-effect text-black reexpedir">
-                  <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar
-                </a>`;
-            }
-
-            if (window.puedeEliminarCertificadoVentaNacional) {
-              acciones += `
-                <a data-id="${full['id_certificado']}" class="dropdown-item waves-effect text-black eliminar">
-                  <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
-                </a>`;
-            }
-
-            // Si no hay acciones disponibles
+            //🔒 Botones sin permisos deshabilitados
             if (!acciones.trim()) {
-              return `
-                <button class="btn btn-sm btn-secondary" disabled>
-                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
-                </button>
-              `;
+                return cancelado
+                    ? `<button class="btn btn-sm btn-danger" disabled><i class="ri-close-line ri-20px me-1"></i>Cancelado</button>`
+                    : `<button class="btn btn-sm btn-secondary" disabled><i class="ri-lock-2-line ri-20px me-1"></i>Opciones</button>`;
             }
 
-            // Render final
-            return `
-              <div class="d-flex align-items-center gap-50">
-                <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                  <i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end m-0">
-                  ${acciones}
-                </div>
-              </div>
-            `;
+            //✅ Botones con permisos
+            return `<div class="d-flex align-items-center gap-50">
+                      <button class="btn btn-sm btn-${cancelado ? 'danger' : 'info'} 
+                        dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="${cancelado ? 'ri-close-line' : 'ri-settings-5-fill'} ri-20px me-1"></i>
+                          ${cancelado ? 'Cancelado' : 'Opciones'} 
+                          ${cancelado ? '' : '<i class="ri-arrow-down-s-fill ri-20px"></i>'}
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end m-0">
+                          ${acciones}
+                      </div>
+                  </div>`;
           }
-
         }
       ],
 

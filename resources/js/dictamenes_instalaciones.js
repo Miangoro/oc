@@ -274,64 +274,52 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            const estatus = full['estatus']; // 1 = Cancelado
-
-            const puedeEditar = window.puedeEditarElUsuario;
-            const puedeEliminar = window.puedeEliminarElUsuario;
-            const puedeReexpedir = window.puedeReexpedirElUsuario;
-
-            // Si está cancelado, mostrar botón rojo deshabilitado
-            if (estatus == 1) {
-              return `
-                <button class="btn btn-sm btn-danger disabled">
-                  <i class="ri-close-line ri-20px me-1"></i> Cancelado
-                </button>
-              `;
-            }
-
+            let cancelado = full['estatus'] == 1;
             let acciones = '';
 
-            if (puedeEditar) {
-              acciones += `
-                <a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#ModalEditar" href="javascript:;" class="dropdown-item text-dark editar">
-                  <i class="ri-edit-box-line ri-20px text-info"></i> Editar
-                </a>`;
+            //Construir acciones según permisos
+            if (cancelado) {
+              
+            } else {
+              if (window.puedeEditarElUsuario) {
+                acciones += `<a data-id="${full['id_dictamen']}" 
+                    class="dropdown-item waves-effect text-dark editar"
+                    data-bs-toggle="modal" data-bs-target="#ModalEditar">
+                    <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>`;
+              }
+              if (window.puedeReexpedirElUsuario) {
+                acciones += `<a data-id="${full['id_dictamen']}" 
+                    class="dropdown-item waves-effect text-dark reexpedir"
+                    data-bs-toggle="modal" data-bs-target="#ModalReexpedir" >
+                    <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar</a>`;
+              }
+              if (window.puedeEliminarElUsuario) {
+                acciones += `<a data-id="${full['id_dictamen']}" 
+                    class="dropdown-item waves-effect text-dark eliminar">
+                    <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>`;
+              }
             }
 
-            if (puedeReexpedir) {
-              acciones += `
-                <a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#ModalReexpedir" href="javascript:;" class="dropdown-item waves-effect text-dark reexpedir">
-                  <i class="ri-file-edit-fill text-success"></i> Reexpedir/Cancelar
-                </a>`;
-            }
 
-            if (puedeEliminar) {
-              acciones += `
-                <a data-id="${full['id_dictamen']}" href="javascript:;" class="dropdown-item waves-effect text-dark eliminar">
-                  <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar
-                </a>`;
-            }
-
-            // Si no hay acciones disponibles
+            //🔒 Botones sin permisos deshabilitados
             if (!acciones.trim()) {
-              return `
-                <button class="btn btn-sm btn-secondary" disabled>
-                  <i class="ri-lock-2-line ri-20px me-1"></i> Opciones
-                </button>
-              `;
+                return cancelado
+                    ? `<button class="btn btn-sm btn-danger" disabled><i class="ri-close-line ri-20px me-1"></i>Cancelado</button>`
+                    : `<button class="btn btn-sm btn-secondary" disabled><i class="ri-lock-2-line ri-20px me-1"></i>Opciones</button>`;
             }
 
-            // Construir dropdown normal
-            return `
-              <div class="d-flex align-items-center gap-50">
-                <button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                  <i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end m-0">
-                  ${acciones}
-                </div>
-              </div>
-            `;
+            //✅ Botones con permisos
+            return `<div class="d-flex align-items-center gap-50">
+                      <button class="btn btn-sm btn-${cancelado ? 'danger' : 'info'} 
+                        dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="${cancelado ? 'ri-close-line' : 'ri-settings-5-fill'} ri-20px me-1"></i>
+                          ${cancelado ? 'Cancelado' : 'Opciones'} 
+                          ${cancelado ? '' : '<i class="ri-arrow-down-s-fill ri-20px"></i>'}
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end m-0">
+                          ${acciones}
+                      </div>
+                  </div>`;
           }
 
         }
