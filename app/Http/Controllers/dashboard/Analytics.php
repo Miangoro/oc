@@ -22,7 +22,7 @@ use App\Models\User;
 use App\Models\carousel;
 use App\Models\empresa;
 use App\Models\mensajes_dashboard;
-
+use App\Models\solicitudHolograma;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -281,8 +281,9 @@ $pendientesRevisarCertificadosConsejo = Revisor::where('decision', 'Pendiente')
             return intval(substr($inspeccion->solicitud->folio ?? 'SOL-0', 4));
         });
 
+        $solicitudesHologramasPendientes = solicitudHolograma::where('estatus','Pendiente')->get();
 
-    return view('content.dashboard.dashboards-analytics', compact('clientes','empresaId','actasSinActivarHologramas','maquiladora','maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado', 'imagenes', 'mensajes', 'revisionActa'));
+    return view('content.dashboard.dashboards-analytics', compact('solicitudesHologramasPendientes','clientes','empresaId','actasSinActivarHologramas','maquiladora','maquiladores','certificadoInstalacionesSinEscaneado','certificadoExportacionSinEscaneado','pendientesRevisarCertificadosConsejo','serviciosInstalacion','revisiones','usuarios','marcasConHologramas','TotalCertificadosExportacionPorMes','certificadoGranelSinEscaneado','lotesSinFq','inspeccionesInspector','solicitudesSinInspeccion', 'solicitudesSinActa','solicitudesSinDictamen' , 'dictamenesPorVencer', 'certificadosPorVencer', 'dictamenesInstalacionesSinCertificado', 'dictamenesGranelesSinCertificado','dictamenesExportacionSinCertificado', 'imagenes', 'mensajes', 'revisionActa'));
   }
 
 

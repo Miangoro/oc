@@ -572,7 +572,17 @@
                     <h4 class="mb-0">{{ $actasSinActivarHologramas->count() }}</h4>
                 </div>
                 <h6 class="mb-0 fw-normal">Actas sin activar hologramas</h6>
-
+                <hr>
+                <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                    data-bs-target="#modalactasSinActivarHologramas">
+                    <div class="avatar me-4">
+                        <span class="avatar-initial rounded-3 bg-label-danger">
+                            <i class="ri-close-circle-line ri-24px"></i>
+                        </span>
+                    </div>
+                    <h4 class="mb-0">{{ $solicitudesHologramasPendientes->count() }}</h4>
+                </div>
+                <h6 class="mb-0 fw-normal">Solicitudes de hologramas pendientes</h6>
                 <hr>
                 <p class="mb-0">
                     <!--<span class="me-1 fw-medium">-2.5%</span>
