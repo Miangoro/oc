@@ -574,7 +574,7 @@
                 <h6 class="mb-0 fw-normal">Actas sin activar hologramas</h6>
                 <hr>
                 <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
-                    data-bs-target="#modalactasSinActivarHologramas">
+                    data-bs-target="#">
                     <div class="avatar me-4">
                         <span class="avatar-initial rounded-3 bg-label-danger">
                             <i class="ri-close-circle-line ri-24px"></i>
