@@ -463,11 +463,11 @@ $(function () {
         { data: '' }, //0   
         { data: 'fake_id' }, //1
         { data: 'id_inspeccion' },    //2
-        { data: 'num_servicio' },  //4
-        { data: 'id_revisor' },       //5
-        { data: 'created_at' },       //6
-        { data: 'decision' },         //7
-        { data: 'actions' }           //8
+        { data: 'num_servicio' },  //3
+        { data: 'id_revisor' },       //4
+        { data: 'created_at' },       //5
+        { data: 'decision' },         //6
+        { data: 'actions' }           //7
       ],
       columnDefs: [
         {
@@ -575,7 +575,8 @@ $(function () {
         },*/
         {
           targets: 6,
-          orderable: 0,
+          searchable: true,
+          orderable: true,
           render: function (data, type, full, meta) {
             let decision = full['decision'];
             let colorDecision;

@@ -80,16 +80,16 @@ class RevisionPersonalController extends Controller
         ])->where('tipo_revision', 1); // Solo revisiones de OC
 
 
-        // Filtrar por usuario si no es admin (ID 8)
-        if ($userId != 1 AND $userId !=2  AND $userId !=3  AND $userId !=4 AND $userId !=320) {
+        // Filtrar por usuario si no es admin
+        if (!in_array($userId, [1,2,3,4,320])) {
             $queryRevisor->where('id_revisor', $userId);
         }
+        // Filtrar por tipo de certificado
         if ($tipoCertificado) {
             $queryRevisor->where('tipo_certificado', $tipoCertificado);
         }
-
         // Filtros de búsqueda
-        if ($search) {
+        /*if ($search) {
             $queryRevisor->where(function ($q) use ($search) {
           $tipoCertificado = null;
         $searchLower = strtolower($search);
@@ -105,8 +105,6 @@ class RevisionPersonalController extends Controller
         ) {
             $tipoCertificado = 1;
         }
-
-
                 $q->orWhereHas('user', function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%");
                 })->orWhere(function ($date) use ($search) {
@@ -126,7 +124,61 @@ class RevisionPersonalController extends Controller
             $q->orWhere('tipo_certificado', $tipoCertificado);
         }
             });
+        }*/
+        if ($search) {
+            $searchLower = strtolower($search);
 
+            // Detectar tipo de certificado por texto
+            $tipoCertificado = null;
+            if (str_contains($searchLower, 'granel')) {
+                $tipoCertificado = 2;
+            } elseif (str_contains($searchLower, 'exportacion') || str_contains($searchLower, 'exportación')) {
+                $tipoCertificado = 3;
+            } elseif (
+                str_contains($searchLower, 'instalacion') || str_contains($searchLower, 'instalación') ||
+                str_contains($searchLower, 'productor') || str_contains($searchLower, 'envasador') ||
+                str_contains($searchLower, 'comercializador') || str_contains($searchLower, 'bodega') ||
+                str_contains($searchLower, 'maduracion') || str_contains($searchLower, 'maduración')
+            ) {
+                $tipoCertificado = 1;
+            }
+
+            // Callback general para buscar empresa (razón social y número de cliente)
+            $buscarEmpresa = function($q) use ($search) {
+                $q->where('razon_social', 'like', "%{$search}%")
+                ->orWhereHas('empresaNumClientes', function($q2) use ($search) {
+                    $q2->where('numero_cliente', 'like', "%{$search}%");
+                });
+            };
+
+
+            $queryRevisor->where(function ($q) use ($search, $tipoCertificado, $buscarEmpresa) {
+                $q->orWhereHas('user', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })
+                ->orWhere(function ($date) use ($search) {
+                    $date->whereRaw("DATE_FORMAT(created_at, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+                })
+                ->orWhere(function ($date2) use ($search) {
+                    $date2->whereRaw("DATE_FORMAT(updated_at, '%d de %M del %Y') LIKE ?", ["%$search%"]);
+                })
+                ->orWhereHas('certificadoNormal', function ($sub) use ($search, $buscarEmpresa) {
+                    $sub->where('num_certificado', 'like', "%{$search}%")
+                        ->orWhereHas('dictamen.inspeccione.solicitud.empresa', $buscarEmpresa);
+                })
+                ->orWhereHas('certificadoGranel', function ($sub) use ($search, $buscarEmpresa) {
+                    $sub->where('num_certificado', 'like', "%{$search}%")
+                        ->orWhereHas('dictamen.inspeccione.solicitud.empresa', $buscarEmpresa);
+                })
+                ->orWhereHas('certificadoExportacion', function ($sub) use ($search, $buscarEmpresa) {
+                    $sub->where('num_certificado', 'like', "%{$search}%")
+                        ->orWhereHas('dictamen.inspeccione.solicitud.empresa', $buscarEmpresa);
+                });
+
+                if (!is_null($tipoCertificado)) {
+                    $q->orWhere('tipo_certificado', $tipoCertificado);
+                }
+            });
         }
 
 

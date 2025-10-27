@@ -110,13 +110,26 @@ public function index(Request $request)
         ->where('id_tipo', '!=', 12);
 
 
-    $columnsInput = $request->input('columns');
-
+    /*$columnsInput = $request->input('columns');
     if ($columnsInput && isset($columnsInput[6]) && !empty($columnsInput[6]['search']['value'])) {
         $tipoFilter = $columnsInput[6]['search']['value'];
         // Filtro exacto o LIKE según necesites
         $query->whereHas('tipo_solicitud', function($q) use ($tipoFilter) {
             $q->where('tipo', 'LIKE', "%{$tipoFilter}%");
+        });
+    }*/
+    //Aplicar filtros botones
+    $filtros = $request->input('filtros', []);
+    // Aplicar filtro por tipo de solicitud
+    if (!empty($filtros['tipo_solicitud'])) {
+        $query->whereHas('tipo_solicitud', function($q) use ($filtros) {
+            $q->where('tipo', 'LIKE', "%{$filtros['tipo_solicitud']}%");
+        });
+    }
+    // Aplicar filtro por inspector
+    if (!empty($filtros['id_inspector'])) {
+        $query->whereHas('inspector', function($q) use ($filtros) {
+            $q->where('id', $filtros['id_inspector']); // <-- comparar por ID, no por name
         });
     }
 

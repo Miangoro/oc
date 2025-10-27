@@ -30,6 +30,8 @@
 @section('page-script')
     @vite(['resources/js/inspecciones.js'])
     <script>
+        const inspectores = @json($inspectores);//para los filtros
+
         window.puedeAsignarRevisor = @json(auth()->user()->can('Asignar revisor de acta'));
 
         document.addEventListener('DOMContentLoaded', function() {

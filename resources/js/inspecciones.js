@@ -2,14 +2,15 @@ $(function () {
   // Definir la URL base
   var baseUrl = window.location.origin + '/';
 
-  // 1. Declarar primero los filtros
+
+  //Declarar los filtros de solicitudes
   const filtros = [
     'Muestreo de agave (ART)',
     'Dictaminación de instalaciones',
     'Vigilancia en producción de lote',
     'Muestreo de lote a granel',
     'Vigilancia en el traslado del lote',
-    'Emisión de certificado NOM a granel',
+    //'Emisión de certificado NOM a granel',
     'Inspección ingreso a barrica/ contenedor de vidrio',
     'Inspección de liberación a barrica/contenedor de vidrio',
     'Georreferenciación',
@@ -20,39 +21,84 @@ $(function () {
     'Emisión de certificado venta nacional',
     'Revisión de etiquetas'
   ];
+  
+  let filtrosActivos = {
+    tipo_solicitud: '',
+    id_inspector: ''
+  };
+  // Función para actualizar botones según filtros activos
+  function actualizarBotones() {
+      const clasesColor = 'btn-primary btn-secondary btn-success btn-danger btn-warning btn-info btn-light btn-dark btn-outline-primary btn-outline-secondary btn-outline-success btn-outline-danger btn-outline-warning btn-outline-info';
+      const botones = [
+        { boton: window.botonSolicitud, activo: filtrosActivos.tipo_solicitud },
+        { boton: window.botonInspector, activo: filtrosActivos.id_inspector }
+      ];
 
-  // 2. Generar los botones dinámicamente
-  const filtroButtons = filtros.map(filtro => ({
-    text: filtro,
-    className: 'dropdown-item',
-    action: function (e, dt, node, config) {
-      dt_instalaciones_table.search(filtro).draw();
-      $('.dt-button-collection').hide(); // Ocultar el dropdown al seleccionar
-    }
-  }));
-  filtroButtons.unshift({
-    text: '<i class="ri-close-line text-danger me-2"></i>Quitar filtro',
-    className: 'dropdown-item text-danger fw-semibold border',
-    action: function (e, dt, node, config) {
-      dt_instalaciones_table.search('').draw();
-      $('.dt-button-collection').hide(); // Ocultar dropdown también
-    }
-  });
+      botones.forEach(({ boton, activo }) => {
+        if (boton?.length) boton.removeClass(clasesColor).addClass(activo ? 'btn-outline-primary' : 'btn-outline-secondary');
+      });
+  }
+  // Función para recargar tabla
+  function recargarTabla() {
+    dt_instalaciones_table.ajax.reload(function() {
+      actualizarBotones();
+    });
+  }
+
+// Botones dinámicos de tipo de solicitud
+const filtroButtons = filtros.map(filtro => ({
+  text: filtro,
+  className: 'dropdown-item',
+  action: function () {
+    filtrosActivos.tipo_solicitud = filtro;
+    recargarTabla();            // <-- recarga y actualiza botones
+    $('.dt-button-collection').hide();
+  }
+}));
+filtroButtons.unshift({
+  text: '<i class="ri-close-line text-danger me-2"></i>Quitar filtro',
+  className: 'dropdown-item text-danger fw-semibold border',
+  action: function () {
+    filtrosActivos.tipo_solicitud = '';
+    recargarTabla();
+    $('.dt-button-collection').hide();
+  }
+});
+
+// Botones dinámicos de inspectores
+const filtroInspectorButtons = inspectores.map(ins => ({
+  text: ins.name,
+  className: 'dropdown-item',
+  action: function () {
+    filtrosActivos.id_inspector = ins.id;
+    recargarTabla();
+    $('.dt-button-collection').hide();
+  }
+}));
+filtroInspectorButtons.unshift({
+  text: '<i class="ri-close-line text-danger me-2"></i>Quitar filtro',
+  className: 'dropdown-item text-danger fw-semibold border',
+  action: function () {
+    filtrosActivos.id_inspector = '';
+    recargarTabla();
+    $('.dt-button-collection').hide();
+  }
+});
 
 
-  // Inicializar DataTable
-  var dt_instalaciones_table = $('.datatables-users').DataTable({
+
+// Inicializar DataTable
+var dt_instalaciones_table = $('.datatables-users').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
       url: baseUrl + 'inspecciones-list',
       type: 'GET',
-      dataSrc: function (json) {
-        console.log(json); // Ver los datos en la consola
-        return json.data;
+      data: function(d) {
+        d.filtros = filtrosActivos; // Enviar filtros al servidor
       },
       error: function (xhr, error, thrown) {
-        console.error('Error en la solicitud Ajax:', error);
+        //console.error('Error en la solicitud Ajax:', error);
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -479,140 +525,21 @@ $(function () {
       }
     },
     buttons: [
-    /*   {
+      {
         extend: 'collection',
-        className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-        text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-        buttons: [
-          {
-            extend: 'print',
-            title: 'Instalaciones',
-            text: '<i class="ri-printer-line me-1"></i>Print',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, coldex, rowdex) {
-                  if (inner.length <= 0) return inner;
-                  var el = $.parseHTML(inner);
-                  var result = '';
-                  $.each(el, function (index, item) {
-                    if (item.classList !== undefined && item.classList.contains('user-name')) {
-                      result += item.lastChild.firstChild.textContent;
-                    } else if (item.innerText === undefined) {
-                      result += item.textContent;
-                    } else {
-                      result += item.innerText;
-                    }
-                  });
-                  return result;
-                }
-              }
-            },
-            customize: function (win) {
-              // Customize print view for dark
-              $(win.document.body)
-                .css('color', config.colors.headingColor)
-                .css('border-color', config.colors.borderColor)
-                .css('background-color', config.colors.body);
-              $(win.document.body)
-                .find('table')
-                .addClass('compact')
-                .css('color', 'inherit')
-                .css('border-color', 'inherit')
-                .css('background-color', 'inherit');
-            }
-          },
-          {
-            extend: 'csv',
-            title: 'Instalaciones',
-            text: '<i class="ri-file-text-line me-1"></i>CSV',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 8 || columnIndex === 11) {
-                    return 'ViewSuspend';
-                  }
-                  if (columnIndex === 1) {
-                    // Asegúrate de que el índice de columna es el correcto para el ID
-                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
-                  }
-                  return inner;
-                }
-              }
-            }
-          },
-          {
-            extend: 'excel',
-            title: 'Instalaciones',
-            text: '<i class="ri-file-excel-line me-1"></i>Excel',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 8 || columnIndex === 11) {
-                    return 'ViewSuspend';
-                  }
-                  if (columnIndex === 1) {
-                    // Asegúrate de que el índice de columna es el correcto para el ID
-                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
-                  }
-                  return inner;
-                }
-              }
-            }
-          },
-          {
-            extend: 'pdf',
-            title: 'Instalaciones',
-            text: '<i class="ri-file-pdf-line me-1"></i>PDF',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 1) {
-                    // Asegúrate de que el índice de columna es el correcto para el ID
-                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
-                  }
-                  return inner;
-                }
-              }
-            }
-          },
-          {
-            extend: 'copy',
-            title: 'Instalaciones',
-            text: '<i class="ri-file-copy-line me-1"></i>Copy',
-            className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-              format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 8 || columnIndex === 11) {
-                    return 'ViewSuspend';
-                  }
-                  if (columnIndex === 1) {
-                    // Asegúrate de que el índice de columna es el correcto para el ID
-                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
-                  }
-                  return inner;
-                }
-              }
-            }
-          }
-        ]
-      }, */
-       {
-        extend: 'collection',
-        className:
-          'btn btn-outline-primary btn-lg dropdown-toggle me-4 waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4 mt-md-0',
-        text: '<i class="ri-filter-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Filtrar</span>',
-        buttons: filtroButtons
+        className: 'btn btn-outline-secondary btn-lg dropdown-toggle me-4 waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4 mt-md-0',
+        text: '<i class="ri-filter-line ri-16px me-2"></i>Filtrar solicitud',
+        buttons: filtroButtons,
+        init: function(api, node) { window.botonSolicitud = $(node); }
       },
+      {
+        extend: 'collection',
+        className: 'btn btn-outline-secondary btn-lg dropdown-toggle me-4 waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4 mt-md-0',
+        text: '<i class="ri-user-line ri-16px me-2"></i>Filtrar inspector',
+        buttons: filtroInspectorButtons,
+        init: function(api, node) { window.botonInspector = $(node); }
+      },
+
       {
         text: '<i class="ri-file-excel-2-fill ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
         className: 'btn btn-info waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4  mt-md-0',
@@ -623,6 +550,9 @@ $(function () {
         }
       }
     ],
+    //para actualizar botones
+    drawCallback: function() { actualizarBotones(); },
+    
 
     // For responsive popup
     responsive: {
@@ -657,7 +587,9 @@ $(function () {
         }
       }
     }
-  });
+
+});
+
 
   var dt_user_table = $('.datatables-users'),
     select2Elements = $('.select2'),
