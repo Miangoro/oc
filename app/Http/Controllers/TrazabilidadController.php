@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Certificado_Exportacion;
 use App\Models\Certificados;
 use App\Models\CertificadosGranel;
+use App\Models\Certificado_Nacional;
 use App\Models\Dictamen_Exportacion;
 use App\Models\Revisor;
 //para lotes
@@ -695,12 +696,12 @@ $folioStyle ="style='background:#3A8DFF;color:white;padding:2px 4px;border-radiu
 ///EXTRAER LOTES ENVASADO
 private function extraerLotesEnvasado($solicitud)
 {
-    if (in_array($solicitud->id_tipo, [5, 8])) {// Retorna un array con un solo ID si existe
+    if (in_array($solicitud->id_tipo, [5, 8, 13])) {// Retorna un array con un solo ID si existe
         $lote = $solicitud->lote_envasado; 
         return $lote ? [$lote->id_lote_envasado] : [];
     }
 
-    if ($solicitud->id_tipo === 11) {// Retorna múltiples IDs desde JSON
+    if (in_array($solicitud->id_tipo, [11, 16])) {// Retorna múltiples IDs desde JSON
         return $solicitud->lotesEnvasadoDesdeJson()->pluck('id_lote_envasado')->toArray();
     }
 
@@ -741,7 +742,7 @@ $totalCajas = 0;
     ]];
 
     // Obtener solicitudes relacionadas
-    $solicitudes = SolicitudesModel::whereIn('id_tipo', [5,8,11])->get()
+    $solicitudes = SolicitudesModel::whereIn('id_tipo', [5,8,11,13,16])->get()
         ->filter(fn($sol) => in_array($lote->id_lote_envasado, $this->extraerLotesEnvasado($sol)));
 
     // Generar  logs por cada solicitud asociada
@@ -799,7 +800,7 @@ $totalCajas = 0;
             if ($solicitud->id_tipo == 5 && $inspeccion->dictamenEnvasado) {
                 $dictamen = $inspeccion->dictamenEnvasado;
                 $ruta = "/dictamen_envasado/{$dictamen->id_dictamen_envasado}";
-            } elseif ($solicitud->id_tipo == 11 && $inspeccion->dictamenExportacion) {
+            } elseif (in_array($solicitud->id_tipo, [11, 16]) && $inspeccion->dictamenExportacion) {
                 $dictamen = $inspeccion->dictamenExportacion;
                 $ruta = "/dictamen_exportacion/{$dictamen->id_dictamen}";
             }
@@ -877,7 +878,7 @@ $totalCajas = 0;
                     // Buscar el detalle correspondiente al lote actual
                     $detalleActual = $detalles->first(fn($d) => $d['id_lote_envasado'] == $lote->id_lote_envasado);
 
-                    $caracteristicas = 'N/A';
+                    $caracteristicas = 'No encontrado';
                     if ($detalleActual) {
                         // Si esta cancelado
                         if ($certificado->estatus == 1) {
@@ -900,6 +901,72 @@ $totalCajas = 0;
                     ];
                 }
             }
+        }
+
+        // CERTIFICADOS (solicitudes tipo 13, sin inspección ni dictamen propio)
+        if ($solicitud->id_tipo === 13) {
+            $certificado = Certificado_Nacional::where('id_solicitud', $solicitud->id_solicitud)->first();
+            if (!$certificado) continue;//si aun no crean el certificado
+
+            // Número de cliente
+            $numero_cliente = $certificado->solicitud->empresa
+                ?->empresaNumClientes->first(fn($item) => 
+                $item->empresa_id === $lote->empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'No encontrado';
+
+            // Buscar certificado firmado (id_documento = 59)
+            $documentacion = Documentacion_url::where('id_relacion', $certificado->id_certificado)
+                ->where('id_documento', 138)
+                ->first();
+            $pdf_firmado = $documentacion?->url
+                ? asset("files/{$numero_cliente}/certificados_nacional/{$documentacion->url}")
+                : null;
+            if ($pdf_firmado) {
+                $pdfIcon = "<a href='{$pdf_firmado}' target='_blank' title='Ver PDF firmado'>
+                <i class='ri-file-pdf-2-fill text-success ri-20px'></i></a>";
+            } else {
+                $pdfIcon = "<a href='/certificado_venta_nacional/{$certificado->id_certificado}' target='_blank'><i class='ri-file-pdf-2-fill text-danger ri-20px'></i></a>";
+            }
+
+            $logs[] = [
+                'titulo' => "Certificado asociado a la solicitud",
+                'registro' => Carbon::parse($certificado->fecha_emision)->format('Y-m-d'),
+                'contenido' => "<b>Número de certificado:</b> <span {$folioStyle}>
+                    {$certificado->num_certificado}</span>{$pdfIcon}, <b>Número de dictamen:</b> {$certificado->dictamen->num_dictamen}",
+                'colorBase' => $color,
+                'borderClass' => "border border-$color",
+                'icono' => 'ri-award-line'
+            ];
+
+
+            /// INICIO TABLA DE CERTIFICADOS NACIONALES
+            // Evitar duplicados
+            if (in_array($certificado->id_certificado, $certificadosAgregados)) {
+                continue;
+            }
+            $certificadosAgregados[] = $certificado->id_certificado;
+
+            // Extraer características del lote
+            $carac = $solicitud->caracteristicasDecodificadas();
+            $botellasBase = intval($carac['cantidad_botellas'] ?? 0);
+            $cajasBase = intval($carac['cantidad_cajas'] ?? 0);
+            
+            $caracteristicas = 'No encontrado';
+            if ($certificado->estatus == 1) {
+                $caracteristicas = "0 botellas / 0 cajas";
+            } else {
+                $caracteristicas = "{$botellasBase} botellas / {$cajasBase} cajas";
+                $totalBotellas += $botellasBase;
+                $totalCajas += $cajasBase;
+            }
+            
+            $certificadosTabla[] = [
+                'fecha' => Carbon::parse($certificado->fecha_emision)->format('Y-m-d'),
+                'certificado' => $certificado->num_certificado . 
+                    ($certificado->estatus == 1 ? " <span class='text-danger'>(Cancelado)</span>" : "") . 
+                    $pdfIcon,
+                'caracteristicas' => $caracteristicas,
+                'lote' => $lote
+            ];
         }
     }
 
