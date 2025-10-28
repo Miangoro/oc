@@ -44,6 +44,21 @@
             z-index:-1;
         }
 
+        .watermark-preliminar {
+            font-family: Arial;
+            color: red;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
+            opacity: 0.2;
+            /* Opacidad predeterminada */
+            letter-spacing: 3px;
+            font-size: 150px;
+            white-space: nowrap;
+            z-index:-1;
+        }
+
         .header img {
             float: left;
             margin-left: -10px;
@@ -250,8 +265,8 @@
             Cancelado
         </div>
     @else
-        <div class="watermark-cancelado">
-            Preliminar
+        <div class="watermark-preliminar">
+            Versión preliminar
         </div>
         @endif
     <div class="margen_mezcal_granel"></div>
