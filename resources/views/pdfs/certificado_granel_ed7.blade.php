@@ -39,7 +39,7 @@
             opacity: 0.5;
             /* Opacidad predeterminada */
             letter-spacing: 3px;
-            font-size: 110px;
+            font-size: 150px;
             white-space: nowrap;
             z-index:-1;
         }
@@ -54,7 +54,7 @@
             opacity: 0.2;
             /* Opacidad predeterminada */
             letter-spacing: 3px;
-            font-size: 150px;
+            font-size: 110px;
             white-space: nowrap;
             z-index:-1;
         }
