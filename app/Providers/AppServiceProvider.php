@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Livewire\Profile\UpdatePasswordForm;
+use Livewire\Livewire;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Vite;
 
@@ -29,5 +31,6 @@ class AppServiceProvider extends ServiceProvider
       }
       return [];
     });
+    Livewire::component('profile.update-password-form', UpdatePasswordForm::class);
   }
 }
