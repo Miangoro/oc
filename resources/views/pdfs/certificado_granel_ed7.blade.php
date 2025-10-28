@@ -249,8 +249,11 @@
         <div class="watermark-cancelado">
             Cancelado
         </div>
-    @endif
-    
+    @else
+        <div class="watermark-cancelado">
+            Preliminar
+        </div>
+        @endif
     <div class="margen_mezcal_granel"></div>
     <img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Marca de Agua" class="watermark">
 
