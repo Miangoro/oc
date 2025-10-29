@@ -346,7 +346,7 @@
                             --
                         @endif
                         <br> ORIGEN
-                        {{-- {{ $data->inspeccion->solicitud->instalacion->estados->nombre ?? 'N/A' }} --}}
+                    {{-- {{ $data->inspeccion->solicitud->instalacion->estados->nombre ?? 'N/A' }} --}}
                         @if ($lotesGranel->isNotEmpty())
                             @foreach ($lotesGranel as $loteGranel)
                                 {{-- {{ strtoupper($loteGranel->estados->nombre ?? 'No encontrado') }} --}}

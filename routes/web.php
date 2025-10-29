@@ -201,6 +201,7 @@ use App\Http\Controllers\hologramas\solicitudHolograma_052;
 use App\Http\Controllers\catalogo\catalogoEquiposController;
 use App\Http\Controllers\insertar_datos_bd;
 use App\Http\Controllers\inspecciones\inspeccionesController;
+use App\Http\Controllers\inspecciones\EtiquetasUIController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\solicitudes\solicitudesController;
 use App\Http\Controllers\solicitudes\Solicitudes052Controller;
@@ -898,7 +899,34 @@ Route::get('/etiqueta-barrica/{id_inspeccion}', 'etiqueta_barrica')->name('etiqu
 
     Route::get('/revisores-disponibles/{id_inspeccion}', 'revisores')->name('revisor UI');
     Route::post('/asignar-revisor-acta', 'asignarRevisor')->name('asignar-revisor-acta');
+
+
+    
 });
+
+//-------------------ETIQUETAS UI-------------------
+Route::middleware(['auth'])->controller(EtiquetasUIController::class)->group(function () {
+    //mezcal granel
+    /*Route::get('/etiqueta-ui/mezcal-granel', 'UserManagement')->name('etiqueta-ui-1');
+    Route::resource('etiquetas-list-granel', EtiquetasUIController::class);
+    //agave art
+    Route::get('/etiqueta-ui/agave-art', 'UserManagement2')->name('etiqueta-ui-2');
+    Route::resource('etiquetas-list-art', EtiquetasUIController::class);*/
+    // Mezcal a granel
+    Route::get('/etiqueta-ui/mezcal-granel', 'UserManagement')->name('etiqueta-ui-1');
+    Route::get('/etiquetas-list-granel', 'index')->name('etiqueta-granel.index');
+    // Agave ART
+    Route::get('/etiqueta-ui/agave-art', 'UserManagement2')->name('etiqueta-ui-2');
+    Route::get('/etiquetas-list-art', 'index2')->name('etiqueta-art.index');
+    // Ingreso maduracion
+    Route::get('/etiqueta-ui/maduracion', 'UserManagement3')->name('etiqueta-ui-3');
+    Route::get('/etiquetas-list-maduracion', 'index3')->name('etiqueta-maduracion.index');
+    // Tapa muestra
+    Route::get('/etiqueta-ui/tapa-muestra', 'UserManagement4')->name('etiqueta-ui-4');
+    Route::get('/etiquetas-list-tapa', 'index4')->name('etiqueta-muestra.index');
+
+});
+
 
 //-------------------HOLOGRAMAS - SOLICITUD DE HOLOGRAMAS-------------------
 Route::middleware(['auth'])->controller(solicitudHolograma::class)->group(function () {

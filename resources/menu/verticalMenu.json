@@ -123,6 +123,37 @@
       "slug": "inspecciones",
       "can": "Visualizar inspecciones"
     },
+
+    {
+      "name": "Etiquetas UI",
+      "icon": "menu-icon ri-price-tag-3-fill",
+      "slug": "etiqueta-ui",
+      "can": "Visualizar solo admin",
+      "submenu": [
+        {
+          "name": "Mezcal a granel",
+          "url": "/etiqueta-ui/mezcal-granel",
+          "slug": "etiqueta-ui-1"
+        },
+        {
+          "name": "Agave ART",
+          "url": "/etiqueta-ui/agave-art",
+          "slug": "etiqueta-ui-2"
+        },
+        {
+          "name": "Ingreso maduracion",
+          "url": "/etiqueta-ui/maduracion",
+          "slug": "etiqueta-ui-3"
+        },
+        {
+          "name": "Tapa muestra",
+          "url": "/etiqueta-ui/tapa-muestra",
+          "slug": "etiqueta-ui-4"
+        }
+      ]
+    },
+
+
     {
       "name": "Dictámenes de cumplimiento",
       "icon": "menu-icon ri-auction-fill",
