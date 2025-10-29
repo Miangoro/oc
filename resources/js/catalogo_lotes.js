@@ -1110,9 +1110,16 @@ async function obtenerDestinoEmpresa() {
               return guia.id;
             });
             $('#edit_id_guia').val(guiasIds).trigger('change');
-            $('#edit_volumen').val(lote.volumen_sin_agua); //antes era volumen
+            /* $('#edit_volumen').val(lote.volumen_sin_agua); */ //antes era volumen
+            $('#edit_volumen').val(
+                (lote.volumen_sin_agua && lote.volumen_sin_agua != 0)
+                    ? lote.volumen_sin_agua
+                    : lote.volumen
+            );
+
+
             if (window.puedeVerElUsuario && $('#edit_volumen_restante').length > 0) {
-              $('#edit_volumen_restante').val(lote.volumen_sin_agua); //antes era volumen_restante
+              $('#edit_volumen_restante').val(lote.volumen_restante); //antes era volumen_sin_agua
             }
             $('#edit_volumen_total').val(lote.volumen);
             $('#edit_cont_alc').val(lote.cont_alc);
