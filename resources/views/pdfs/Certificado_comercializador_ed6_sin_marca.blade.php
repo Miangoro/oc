@@ -382,7 +382,7 @@
                     Convenio de corresponsabilidad:
                 </td>
                 <td class="td-margins"
-                    style="text-align: left; padding-left: 12px; margin-left: 5px; padding-top: 7px; padding-bottom: 7px;">
+                    style="font-size: 13px; text-align: left; padding-left: 12px; margin-left: 5px; padding-top: 7px; padding-bottom: 7px;">
                     {{ $convenio_corresponsabilidad }}
                 </td>
             </tr>
