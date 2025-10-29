@@ -180,6 +180,13 @@
                             <label for="id_contacto">Empresa maquiladora</label>
                         </div>
                     </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <textarea id="convenio_empresas_edit" rows="4" name="convenio_empresas" class="form-control"  placeholder="NOM-070-430C"></textarea>
+                        <label>Convenio con empresas</label>
+                        </div>
+                    </div>
                   </div>
 
                   <div class="row">

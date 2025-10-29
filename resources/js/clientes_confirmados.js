@@ -917,6 +917,7 @@ window.abrirModal = function(id_empresa) {
                   $('#registro_productor_edit').val(dato.registro_productor);
                   $('#convenio_corresp_edit').val(dato.convenio_corresp);
                   $('#estatus').val(dato.estatus).trigger('change');
+                  $('#convenio_empresas_edit').val(dato.convenio_empresas);
 
                   $('#es_maquilador').val(dato.es_maquilador);
 

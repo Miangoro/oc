@@ -498,7 +498,8 @@ public function editar_cliente_confirmado(Request $request)
         'registro_productor' => 'max:5',
         'convenio_corresp' => 'max:5',
         'es_maquilador' => '',
-        'estatus' => ''
+        'estatus' => '',
+        'convenio_empresas' => 'nullable'
       ]);
 
       // Crear una nueva instancia del modelo Dictamen_Granel
@@ -519,6 +520,7 @@ public function editar_cliente_confirmado(Request $request)
       $cliente->convenio_corresp = $validatedData['convenio_corresp'];
       $cliente->es_maquilador = $validatedData['es_maquilador'];
       $cliente->estatus = $validatedData['estatus'];
+      $cliente->convenio_empresas = $validatedData['convenio_empresas'];
 
       $cliente->save();
 
@@ -673,7 +675,8 @@ public function registrarClientes(Request $request)
         'registro_productor' => 'max:5',
         'convenio_corresp' => 'max:5',
         'es_maquilador' => '',
-        'estatus' => ''
+        'estatus' => '',
+        'convenio_empresas' => 'nullable'
     ]);
 
     // Crear una nueva instancia del modelo Dictamen_Granel
@@ -697,6 +700,7 @@ public function registrarClientes(Request $request)
     $cliente->convenio_corresp = $validatedData['convenio_corresp'];
     $cliente->es_maquilador = $validatedData['es_maquilador'];
     $cliente->estatus = $validatedData['estatus'];
+    $cliente->convenio_empresas = $validatedData['convenio_empresas'];
 
     $cliente->save();
 
