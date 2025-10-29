@@ -346,7 +346,16 @@
                             --
                         @endif
                         <br> ORIGEN
-                        {{ $data->inspeccion->solicitud->instalacion->estados->nombre ?? 'N/A' }}
+                        {{-- {{ $data->inspeccion->solicitud->instalacion->estados->nombre ?? 'N/A' }} --}}
+                        @if ($lotesGranel->isNotEmpty())
+                            @foreach ($lotesGranel as $loteGranel)
+                                {{-- {{ strtoupper($loteGranel->estados->nombre ?? 'No encontrado') }} --}}
+                                {{ mb_strtoupper($loteGranel->estados->nombre ?? 'No encontrado', 'UTF-8') }}
+                                @if (!$loop->last), @endif
+                            @endforeach
+                        @else
+                            --
+                        @endif
                     </td>
                 </tr>
                 <tr>
