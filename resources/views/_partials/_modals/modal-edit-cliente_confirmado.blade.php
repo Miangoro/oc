@@ -183,7 +183,7 @@
 
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-4">
-                            <textarea id="convenio_empresas_edit" rows="4" name="convenio_empresas" class="form-control"  placeholder="NOM-070-430C"></textarea>
+                            <textarea id="convenio_empresas_edit" rows="4" name="convenio_empresas" class="form-control"  placeholder="Convenio con empresas"></textarea>
                         <label>Convenio con empresas</label>
                         </div>
                     </div>
