@@ -128,7 +128,7 @@
       "name": "Etiquetas UI",
       "icon": "menu-icon ri-price-tag-3-fill",
       "slug": "etiqueta-ui",
-      "can": "Visualizar inspecciones",
+      "can": "Visualizar solo admin",
       "submenu": [
         {
           "name": "Mezcal a granel",
