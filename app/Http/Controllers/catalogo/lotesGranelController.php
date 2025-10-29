@@ -981,13 +981,23 @@ public function update(Request $request, $id_lote_granel)
               $updateData['volumen_restante'] = $validated['volumen_restante'];
 
           } *///si se envia siempre editara
-           if (array_key_exists('volumen_restante', $validated)) {
+           // Siempre actualiza volumen_restante
+          if (array_key_exists('volumen_restante', $validated)) {
+              $updateData['volumen_restante'] = $validated['volumen_restante'];
+              if ($validated['volumen_restante'] == 0) {
+                  $updateData['estatus'] = 2; // Agotado
+              } elseif ($validated['volumen_restante'] > 0) {
+                  $updateData['estatus'] = 1; // Disponible
+              }
+          }
+
+           /* if (array_key_exists('volumen_restante', $validated)) { */
               // Si se envía, actualiza con el valor recibido
-                $updateData['volumen_restante'] = $validated['volumen_restante'];
-            } else {
+             /*    $updateData['volumen_restante'] = $validated['volumen_restante'];
+            } else { */
                 // Si no se envía, usa el volumen_total
-                $updateData['volumen_restante'] = $validated['volumen_total'];
-            }
+               /*  $updateData['volumen_restante'] = $validated['volumen_total'];
+            } */
 
           if (array_key_exists('volumen_total', $validated)) {
               $updateData['volumen_sin_agua'] = $validated['volumen']; //volumen_total
@@ -997,15 +1007,15 @@ public function update(Request $request, $id_lote_granel)
 
 
 
-// Siempre actualiza volumen_restante
-if (array_key_exists('volumen_restante', $validated)) {
-    $updateData['volumen_restante'] = $validated['volumen_restante'];
-}
-
-// Actualiza volumen_con_agua solo si se envía
-if ($request->filled('volumen_total')) {
-    $updateData['volumen_sin_agua'] = $validated['volumen_total'];
-}
+          // Siempre actualiza volumen_restante
+          /* if (array_key_exists('volumen_restante', $validated)) {
+              $updateData['volumen_restante'] = $validated['volumen_restante'];
+          }
+ */
+          // Actualiza volumen_con_agua solo si se envía
+          if ($request->filled('volumen_total')) {
+              $updateData['volumen_sin_agua'] = $validated['volumen_total'];
+          }
 
 
 
