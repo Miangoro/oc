@@ -546,11 +546,11 @@
                 <td>{{ $bitacora->molienda_total_formulado }}</td>
                 <td>VOLUMEN TOTAL</td>
                 <td>{{ number_format($total_puntas_volumen, 2) }}</td>
-                <td>{{-- {{ number_format($total_puntas_porcentaje, 2) . '%' }} --}}</td> {{-- % total --}}
+                <td>{{$bitacora->total_puntas_porcentaje}}%</td> {{-- % total --}}
                 <td>{{ number_format($total_mezcal_volumen, 2) }}</td>
-                <td>{{-- {{ number_format($total_mezcal_porcentaje, 2) . '%' }} --}}</td>{{-- % total --}}
+                <td>{{$bitacora->total_mezcal_porcentaje}}%</td>{{-- % total --}}
                 <td>{{ number_format($total_colas_volumen, 2) }}</td>
-                <td>{{-- {{ number_format($total_colas_porcentaje, 2) . '%' }} --}}</td> {{-- % total --}}
+                <td>{{$bitacora->total_colas_porcentaje}}%</td> {{-- % total --}}
             </tr>
         </tbody>
     </table>
