@@ -486,11 +486,13 @@ private function esJsonValido($string)
         $query->whereIn('id_instalacion', $idsInstalaciones);
     })
 
-    ->when($id_usuario == 46, function ($query) {
-        $query->whereDate('fecha', '<', '2025-10-01')
-            ->where('id_firmante', '!=', 0);
-    })
-
+->when($id_usuario == 46, function ($query) {
+    $query->where(function($q) {
+        $q->whereDate('fecha', '<', '2025-10-01')
+          ->where('id_firmante', '!=', 0)
+          ->orWhereDate('fecha', '>=', '2025-10-01');
+    });
+})
 
 
        /*  ->when($empresaId, function ($query) use ($empresaId, $instalacionId) {
