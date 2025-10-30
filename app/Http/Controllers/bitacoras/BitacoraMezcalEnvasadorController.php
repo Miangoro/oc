@@ -146,9 +146,9 @@ class BitacoraMezcalEnvasadorController extends Controller
             
 if ($id_usuario == 46) {
     $query->where(function($q) {
-        $q->whereDate('fecha', '<', '2025-10-23')
+        $q->whereDate('fecha', '<', '2025-10-01')
           ->where('id_firmante', '!=', 0)
-          ->orWhereDate('fecha', '>=', '2025-10-23');
+          ->orWhereDate('fecha', '>=', '2025-10-01');
     });
 }
 
