@@ -144,7 +144,12 @@ class BitacoraMezcalEnvasadorController extends Controller
             $user = Auth::user();
             $id_usuario = $user->id;
             
-
+           if ($id_usuario == 46) {
+            $query->where(function($q) {
+                $q->whereDate('fecha', '<', '2025-10-01')
+                ->where('id_firmante', '!=', 0);
+            });
+        }
 
 
                 
@@ -480,7 +485,7 @@ private function esJsonValido($string)
     })
 
     ->when($id_usuario == 46, function ($query) {
-        $query->whereDate('fecha', '<', '2025-10-03')
+        $query->whereDate('fecha', '<', '2025-10-01')
             ->where('id_firmante', '!=', 0);
     })
 
