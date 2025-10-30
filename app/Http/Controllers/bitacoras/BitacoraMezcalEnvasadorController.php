@@ -479,7 +479,7 @@ private function esJsonValido($string)
     })
 
     ->when($id_usuario == 46, function ($query) {
-        $query->whereDate('fecha', '<', '2025-10-23')
+        $query->whereDate('fecha', '<', '2025-10-03')
             ->where('id_firmante', '!=', 0);
     })
 
