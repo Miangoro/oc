@@ -478,10 +478,7 @@ private function esJsonValido($string)
         $query->whereIn('id_instalacion', $idsInstalaciones);
     })
 
-    ->when($id_usuario == 46, function ($query) {
-        $query->whereDate('fecha', '<', '2025-10-03')
-            ->where('id_firmante', '!=', 0);
-    })
+
 
 
 
