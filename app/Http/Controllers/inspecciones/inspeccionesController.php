@@ -350,9 +350,9 @@ public function index(Request $request)
                 }elseif ($solicitud->inspeccion?->dictamenExportacion) {
                     $tipo_dictamen = 'dictamen_exportacion';
                     $id = $solicitud->inspeccion->dictamenExportacion->id_dictamen;
-                /*}elseif ($solicitud->inspeccion?->dictamenNoCumplimiento) {//SE AGREGO
+                }elseif ($solicitud->inspeccion?->dictamenNoCumplimiento) {//SE AGREGO
                     $tipo_dictamen = 'dictamen_no_cumplimiento';
-                    $id = $solicitud->inspeccion->dictamenNoCumplimiento->id_dictamen;*/
+                    $id = $solicitud->inspeccion->dictamenNoCumplimiento->id_dictamen;
                 } else {
                     $tipo_dictamen = null;
                     $id = null;
