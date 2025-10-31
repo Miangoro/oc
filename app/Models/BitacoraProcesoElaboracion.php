@@ -87,6 +87,10 @@ class BitacoraProcesoElaboracion extends Model
         return $this->belongsTo(User::class, 'id_usuario_registro','id');
     }
 
+  public function totales()
+  {
+      return $this->hasMany(BitacoraProcesoTotales::class, 'id_bitacora', 'id');
+  }
 
 
 }

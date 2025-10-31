@@ -280,6 +280,60 @@
                                             </tr>
 
                                         </tbody>
+
+
+                                        <tfoot>
+                                            <tr class="fw-bold bg-light">
+                                                <td class="text-end" colspan="4">VOLUMEN TOTAL</td>
+
+                                                <!-- Total volumen formulación final -->
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="molienda_final[volumen_formulacion_final]"
+                                                        placeholder="Vol. final">
+                                                </td>
+
+                                                <!-- fecha destilación final -->
+                                                <td class="text-end">TOTAL FINAL</td>
+
+                                                <!-- Puntas Final -->
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="molienda_final[puntas_volumen_final]"
+                                                        placeholder="Vol.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="molienda_final[puntas_alcohol_final]"
+                                                        placeholder="% Alc.">
+                                                </td>
+
+                                                <!-- Mezcal Final -->
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="molienda_final[mezcal_volumen_final]"
+                                                        placeholder="Vol.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="molienda_final[mezcal_alcohol_final]"
+                                                        placeholder="% Alc.">
+                                                </td>
+
+                                                <!-- Colas Final -->
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="molienda_final[colas_volumen_final]" placeholder="Vol.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="molienda_final[colas_alcohol_final]"
+                                                        placeholder="% Alc.">
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+
+
                                     </table>
                                 </div>
                             </div>
@@ -366,6 +420,48 @@
                                                 </td>
                                             </tr>
                                         </tbody>
+                                        <tfoot>
+                                            <tr class="fw-bold bg-light">
+                                                <td class="text-end" colspan="2">VOLUMEN TOTAL</td>
+
+                                                <!-- Puntas Final -->
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="segunda_destilacion_final[puntas_volumen_final]"
+                                                        placeholder="Vol.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="segunda_destilacion_final[puntas_alcohol_final]"
+                                                        placeholder="% Alc.">
+                                                </td>
+
+                                                <!-- Mezcal Final -->
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="segunda_destilacion_final[mezcal_volumen_final]"
+                                                        placeholder="Vol.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="segunda_destilacion_final[mezcal_alcohol_final]"
+                                                        placeholder="% Alc.">
+                                                </td>
+
+                                                <!-- Colas Final -->
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="segunda_destilacion_final[colas_volumen_final]"
+                                                        placeholder="Vol.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="segunda_destilacion_final[colas_alcohol_final]"
+                                                        placeholder="% Alc.">
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+
                                     </table>
                                 </div>
                             </div>
@@ -450,6 +546,48 @@
                                                 </td>
                                             </tr>
                                         </tbody>
+                                        <tfoot>
+                                            <tr class="fw-bold bg-light">
+                                                <td class="text-end" colspan="2">VOLUMEN TOTAL</td>
+
+                                                <!-- Puntas Final -->
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="tercera_destilacion_final[puntas_volumen_final]"
+                                                        placeholder="Vol.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="tercera_destilacion_final[puntas_alcohol_final]"
+                                                        placeholder="% Alc.">
+                                                </td>
+
+                                                <!-- Mezcal Final -->
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="tercera_destilacion_final[mezcal_volumen_final]"
+                                                        placeholder="Vol.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="tercera_destilacion_final[mezcal_alcohol_final]"
+                                                        placeholder="% Alc.">
+                                                </td>
+
+                                                <!-- Colas Final -->
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="tercera_destilacion_final[colas_volumen_final]"
+                                                        placeholder="Vol.">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        name="tercera_destilacion_final[colas_alcohol_final]"
+                                                        placeholder="% Alc.">
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+
                                     </table>
                                 </div>
                             </div>

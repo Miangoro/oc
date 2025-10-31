@@ -236,18 +236,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== ''
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -1115,6 +1115,12 @@ $(function () {
         success: function (data) {
           if (data.success) {
             const bitacora = data.bitacora;
+            const totales = data.bitacora.totales;
+
+            const molienda = totales.find(t => t.etapa == 1);
+            const segunda = totales.find(t => t.etapa == 2);
+            const tercera = totales.find(t => t.etapa == 3);
+
             // Cargar campos simples
             $('#edit_fecha_ingreso').val(bitacora.fecha_ingreso);
             $('#edit_id_empresa').val(bitacora.id_empresa).trigger('change');
@@ -1138,6 +1144,38 @@ $(function () {
             $('#edit_colas_volumen').val(bitacora.colas_volumen);
             $('#edit_colas_alcohol').val(bitacora.colas_alcohol);
             $('#edit_observaciones').val(bitacora.observaciones);
+
+            // Molienda (etapa 1)
+            if (molienda) {
+              $('#edit_molienda_volumen_formulacion_final').val(molienda.volumen_formulacion);
+              $('#edit_molienda_puntas_volumen_final').val(molienda.puntas_volumen);
+              $('#edit_molienda_puntas_alcohol_final').val(molienda.puntas_porcentaje);
+              $('#edit_molienda_mezcal_volumen_final').val(molienda.mezcal_volumen);
+              $('#edit_molienda_mezcal_alcohol_final').val(molienda.mezcal_porcentaje);
+              $('#edit_molienda_colas_volumen_final').val(molienda.colas_volumen);
+              $('#edit_molienda_colas_alcohol_final').val(molienda.colas_porcentaje);
+            }
+
+            // Segunda destilación (etapa 2)
+            if (segunda) {
+              $('#edit_segunda_puntas_volumen_final').val(segunda.puntas_volumen);
+              $('#edit_segunda_puntas_alcohol_final').val(segunda.puntas_porcentaje);
+              $('#edit_segunda_mezcal_volumen_final').val(segunda.mezcal_volumen);
+              $('#edit_segunda_mezcal_alcohol_final').val(segunda.mezcal_porcentaje);
+              $('#edit_segunda_colas_volumen_final').val(segunda.colas_volumen);
+              $('#edit_segunda_colas_alcohol_final').val(segunda.colas_porcentaje);
+            }
+
+            // Tercera destilación (etapa 3)
+            if (tercera) {
+              $('#edit_tercera_puntas_volumen_final').val(tercera.puntas_volumen);
+              $('#edit_tercera_puntas_alcohol_final').val(tercera.puntas_porcentaje);
+              $('#edit_tercera_mezcal_volumen_final').val(tercera.mezcal_volumen);
+              $('#edit_tercera_mezcal_alcohol_final').val(tercera.mezcal_porcentaje);
+              $('#edit_tercera_colas_volumen_final').val(tercera.colas_volumen);
+              $('#edit_tercera_colas_alcohol_final').val(tercera.colas_porcentaje);
+            }
+
 
             // Tipos de maguey (select múltiple con Select2, por ejemplo)
             if (bitacora.id_tipo) {

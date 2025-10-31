@@ -12,6 +12,7 @@ use App\Models\empresa;
 use App\Models\BitacoraProcesoMoliendaDestilacion;
 use App\Models\BitacoraProcesoSegundaDestilacion;
 use App\Models\BitacoraProcesoTerceraDestilacion;
+use App\Models\BitacoraProcesoTotales;
 use App\Models\maquiladores_model;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
@@ -324,6 +325,7 @@ class BitacoraProcesoElaboracionController extends Controller
 
       public function store(Request $request)
       {
+        /* dd($request->all()); */
 
           $request->validate([
               'fecha_ingreso'           => 'required|date',
@@ -459,20 +461,73 @@ class BitacoraProcesoElaboracionController extends Controller
 
                 }
             }
+            $moliendaFinal = $request->input('molienda_final');
+            $segundaFinal  = $request->input('segunda_destilacion_final');
+            $terceraFinal  = $request->input('tercera_destilacion_final');
+            // Totales Molienda (etapa 1)
+            if ($moliendaFinal) {
+                BitacoraProcesoTotales::create([
+                    'id_bitacora' => $bitacora->id,
+                    'etapa' => 1,
+                    'volumen_formulacion' => $moliendaFinal['volumen_formulacion_final'] ?? null,
+                    'puntas_volumen'      => $moliendaFinal['puntas_volumen_final'] ?? null,
+                    'puntas_porcentaje'   => $moliendaFinal['puntas_alcohol_final'] ?? null,
+                    'mezcal_volumen'      => $moliendaFinal['mezcal_volumen_final'] ?? null,
+                    'mezcal_porcentaje'   => $moliendaFinal['mezcal_alcohol_final'] ?? null,
+                    'colas_volumen'       => $moliendaFinal['colas_volumen_final'] ?? null,
+                    'colas_porcentaje'    => $moliendaFinal['colas_alcohol_final'] ?? null,
+                ]);
+            }
+
+            // Totales Segunda (etapa 2)
+            if ($segundaFinal) {
+                BitacoraProcesoTotales::create([
+                    'id_bitacora' => $bitacora->id,
+                    'etapa' => 2,
+                    'volumen_formulacion' => $segundaFinal['volumen_formulacion_final'] ?? null,
+                    'puntas_volumen'      => $segundaFinal['puntas_volumen_final'] ?? null,
+                    'puntas_porcentaje'   => $segundaFinal['puntas_alcohol_final'] ?? null,
+                    'mezcal_volumen'      => $segundaFinal['mezcal_volumen_final'] ?? null,
+                    'mezcal_porcentaje'   => $segundaFinal['mezcal_alcohol_final'] ?? null,
+                    'colas_volumen'       => $segundaFinal['colas_volumen_final'] ?? null,
+                    'colas_porcentaje'    => $segundaFinal['colas_alcohol_final'] ?? null,
+                ]);
+            }
+
+            // Totales Tercera (etapa 3)
+            if ($terceraFinal) {
+                BitacoraProcesoTotales::create([
+                    'id_bitacora' => $bitacora->id,
+                    'etapa' => 3,
+                    'volumen_formulacion' => $terceraFinal['volumen_formulacion_final'] ?? null,
+                    'puntas_volumen'      => $terceraFinal['puntas_volumen_final'] ?? null,
+                    'puntas_porcentaje'   => $terceraFinal['puntas_alcohol_final'] ?? null,
+                    'mezcal_volumen'      => $terceraFinal['mezcal_volumen_final'] ?? null,
+                    'mezcal_porcentaje'   => $terceraFinal['mezcal_alcohol_final'] ?? null,
+                    'colas_volumen'       => $terceraFinal['colas_volumen_final'] ?? null,
+                    'colas_porcentaje'    => $terceraFinal['colas_alcohol_final'] ?? null,
+                ]);
+            }
+
 
               DB::commit();
               return response()->json(['success' => 'Bitácora registrada correctamente']);
           } catch (\Throwable $e) {
-              DB::rollBack();
-              Log::error('Error al guardar bitácora: ' . $e->getMessage());
-              return response()->json(['error' => 'Ocurrió un error al guardar la bitácora'], 500);
-          }
+    DB::rollBack();
+    // Esto te dirá el error real en la respuesta JSON
+    return response()->json([
+        'error' => 'Error real detectado',
+        'mensaje' => $e->getMessage(),
+        'archivo' => $e->getFile(),
+        'linea' => $e->getLine(),
+    ], 500);
+}
       }
 
         public function edit($id_bitacora)
         {
             try {
-                $bitacora = BitacoraProcesoElaboracion::with(['molienda', 'segundaDestilacion', 'terceraDestilacion'])->findOrFail($id_bitacora);
+                $bitacora = BitacoraProcesoElaboracion::with(['molienda', 'segundaDestilacion', 'terceraDestilacion', 'totales'])->findOrFail($id_bitacora);
                 return response()->json([
                     'success' => true,
                     'bitacora' => [
@@ -501,6 +556,7 @@ class BitacoraProcesoElaboracionController extends Controller
                         'molienda'               => $bitacora->molienda,
                         'segunda_destilacion'    => $bitacora->segundaDestilacion,
                         'tercera_destilacion'    => $bitacora->terceraDestilacion,
+                        'totales'                => $bitacora->totales,
                     ]
                 ]);
             } catch (\Exception $e) {
@@ -715,6 +771,66 @@ class BitacoraProcesoElaboracionController extends Controller
                       'colas_porcentaje'  => $fila['colas_alcohol'],   // map correcto
                   ]);
                 }
+
+
+                // Totales Molienda (etapa 1)
+$moliendaFinal = $request->input('molienda_final');
+if ($moliendaFinal) {
+    // Elimina primero si existe
+    BitacoraProcesoTotales::where('id_bitacora', $bitacora->id)
+        ->where('etapa', 1)->delete();
+
+    BitacoraProcesoTotales::create([
+        'id_bitacora' => $bitacora->id,
+        'etapa' => 1,
+        'volumen_formulacion' => $moliendaFinal['volumen_formulacion_final'] ?? null,
+        'puntas_volumen'      => $moliendaFinal['puntas_volumen_final'] ?? null,
+        'puntas_porcentaje'   => $moliendaFinal['puntas_alcohol_final'] ?? null,
+        'mezcal_volumen'      => $moliendaFinal['mezcal_volumen_final'] ?? null,
+        'mezcal_porcentaje'   => $moliendaFinal['mezcal_alcohol_final'] ?? null,
+        'colas_volumen'       => $moliendaFinal['colas_volumen_final'] ?? null,
+        'colas_porcentaje'    => $moliendaFinal['colas_alcohol_final'] ?? null,
+    ]);
+}
+
+// Totales Segunda (etapa 2)
+$segundaFinal = $request->input('segunda_destilacion_final');
+if ($segundaFinal) {
+    BitacoraProcesoTotales::where('id_bitacora', $bitacora->id)
+        ->where('etapa', 2)->delete();
+
+    BitacoraProcesoTotales::create([
+        'id_bitacora' => $bitacora->id,
+        'etapa' => 2,
+        'volumen_formulacion' => $segundaFinal['volumen_formulacion_final'] ?? null,
+        'puntas_volumen'      => $segundaFinal['puntas_volumen_final'] ?? null,
+        'puntas_porcentaje'   => $segundaFinal['puntas_alcohol_final'] ?? null,
+        'mezcal_volumen'      => $segundaFinal['mezcal_volumen_final'] ?? null,
+        'mezcal_porcentaje'   => $segundaFinal['mezcal_alcohol_final'] ?? null,
+        'colas_volumen'       => $segundaFinal['colas_volumen_final'] ?? null,
+        'colas_porcentaje'    => $segundaFinal['colas_alcohol_final'] ?? null,
+    ]);
+}
+
+// Totales Tercera (etapa 3)
+$terceraFinal = $request->input('tercera_destilacion_final');
+if ($terceraFinal) {
+    BitacoraProcesoTotales::where('id_bitacora', $bitacora->id)
+        ->where('etapa', 3)->delete();
+
+    BitacoraProcesoTotales::create([
+        'id_bitacora' => $bitacora->id,
+        'etapa' => 3,
+        'volumen_formulacion' => $terceraFinal['volumen_formulacion_final'] ?? null,
+        'puntas_volumen'      => $terceraFinal['puntas_volumen_final'] ?? null,
+        'puntas_porcentaje'   => $terceraFinal['puntas_alcohol_final'] ?? null,
+        'mezcal_volumen'      => $terceraFinal['mezcal_volumen_final'] ?? null,
+        'mezcal_porcentaje'   => $terceraFinal['mezcal_alcohol_final'] ?? null,
+        'colas_volumen'       => $terceraFinal['colas_volumen_final'] ?? null,
+        'colas_porcentaje'    => $terceraFinal['colas_alcohol_final'] ?? null,
+    ]);
+}
+
 
               DB::commit();
               return response()->json(['success' => 'Bitácora actualizada correctamente']);
