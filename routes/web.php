@@ -780,10 +780,10 @@ Route::get('/pdf_asignacion_usuario/{id}', [UsuariosController::class, 'pdfAsign
 Route::get('/usuarios/exportar', [UsuariosController::class, 'exportar'])->name('usuarios.exportar')->middleware(['auth']);
 
 
-Route::get('/usuarios/inspectores', [UsuariosInspectoresController::class, 'inspectores'])->name('usuarios-inspectores')->middleware(['auth']);
+Route::get('/usuarios/inspectores', [UsuariosInspectoresController::class, 'inspectores'])->name('usuarios-inspectores')->middleware(['auth','permission:Visualizar usuarios']);
 Route::resource('/inspectores-list', UsuariosInspectoresController::class)->middleware(['auth']);
 
-Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal'])->name('usuarios-personal')->middleware(['auth']);
+Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal'])->name('usuarios-personal')->middleware(['auth','permission:Visualizar usuarios']);
 Route::resource('/personal-list', UsuariosPersonalController::class)->middleware(['auth']);
 
 //Consejo usuarios
