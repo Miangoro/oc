@@ -1,76 +1,37 @@
 
 'use strict';
 
-$(document).ready(function () {
-  flatpickr(".flatpickr-datetime", {
-      dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
-      enableTime: false,   // Desactiva la  hora
-      allowInput: true,    // Permite al usuario escribir la fecha manualmente
-      locale: "es",        // idioma a español
-  });
-});
-//FUNCION FECHAS
-$('#fecha_emision').on('change', function () {
-  var fechaInicial = new Date($(this).val());
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-  var fechaVigencia = fechaInicial.toISOString().split('T')[0];
-  $('#fecha_vigencia').val(fechaVigencia);
-  flatpickr('#fecha_vigencia', {
-    dateFormat: 'Y-m-d',
-    enableTime: false,
-    allowInput: true,
-    locale: 'es',
-    static: true,
-    disable: true
-  });
-});
-//FUNCION FECHAS EDIT
-$('#edit_fecha_emision').on('change', function () {
-  var fechaInicial = new Date($(this).val());
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-  var fechaVigencia = fechaInicial.toISOString().split('T')[0];
-  $('#edit_fecha_vigencia').val(fechaVigencia);
-  flatpickr('#edit_fecha_vigencia', {
-    dateFormat: 'Y-m-d',
-    enableTime: false,
-    allowInput: true,
-    locale: 'es',
-    static: true,
-    disable: true
-  });
+// CSRF para Laravel
+$.ajaxSetup({
+    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
 });
 
+// Flatpickr global para todos los inputs con esta clase
+flatpickr(".flatpickr-datetime", {
+    dateFormat: "Y-m-d", // Formato de la fecha: Año-Mes-Día (YYYY-MM-DD)
+    enableTime: false,   // Desactiva la  hora
+    allowInput: true,    // Permite al usuario escribir la fecha manualmente
+    locale: "es",        // idioma a español
+});
+
+// Inicializar Select2
+function initializeSelect2($elements) {
+    $elements.each(function () {
+        var $this = $(this);
+        $this.wrap('<div class="position-relative"></div>').select2({
+            dropdownParent: $this.parent()
+        });
+    });
+}
+initializeSelect2($('.select2'));
 
 
 // Datatable (jquery)
 $(function () {
-// Variable declaration for table
-var dt_user_table = $('.datatables-users');
-
-var select2Elements = $('.select2');
-  // Función para inicializar Select2 en elementos específicos
-  function initializeSelect2($elements) {
-    $elements.each(function () {
-      var $this = $(this);
-      select2Focus($this);
-      $this.wrap('<div class="position-relative"></div>').select2({
-        dropdownParent: $this.parent()
-      });
-    });
-  }
-initializeSelect2(select2Elements);
-
-
-// ajax setup
-$.ajaxSetup({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
 
 //FUNCIONALIDAD DE LA VISTA datatable
-if (dt_user_table.length) {
-  var dataTable = dt_user_table.DataTable({
+if ($('.datatables-users').length) {
+  var dataTable = $('.datatables-users').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
@@ -122,7 +83,11 @@ if (dt_user_table.length) {
                 <i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>
               </button>
               <div class="dropdown-menu dropdown-menu-end m-0">
-                    
+                  <a data-id="${full['id']}" class="dropdown-item waves-effect text-dark editar"
+                  data-bs-toggle="modal" data-bs-target="#ModalEditMezcalGranel">
+                      <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>
+                  <a data-id="${full['id']}" class="dropdown-item waves-effect text-black eliminar">
+                      <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>
               </div>
             </div>
           `;
@@ -156,12 +121,12 @@ if (dt_user_table.length) {
     // Opciones Exportar Documentos
     buttons: [
       {
-        text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo etiqueta</span>',
+        text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nueva etiqueta</span>',
         className: 'add-new btn btn-primary waves-effect waves-light',
         attr: {
           'data-bs-toggle': 'modal',
           'data-bs-dismiss': 'modal',
-          'data-bs-target': '#ModalAgregar'
+          'data-bs-target': '#ModalAddMezcalGranel'
         }
       }
     ],
@@ -170,32 +135,12 @@ if (dt_user_table.length) {
     responsive: {
       details: {
         display: $.fn.dataTable.Responsive.display.modal({
-          header: function (row) {
-            var data = row.data();
-            return 'Detalles de ' + data['num_dictamen'];
-          }
+          header: row => 'Detalles de ' + row.data()['num_servicio']
         }),
         type: 'column',
-        renderer: function (api, rowIdx, columns) {
-          var data = $.map(columns, function (col, i) {
-            return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
-              ? '<tr data-dt-row="' +
-                  col.rowIndex +
-                  '" data-dt-column="' +
-                  col.columnIndex +
-                  '">' +
-                  '<td>' +
-                  col.title +
-                  ':' +
-                  '</td> ' +
-                  '<td>' +
-                  col.data +
-                  '</td>' +
-                  '</tr>'
-              : '';
-          }).join('');
-
-          return data ? $('<table class="table"/><tbody />').append(data) : false;
+        renderer: (api, rowIdx, columns) => {
+            var data = $.map(columns, col => col.title !== '' ? `<tr data-dt-row="${col.rowIndex}" data-dt-column="${col.columnIndex}"><td>${col.title}:</td><td>${col.data}</td></tr>` : '').join('');
+            return data ? $('<table class="table"/><tbody />').append(data) : false;
         }
       }
     }
@@ -203,362 +148,229 @@ if (dt_user_table.length) {
   });
 }
 
-/*
-///REGISTRAR
+///REGISTRAR MEZCAL A GRANEL
+const FormAgregar = document.getElementById('FormAddMezcalGranel');
 FormValidation.formValidation(FormAgregar, {
-  fields: {
-    'id_inspeccion': {
+  /*fields: { //PARA VALIDACION DE CAMPOS
+    'fecha_servicio': {
       validators: {
         notEmpty: {
-          message: 'El número de servicio es obligatorio.'
+          message: 'La fecha es obligatorio.'
         }
       }
-    },
-    'num_dictamen': {
-      validators: {
-        notEmpty: {
-          message: 'El número de dictamen es obligatorio.'
-        },
-      }
-    },
-    'id_firmante': {
-      validators: {
-        notEmpty: {
-          message: 'El nombre del firmante es obligatorio.',
-        }
-      }
-    },
-    'fecha_emision': {
-      validators: {
-        notEmpty: {
-          message: 'La fecha de emisión es obligatoria.',
-        },
-        date: {
-          format: 'YYYY-MM-DD',
-          message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-        }
-      }
-    },
-    'fecha_vigencia': {
-      validators: {
-        notEmpty: {
-          message: 'La fecha de vigencia es obligatoria.',
-        },
-        date: {
-          format: 'YYYY-MM-DD',
-          message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-        }
-      }
-    },
-  },
+    }
+  },*/
   plugins: {
-    trigger: new FormValidation.plugins.Trigger(),
-    bootstrap5: new FormValidation.plugins.Bootstrap5({
-      eleValidClass: '',
-      eleInvalidClass: 'is-invalid',
-      rowSelector: '.form-floating'//clases del formulario
-    }),
-    submitButton: new FormValidation.plugins.SubmitButton(),
-    autoFocus: new FormValidation.plugins.AutoFocus()
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
   }
 }).on('core.form.valid', function (e) {
-
   var formData = new FormData(FormAgregar);
-  console.log('Envio de datos:', Object.fromEntries(formData.entries()));// Imprimir los datos para verificar
+  const $submitBtn = $(FormAgregar).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-2-line ri-spin"></i> Guardando...');
+
   $.ajax({
-      url: '/registrar/no_cumplimiento',
+      url: '/etiqueta-mezcal-granel/add',
       type: 'POST',
       data: formData,
       processData: false,
       contentType: false,
       success: function (response) {
         // Ocultar y resetear el formulario
-        $('#ModalAgregar').modal('hide');
-        $('#FormAgregar')[0].reset();
-        $('.select2').val(null).trigger('change');
-        dataTable.ajax.reload(false);//Recarga los datos del datatable
-
-        // Mostrar alerta de éxito
+        $('#ModalAddMezcalGranel').modal('hide');
+        $('#FormAddMezcalGranel')[0].reset();
+        dataTable.ajax.reload(false);// Recargar DataTable
+        
+        // Alerta de éxito
         Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
             text: response.message,
             customClass: {
-              confirmButton: 'btn btn-primary'
+                confirmButton: 'btn btn-primary'
             }
         });
       },
       error: function (xhr) {
-        console.log('Error:', xhr);
-        console.log('Error2:', xhr.responseText);
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
+        const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+        if (isDev) console.log('Error Completo:', xhr);
+        const errorJSON = xhr.responseJSON?.message || "Error al registrar.";
+        
+          // Alerta de error
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: errorJSON,
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      },
+      complete: function () {
+          $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');
       }
   });
-
+});
+// Limpiar formulario al cerrar modal
+$('#ModalAddMezcalGranel').on('hidden.bs.modal', function () {
+    FormAgregar.reset();
+    $('.select2').val(null).trigger('change');
 });
 
+///ELIMINAR MEZCAL A GRANEL
+$(document).on('click', '.eliminar', function() {
+  var id = $(this).data('id');
 
-
-///ELIMINAR
-$(document).on('click', '.eliminar', function () {
-  var id_dictamen = $(this).data('id'); // Obtener el ID de la clase
-  var dtrModal = $('.dtr-bs-modal.show');
-
-  // Ocultar modal responsivo en pantalla pequeña si está abierto
-  if (dtrModal.length) {
-      dtrModal.modal('hide');
-  }
-
-  // SweetAlert para confirmar la eliminación
   Swal.fire({
-      title: '¿Está seguro?',
-      text: 'No podrá revertir este evento',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
-      cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
-      customClass: {
-        confirmButton: 'btn btn-primary me-2',
-        cancelButton: 'btn btn-danger'
-      },
-      buttonsStyling: false
-  }).then(function (result) {
-  if (result.isConfirmed) {
-    // Enviar solicitud DELETE al servidor
-    $.ajax({
-      type: 'DELETE',
-      url: `${baseUrl}dictamen/no_cumplimiento/${id_dictamen}`,
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-        success: function (response) {
-          dataTable.draw(false);//Actualizar la tabla, "null,false" evita que vuelva al inicio
-          // Mostrar SweetAlert de éxito
+    title: '¿Estás seguro?',
+    text: "No podrás revertir esta acción.",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+    cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+    customClass: {
+      confirmButton: 'btn btn-primary me-2',
+      cancelButton: 'btn btn-danger'
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        type: 'DELETE',
+        url: `/etiqueta-mezcal-granel/delete/${id}`,
+        success: function(res) {
+          dataTable.ajax.reload(false);
           Swal.fire({
-            icon: 'success',
-            title: '¡Exito!',
-            text: response.message,
-            customClass: {
-              confirmButton: 'btn btn-primary'
-            }
+              icon: 'success',
+              title: '¡Exito!',
+              text: res.message,
+              customClass: { confirmButton: 'btn btn-primary' }
           });
         },
-        error: function (error) {
-          console.log('Error:', error);
-          // Mostrar SweetAlert de error
+        error: function(xhr) {
+          const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+          if (isDev) console.log('Error Completo:', xhr);
+          const errorJSON = xhr.responseJSON?.message || "Error al eliminar.";
           Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al eliminar.',
-            //footer: `<pre>${error.responseText}</pre>`,
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
+              icon: 'error',
+              title: '¡Error!',
+              text: errorJSON,
+              customClass: { confirmButton: 'btn btn-danger' }
           });
         }
       });
     } else if (result.dismiss === Swal.DismissReason.cancel) {
-      // Acción cancelar, mostrar mensaje informativo
       Swal.fire({
-        title: '¡Cancelado!',
-        text: 'La eliminación ha sido cancelada.',
         icon: 'info',
+        title: '¡Cancelado!',
+        text: 'Operación cancelada.',
         customClass: {
           confirmButton: 'btn btn-primary'
         }
       });
     }
   });
-
 });
 
+///OBTENER MEZCAL A GRANEL
+$(document).on('click', '.editar', function(){
+  var id = $(this).data('id');
 
-
-///EDITAR
-$(function () { //$(document).ready(function () {
-  
-  $.ajaxSetup({
-      headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  $.ajax({
+    url: `/etiqueta-mezcal-granel/edit/${id}`,
+    method: 'GET',
+    success: function (res) {
+      // Llenar modal con datos
+      for (const key in res) {
+          $(`#ModalEditMezcalGranel [name="${key}"]`).val(res[key]);
       }
-  });
-  
-  // Inicializar FormValidation para el formulario
-  const form = document.getElementById('FormEditar');
-  const fv = FormValidation.formValidation(form, {
-    fields: {
-      'id_inspeccion': {
-          validators: {
-          notEmpty: {
-            message: 'El número de servicio es obligatorio.'
-          }
-          }
-      },
-      'num_dictamen': {
-          validators: {
-          notEmpty: {
-            message: 'El número de dictamen es obligatorio.'
-          },
-          }
-      },
-      'id_firmante': {
-          validators: {
-          notEmpty: {
-            message: 'El nombre del firmante es obligatorio.',
-          }
-          }
-      },
-      'fecha_emision': {
-          validators: {
-          notEmpty: {
-            message: 'La fecha de emisión es obligatoria.'
-          },
-          date: {
-            format: 'YYYY-MM-DD',
-            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-          }
-          }
-      },
-      'fecha_vigencia': {
-          validators: {
-          notEmpty: {
-            message: 'La fecha de vigencia es obligatoria.'
-          },
-          date: {
-            format: 'YYYY-MM-DD',
-            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-          }
-          }
-      },
-    },
-    plugins: {
-          trigger: new FormValidation.plugins.Trigger(),
-          bootstrap5: new FormValidation.plugins.Bootstrap5({
-              eleValidClass: '',
-              eleInvalidClass: 'is-invalid',
-              rowSelector: '.form-floating'
-          }),
-          submitButton: new FormValidation.plugins.SubmitButton(),
-          autoFocus: new FormValidation.plugins.AutoFocus()
+      $('#FormEditMezcalGranel').data('id', id);
+      $('#ModalEditMezcalGranel').modal('show');
+    }, 
+    error: function(xhr) {
+      const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+      if (isDev) console.log('Error Completo:', xhr);
+      const errorJSON = xhr.responseJSON?.message || "Error al obtener datos.";
+      Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: errorJSON,
+          customClass: { confirmButton: 'btn btn-danger' }
+      });
     }
-  }).on('core.form.valid', function () {
-      // Validar y enviar el formulario cuando pase la validación
-      var formData = new FormData(form);
-      var dictamen = $('#edit_id_dictamen').val();
-
-      $.ajax({
-          url: '/dictamen/no_cumplimiento/' + dictamen,
-          type: 'POST',
-          data: formData,
-          contentType: false,
-          processData: false,
-          success: function (response) {
-            dataTable.ajax.reload(null, false);//Recarga los datos del datatable, "null,false" evita que vuelva al inicio
-            $('#ModalEditar').modal('hide');//ocultar modal
-            Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.message,
-              customClass: {
-                confirmButton: 'btn btn-primary'
-              }
-            });
-          },
-          error: function (xhr) {
-            //error de validación del lado del servidor
-            if (xhr.status === 422) {
-              var errors = xhr.responseJSON.errors;
-              var errorMessages = Object.keys(errors).map(function (key) {
-                return errors[key].join('<br>');
-              }).join('<br>');
-
-              Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                html: errorMessages,
-                customClass: {
-                  confirmButton: 'btn btn-danger'
-                }
-              });
-            } else {//otro tipo de error
-              Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'Error al actualizar.',
-                customClass: {
-                  confirmButton: 'btn btn-danger'
-                }
-              });
-            }
-          }
-      });
   });
-
-  // Función para cargar los datos
-  $(document).on('click', '.editar', function () {
-      var id_dictamen = $(this).data('id');
-      $('#edit_id_dictamen').val(id_dictamen);
-
-      $.ajax({
-          url: '/dictamen/no_cumplimiento/' + id_dictamen,
-          method: 'GET',
-          success: function (datos) {
-
-            //obtener la inspeccion ya asignada
-          const $select = $('#edit_id_inspeccion');
-          // Eliminar opciones anteriores agregadas dinámicamente, pero dejar los disponibles
-          $select.find('option[data-dinamico="true"]').remove();
-
-          // Si la inspeccion guardada no está en los disponibles, agregarlo temporalmente
-          if (!$select.find(`option[value="${datos.id_inspeccion}"]`).length) {
-            const texto = `${datos.num_servicio} | ${datos.folio ?? 'Sin folio'} | ${datos.direccion_completa}`;
-            $select.append(`<option value="${datos.id_inspeccion}" selected data-dinamico="true">${texto}</option>`);
-          } else {
-            $select.val(datos.id_inspeccion).trigger('change');
-          }
-
-            // Asignar valores a los campos del formulario
-            $('#edit_id_inspeccion').val(datos.id_inspeccion).trigger('change');
-            $('#edit_num_dictamen').val(datos.num_dictamen);
-            $('#edit_fecha_emision').val(datos.fecha_emision);
-            $('#edit_fecha_vigencia').val(datos.fecha_vigencia);
-            $('#edit_id_firmante').val(datos.id_firmante).prop('selected', true).change();
-            $('#edit_observaciones').val(datos.observaciones);
-
-            flatpickr("#edit_fecha_emision", {//Actualiza flatpickr para mostrar la fecha correcta
-              dateFormat: "Y-m-d",
-              enableTime: false,
-              allowInput: true,
-              locale: "es"
-            });
-            // Mostrar el modal
-            $('#ModalEditar').modal('show');
-          },
-          error: function (error) {
-            console.error('Error al cargar los datos:', error);
-            Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al cargar los datos.',
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          }
-      });
-  });
-
 });
-*/
+///ACTUALIZAR MEZCAL A GRANEL
+const FormEditar = document.getElementById('FormEditMezcalGranel');
+FormValidation.formValidation(FormEditar, {
+  /*fields: {
+    'num_servicio': {
+        validators: {
+            notEmpty: { message: 'El número de servicio es obligatorio.' },
+            digits: { message: 'Solo se permiten números.' },
+            stringLength: { max: 10, message: 'Máximo 10 dígitos.' }
+        }
+    },
+  },*/
+  plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  var id = $(FormEditar).data('id');
+  const $submitBtn = $(FormEditar).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-2-line ri-spin"></i>Guardando...');
 
+    $.ajax({
+      url: `/etiqueta-mezcal-granel/update/${id}`,
+      type: 'POST',
+      data: new FormData(FormEditar),
+      processData: false,
+      contentType: false,
+      success: function(res){
+          $('#ModalEditMezcalGranel').modal('hide');
+          dataTable.ajax.reload(false);
+
+        // Alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: res.message,
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      },
+      error: function(xhr){
+        const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+        if (isDev) console.log('Error Completo:', xhr);
+        const errorJSON = xhr.responseJSON?.message || "Error al actualizar.";
+        // Alerta de error
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: errorJSON,
+            customClass: {
+                confirmButton: 'btn btn-danger'
+            }
+        });
+      },
+      complete: function(){
+          $submitBtn.prop('disabled', false).html('<i class="ri-edit-line"></i> Editar');
+      }
+    });
+});
 
 ///FORMATO PDF ETIQUETA
 $(document).on('click', '.pdfSolicitud', function ()  {
@@ -587,40 +399,18 @@ $(document).on('click', '.pdfSolicitud', function ()  {
 });
 
 
-
 });//end-function(jquery)
+
+
 
 
 
 //------------------- AGAVE ART -------------------
 $(function () {
-// Variable declaration for table
-var dt_user_table2 = $('.datatables-users2');
-
-var select2Elements = $('.select2');
-  // Función para inicializar Select2 en elementos específicos
-  function initializeSelect2($elements) {
-    $elements.each(function () {
-      var $this = $(this);
-      select2Focus($this);
-      $this.wrap('<div class="position-relative"></div>').select2({
-        dropdownParent: $this.parent()
-      });
-    });
-  }
-initializeSelect2(select2Elements);
-
-
-// ajax setup
-$.ajaxSetup({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
 
 //FUNCIONALIDAD DE LA VISTA datatable
-if (dt_user_table2.length) {
-  var dataTable = dt_user_table2.DataTable({
+if ($('.datatables-users2').length) {
+  var dataTable2 = $('.datatables-users2').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
@@ -634,7 +424,7 @@ if (dt_user_table2.length) {
       { data: 'num_servicio'},
       { data: 'lote'},
       { data: 'cliente'},
-      { data: 'num_certificado'},
+      { data: 'tipo_agave'},
       { data: ''},//7
       { data: 'action'}
     ],
@@ -672,7 +462,11 @@ if (dt_user_table2.length) {
                 <i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>
               </button>
               <div class="dropdown-menu dropdown-menu-end m-0">
-                    
+                  <a data-id="${full['id']}" class="dropdown-item waves-effect text-dark editar2"
+                  data-bs-toggle="modal" data-bs-target="#ModalEditAgaveArt">
+                      <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>
+                  <a data-id="${full['id']}" class="dropdown-item waves-effect text-black eliminar2">
+                      <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>
               </div>
             </div>
           `;
@@ -706,12 +500,12 @@ if (dt_user_table2.length) {
     // Opciones Exportar Documentos
     buttons: [
       {
-        text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo etiqueta</span>',
+        text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nueva etiqueta</span>',
         className: 'add-new btn btn-primary waves-effect waves-light',
         attr: {
           'data-bs-toggle': 'modal',
           'data-bs-dismiss': 'modal',
-          'data-bs-target': '#ModalAgregar'
+          'data-bs-target': '#ModalAddAgaveArt'
         }
       }
     ],
@@ -720,32 +514,12 @@ if (dt_user_table2.length) {
     responsive: {
       details: {
         display: $.fn.dataTable.Responsive.display.modal({
-          header: function (row) {
-            var data = row.data();
-            return 'Detalles de ' + data['num_dictamen'];
-          }
+          header: row => 'Detalles de ' + row.data()['num_servicio']
         }),
         type: 'column',
-        renderer: function (api, rowIdx, columns) {
-          var data = $.map(columns, function (col, i) {
-            return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
-              ? '<tr data-dt-row="' +
-                  col.rowIndex +
-                  '" data-dt-column="' +
-                  col.columnIndex +
-                  '">' +
-                  '<td>' +
-                  col.title +
-                  ':' +
-                  '</td> ' +
-                  '<td>' +
-                  col.data +
-                  '</td>' +
-                  '</tr>'
-              : '';
-          }).join('');
-
-          return data ? $('<table class="table"/><tbody />').append(data) : false;
+        renderer: (api, rowIdx, columns) => {
+            var data = $.map(columns, col => col.title !== '' ? `<tr data-dt-row="${col.rowIndex}" data-dt-column="${col.columnIndex}"><td>${col.title}:</td><td>${col.data}</td></tr>` : '').join('');
+            return data ? $('<table class="table"/><tbody />').append(data) : false;
         }
       }
     }
@@ -753,41 +527,227 @@ if (dt_user_table2.length) {
   });
 }
 
+///REGISTRAR AGAVE ART
+const FormAgregar = document.getElementById('FormAddAgaveArt');
+FormValidation.formValidation(FormAgregar, {
+
+  plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  var formData = new FormData(FormAgregar);
+  const $submitBtn = $(FormAgregar).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-2-line ri-spin"></i> Guardando...');
+
+  $.ajax({
+      url: '/etiqueta-agave-art/add',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Ocultar y resetear el formulario
+        $('#ModalAddAgaveArt').modal('hide');
+        $('#FormAddAgaveArt')[0].reset();
+        dataTable2.ajax.reload(false);// Recargar DataTable
+        
+        // Alerta de éxito
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+                confirmButton: 'btn btn-primary'
+            }
+        });
+      },
+      error: function (xhr) {
+        const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+        if (isDev) console.log('Error Completo:', xhr);
+        const errorJSON = xhr.responseJSON?.message || "Error al registrar.";
+        
+          // Alerta de error
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: errorJSON,
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      },
+      complete: function () {
+          $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');
+      }
+  });
+});
+// Limpiar formulario al cerrar modal
+$('#ModalAddAgaveArt').on('hidden.bs.modal', function () {
+    FormAgregar.reset();
+    $('.select2').val(null).trigger('change');
+});
+
+///ELIMINAR AGAVE ART
+$(document).on('click', '.eliminar2', function() {
+  var id = $(this).data('id');
+
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: "No podrás revertir esta acción.",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+    cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+    customClass: {
+      confirmButton: 'btn btn-primary me-2',
+      cancelButton: 'btn btn-danger'
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        type: 'DELETE',
+        url: `/etiqueta-agave-art/delete/${id}`,
+        success: function(res) {
+          dataTable2.ajax.reload(false);
+          Swal.fire({
+              icon: 'success',
+              title: '¡Exito!',
+              text: res.message,
+              customClass: { confirmButton: 'btn btn-primary' }
+          });
+        },
+        error: function(xhr) {
+          const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+          if (isDev) console.log('Error Completo:', xhr);
+          const errorJSON = xhr.responseJSON?.message || "Error al eliminar.";
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: errorJSON,
+              customClass: { confirmButton: 'btn btn-danger' }
+          });
+        }
+      });
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      Swal.fire({
+        icon: 'info',
+        title: '¡Cancelado!',
+        text: 'Operación cancelada.',
+        customClass: {
+          confirmButton: 'btn btn-primary'
+        }
+      });
+    }
+  });
+});
+
+///OBTENER AGAVE ART
+$(document).on('click', '.editar2', function(){
+  var id = $(this).data('id');
+
+  $.ajax({
+    url: `/etiqueta-agave-art/edit/${id}`,
+    method: 'GET',
+    success: function (res) {
+      // Llenar modal con datos
+      for (const key in res) {
+          $(`#ModalEditAgaveArt [name="${key}"]`).val(res[key]);
+      }
+      $('#FormEditAgaveArt').data('id', id);
+      $('#ModalEditAgaveArt').modal('show');
+    }, 
+    error: function(xhr) {
+      const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+      if (isDev) console.log('Error Completo:', xhr);
+      const errorJSON = xhr.responseJSON?.message || "Error al obtener datos.";
+      Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: errorJSON,
+          customClass: { confirmButton: 'btn btn-danger' }
+      });
+    }
+  });
+});
+///ACTUALIZAR AGAVE ART
+const FormEditar = document.getElementById('FormEditAgaveArt');
+FormValidation.formValidation(FormEditar, {
+  
+  plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  var id = $(FormEditar).data('id');
+  const $submitBtn = $(FormEditar).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-2-line ri-spin"></i>Guardando...');
+
+    $.ajax({
+      url: `/etiqueta-agave-art/update/${id}`,
+      type: 'POST',
+      data: new FormData(FormEditar),
+      processData: false,
+      contentType: false,
+      success: function(res){
+          $('#ModalEditAgaveArt').modal('hide');
+          dataTable2.ajax.reload(false);
+
+        // Alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: res.message,
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      },
+      error: function(xhr){
+        const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+        if (isDev) console.log('Error Completo:', xhr);
+        const errorJSON = xhr.responseJSON?.message || "Error al actualizar.";
+        // Alerta de error
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: errorJSON,
+            customClass: {
+                confirmButton: 'btn btn-danger'
+            }
+        });
+      },
+      complete: function(){
+          $submitBtn.prop('disabled', false).html('<i class="ri-edit-line"></i> Editar');
+      }
+    });
+});
 
 
 });//end-function(jquery)
 
 
 
+
+
 //------------------- INGRESO MADURACION -------------------
 $(function () {
-// Variable declaration for table
-var dt_user_table3 = $('.datatables-users3');
-
-var select2Elements = $('.select2');
-  // Función para inicializar Select2 en elementos específicos
-  function initializeSelect2($elements) {
-    $elements.each(function () {
-      var $this = $(this);
-      select2Focus($this);
-      $this.wrap('<div class="position-relative"></div>').select2({
-        dropdownParent: $this.parent()
-      });
-    });
-  }
-initializeSelect2(select2Elements);
-
-
-// ajax setup
-$.ajaxSetup({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
 
 //FUNCIONALIDAD DE LA VISTA datatable
-if (dt_user_table3.length) {
-  var dataTable = dt_user_table3.DataTable({
+if ($('.datatables-users3').length) {
+  var dataTable3 = $('.datatables-users3').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
@@ -839,7 +799,11 @@ if (dt_user_table3.length) {
                 <i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>
               </button>
               <div class="dropdown-menu dropdown-menu-end m-0">
-                    
+                  <a data-id="${full['id']}" class="dropdown-item waves-effect text-dark editar3"
+                  data-bs-toggle="modal" data-bs-target="#ModalEditMaduracion">
+                      <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>
+                  <a data-id="${full['id']}" class="dropdown-item waves-effect text-black eliminar3">
+                      <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>
               </div>
             </div>
           `;
@@ -873,12 +837,12 @@ if (dt_user_table3.length) {
     // Opciones Exportar Documentos
     buttons: [
       {
-        text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo etiqueta</span>',
+        text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nueva etiqueta</span>',
         className: 'add-new btn btn-primary waves-effect waves-light',
         attr: {
           'data-bs-toggle': 'modal',
           'data-bs-dismiss': 'modal',
-          'data-bs-target': '#ModalAgregar'
+          'data-bs-target': '#ModalAddMaduracion'
         }
       }
     ],
@@ -887,32 +851,12 @@ if (dt_user_table3.length) {
     responsive: {
       details: {
         display: $.fn.dataTable.Responsive.display.modal({
-          header: function (row) {
-            var data = row.data();
-            return 'Detalles de ' + data['num_dictamen'];
-          }
+          header: row => 'Detalles de ' + row.data()['num_servicio']
         }),
         type: 'column',
-        renderer: function (api, rowIdx, columns) {
-          var data = $.map(columns, function (col, i) {
-            return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
-              ? '<tr data-dt-row="' +
-                  col.rowIndex +
-                  '" data-dt-column="' +
-                  col.columnIndex +
-                  '">' +
-                  '<td>' +
-                  col.title +
-                  ':' +
-                  '</td> ' +
-                  '<td>' +
-                  col.data +
-                  '</td>' +
-                  '</tr>'
-              : '';
-          }).join('');
-
-          return data ? $('<table class="table"/><tbody />').append(data) : false;
+        renderer: (api, rowIdx, columns) => {
+            var data = $.map(columns, col => col.title !== '' ? `<tr data-dt-row="${col.rowIndex}" data-dt-column="${col.columnIndex}"><td>${col.title}:</td><td>${col.data}</td></tr>` : '').join('');
+            return data ? $('<table class="table"/><tbody />').append(data) : false;
         }
       }
     }
@@ -920,41 +864,227 @@ if (dt_user_table3.length) {
   });
 }
 
+///REGISTRAR INGRESO MADURACION
+const FormAgregar = document.getElementById('FormAddMaduracion');
+FormValidation.formValidation(FormAgregar, {
+
+  plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  var formData = new FormData(FormAgregar);
+  const $submitBtn = $(FormAgregar).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-2-line ri-spin"></i> Guardando...');
+
+  $.ajax({
+      url: '/etiqueta-maduracion/add',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Ocultar y resetear el formulario
+        $('#ModalAddMaduracion').modal('hide');
+        $('#FormAddMaduracion')[0].reset();
+        dataTable3.ajax.reload(false);// Recargar DataTable
+        
+        // Alerta de éxito
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+                confirmButton: 'btn btn-primary'
+            }
+        });
+      },
+      error: function (xhr) {
+        const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+        if (isDev) console.log('Error Completo:', xhr);
+        const errorJSON = xhr.responseJSON?.message || "Error al registrar.";
+        
+          // Alerta de error
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: errorJSON,
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      },
+      complete: function () {
+          $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');
+      }
+  });
+});
+// Limpiar formulario al cerrar modal
+$('#ModalAddMaduracion').on('hidden.bs.modal', function () {
+    FormAgregar.reset();
+    $('.select2').val(null).trigger('change');
+});
+
+///ELIMINAR INGRESO MADURACION
+$(document).on('click', '.eliminar3', function() {
+  var id = $(this).data('id');
+
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: "No podrás revertir esta acción.",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+    cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+    customClass: {
+      confirmButton: 'btn btn-primary me-2',
+      cancelButton: 'btn btn-danger'
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        type: 'DELETE',
+        url: `/etiqueta-maduracion/delete/${id}`,
+        success: function(res) {
+          dataTable3.ajax.reload(false);
+          Swal.fire({
+              icon: 'success',
+              title: '¡Exito!',
+              text: res.message,
+              customClass: { confirmButton: 'btn btn-primary' }
+          });
+        },
+        error: function(xhr) {
+          const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+          if (isDev) console.log('Error Completo:', xhr);
+          const errorJSON = xhr.responseJSON?.message || "Error al eliminar.";
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: errorJSON,
+              customClass: { confirmButton: 'btn btn-danger' }
+          });
+        }
+      });
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      Swal.fire({
+        icon: 'info',
+        title: '¡Cancelado!',
+        text: 'Operación cancelada.',
+        customClass: {
+          confirmButton: 'btn btn-primary'
+        }
+      });
+    }
+  });
+});
+
+///OBTENER INGRESO MADURACION
+$(document).on('click', '.editar3', function(){
+  var id = $(this).data('id');
+
+  $.ajax({
+    url: `/etiqueta-maduracion/edit/${id}`,
+    method: 'GET',
+    success: function (res) {
+      // Llenar modal con datos
+      for (const key in res) {
+          $(`#ModalEditMaduracion [name="${key}"]`).val(res[key]);
+      }
+      $('#FormEditMaduracion').data('id', id);
+      $('#ModalEditMaduracion').modal('show');
+    }, 
+    error: function(xhr) {
+      const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+      if (isDev) console.log('Error Completo:', xhr);
+      const errorJSON = xhr.responseJSON?.message || "Error al obtener datos.";
+      Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: errorJSON,
+          customClass: { confirmButton: 'btn btn-danger' }
+      });
+    }
+  });
+});
+///ACTUALIZAR INGRESO MADURACION
+const FormEditar = document.getElementById('FormEditMaduracion');
+FormValidation.formValidation(FormEditar, {
+  
+  plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  var id = $(FormEditar).data('id');
+  const $submitBtn = $(FormEditar).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-2-line ri-spin"></i>Guardando...');
+
+    $.ajax({
+      url: `/etiqueta-maduracion/update/${id}`,
+      type: 'POST',
+      data: new FormData(FormEditar),
+      processData: false,
+      contentType: false,
+      success: function(res){
+          $('#ModalEditMaduracion').modal('hide');
+          dataTable3.ajax.reload(false);
+
+        // Alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: res.message,
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      },
+      error: function(xhr){
+        const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+        if (isDev) console.log('Error Completo:', xhr);
+        const errorJSON = xhr.responseJSON?.message || "Error al actualizar.";
+        // Alerta de error
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: errorJSON,
+            customClass: {
+                confirmButton: 'btn btn-danger'
+            }
+        });
+      },
+      complete: function(){
+          $submitBtn.prop('disabled', false).html('<i class="ri-edit-line"></i> Editar');
+      }
+    });
+});
 
 
 });//end-function(jquery)
 
 
 
+
+
 //------------------- TAPA MUESTRA -------------------
 $(function () {
-// Variable declaration for table
-var dt_user_table4 = $('.datatables-users4');
-
-var select2Elements = $('.select2');
-  // Función para inicializar Select2 en elementos específicos
-  function initializeSelect2($elements) {
-    $elements.each(function () {
-      var $this = $(this);
-      select2Focus($this);
-      $this.wrap('<div class="position-relative"></div>').select2({
-        dropdownParent: $this.parent()
-      });
-    });
-  }
-initializeSelect2(select2Elements);
-
-
-// ajax setup
-$.ajaxSetup({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
 
 //FUNCIONALIDAD DE LA VISTA datatable
-if (dt_user_table4.length) {
-  var dataTable = dt_user_table4.DataTable({
+if ($('.datatables-users4').length) {
+  var dataTable4 = $('.datatables-users4').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
@@ -1006,7 +1136,11 @@ if (dt_user_table4.length) {
                 <i class="ri-settings-5-fill"></i>&nbsp;Opciones<i class="ri-arrow-down-s-fill ri-20px"></i>
               </button>
               <div class="dropdown-menu dropdown-menu-end m-0">
-                    
+                  <a data-id="${full['id']}" class="dropdown-item waves-effect text-dark editar4"
+                  data-bs-toggle="modal" data-bs-target="#ModalEditTapaMuestra">
+                      <i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>
+                  <a data-id="${full['id']}" class="dropdown-item waves-effect text-black eliminar4">
+                      <i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>
               </div>
             </div>
           `;
@@ -1040,12 +1174,12 @@ if (dt_user_table4.length) {
     // Opciones Exportar Documentos
     buttons: [
       {
-        text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo etiqueta</span>',
+        text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nueva etiqueta</span>',
         className: 'add-new btn btn-primary waves-effect waves-light',
         attr: {
           'data-bs-toggle': 'modal',
           'data-bs-dismiss': 'modal',
-          'data-bs-target': '#ModalAgregar'
+          'data-bs-target': '#ModalAddTapaMuestra'
         }
       }
     ],
@@ -1054,32 +1188,12 @@ if (dt_user_table4.length) {
     responsive: {
       details: {
         display: $.fn.dataTable.Responsive.display.modal({
-          header: function (row) {
-            var data = row.data();
-            return 'Detalles de ' + data['num_dictamen'];
-          }
+          header: row => 'Detalles de ' + row.data()['num_servicio']
         }),
         type: 'column',
-        renderer: function (api, rowIdx, columns) {
-          var data = $.map(columns, function (col, i) {
-            return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
-              ? '<tr data-dt-row="' +
-                  col.rowIndex +
-                  '" data-dt-column="' +
-                  col.columnIndex +
-                  '">' +
-                  '<td>' +
-                  col.title +
-                  ':' +
-                  '</td> ' +
-                  '<td>' +
-                  col.data +
-                  '</td>' +
-                  '</tr>'
-              : '';
-          }).join('');
-
-          return data ? $('<table class="table"/><tbody />').append(data) : false;
+        renderer: (api, rowIdx, columns) => {
+            var data = $.map(columns, col => col.title !== '' ? `<tr data-dt-row="${col.rowIndex}" data-dt-column="${col.columnIndex}"><td>${col.title}:</td><td>${col.data}</td></tr>` : '').join('');
+            return data ? $('<table class="table"/><tbody />').append(data) : false;
         }
       }
     }
@@ -1087,6 +1201,213 @@ if (dt_user_table4.length) {
   });
 }
 
+///REGISTRAR TAPA MUESTRA
+const FormAgregar = document.getElementById('FormAddTapaMuestra');
+FormValidation.formValidation(FormAgregar, {
+
+  plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  var formData = new FormData(FormAgregar);
+  const $submitBtn = $(FormAgregar).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-2-line ri-spin"></i> Guardando...');
+
+  $.ajax({
+      url: '/etiqueta-tapa-muestra/add',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Ocultar y resetear el formulario
+        $('#ModalAddTapaMuestra').modal('hide');
+        $('#FormAddTapaMuestra')[0].reset();
+        dataTable4.ajax.reload(false);// Recargar DataTable
+        
+        // Alerta de éxito
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+                confirmButton: 'btn btn-primary'
+            }
+        });
+      },
+      error: function (xhr) {
+        const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+        if (isDev) console.log('Error Completo:', xhr);
+        const errorJSON = xhr.responseJSON?.message || "Error al registrar.";
+        
+          // Alerta de error
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: errorJSON,
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      },
+      complete: function () {
+          $submitBtn.prop('disabled', false).html('<i class="ri-add-line"></i> Registrar');
+      }
+  });
+});
+// Limpiar formulario al cerrar modal
+$('#ModalAddTapaMuestra').on('hidden.bs.modal', function () {
+    FormAgregar.reset();
+    $('.select2').val(null).trigger('change');
+});
+
+///ELIMINAR TAPA MUESTRA
+$(document).on('click', '.eliminar4', function() {
+  var id = $(this).data('id');
+
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: "No podrás revertir esta acción.",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '<i class="ri-check-line"></i> Sí, eliminar',
+    cancelButtonText: '<i class="ri-close-line"></i> Cancelar',
+    customClass: {
+      confirmButton: 'btn btn-primary me-2',
+      cancelButton: 'btn btn-danger'
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        type: 'DELETE',
+        url: `/etiqueta-tapa-muestra/delete/${id}`,
+        success: function(res) {
+          dataTable4.ajax.reload(false);
+          Swal.fire({
+              icon: 'success',
+              title: '¡Exito!',
+              text: res.message,
+              customClass: { confirmButton: 'btn btn-primary' }
+          });
+        },
+        error: function(xhr) {
+          const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+          if (isDev) console.log('Error Completo:', xhr);
+          const errorJSON = xhr.responseJSON?.message || "Error al eliminar.";
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: errorJSON,
+              customClass: { confirmButton: 'btn btn-danger' }
+          });
+        }
+      });
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      Swal.fire({
+        icon: 'info',
+        title: '¡Cancelado!',
+        text: 'Operación cancelada.',
+        customClass: {
+          confirmButton: 'btn btn-primary'
+        }
+      });
+    }
+  });
+});
+
+///OBTENER TAPA MUESTRA
+$(document).on('click', '.editar4', function(){
+  var id = $(this).data('id');
+
+  $.ajax({
+    url: `/etiqueta-tapa-muestra/edit/${id}`,
+    method: 'GET',
+    success: function (res) {
+      // Llenar modal con datos
+      for (const key in res) {
+          $(`#ModaEditTapaMuestra [name="${key}"]`).val(res[key]);
+      }
+      $('#FormEditTapaMuestra').data('id', id);
+      $('#ModaEditTapaMuestra').modal('show');
+    }, 
+    error: function(xhr) {
+      const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+      if (isDev) console.log('Error Completo:', xhr);
+      const errorJSON = xhr.responseJSON?.message || "Error al obtener datos.";
+      Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: errorJSON,
+          customClass: { confirmButton: 'btn btn-danger' }
+      });
+    }
+  });
+});
+///ACTUALIZAR TAPA MUESTRA
+const FormEditar = document.getElementById('FormEditTapaMuestra');
+FormValidation.formValidation(FormEditar, {
+  
+  plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  var id = $(FormEditar).data('id');
+  const $submitBtn = $(FormEditar).find('button[type="submit"]');
+  $submitBtn.prop('disabled', true).html('<i class="ri-loader-2-line ri-spin"></i>Guardando...');
+
+    $.ajax({
+      url: `/etiqueta-tapa-muestra/update/${id}`,
+      type: 'POST',
+      data: new FormData(FormEditar),
+      processData: false,
+      contentType: false,
+      success: function(res){
+          $('#ModaEditTapaMuestra').modal('hide');
+          dataTable4.ajax.reload(false);
+
+        // Alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: res.message,
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        });
+      },
+      error: function(xhr){
+        const isDev = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+        if (isDev) console.log('Error Completo:', xhr);
+        const errorJSON = xhr.responseJSON?.message || "Error al actualizar.";
+        // Alerta de error
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: errorJSON,
+            customClass: {
+                confirmButton: 'btn btn-danger'
+            }
+        });
+      },
+      complete: function(){
+          $submitBtn.prop('disabled', false).html('<i class="ri-edit-line"></i> Editar');
+      }
+    });
+});
 
 
 });//end-function(jquery)

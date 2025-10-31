@@ -123,12 +123,11 @@
       "slug": "inspecciones",
       "can": "Visualizar inspecciones"
     },
-
     {
       "name": "Etiquetas UI",
       "icon": "menu-icon ri-price-tag-3-fill",
       "slug": "etiqueta-ui",
-      "can": "Visualizar solo admin",
+      "can": "Visualizar por admin",
       "submenu": [
         {
           "name": "Mezcal a granel",
@@ -152,8 +151,6 @@
         }
       ]
     },
-
-
     {
       "name": "Dictámenes de cumplimiento",
       "icon": "menu-icon ri-auction-fill",

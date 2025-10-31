@@ -12,6 +12,7 @@ class EtiquetaUIMaduracion extends Model
 
     protected $table = 'etiqueta_maduracion';
     protected $primaryKey = 'id'; // Clave primaria
+    public $timestamps = false; // Desactivar created_at / updated_at
 
     // Campos comunes de todas las tablas
     protected $fillable = [

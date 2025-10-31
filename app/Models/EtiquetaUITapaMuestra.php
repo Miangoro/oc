@@ -12,6 +12,7 @@ class EtiquetaUITapaMuestra extends Model
 
     protected $table = 'etiqueta_tapa_muestra';
     protected $primaryKey = 'id'; // Clave primaria
+    public $timestamps = false; // Desactivar created_at / updated_at
 
     // Campos comunes de todas las tablas
     protected $fillable = [
