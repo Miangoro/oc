@@ -372,7 +372,7 @@ FormValidation.formValidation(FormEditar, {
     });
 });
 
-///FORMATO PDF ETIQUETA
+///FORMATO PDF MEZCAL A GRANEL
 $(document).on('click', '.pdfMezcalGranel', function ()  {
   var id = $(this).data('id');
   //var folio = $(this).data('folio');

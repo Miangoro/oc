@@ -912,12 +912,7 @@ Route::middleware(['auth'])->controller(EtiquetasUIController::class)->group(fun
     Route::delete('/etiqueta-mezcal-granel/delete/{id}', 'destroy')->name('etiqueta-mezcal-granel.destroy');
     Route::get('/etiqueta-mezcal-granel/edit/{id}', 'edit')->name('etiqueta-mezcal-granel.edit');
     Route::post('/etiqueta-mezcal-granel/update/{id}', 'update')->name('etiqueta-mezcal-granel.update');
-
-    //PDF etiquetas
-Route::get('/etiqueta_mezcal_granel/{id}', 'EtiquetaMezcalGranel')->name('etiqueta-mezcal-granel.PDF');
-/*Route::get('/etiqueta_agave_art/{id_inspeccion}', 'etiqueta_muestra')->name('etiqueta-muestra');
-Route::get('/etiqueta-barrica/{id_inspeccion}', 'etiqueta_barrica')->name('etiquetabarrica');
-Route::get('/etiquetas_tapas_sellado/{id_inspeccion}', 'etiqueta')->name('etiqueta-2401ESPTOB');*/
+    Route::get('/etiqueta_mezcal_granel/{id}', 'EtiquetaMezcalGranel')->name('etiqueta-mezcal-granel.PDF');
     // Agave ART
     Route::get('/etiqueta-ui/agave-art', 'UserManagement2')->name('etiqueta-ui-2');
     Route::get('/etiquetas-list-art', 'index2')->name('etiqueta-art.index');
@@ -925,6 +920,7 @@ Route::get('/etiquetas_tapas_sellado/{id_inspeccion}', 'etiqueta')->name('etique
     Route::delete('/etiqueta-agave-art/delete/{id}', 'destroy2')->name('etiqueta-agave-art.destroy');
     Route::get('/etiqueta-agave-art/edit/{id}', 'edit2')->name('etiqueta-agave-art.edit');
     Route::post('/etiqueta-agave-art/update/{id}', 'update2')->name('etiqueta-agave-art.update');
+    Route::get('/etiqueta_agave_art/{id}', 'EtiquetaAgaveArt')->name('etiqueta-agave-art.PDF');
     // Ingreso maduracion
     Route::get('/etiqueta-ui/maduracion', 'UserManagement3')->name('etiqueta-ui-3');
     Route::get('/etiquetas-list-maduracion', 'index3')->name('etiqueta-maduracion.index');
@@ -932,6 +928,7 @@ Route::get('/etiquetas_tapas_sellado/{id_inspeccion}', 'etiqueta')->name('etique
     Route::delete('/etiqueta-maduracion/delete/{id}', 'destroy3')->name('etiqueta-maduracion.destroy');
     Route::get('/etiqueta-maduracion/edit/{id}', 'edit3')->name('etiqueta-maduracion.edit');
     Route::post('/etiqueta-maduracion/update/{id}', 'update3')->name('etiqueta-maduracion.update');
+    Route::get('/etiqueta_maduracion/{id}', 'EtiquetaMaduracion')->name('etiqueta-maduracion.PDF');
     // Tapa muestra
     Route::get('/etiqueta-ui/tapa-muestra', 'UserManagement4')->name('etiqueta-ui-4');
     Route::get('/etiquetas-list-tapa', 'index4')->name('etiqueta-muestra.index');
@@ -939,6 +936,7 @@ Route::get('/etiquetas_tapas_sellado/{id_inspeccion}', 'etiqueta')->name('etique
     Route::delete('/etiqueta-tapa-muestra/delete/{id}', 'destroy4')->name('etiqueta-tapa-muestra.destroy');
     Route::get('/etiqueta-tapa-muestra/edit/{id}', 'edit4')->name('etiqueta-tapa-muestra.edit');
     Route::post('/etiqueta-tapa-muestra/update/{id}', 'update4')->name('etiqueta-tapa-muestra.update');
+    Route::get('/etiqueta_tapa_muestra/{id}', 'EtiquetaTapaMuestra')->name('etiqueta-tapa-muestra.PDF');
 });
 
 
