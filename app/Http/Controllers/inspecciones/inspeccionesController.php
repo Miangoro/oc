@@ -1047,8 +1047,6 @@ public function agregarResultados(Request $request)
     //Metodo para llenar el pdf
     public function acta_circunstanciada_produccion($id_inspeccion)
     {
-
-
         $datos = inspecciones::with(
             'solicitud.empresa',
             'actas_inspeccion.actas_testigo',

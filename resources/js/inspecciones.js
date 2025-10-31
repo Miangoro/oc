@@ -412,7 +412,8 @@ var dt_instalaciones_table = $('.datatables-users').DataTable({
                               data-bs-toggle="modal"
                               data-bs-dismiss="modal"
                               data-id="../${dictamen}"
-                              data-registro="${razon}">
+                              data-registro="${razon}"
+                              data-dictamen="1">
                           </i>`;
             } else {
               html += '<span class="badge bg-warning">Sin dictamen</span>';
@@ -1493,7 +1494,7 @@ $('#asignarRevisorForm').on('submit', function (e) {
     });
   });
 
-  /*   $(document).on('click', '.pdf', function () {
+  /*$(document).on('click', '.pdf', function () {
       var url = $(this).data('url');
       var registro = $(this).data('registro');
           var iframe = $('#pdfViewer');
@@ -1501,10 +1502,11 @@ $('#asignarRevisorForm').on('submit', function (e) {
 
           $("#titulo_modal").text("Certificado de instalaciones");
           $("#subtitulo_modal").text(registro);
-    }); */
+    });*/
   $(document).on('click', '.pdf', function () {
     var id_inspeccion = $(this).data('id');
     var registro = $(this).data('registro');
+    var Esdictamen = $(this).data('dictamen');
 
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
@@ -1517,7 +1519,11 @@ $('#asignarRevisorForm').on('submit', function (e) {
     //Configurar el botón para abrir el PDF en una nueva pestaña
     $('#NewPestana').attr('href', id_inspeccion).show();
 
-    $('#titulo_modal').text('Acta de inspección');
+    if (Esdictamen ==1){
+      $('#titulo_modal').text('PDf del dictamen');
+    }else{
+      $('#titulo_modal').text('Acta de inspección');
+    }
     $('#subtitulo_modal').text(registro);
 
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
