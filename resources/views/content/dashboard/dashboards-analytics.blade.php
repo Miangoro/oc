@@ -114,7 +114,7 @@
 
         <!-- Statistics Total Order -->
         <!--  <div class="col-xxl-2 col-sm-6">
-                <div class="card ">
+                <div class="card h-100">
                     <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
                         <div class="avatar">
@@ -139,7 +139,7 @@
 
         <!-- Sessions line chart -->
         <!--<div class="col-xxl-2 col-sm-6">
-                <div class="card ">
+                <div class="card h-100">
                     <div class="card-header pb-0">
                     <div class="d-flex align-items-center mb-1 flex-wrap">
                         <h5 class="mb-0 me-1">$38.5k</h5>
@@ -208,7 +208,7 @@
                         @foreach ($maquiladores as $maquilador)
                             @foreach ($maquilador->maquiladores as $m)
                                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                                    <div class="card text-center shadow border-0 " style="font-size: 0.9rem;">
+                                    <div class="card text-center shadow border-0 h-100" style="font-size: 0.9rem;">
 
                                         <!-- Encabezado -->
                                         <div class="card-header text-white py-2"
@@ -234,7 +234,7 @@
 
                         <!-- Mensajes del dashboard f0f8ff-->
                         <!-- Mensajes del dashboard -->
-                        <div class="dashboard-messages d-flex justify-content-center align-items-start  pe-5">
+                        <div class="dashboard-messages d-flex justify-content-center align-items-start h-100 pe-5">
                             <div class="w-100 pe-5">
                                 @foreach ($mensajes as $mensaje)
                                     @if ($mensaje->activo == 1 && ($mensaje->id_usuario_destino == auth()->id() || is_null($mensaje->id_usuario_destino)))
@@ -379,333 +379,104 @@
 
 
     <!--CONTENEDOR DE ESTADISTICAS-->
-   <div class="row g-6">
-    @can('Estadísticas ui')
-    <div class="col-sm-6 col-lg-3">
-        {{-- Tarjeta de Primaria: Agrupa las acciones pendientes del área UI --}}
-        <div class="card  shadow-sm card-border-shadow-primary">
-            <div class="card-header border-bottom py-3">
-                <h5 class="card-title m-0 text-primary">📑 Tareas Pendientes UI</h5>
-            </div>
-            <div class="card-body p-0">
-                
-                {{-- Bloque: Asignar Inspector --}}
-                <div class="p-3 d-flex flex-column hover-bg-light cursor-pointer border-bottom"
-                    data-bs-toggle="modal" data-bs-target="#modalSolicitudesSinInspector">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3 flex-shrink-0">
-                                <span class="avatar-initial rounded-3 bg-label-primary"><i
-                                        class="ri-group-fill ri-24px"></i></span>
-                            </div>
-                            <h4 class="mb-0 fw-bold">{{ $solicitudesSinInspeccion->count() }}</h4>
-                        </div>
-                        <small class="text-muted">Ver Lista</small>
-                    </div>
-                    <h6 class="mb-0 mt-2 text-muted small fw-normal">Pendiente de asignar inspector</h6>
-                </div>
-                
-                {{-- Bloque: Subir Acta (2025) --}}
-                <div class="p-3 d-flex flex-column hover-bg-light cursor-pointer border-bottom"
-                    data-bs-toggle="modal" data-bs-target="#modalSolicitudesSinActa">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3 flex-shrink-0">
-                                <span class="avatar-initial rounded-3 bg-label-warning"><i
-                                        class="ri-file-list-fill ri-24px"></i></span>
-                            </div>
-                            <h4 class="mb-0 fw-bold">{{ $solicitudesSinActa->count() }}</h4>
-                        </div>
-                        <small class="text-muted">Ver Lista</small>
-                    </div>
-                    <h6 class="mb-0 mt-2 text-muted small fw-normal">Pendiente de subir acta 2025</h6>
-                </div>
-
-                {{-- Bloque: Crear Dictamen --}}
-                <div class="p-3 d-flex flex-column hover-bg-light cursor-pointer border-bottom"
-                    data-bs-toggle="modal" data-bs-target="#modalSolicitudesSinDictamen">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3 flex-shrink-0">
-                                <span class="avatar-initial rounded-3 bg-label-warning"><i
-                                        class="ri-file-warning-line ri-24px"></i></span>
-                            </div>
-                            <h4 class="mb-0 fw-bold">{{ $solicitudesSinDictamen->count() }}</h4>
-                        </div>
-                        <small class="text-muted">Ver Lista</small>
-                    </div>
-                    <h6 class="mb-0 mt-2 text-muted small fw-normal">Pendiente de crear dictamen</h6>
-                </div>
-                
-                {{-- Bloque: Revisión de Acta --}}
-                <div class="p-3 d-flex flex-column hover-bg-light cursor-pointer border-bottom"
-                    data-bs-toggle="modal" data-bs-target="#modalRevisionActa">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3 flex-shrink-0">
-                                <span class="avatar-initial rounded-3 bg-label-warning"><i
-                                        class="ri-file-warning-line ri-24px"></i></span>
-                            </div>
-                            <h4 class="mb-0 fw-bold">{{ $revisionActa->count() }}</h4>
-                        </div>
-                        <small class="text-muted">Ver Lista</small>
-                    </div>
-                    <h6 class="mb-0 mt-2 text-muted small fw-normal">Pendiente revisión de acta</h6>
-                </div>
-
-                {{-- Bloque: Lotes sin FQ --}}
-                <div class="p-3 d-flex flex-column hover-bg-light cursor-pointer"
-                    data-bs-toggle="modal" data-bs-target="#modalSolicitudesSinActa">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3 flex-shrink-0">
-                                <span class="avatar-initial rounded-3 bg-label-warning"><i
-                                        class="ri-flask-line ri-24px"></i></span> {{-- Cambié el ícono para FQ --}}
-                            </div>
-                            <h4 class="mb-0 fw-bold">{{ $lotesSinFq->count() }}</h4>
-                        </div>
-                        <small class="text-muted">Ver Lista</small>
-                    </div>
-                    <h6 class="mb-0 mt-2 text-muted small fw-normal">Lotes pendientes de subir FQ</h6>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    @endcan
+   <div class="row g-4 mb-4">
+    {{--
+    * CAMBIOS APLICADOS:
+    * 1. Se cambió 'g-6' por 'g-4' en el 'row' principal para un mejor espaciado.
+    * 2. Se eliminó la clase 'h-100' de los card que tienen mucho contenido variable.
+    * 3. Se mantiene la estructura 'col-sm-6 col-lg-3' para la grilla 4x12.
+    * 4. Se usa 'h-100' solo en el contenedor de las 'Estadísticas Hologramas' para forzar la uniformidad visual de ese bloque.
+    * 5. Se usa la clase de utilidad 'mb-4' en los 'row' principales para separar mejor las secciones.
+    --}}
 
     @can('Estadísticas ui')
     <div class="col-sm-6 col-lg-3">
-        <div class="card  shadow-sm card-border-shadow-danger">
-            <div class="card-header border-bottom py-3">
-                <h5 class="card-title m-0 text-danger">🚨 Dictámenes por Vencer</h5>
-            </div>
-            <div class="card-body pt-3 pb-3">
-                <div class="d-flex align-items-start mb-2">
+        {{-- Quitamos h-100 para evitar estiramiento y que la card se ajuste al contenido --}}
+        <div class="card card-border-shadow-primary">
+            <div class="card-body">
+                <h5 class="card-title text-primary mb-3">Tareas Pendientes (UI)</h5>
+                <div class="d-flex align-items-center mb-2" data-bs-toggle="modal"
+                    data-bs-target="#modalSolicitudesSinInspector">
                     <div class="avatar me-4 flex-shrink-0">
-                        <span class="avatar-initial rounded-3 bg-label-danger"><i
-                                class="ri-close-circle-fill ri-24px"></i></span>
+                        <span class="avatar-initial rounded-3 bg-label-primary"><i
+                                class="ri-group-fill ri-24px"></i></span>
                     </div>
-                    <div class="list-unstyled mb-0 w-100">
-                        @forelse ($dictamenesPorVencer as $dictamen)
-                            <p class="mb-1 text-dark fw-medium">
-                                **{{ $dictamen->num_dictamen }}** <span class="badge bg-label-danger ms-1">{{ \Carbon\Carbon::parse($dictamen->fecha_vigencia)->diffForHumans() }}</span>
-                                <br><small class="text-muted d-block mt-0 pt-0">Vence: {{ \Carbon\Carbon::parse($dictamen->fecha_vigencia)->format('d/m/Y') }}</small>
-                            </p>
-                        @empty
-                            <p class="mb-0 text-success fw-medium">¡No hay dictámenes próximos a vencer!</p>
-                        @endforelse
+                    <div>
+                        <h4 class="mb-0">{{ $solicitudesSinInspeccion->count() }}</h4>
+                        <small class="text-muted">Asignar inspector</small>
+                    </div>
+                </div>
+                <hr class="my-2">
+
+                <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                    data-bs-target="#modalSolicitudesSinActa">
+                    <div class="avatar me-4 flex-shrink-0">
+                        <span class="avatar-initial rounded-3 bg-label-warning"><i
+                                class="ri-file-list-fill ri-24px"></i></span>
+                    </div>
+                    <div>
+                        <h4 class="mb-0">{{ $solicitudesSinActa->count() }}</h4>
+                        <small class="text-muted">Subir acta 2025</small>
+                    </div>
+                </div>
+                <hr class="my-2">
+
+                <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                    data-bs-target="#modalSolicitudesSinDictamen">
+                    <div class="avatar me-4 flex-shrink-0">
+                        <span class="avatar-initial rounded-3 bg-label-warning"><i
+                                class="ri-file-warning-line ri-24px"></i></span>
+                    </div>
+                    <div>
+                        <h4 class="mb-0">{{ $solicitudesSinDictamen->count() }}</h4>
+                        <small class="text-muted">Crear dictamen</small>
+                    </div>
+                </div>
+                <hr class="my-2">
+
+                <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                    data-bs-target="#modalRevisionActa">
+                    <div class="avatar me-4 flex-shrink-0">
+                        <span class="avatar-initial rounded-3 bg-label-warning"><i
+                                class="ri-file-warning-line ri-24px"></i></span>
+                    </div>
+                    <div>
+                        <h4 class="mb-0">{{ $revisionActa->count() }}</h4>
+                        <small class="text-muted">Revisión de acta</small>
+                    </div>
+                </div>
+                <hr class="my-2">
+
+                <div class="d-flex align-items-center cursor-pointer" data-bs-toggle="modal"
+                    data-bs-target="#modalSolicitudesSinActa">
+                    <div class="avatar me-4 flex-shrink-0">
+                        <span class="avatar-initial rounded-3 bg-label-warning"><i
+                                class="ri-file-list-fill ri-24px"></i></span>
+                    </div>
+                    <div>
+                        <h4 class="mb-0">{{ $lotesSinFq->count() }}</h4>
+                        <small class="text-muted">Lotes sin FQ</small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     @endcan
-
-    @can('Estadísticas oc')
-    <div class="col-sm-6 col-lg-3">
-        <div class="card  shadow-sm card-border-shadow-primary">
-            <div class="card-header border-bottom py-3">
-                <h5 class="card-title m-0 text-primary">📄 Pendientes OC (Certificados)</h5>
-            </div>
-            <div class="card-body p-0">
-                
-                {{-- Bloque: Certificado Instalaciones --}}
-                <div class="p-3 d-flex flex-column hover-bg-light cursor-pointer border-bottom"
-                    data-bs-toggle="modal" data-bs-target="#modalDictamenesInstalacionesPendientes">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3 flex-shrink-0">
-                                <span class="avatar-initial rounded-3 bg-label-danger"><i
-                                        class="ri-building-4-fill ri-24px"></i></span>
-                            </div>
-                            <h4 class="mb-0 fw-bold">{{ $dictamenesInstalacionesSinCertificado->count() }}</h4>
-                        </div>
-                        <small class="text-muted">Crear</small>
-                    </div>
-                    <h6 class="mb-0 mt-2 text-muted small fw-normal">Certificado de instalaciones</h6>
-                </div>
-
-                {{-- Bloque: Certificado Graneles --}}
-                <div class="p-3 d-flex flex-column hover-bg-light cursor-pointer border-bottom"
-                    data-bs-toggle="modal" data-bs-target="#modalDictamenesGranelPendientes">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3 flex-shrink-0">
-                                <span class="avatar-initial rounded-3 bg-label-danger"><i
-                                        class="ri-ship-fill ri-24px"></i></span> {{-- Icono para Granel/Envío --}}
-                            </div>
-                            <h4 class="mb-0 fw-bold">{{ $dictamenesGranelesSinCertificado->count() }}</h4>
-                        </div>
-                        <small class="text-muted">Crear</small>
-                    </div>
-                    <h6 class="mb-0 mt-2 text-muted small fw-normal">Certificado de graneles</h6>
-                </div>
-
-                {{-- Bloque: Certificado Exportación --}}
-                <div class="p-3 d-flex flex-column hover-bg-light cursor-pointer"
-                    data-bs-toggle="modal" data-bs-target="#modalDictamenesExportacionPendientes">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3 flex-shrink-0">
-                                <span class="avatar-initial rounded-3 bg-label-danger">
-                                    <i class="ri-plane-fill ri-24px"></i> {{-- Icono para Exportación/Viaje --}}
-                                </span>
-                            </div>
-                            <h4 class="mb-0 fw-bold">{{ $dictamenesExportacionSinCertificado->count() }}</h4>
-                        </div>
-                        <small class="text-muted">Crear</small>
-                    </div>
-                    <h6 class="mb-0 mt-2 text-muted small fw-normal">Certificado de exportación</h6>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endcan
-    
-    @can('Estadísticas oc')
-    <div class="col-sm-6 col-lg-3">
-        <div class="card  shadow-sm card-border-shadow-info">
-            <div class="card-header border-bottom py-3">
-                <h5 class="card-title m-0 text-info">⚙️ Pendientes OC (Documentación)</h5>
-            </div>
-            <div class="card-body p-0">
-
-                {{-- Certificados por vencer --}}
-                <div class="p-3 border-bottom">
-                    <p class="fw-bold mb-1 d-flex justify-content-between align-items-center">
-                        Certificados de instalaciones por vencer
-                        <i class='ri-alarm-line text-danger ri-18px'></i>
-                    </p>
-                    <ul class="list-unstyled mb-0 small" style="max-height: 100px; overflow-y: auto;">
-                        @forelse ($certificadosPorVencer as $certificado)
-                            <li class="mb-1">
-                                <span class="text-danger fw-medium">{{ $certificado->num_certificado }}</span>
-                                <small class="text-muted ms-1">({{ \Carbon\Carbon::parse($certificado->fecha_vigencia)->format('d/m/Y') }})</small>
-                                <br><small class="text-dark">{{ $certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}</small>
-                            </li>
-                        @empty
-                            <li class="text-success fw-medium">Ninguno próximo a vencer.</li>
-                        @endforelse
-                    </ul>
-                </div>
-
-                {{-- Bloque: Sin Escaneado Instalaciones --}}
-                <div class="p-3 d-flex flex-column hover-bg-light cursor-pointer border-bottom"
-                    data-bs-toggle="modal" data-bs-target="#modalCertificadosInstalacionesSinEscaner">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3 flex-shrink-0">
-                                <span class="avatar-initial rounded-3 bg-label-warning"><i
-                                        class="ri-scan-line ri-24px"></i></span>
-                            </div>
-                            <h4 class="mb-0 fw-bold">{{ $certificadoInstalacionesSinEscaneado->count() }}</h4>
-                        </div>
-                        <small class="text-muted">Subir</small>
-                    </div>
-                    <h6 class="mb-0 mt-2 text-muted small fw-normal">Certificados Inst. sin escanear</h6>
-                </div>
-
-                {{-- Bloque: Sin Escaneado Graneles --}}
-                <div class="p-3 d-flex flex-column hover-bg-light cursor-pointer border-bottom"
-                    data-bs-toggle="modal" data-bs-target="#modalCertificadosSinEscaner">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3 flex-shrink-0">
-                                <span class="avatar-initial rounded-3 bg-label-warning"><i
-                                        class="ri-scan-line ri-24px"></i></span>
-                            </div>
-                            <h4 class="mb-0 fw-bold">{{ $certificadoGranelSinEscaneado->count() }}</h4>
-                        </div>
-                        <small class="text-muted">Subir</small>
-                    </div>
-                    <h6 class="mb-0 mt-2 text-muted small fw-normal">Certificados Graneles sin escanear</h6>
-                </div>
-
-                {{-- Bloque: Sin Escaneado Exportación --}}
-                <div class="p-3 d-flex flex-column hover-bg-light cursor-pointer border-bottom"
-                    data-bs-toggle="modal" data-bs-target="#modalCertificadosExportacionSinEscaner">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3 flex-shrink-0">
-                                <span class="avatar-initial rounded-3 bg-label-warning"><i
-                                        class="ri-scan-line ri-24px"></i></span>
-                            </div>
-                            <h4 class="mb-0 fw-bold">{{ $certificadoExportacionSinEscaneado->count() }}</h4>
-                        </div>
-                        <small class="text-muted">Subir</small>
-                    </div>
-                    <h6 class="mb-0 mt-2 text-muted small fw-normal">Certificados Exp. sin escanear</h6>
-                </div>
-                
-                {{-- Bloque: Actas sin activar hologramas --}}
-                <div class="p-3 d-flex flex-column hover-bg-light cursor-pointer border-bottom"
-                    data-bs-toggle="modal" data-bs-target="#modalactasSinActivarHologramas">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3 flex-shrink-0">
-                                <span class="avatar-initial rounded-3 bg-label-danger">
-                                    <i class="ri-coupon-3-line ri-24px"></i>
-                                </span>
-                            </div>
-                            <h4 class="mb-0 fw-bold">{{ $actasSinActivarHologramas->count() }}</h4>
-                        </div>
-                        <small class="text-muted">Activar</small>
-                    </div>
-                    <h6 class="mb-0 mt-2 text-muted small fw-normal">Actas sin activar hologramas</h6>
-                </div>
-                
-                {{-- Bloque: Solicitudes de hologramas pendientes --}}
-                <div class="p-3 d-flex flex-column hover-bg-light cursor-pointer"
-                    data-bs-toggle="modal" data-bs-target="#">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3 flex-shrink-0">
-                                <span class="avatar-initial rounded-3 bg-label-danger">
-                                    <i class="ri-coupon-4-line ri-24px"></i>
-                                </span>
-                            </div>
-                            <h4 class="mb-0 fw-bold">{{ $solicitudesHologramasPendientes->count() }}</h4>
-                        </div>
-                        <small class="text-muted">Revisar</small>
-                    </div>
-                    <h6 class="mb-0 mt-2 text-muted small fw-normal">Solicitudes de hologramas pendientes</h6>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    @endcan
-
-    ---
 
     @can('Estadísticas ui')
-    <div class="col-md-6 col-xxl-4">
-        <div class="card  shadow-sm">
-            <div class="card-header d-flex align-items-center justify-content-between border-bottom">
-                <h5 class="card-title m-0 me-2">👨‍💻 Inspecciones por Inspector <span class="badge bg-label-secondary">2025</span></h5>
-            </div>
-            <div class="card-body p-4">
-                <ul class="list-group list-group-flush">
-                    @forelse ($inspeccionesInspector as $inspector)
-                        <li class="list-group-item d-flex align-items-center justify-content-between px-0">
-                            <div class="d-flex align-items-center">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    {{-- Se mantiene la lógica de imagen original --}}
-                                    <img src="{{ asset('storage/' . $inspector['foto']) }}"
-                                        alt="Foto de {{ $inspector['nombre'] }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
-                                </div>
-                                <div class="me-2">
-                                    <h6 class="mb-0">{{ $inspector['nombre'] }}</h6>
-                                    <small class="text-muted">Total inspecciones</small>
-                                </div>
-                            </div>
-                            <div class="badge bg-primary rounded-pill py-2 px-3 fw-bold fs-6">
-                                {{ $inspector['total_inspecciones'] }}
-                            </div>
-                        </li>
+    <div class="col-sm-6 col-lg-3">
+        {{-- Quitamos h-100 para evitar estiramiento y que la card se ajuste al contenido --}}
+        <div class="card card-border-shadow-danger">
+            <div class="card-body">
+                <h5 class="card-title text-danger mb-3">Dictámenes por Vencer</h5>
+                <ul class="list-unstyled mb-0">
+                    @forelse ($dictamenesPorVencer as $dictamen)
+                    <li class="d-flex justify-content-between align-items-center border-bottom pb-1 mb-1">
+                        <h6 class="mb-0">{{ $dictamen->num_dictamen }}</h6>
+                        <small class="text-muted fw-bold">{{ $dictamen->fecha_vigencia }}</small>
+                    </li>
                     @empty
-                        <li class="list-group-item text-center text-muted">No hay inspecciones asignadas.</li>
+                    <li class="text-muted">No hay dictámenes próximos a vencer.</li>
                     @endforelse
                 </ul>
             </div>
@@ -714,67 +485,243 @@
     @endcan
 
     @can('Estadísticas oc')
-    <div class="col-12 col-xxl-8"> {{-- Se ajusta el ancho a 12 en móvil y 8 en desktop para dar espacio --}}
-        <div class="card  shadow-sm">
-            <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center border-bottom pb-2">
-                <h5 class="card-title mb-2 mb-md-0">📈 Certificados Emitidos por Mes</h5>
-                <div class="d-flex flex-wrap gap-3">
-                    <div class="d-flex align-items-center">
-                        <label for="selectAnio" class="form-label mb-0 me-2 fw-medium">Año:</label>
+    <div class="col-sm-6 col-lg-3">
+        {{-- Quitamos h-100 para evitar estiramiento y que la card se ajuste al contenido --}}
+        <div class="card card-border-shadow-primary">
+            <div class="card-body">
+                <h5 class="card-title text-primary mb-3">Pendientes de Certificado (OC)</h5>
+
+                <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                    data-bs-target="#modalDictamenesInstalacionesPendientes">
+                    <div class="avatar me-4 flex-shrink-0">
+                        <span class="avatar-initial rounded-3 bg-label-danger"><i
+                                class="ri-file-warning-line ri-24px"></i></span>
+                    </div>
+                    <div>
+                        <h4 class="mb-0">{{ $dictamenesInstalacionesSinCertificado->count() }}</h4>
+                        <small class="text-muted">Instalaciones</small>
+                    </div>
+                </div>
+                <hr class="my-2">
+
+                <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                    data-bs-target="#modalDictamenesGranelPendientes">
+                    <div class="avatar me-4 flex-shrink-0">
+                        <span class="avatar-initial rounded-3 bg-label-danger"><i
+                                class="ri-file-warning-line ri-24px"></i></span>
+                    </div>
+                    <div>
+                        <h4 class="mb-0">{{ $dictamenesGranelesSinCertificado->count() }}</h4>
+                        <small class="text-muted">Graneles</small>
+                    </div>
+                </div>
+                <hr class="my-2">
+
+                <div class="d-flex align-items-center cursor-pointer" data-bs-toggle="modal"
+                    data-bs-target="#modalDictamenesExportacionPendientes">
+                    <div class="avatar me-4 flex-shrink-0">
+                        <span class="avatar-initial rounded-3 bg-label-danger">
+                            <i class="ri-file-warning-line ri-24px"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <h4 class="mb-0">{{ $dictamenesExportacionSinCertificado->count() }}</h4>
+                        <small class="text-muted">Exportación</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endcan
+
+    @can('Estadísticas oc')
+    <div class="col-sm-6 col-lg-3">
+        {{-- Quitamos h-100 para evitar estiramiento y que la card se ajuste al contenido --}}
+        <div class="card card-border-shadow-info">
+            <div class="card-body">
+                <h5 class="card-title text-info mb-3">Tareas Pendientes (OC)</h5>
+
+                <div class="mb-3">
+                    <h6 class="mb-0 text-danger fw-bold">Certificados por Vencer</h6>
+                    <ul class="list-unstyled mb-0 ms-4">
+                        @forelse ($certificadosPorVencer as $certificado)
+                        <li class="text-muted">
+                            {{ $certificado->num_certificado }} -
+                            <small class="text-muted">{{ $certificado->fecha_vigencia }}</small>
+                            ({{ $certificado->dictamen->inspeccione->solicitud->empresa->razon_social }})
+                        </li>
+                        @empty
+                        <li class="text-muted">Ninguno.</li>
+                        @endforelse
+                    </ul>
+                </div>
+                <hr class="my-2">
+
+                <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                    data-bs-target="#modalCertificadosInstalacionesSinEscaner">
+                    <div class="avatar me-4 flex-shrink-0">
+                        <span class="avatar-initial rounded-3 bg-label-warning"><i
+                                class="ri-file-list-fill ri-24px"></i></span>
+                    </div>
+                    <div>
+                        <h4 class="mb-0">{{ $certificadoInstalacionesSinEscaneado->count() }}</h4>
+                        <small class="text-muted">Instalaciones sin escaneado</small>
+                    </div>
+                </div>
+                <hr class="my-2">
+
+                <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                    data-bs-target="#modalCertificadosSinEscaner">
+                    <div class="avatar me-4 flex-shrink-0">
+                        <span class="avatar-initial rounded-3 bg-label-warning"><i
+                                class="ri-file-list-fill ri-24px"></i></span>
+                    </div>
+                    <div>
+                        <h4 class="mb-0">{{ $certificadoGranelSinEscaneado->count() }}</h4>
+                        <small class="text-muted">Graneles sin escaneado</small>
+                    </div>
+                </div>
+                <hr class="my-2">
+
+                <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                    data-bs-target="#modalCertificadosExportacionSinEscaner">
+                    <div class="avatar me-4 flex-shrink-0">
+                        <span class="avatar-initial rounded-3 bg-label-warning"><i
+                                class="ri-file-list-fill ri-24px"></i></span>
+                    </div>
+                    <div>
+                        <h4 class="mb-0">{{ $certificadoExportacionSinEscaneado->count() }}</h4>
+                        <small class="text-muted">Exportación sin escaneado</small>
+                    </div>
+                </div>
+                <hr class="my-2">
+
+                <div class="d-flex align-items-center mb-2 cursor-pointer" data-bs-toggle="modal"
+                    data-bs-target="#modalactasSinActivarHologramas">
+                    <div class="avatar me-4 flex-shrink-0">
+                        <span class="avatar-initial rounded-3 bg-label-danger">
+                            <i class="ri-close-circle-line ri-24px"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <h4 class="mb-0">{{ $actasSinActivarHologramas->count() }}</h4>
+                        <small class="text-muted">Actas sin activar hologramas</small>
+                    </div>
+                </div>
+                <hr class="my-2">
+
+                <div class="d-flex align-items-center cursor-pointer" data-bs-toggle="modal" data-bs-target="#">
+                    <div class="avatar me-4 flex-shrink-0">
+                        <span class="avatar-initial rounded-3 bg-label-danger">
+                            <i class="ri-close-circle-line ri-24px"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <h4 class="mb-0">{{ $solicitudesHologramasPendientes->count() }}</h4>
+                        <small class="text-muted">Solicitudes de hologramas pendientes</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endcan
+</div>
+
+<div class="row g-4 mb-4">
+    @can('Estadísticas ui')
+    <div class="col-md-6 col-xxl-4">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="card-title m-0 me-2">Inspecciones por Inspector 2025 🧑‍💼</h5>
+            </div>
+            <div class="card-body">
+                <ul class="p-0 m-0 list-unstyled">
+                    @foreach ($inspeccionesInspector as $inspector)
+                    <li class="d-flex align-items-center mb-4 pb-2 border-bottom">
+                        <div class="avatar flex-shrink-0 me-4">
+                            <img src="{{ asset('storage/' . $inspector['foto']) }}"
+                                alt="Foto de {{ $inspector['nombre'] }}" class="rounded-circle" width="50"
+                                height="50" style="object-fit: cover;">
+                        </div>
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-0 fw-semibold">{{ $inspector['nombre'] }}</h6>
+                            </div>
+                            <div class="badge bg-label-primary rounded-pill fw-bold fs-6">
+                                {{ $inspector['total_inspecciones'] }}</div>
+                        </div>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+    @endcan
+
+    @can('Estadísticas oc')
+    {{-- Aumentamos el tamaño a col-md-6 para la gráfica si es un tamaño intermedio --}}
+    <div class="col-md-6 col-xxl-8">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between flex-column flex-md-row">
+                <div>
+                    <h5 class="card-title mb-1">Certificados Emitidos por Mes 📈</h5>
+                    <p class="text-muted mb-0">Selecciona el año y el cliente para filtrar.</p>
+                </div>
+                <div class="d-flex gap-3 mt-3 mt-md-0">
+                    <div>
+                        <label for="selectAnio" class="form-label mb-0 small">Año:</label>
                         <select id="selectAnio" class="form-select form-select-sm w-auto">
                             @for ($i = now()->year; $i >= 2022; $i--)
-                                <option value="{{ $i }}">{{ $i }}</option>
+                            <option value="{{ $i }}">{{ $i }}</option>
                             @endfor
                         </select>
                     </div>
-                    <div class="d-flex align-items-center">
-                        <label for="selectCliente" class="form-label mb-0 me-2 fw-medium">Cliente:</label>
+                    <div>
+                        <label for="selectCliente" class="form-label mb-0 small">Cliente:</label>
                         <select id="selectCliente" class="form-select form-select-sm w-auto">
                             <option value="0">Todos los clientes</option>
                             @foreach ($clientes as $cliente)
-                                <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
+                            <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
             </div>
             <div class="card-body">
-                {{-- Contenedor del Gráfico --}}
-                <div id="lineChart" style="min-height: 350px;"></div> 
+                <div id="lineChart" style="min-height: 300px;"></div>
+                
             </div>
         </div>
     </div>
     @endcan
+</div>
 
-    ---
-
+<div class="row g-4 mb-4">
     @canany(['Estadísticas consejo', 'Estadísticas oc'])
     @php
-        $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
-        $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
+    $tipos = [1 => 'Instalaciones', 2 => 'Granel', 3 => 'Exportación'];
+    $agrupado = $revisiones->groupBy(fn($r) => $r->user_id . '-' . $r->rol);
     @endphp
 
     <div class="col-md-6">
-        <div class="card  shadow-sm">
-            <div class="card-header border-bottom pb-2">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+        <div class="card h-100">
+            <div class="card-header pb-2">
+                <div
+                    class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
                     <div>
                         <h5 class="mb-1">📊 Resumen de Revisiones por Revisor</h5>
-                        <small class="text-muted">Cantidad de revisiones realizadas por revisor y tipo de certificado.</small>
+                        <small class="text-muted">Revisiones realizadas por tipo de certificado.</small>
                     </div>
-                    <form method="GET" class="mt-3 mt-md-0">
+                    <form method="GET" class="mt-2 mt-md-0">
                         <div class="input-group input-group-sm">
-                            <label class="input-group-text bg-light" for="mes">Mes</label>
-                            @php
-                                $mesSeleccionado = request('mes', now()->month);
-                            @endphp
+                            <label class="input-group-text" for="mes">Mes</label>
+                            @php $mesSeleccionado = request('mes', now()->month); @endphp
                             <select name="mes" id="mes" class="form-select form-select-sm">
                                 <option value="">Todos</option>
                                 @for ($i = 1; $i <= 12; $i++)
-                                    <option value="{{ $i }}"
-                                        {{ $mesSeleccionado == $i ? 'selected' : '' }}>
-                                        {{ ucfirst(\Carbon\Carbon::create()->month($i)->translatedFormat('F')) }}
-                                    </option>
+                                <option value="{{ $i }}" {{ $mesSeleccionado == $i ? 'selected' : '' }}>
+                                    {{ ucfirst(\Carbon\Carbon::create()->month($i)->translatedFormat('F')) }}
+                                </option>
                                 @endfor
                             </select>
                         </div>
@@ -782,59 +729,63 @@
                 </div>
             </div>
 
-            <div class="card-body pt-3 p-0">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover m-0">
+            <div class="card-body pt-2">
+                <div class="table-responsive border-top">
+                    <table class="table table-bordered table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th><i class="ri-user-3-fill me-1"></i> Revisor</th>
+                                <th><i class="ri-user-3-fill"></i> Revisor</th>
                                 <th class="text-center">🏗️ Inst.</th>
                                 <th class="text-center">🌾 Granel</th>
                                 <th class="text-center">🚢 Export.</th>
-                                <th class="text-center text-danger"><i class="ri-alert-line me-1"></i> Pend.</th>
+                                <th class="text-center"><i class="ri-time-line"></i> Pendientes</th>
                             </tr>
                         </thead>
 
                         <tbody id="tbody-revisiones">
                             @forelse ($agrupado as $key => $grupo)
                             @php
-                                $revisor = $usuarios[$grupo->first()->user_id] ?? null;
-                                $rol = $grupo->first()->rol;
-                                $inst = $grupo->where('tipo_certificado', 1)->where('decision', '!=', 'Pendiente')->sum('total');
-                                $gran = $grupo->where('tipo_certificado', 2)->where('decision', '!=', 'Pendiente')->sum('total');
-                                $expo = $grupo->where('tipo_certificado', 3)->where('decision', '!=', 'Pendiente')->sum('total');
-                                $pendientes = $grupo->where('decision', 'Pendiente')->sum('total');
+                            $revisor = $usuarios[$grupo->first()->user_id] ?? null;
+                            $rol = $grupo->first()->rol;
+                            $inst = $grupo->where('tipo_certificado', 1)->where('decision', '!=', 'Pendiente')->sum('total');
+                            $gran = $grupo->where('tipo_certificado', 2)->where('decision', '!=', 'Pendiente')->sum('total');
+                            $expo = $grupo->where('tipo_certificado', 3)->where('decision', '!=', 'Pendiente')->sum('total');
+                            $pendientes = $grupo->where('decision', 'Pendiente')->sum('total');
                             @endphp
-                            <tr class="{{ $revisor?->id == auth()->id() ? 'table-primary fw-bold' : '' }}">
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
+                            <tr>
+                                <td class="{{ $revisor?->id == auth()->id() ? 'bg-primary text-white fw-bold' : '' }}"
+                                    style="padding: 0.25rem 0.5rem;">
+                                    <div class="d-flex align-items-center gap-2" style="border-radius: 13px;">
                                         <div class="avatar flex-shrink-0">
                                             @if (!empty($revisor?->profile_photo_path))
-                                                <img src="/storage/{{ $revisor->profile_photo_path }}"
-                                                    alt="{{ $revisor->name ?? '—' }}" class="rounded-circle"
-                                                    style="width: 36px; height: 36px; object-fit: cover;">
+                                            <img src="/storage/{{ $revisor->profile_photo_path }}"
+                                                alt="{{ $revisor->name ?? '—' }}" class="rounded-circle"
+                                                style="width: 36px; height: 36px; object-fit: cover;">
                                             @endif
                                         </div>
                                         <div class="d-flex flex-column">
-                                            <span class="fw-semibold text-truncate" style="max-width: 150px;">{{ $revisor?->name ?? '—' }}</span>
-                                            <span class="badge rounded-pill {{ $rol === 'Personal' ? 'bg-label-info' : ($rol === 'Consejo' ? 'bg-label-warning' : 'bg-label-secondary') }}"
+                                            <h6 class="mb-0" style="font-weight: 600; font-size: 0.9rem;">
+                                                {{ $revisor?->name ?? '—' }}
+                                            </h6>
+                                            <span
+                                                class="badge rounded-pill {{ $rol === 'Personal' ? 'bg-label-info' : ($rol === 'Consejo' ? 'bg-label-warning' : 'bg-label-secondary') }}"
                                                 style="font-size: 0.75rem; padding: 0.2em 0.5em;">
                                                 {{ $rol }}
                                             </span>
                                         </div>
                                     </div>
                                 </td>
-
-                                <td class="text-center fw-medium">{{ number_format($inst) }}</td>
-                                <td class="text-center fw-medium">{{ number_format($gran) }}</td>
-                                <td class="text-center fw-medium">{{ number_format($expo) }}</td>
-                                <td class="text-center {{ $pendientes > 0 ? 'bg-danger text-white fw-bold' : '' }}">
+                                <td class="text-end fw-medium">{{ number_format($inst) }}</td>
+                                <td class="text-end fw-medium">{{ number_format($gran) }}</td>
+                                <td class="text-end fw-medium">{{ number_format($expo) }}</td>
+                                <td
+                                    class="text-end {{ $pendientes > 0 ? 'bg-danger text-white fw-bold' : '' }}">
                                     {{ number_format($pendientes) }}
                                 </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="text-center text-muted py-3">No hay revisiones registradas.</td>
+                                <td colspan="5" class="text-center text-muted">No hay revisiones registradas.</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -847,109 +798,37 @@
 
     @can('Estadísticas exportación clientes')
     <div class="col-md-6 col-xxl-4">
-        <div class="card  shadow-sm">
-            <div class="card-header d-flex align-items-center justify-content-between border-bottom">
-                <h5 class="card-title m-0 me-2">🚢 Certificados de Exportación</h5>
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="card-title m-0 me-2">Certificados de Exportación 🚢</h5>
             </div>
-            <div class="card-body p-0">
-                <div class="p-3">
-                    <p class="mb-2 fw-medium text-muted">Cierre por mes (Certificados vs. Reexpediciones)</p>
-                </div>
-                <div class="table-responsive border-top">
-                    <table class="table table-striped m-0">
+            <div class="card-body pb-1 pt-0">
+                <p class="mt-0 fw-medium text-muted">Resumen de cierre por mes:</p>
+                <div class="table-responsive text-nowrap border-top">
+                    <table class="table table-striped">
                         <thead class="table-light">
                             <tr>
-                                <th style="width: 50%;">Mes</th>
-                                <th class="text-end">Certificados</th>
-                                <th class="text-end text-warning">Reexpediciónes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($TotalCertificadosExportacionPorMes as $item)
-                                <tr>
-                                    <td>
-                                        <span class="fw-medium text-dark">
-                                            {{ ucfirst(\Carbon\Carbon::createFromFormat('Y-m-d', $item->mes . '-01')->locale('es')->isoFormat('MMMM YYYY')) }}
-                                        </span>
-                                    </td>
-                                    <td class="text-end fw-bold text-primary">{{ $item->total }}</td>
-                                    <td class="text-end fw-bold text-warning">
-                                        {{ $item->certificado_reexpedido ? 1 : 0 }}
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="3" class="text-center text-muted">No hay datos de exportación.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endcan
-
-    ---
-    
-    @can('Estadísticas exportación clientes')
-    <div class="col-12 col-xxl-8">
-        <div class="card  shadow-sm">
-            <div class="card-header d-flex align-items-center justify-content-between border-bottom">
-                <h5 class="card-title m-0 me-2">📋 Servicios de Exportación Detalle</h5>
-            </div>
-            <div class="card-body p-0">
-                <div class="p-3">
-                    <p class="mb-2 fw-medium text-muted">Detalle de servicios por fecha e instalación.</p>
-                </div>
-                <div class="table-responsive border-top">
-                    <table class="table table-bordered table-striped m-0">
-                        <thead>
-                            <tr class="table-light">
-                                <th>Año</th>
                                 <th>Mes</th>
-                                <th>Día del Servicio</th>
-                                <th>Instalación</th>
-                                <th>Servicios Únicos</th>
+                                <th class="text-end">Certificados</th>
+                                <th class="text-end">Reexpediciónes</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @php
-                                $agrupadoPorAnio = collect($serviciosInstalacion)
-                                    ->filter(fn ($_, $mes) => preg_match('/^\d{4}-\d{2}$/', $mes))
-                                    ->groupBy(fn ($_, $mes) => \Carbon\Carbon::parse($mes . '-01')->format('Y'));
-                            @endphp
-
-                            @foreach ($agrupadoPorAnio as $anio => $meses)
-                                <tr class="table-dark fw-bold">
-                                    <td colspan="5" class="text-center py-2">Año: {{ $anio }}</td>
-                                </tr>
-                                @foreach ($meses as $mes => $fechas)
-                                    @php
-                                        // Validación para evitar mostrar entradas con error si $mes no tiene el formato esperado
-                                        $carbonMes = \Carbon\Carbon::parse($mes . '-01');
-                                        $mesNombre = $carbonMes->locale('es')->isoFormat('MMMM YYYY');
-                                    @endphp
-                                    <tr class="table-primary fw-bold">
-                                        <td colspan="5">{{ $mesNombre }}</td>
-                                    </tr>
-
-                                    @foreach ($fechas as $fecha => $instalaciones)
-                                        @php
-                                            $carbonDia = \Carbon\Carbon::parse($fecha);
-                                            $diaNombre = $carbonDia->locale('es')->translatedFormat('d \d\e F');
-                                        @endphp
-                                        @foreach ($instalaciones as $direccion => $cantidad)
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td class="fw-medium">{{ $diaNombre }}</td>
-                                                <td>{{ $direccion }}</td>
-                                                <td class="text-center fw-bold">{{ $cantidad }}</td>
-                                            </tr>
-                                        @endforeach
-                                    @endforeach
-                                @endforeach
+                        <tbody class="table-border-bottom-0">
+                            @foreach ($TotalCertificadosExportacionPorMes as $item)
+                            <tr>
+                                <td class="ps-3 py-2">
+                                    <span class="text-heading fw-semibold">
+                                        {{ ucfirst(\Carbon\Carbon::createFromFormat('Y-m-d', $item->mes . '-01')->locale('es')->isoFormat('MMMM YYYY')) }}
+                                    </span>
+                                </td>
+                                <td class="text-end py-2">
+                                    <span class="text-heading fw-medium">{{ $item->total }}</span>
+                                </td>
+                                <td class="text-end py-2">
+                                    <span class="text-heading fw-medium">
+                                        {{ $item->certificado_reexpedido ? 1 : 0 }}</span>
+                                </td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -958,56 +837,45 @@
         </div>
     </div>
     @endcan
+</div>
 
+<div class="row g-4 mb-4">
     @can('Estadísticas hologramas clientes')
-    <div class="col-12 mt-4">
-        <h4 class="mb-3">🏷️ Resumen de Hologramas por Marca</h4>
-        <div class="row g-4"> {{-- Se cambió a g-4 para un mejor espaciado entre tarjetas --}}
+    <div class="col-12">
+        <h4 class="mb-3">Resumen de Hologramas por Marca 🏷️</h4>
+        <div class="row g-4">
+            {{-- Usamos row g-4 para un buen espacio, y h-100 en la card para uniformidad visual ya que tienen contenido simple --}}
             @foreach ($marcasConHologramas as $marca)
-                @php
-                    $totalDisponibles = $marca->solicitudHolograma()
-                        ->where('id_empresa', $empresaId)
-                        ->get()
-                        ->sum(fn ($solicitud) => $solicitud->cantidadDisponibles());
-                    
-                    // Definir una clase de color basada en la cantidad para un toque visual
-                    if ($totalDisponibles == 0) {
-                        $colorClass = 'bg-danger';
-                        $iconColor = 'text-white';
-                    } elseif ($totalDisponibles < 100) {
-                        $colorClass = 'bg-warning';
-                        $iconColor = 'text-dark';
-                    } else {
-                        $colorClass = 'bg-success';
-                        $iconColor = 'text-white';
-                    }
-                @endphp
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    {{-- Usar `shadow-lg` para mayor realce y `rounded-4` para esquinas más suaves --}}
-                    <div class="card  shadow-lg border-0 rounded-4 overflow-hidden hover-card">
-                        <div class="card-body p-4 text-center d-flex flex-column justify-content-between align-items-center">
-                            
-                            {{-- Ícono grande y círculo de color --}}
-                            <div class="mb-3 icon-wrapper rounded-circle p-3 {{ $colorClass }}" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
-                                <i class="ri-price-tag-3-line display-6 {{ $iconColor }}"></i>
-                            </div>
-                            
-                            {{-- Cantidad de hologramas --}}
-                            <h2 class="fw-bolder mb-1 mt-2 text-dark" style="font-size: 2.5rem;">
-                                {{ number_format($totalDisponibles, 0) }}
-                            </h2>
-                            <p class="text-muted mb-3 fw-medium">Hologramas **sin activar**</p>
-
-                            {{-- Nombre de la marca --}}
-                            <h5 class="fw-bold text-primary text-uppercase">{{ $marca->marca }}</h5>
+            @php
+            $totalDisponibles = $marca->solicitudHolograma()
+            ->where('id_empresa', $empresaId)
+            ->get()
+            ->sum(fn ($solicitud) => $solicitud->cantidadDisponibles());
+            @endphp
+            {{-- col-12 en sm, col-md-6, col-lg-3 para mejor responsividad --}}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card shadow-sm border-0 **h-100** rounded-4 overflow-hidden hover-card">
+                    <div class="card-body p-4 text-center d-flex flex-column justify-content-between">
+                        {{-- Icono grande con estilo --}}
+                        <div class="mx-auto mb-3"
+                            style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(45deg, #007bff, #00b4d8); display: flex; align-items: center; justify-content: center;">
+                            <i class="ri-price-tag-3-line display-6 text-white"></i>
                         </div>
+                        {{-- Cantidad de hologramas --}}
+                        <h2 class="fw-bold text-primary mb-1">
+                            {{ number_format($totalDisponibles, 0) }}
+                        </h2>
+                        <p class="text-muted mb-3 small">Hologramas sin activar</p>
+
+                        {{-- Nombre de la marca --}}
+                        <h5 class="fw-semibold text-dark">{{ $marca->marca }}</h5>
                     </div>
                 </div>
+            </div>
             @endforeach
         </div>
     </div>
     @endcan
-
 </div><!--contenedor de estatisticas fin-->
 
 
