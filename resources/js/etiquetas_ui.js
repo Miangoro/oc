@@ -66,7 +66,7 @@ if ($('.datatables-users').length) {
         orderable: false,
         render: function (data, type, full, meta) {
             var $id = full['id'];
-            return '<i data-id="' + $id + '" class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdfCertificado" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+            return '<i data-id="' + $id + '" class="ri-file-pdf-2-fill text-danger ri-40px cursor-pointer pdfMezcalGranel" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
         }
       },
       {
@@ -373,10 +373,10 @@ FormValidation.formValidation(FormEditar, {
 });
 
 ///FORMATO PDF ETIQUETA
-$(document).on('click', '.pdfSolicitud', function ()  {
+$(document).on('click', '.pdfMezcalGranel', function ()  {
   var id = $(this).data('id');
-  var folio = $(this).data('folio');
-  var pdfUrl = '/solicitud_de_servicio/' + id; //Ruta del PDF
+  //var folio = $(this).data('folio');
+  var pdfUrl = '/etiqueta_lotes_mezcal_granel/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
 
@@ -389,8 +389,8 @@ $(document).on('click', '.pdfSolicitud', function ()  {
     //Configurar el botón para abrir el PDF en una nueva pestaña
     $("#NewPestana").attr('href', pdfUrl).show();
 
-    $("#titulo_modal").text("Solicitud de servicios");
-    $("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
+    $("#titulo_modal").text("Etiqueta para lotes de mezcal a granel");
+    //$("#subtitulo_modal").html('<p class="solicitud badge bg-primary">' + folio + '</p>');
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();

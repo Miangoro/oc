@@ -350,6 +350,9 @@ public function index(Request $request)
                 }elseif ($solicitud->inspeccion?->dictamenExportacion) {
                     $tipo_dictamen = 'dictamen_exportacion';
                     $id = $solicitud->inspeccion->dictamenExportacion->id_dictamen;
+                /*}elseif ($solicitud->inspeccion?->dictamenNoCumplimiento) {//SE AGREGO
+                    $tipo_dictamen = 'dictamen_no_cumplimiento';
+                    $id = $solicitud->inspeccion->dictamenNoCumplimiento->id_dictamen;*/
                 } else {
                     $tipo_dictamen = null;
                     $id = null;
@@ -1069,6 +1072,34 @@ public function agregarResultados(Request $request)
 
 
 
+    ///PDF ETIQUETAS - LOTES DE MEZCAL A GRANEL (Vigilancia en el traslado del lote (4))
+    public function etiqueta_granel($id_inspeccion)
+    {
+        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
+
+        $lotesOriginales = collect();
+        if (!empty($datos->solicitud->lote_granel->lote_original_id)) {
+            $json = json_decode($datos->solicitud->lote_granel->lote_original_id, true);
+
+            if (isset($json['lotes']) && is_array($json['lotes'])) {
+                $lotesOriginales = LotesGranel::with('certificadoGranel')
+                    ->whereIn('id_lote_granel', $json['lotes'])
+                    ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
+            }
+        }
+
+        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {//edicion del formato
+            $edicion = 'pdfs.etiqueta_lotes_mezcal_granel'; // ed16
+        } else {
+            $edicion = 'pdfs.etiqueta_lotes_mezcal_granel_ed17';
+        }
+        $pdf = Pdf::loadView($edicion, [
+            'datos' => $datos,
+            'lotesOriginales' => $lotesOriginales,
+        ]);
+
+        return $pdf->stream('Etiqueta para lotes de mezcal a granel.pdf');
+    }
     ///PDF ETIQUETAS - MUESTRAS DE AGAVE ART (Muestreo de agave ART (1))
     public function etiqueta_muestra($id_inspeccion)
     {
@@ -1083,6 +1114,20 @@ public function agregarResultados(Request $request)
         $pdf = Pdf::loadView($edicion, ['datos' => $datos]);
 
         return $pdf->stream('Etiqueta para agave (%ART).pdf');
+    }
+    ///PDF ETIQUETAS - INGRESO A MADURACION (Inspección ingreso a barrica/ contenedor de vidrio (7))
+    public function etiqueta_barrica($id_inspeccion)
+    {
+        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
+
+        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {//edicion del formato
+            $edicion = 'pdfs.etiqueta_barrica'; // ed16
+        } else {
+            $edicion = 'pdfs.etiqueta_barrica_ed17';
+        }
+        $pdf = Pdf::loadView($edicion, ['datos' => $datos]);
+
+        return $pdf->stream('Etiqueta para ingreso a barrica.pdf');
     }
     ///PDF ETIQUETAS - TAPA MUESTRAS DE LOTE DE MEZCAL A GRANEL (Muestreo de lote a granel (3))
     public function etiqueta($id_inspeccion)
@@ -1122,48 +1167,6 @@ public function agregarResultados(Request $request)
         ]);
 
         return $pdf->stream('Etiqueta para tapa de la muestra.pdf');
-    }
-    ///PDF ETIQUETAS - LOTES DE MEZCAL A GRANEL (Vigilancia en el traslado del lote (4))
-    public function etiqueta_granel($id_inspeccion)
-    {
-        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
-
-        $lotesOriginales = collect();
-        if (!empty($datos->solicitud->lote_granel->lote_original_id)) {
-            $json = json_decode($datos->solicitud->lote_granel->lote_original_id, true);
-
-            if (isset($json['lotes']) && is_array($json['lotes'])) {
-                $lotesOriginales = LotesGranel::with('certificadoGranel')
-                    ->whereIn('id_lote_granel', $json['lotes'])
-                    ->get(['id_lote_granel', 'nombre_lote', 'folio_fq', 'folio_certificado']);
-            }
-        }
-
-        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {//edicion del formato
-            $edicion = 'pdfs.etiqueta_lotes_mezcal_granel'; // ed16
-        } else {
-            $edicion = 'pdfs.etiqueta_lotes_mezcal_granel_ed17';
-        }
-        $pdf = Pdf::loadView($edicion, [
-            'datos' => $datos,
-            'lotesOriginales' => $lotesOriginales,
-        ]);
-
-        return $pdf->stream('Etiqueta para lotes de mezcal a granel.pdf');
-    }
-    ///PDF ETIQUETAS - INGRESO A MADURACION (Inspección ingreso a barrica/ contenedor de vidrio (7))
-    public function etiqueta_barrica($id_inspeccion)
-    {
-        $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
-
-        if ($datos->solicitud->fecha_solicitud < '2025-08-07') {//edicion del formato
-            $edicion = 'pdfs.etiqueta_barrica'; // ed16
-        } else {
-            $edicion = 'pdfs.etiqueta_barrica_ed17';
-        }
-        $pdf = Pdf::loadView($edicion, ['datos' => $datos]);
-
-        return $pdf->stream('Etiqueta para ingreso a barrica.pdf');
     }
 
 

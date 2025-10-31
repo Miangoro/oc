@@ -1044,57 +1044,6 @@ $(function () {
       indexTerceraDestilacion++;
     });
 
-    function calcularTotales() {
-      // --- MOLIENDA: volumen_total_formulado ---
-      let totalFormulacion = 0;
-      $('[name^="molienda"][name$="[volumen_formulacion]"]').each(function () {
-        const val = parseFloat($(this).val()) || 0;
-        totalFormulacion += val;
-      });
-      $('#volumen_total_formulado').val(totalFormulacion.toFixed(2));
-
-      // --- SEGUNDA DESTILACIÓN: Volúmenes ---
-      let totalPuntas = 0,
-        totalMezcal = 0,
-        totalColas = 0;
-
-      $('[name^="segunda_destilacion"][name$="[puntas_volumen]"]').each(function () {
-        const val = parseFloat($(this).val()) || 0;
-        totalPuntas += val;
-      });
-
-      $('[name^="segunda_destilacion"][name$="[mezcal_volumen]"]').each(function () {
-        const val = parseFloat($(this).val()) || 0;
-        totalMezcal += val;
-      });
-
-      $('[name^="segunda_destilacion"][name$="[colas_volumen]"]').each(function () {
-        const val = parseFloat($(this).val()) || 0;
-        totalColas += val;
-      });
-
-      $('#puntas_volumen').val(totalPuntas.toFixed(2));
-      $('#mezcal_volumen').val(totalMezcal.toFixed(2));
-      $('#colas_volumen').val(totalColas.toFixed(2));
-    }
-
-    // Trigger cada que cambie un input relevante
-    $(document).on(
-      'input',
-      '[name^="molienda"][name$="[volumen_formulacion]"], \
-                                [name^="segunda_destilacion"][name$="[puntas_volumen]"], \
-                                [name^="segunda_destilacion"][name$="[mezcal_volumen]"], \
-                                [name^="segunda_destilacion"][name$="[colas_volumen]"]',
-      function () {
-        calcularTotales();
-        // Revalidar campos calculados
-        /* fv.revalidateField('volumen_total_formulado');
-        fv.revalidateField('puntas_volumen');
-        fv.revalidateField('mezcal_volumen');
-        fv.revalidateField('colas_volumen'); */
-      }
-    );
-
     // También cada que agregues fila nueva
     $('#agregarFilaMolienda, #agregarFilaSegundaDestilacion').on('click', function () {
       setTimeout(calcularTotales, 100); // Espera a que se agregue al DOM
@@ -1295,60 +1244,6 @@ $(function () {
       $('.datepicker').datepicker({ format: 'yyyy-mm-dd', autoclose: true });
     }
 
-    function calcularTotalesEdit() {
-      console.log('Calculando totales de edición');
-      // --- MOLIENDA: volumen_total_formulado ---
-      let totalFormulacion = 0;
-      $('[name^="molienda"][name$="[volumen_formulacion]"]').each(function () {
-        const val = parseFloat($(this).val()) || 0;
-        totalFormulacion += val;
-      });
-      $('#edit_volumen_total_formulado').val(totalFormulacion.toFixed(2));
-
-      // --- SEGUNDA DESTILACIÓN: Volúmenes ---
-      let totalPuntas = 0,
-        totalMezcal = 0,
-        totalColas = 0;
-
-      $('[name^="segunda_destilacion"][name$="[puntas_volumen]"]').each(function () {
-        const val = parseFloat($(this).val()) || 0;
-        totalPuntas += val;
-      });
-
-      $('[name^="segunda_destilacion"][name$="[mezcal_volumen]"]').each(function () {
-        const val = parseFloat($(this).val()) || 0;
-        totalMezcal += val;
-      });
-
-      $('[name^="segunda_destilacion"][name$="[colas_volumen]"]').each(function () {
-        const val = parseFloat($(this).val()) || 0;
-        totalColas += val;
-      });
-
-      $('#edit_puntas_volumen').val(totalPuntas.toFixed(2));
-      $('#edit_mezcal_volumen').val(totalMezcal.toFixed(2));
-      $('#edit_colas_volumen').val(totalColas.toFixed(2));
-    }
-
-    $(document).on(
-      'input',
-      '[name^="molienda"][name$="[volumen_formulacion]"], \
-        [name^="segunda_destilacion"][name$="[puntas_volumen]"], \
-        [name^="segunda_destilacion"][name$="[mezcal_volumen]"], \
-        [name^="segunda_destilacion"][name$="[colas_volumen]"]',
-      function () {
-        calcularTotalesEdit();
-
-        // Revalidar campos si estás usando FormValidation
-        /*         if (typeof fv !== 'undefined') {
-          fv.revalidateField('edit_volumen_total_formulado');
-          fv.revalidateField('edit_puntas_volumen');
-          fv.revalidateField('edit_mezcal_volumen');
-          fv.revalidateField('edit_colas_volumen');
-        } */
-      }
-    );
-
     $('#edit_agregarFilaMolienda').on('click', function () {
       agregarFilaMoliendaEdit({}, edit_indexMolienda++);
     });
@@ -1362,6 +1257,337 @@ $(function () {
     });
   });
 
+
+
+  $(document).ready(function () {
+
+    // --- 1. FUNCIÓN DEL TOTAL GENERAL (LA NUEVA) ---
+    // Esta función lee los 'tfoot' de las 3 tablas y actualiza la tabla 'TOTAL'
+    function calcularTotalGeneral() {
+
+      // 1. Molienda (Caso especial, solo se copia)
+      let totalFormulacion = parseFloat($('#molienda_final_volumen_formulacion_final').val()) || 0;
+
+      // 2. Puntas (Suma de los 3 totales)
+      let totalPuntas = (parseFloat($('#molienda_final_puntas_volumen_final').val()) || 0) +
+        (parseFloat($('#segunda_destilacion_final_puntas_volumen_final').val()) || 0) +
+        (parseFloat($('#tercera_destilacion_final_puntas_volumen_final').val()) || 0);
+
+      // 3. Mezcal (Suma de los 3 totales)
+      let totalMezcal = (parseFloat($('#molienda_final_mezcal_volumen_final').val()) || 0) +
+        (parseFloat($('#segunda_destilacion_final_mezcal_volumen_final').val()) || 0) +
+        (parseFloat($('#tercera_destilacion_final_mezcal_volumen_final').val()) || 0);
+
+      // 4. Colas (Suma de los 3 totales)
+      let totalColas = (parseFloat($('#molienda_final_colas_volumen_final').val()) || 0) +
+        (parseFloat($('#segunda_destilacion_final_colas_volumen_final').val()) || 0) +
+        (parseFloat($('#tercera_destilacion_final_colas_volumen_final').val()) || 0);
+
+      // --- Asignar los valores a la tabla TOTAL ---
+      $('#volumen_total_formulado').val(totalFormulacion.toFixed(2));
+      $('#puntas_volumen').val(totalPuntas.toFixed(2));
+      $('#mezcal_volumen').val(totalMezcal.toFixed(2));
+      $('#colas_volumen').val(totalColas.toFixed(2));
+
+      // NOTA: Los campos de % Alcohol no se calculan porque no son 'readonly'
+      // y la lógica (promedio ponderado) es más compleja.
+      // Si la necesitas, avísame.
+    }
+
+
+    // --- 2. FUNCIÓN MOLIENDA (MODIFICADA) ---
+    // (Esta es la primera que me pediste, ahora con 1 línea extra al final)
+    function calcularTotalesMolienda() {
+      let totalFormulacion = 0;
+      let totalPuntas = 0;
+      let totalMezcal = 0;
+      let totalColas = 0;
+
+      $('#tablaMolienda input[name*="[volumen_formulacion]"]').each(function () {
+        totalFormulacion += parseFloat($(this).val()) || 0;
+      });
+      $('#tablaMolienda input[name*="[puntas_volumen]"]').each(function () {
+        totalPuntas += parseFloat($(this).val()) || 0;
+      });
+      $('#tablaMolienda input[name*="[mezcal_volumen]"]').each(function () {
+        totalMezcal += parseFloat($(this).val()) || 0;
+      });
+      $('#tablaMolienda input[name*="[colas_volumen]"]').each(function () {
+        totalColas += parseFloat($(this).val()) || 0;
+      });
+
+      $('#molienda_final_volumen_formulacion_final').val(totalFormulacion.toFixed(2));
+      $('#molienda_final_puntas_volumen_final').val(totalPuntas.toFixed(2));
+      $('#molienda_final_mezcal_volumen_final').val(totalMezcal.toFixed(2));
+      $('#molienda_final_colas_volumen_final').val(totalColas.toFixed(2));
+
+      // --- ¡LÍNEA NUEVA! ---
+      // Cada vez que Molienda se actualiza, también actualiza el Total General
+      calcularTotalGeneral();
+    }
+
+
+    // --- 3. FUNCIÓN SEGUNDA DESTILACIÓN (MODIFICADA) ---
+    // (La del script anterior, con 1 línea extra al final)
+    function calcularTotalesSegundaDestilacion() {
+      let totalPuntas = 0;
+      let totalMezcal = 0;
+      let totalColas = 0;
+
+      $('#tablaSegundaDestilacion input[name*="[puntas_volumen]"]').each(function () {
+        totalPuntas += parseFloat($(this).val()) || 0;
+      });
+      $('#tablaSegundaDestilacion input[name*="[mezcal_volumen]"]').each(function () {
+        totalMezcal += parseFloat($(this).val()) || 0;
+      });
+      $('#tablaSegundaDestilacion input[name*="[colas_volumen]"]').each(function () {
+        totalColas += parseFloat($(this).val()) || 0;
+      });
+
+      $('#segunda_destilacion_final_puntas_volumen_final').val(totalPuntas.toFixed(2));
+      $('#segunda_destilacion_final_mezcal_volumen_final').val(totalMezcal.toFixed(2));
+      $('#segunda_destilacion_final_colas_volumen_final').val(totalColas.toFixed(2));
+
+      // --- ¡LÍNEA NUEVA! ---
+      calcularTotalGeneral();
+    }
+
+
+    // --- 4. FUNCIÓN TERCERA DESTILACIÓN (MODIFICADA) ---
+    // (La del script anterior, con 1 línea extra al final)
+    function calcularTotalesTerceraDestilacion() {
+      let totalPuntas = 0;
+      let totalMezcal = 0;
+      let totalColas = 0;
+
+      $('#tablaTerceraDestilacion input[name*="[puntas_volumen]"]').each(function () {
+        totalPuntas += parseFloat($(this).val()) || 0;
+      });
+      $('#tablaTerceraDestilacion input[name*="[mezcal_volumen]"]').each(function () {
+        totalMezcal += parseFloat($(this).val()) || 0;
+      });
+      $('#tablaTerceraDestilacion input[name*="[colas_volumen]"]').each(function () {
+        totalColas += parseFloat($(this).val()) || 0;
+      });
+
+      $('#tercera_destilacion_final_puntas_volumen_final').val(totalPuntas.toFixed(2));
+      $('#tercera_destilacion_final_mezcal_volumen_final').val(totalMezcal.toFixed(2));
+      $('#tercera_destilacion_final_colas_volumen_final').val(totalColas.toFixed(2));
+
+      // --- ¡LÍNEA NUEVA! ---
+      calcularTotalGeneral();
+    }
+
+
+    // --- 5. DISPARADORES DE EVENTOS (LISTENERS) ---
+
+    // Tabla Molienda
+    const selectorMolienda = 'input[name*="[volumen_formulacion]"], input[name*="[puntas_volumen]"], input[name*="[mezcal_volumen]"], input[name*="[colas_volumen]"]';
+    $('#tablaMolienda').on('input', selectorMolienda, calcularTotalesMolienda);
+    $('#tablaMolienda').on('click', '.btn-danger', function () {
+      $(this).closest('tr').remove();
+      calcularTotalesMolienda();
+    });
+
+    // Tabla Segunda Destilación
+    const selectorSegunda = 'input[name*="[puntas_volumen]"], input[name*="[mezcal_volumen]"], input[name*="[colas_volumen]"]';
+    $('#tablaSegundaDestilacion').on('input', selectorSegunda, calcularTotalesSegundaDestilacion);
+    $('#tablaSegundaDestilacion').on('click', '.btn-danger', function () {
+      $(this).closest('tr').remove();
+      calcularTotalesSegundaDestilacion();
+    });
+
+    // Tabla Tercera Destilación
+    const selectorTercera = 'input[name*="[puntas_volumen]"], input[name*="[mezcal_volumen]"], input[name*="[colas_volumen]"]';
+    $('#tablaTerceraDestilacion').on('input', selectorTercera, calcularTotalesTerceraDestilacion);
+    $('#tablaTerceraDestilacion').on('click', '.btn-danger', function () {
+      $(this).closest('tr').remove();
+      calcularTotalesTerceraDestilacion();
+    });
+
+
+    // --- 6. LLAMADA INICIAL AL CARGAR LA PÁGINA ---
+    // Se ejecutan las 3 funciones de subtotal.
+    // Cada una, al terminar, llamará a calcularTotalGeneral()
+    calcularTotalesMolienda();
+    calcularTotalesSegundaDestilacion();
+    calcularTotalesTerceraDestilacion();
+
+  });
+
+  /* metodo para la sumatoria de los totales volumenes al editar  */
+
+  $(document).ready(function() {
+
+    // -----------------------------------------------------------------
+    // --- SCRIPT EXCLUSIVO PARA EL MODAL DE EDITAR (prefijo 'edit_') ---
+    // -----------------------------------------------------------------
+
+    /**
+     * =============================================
+     * FUNCIÓN 1: TOTAL GENERAL (SOLO PARA 'EDIT')
+     * =============================================
+     * Lee los tfoot de las 3 tablas 'edit_' y actualiza la tabla 'TOTAL'
+     */
+    function calcularTotalGeneralEdit() {
+
+        // 1. Molienda (Toma el valor directo del tfoot de Molienda)
+        let totalFormulacion = parseFloat($('#edit_molienda_volumen_formulacion_final').val()) || 0;
+
+        // 2. Puntas (Suma de los 3 totales 'edit_')
+        let totalPuntas = (parseFloat($('#edit_molienda_puntas_volumen_final').val()) || 0) +
+                          (parseFloat($('#edit_segunda_puntas_volumen_final').val()) || 0) +
+                          (parseFloat($('#edit_tercera_puntas_volumen_final').val()) || 0);
+
+        // 3. Mezcal (Suma de los 3 totales 'edit_')
+        let totalMezcal = (parseFloat($('#edit_molienda_mezcal_volumen_final').val()) || 0) +
+                          (parseFloat($('#edit_segunda_mezcal_volumen_final').val()) || 0) +
+                          (parseFloat($('#edit_tercera_mezcal_volumen_final').val()) || 0);
+
+        // 4. Colas (Suma de los 3 totales 'edit_')
+        let totalColas = (parseFloat($('#edit_molienda_colas_volumen_final').val()) || 0) +
+                         (parseFloat($('#edit_segunda_colas_volumen_final').val()) || 0) +
+                         (parseFloat($('#edit_tercera_colas_volumen_final').val()) || 0);
+
+        // --- Asignar los valores a la tabla TOTAL (con IDs 'edit_') ---
+        $('#edit_volumen_total_formulado').val(totalFormulacion.toFixed(2));
+        $('#edit_puntas_volumen').val(totalPuntas.toFixed(2));
+        $('#edit_mezcal_volumen').val(totalMezcal.toFixed(2));
+        $('#edit_colas_volumen').val(totalColas.toFixed(2));
+    }
+
+
+    /**
+     * =============================================
+     * FUNCIÓN 2: MOLIENDA (SOLO PARA 'EDIT')
+     * =============================================
+     */
+    function calcularTotalesEditMolienda() {
+        let totalFormulacion = 0, totalPuntas = 0, totalMezcal = 0, totalColas = 0;
+
+        $('#edit_tablaMolienda input[name*="[volumen_formulacion]"]').each(function() {
+            totalFormulacion += parseFloat($(this).val()) || 0;
+        });
+        $('#edit_tablaMolienda input[name*="[puntas_volumen]"]').each(function() {
+            totalPuntas += parseFloat($(this).val()) || 0;
+        });
+        $('#edit_tablaMolienda input[name*="[mezcal_volumen]"]').each(function() {
+            totalMezcal += parseFloat($(this).val()) || 0;
+        });
+        $('#edit_tablaMolienda input[name*="[colas_volumen]"]').each(function() {
+            totalColas += parseFloat($(this).val()) || 0;
+        });
+
+        // Escribe en el tfoot 'edit_'
+        $('#edit_molienda_volumen_formulacion_final').val(totalFormulacion.toFixed(2));
+        $('#edit_molienda_puntas_volumen_final').val(totalPuntas.toFixed(2));
+        $('#edit_molienda_mezcal_volumen_final').val(totalMezcal.toFixed(2));
+        $('#edit_molienda_colas_volumen_final').val(totalColas.toFixed(2));
+
+        // --- Llama a la calculadora general 'edit_' ---
+        calcularTotalGeneralEdit();
+    }
+
+
+    /**
+     * =============================================
+     * FUNCIÓN 3: SEGUNDA DESTILACIÓN (SOLO PARA 'EDIT')
+     * =============================================
+     */
+    function calcularTotalesEditSegunda() {
+        let totalPuntas = 0, totalMezcal = 0, totalColas = 0;
+
+        $('#edit_tablaSegundaDestilacion input[name*="[puntas_volumen]"]').each(function() {
+            totalPuntas += parseFloat($(this).val()) || 0;
+        });
+        $('#edit_tablaSegundaDestilacion input[name*="[mezcal_volumen]"]').each(function() {
+            totalMezcal += parseFloat($(this).val()) || 0;
+        });
+        $('#edit_tablaSegundaDestilacion input[name*="[colas_volumen]"]').each(function() {
+            totalColas += parseFloat($(this).val()) || 0;
+        });
+
+        // Escribe en el tfoot 'edit_'
+        $('#edit_segunda_puntas_volumen_final').val(totalPuntas.toFixed(2));
+        $('#edit_segunda_mezcal_volumen_final').val(totalMezcal.toFixed(2));
+        $('#edit_segunda_colas_volumen_final').val(totalColas.toFixed(2));
+
+        // --- Llama a la calculadora general 'edit_' ---
+        calcularTotalGeneralEdit();
+    }
+
+
+    /**
+     * =============================================
+     * FUNCIÓN 4: TERCERA DESTILACIÓN (SOLO PARA 'EDIT')
+     * =============================================
+     */
+    function calcularTotalesEditTercera() {
+        let totalPuntas = 0, totalMezcal = 0, totalColas = 0;
+
+        $('#edit_tablaTerceraDestilacion input[name*="[puntas_volumen]"]').each(function() {
+            totalPuntas += parseFloat($(this).val()) || 0;
+        });
+        $('#edit_tablaTerceraDestilacion input[name*="[mezcal_volumen]"]').each(function() {
+            totalMezcal += parseFloat($(this).val()) || 0;
+        });
+        $('#edit_tablaTerceraDestilacion input[name*="[colas_volumen]"]').each(function() {
+            totalColas += parseFloat($(this).val()) || 0;
+        });
+
+        // Escribe en el tfoot 'edit_'
+        $('#edit_tercera_puntas_volumen_final').val(totalPuntas.toFixed(2));
+        $('#edit_tercera_mezcal_volumen_final').val(totalMezcal.toFixed(2));
+        $('#edit_tercera_colas_volumen_final').val(totalColas.toFixed(2));
+
+        // --- Llama a la calculadora general 'edit_' ---
+        calcularTotalGeneralEdit();
+    }
+
+
+    /**
+     * =============================================
+     * SECCIÓN 5: DISPARADORES DE EVENTOS ('LISTENERS')
+     * =============================================
+     * Asigna las funciones anteriores a los eventos de 'input'
+     */
+
+    // Disparadores para Molienda (edit)
+    const selectorMoliendaEdit = 'input[name*="[volumen_formulacion]"], input[name*="[puntas_volumen]"], input[name*="[mezcal_volumen]"], input[name*="[colas_volumen]"]';
+    $('#edit_tablaMolienda').on('input', selectorMoliendaEdit, calcularTotalesEditMolienda);
+    $('#edit_tablaMolienda').on('click', '.btn-danger', function() {
+        $(this).closest('tr').remove();
+        calcularTotalesEditMolienda();
+    });
+
+    // Disparadores para Segunda Destilación (edit)
+    const selectorSegundaEdit = 'input[name*="[puntas_volumen]"], input[name*="[mezcal_volumen]"], input[name*="[colas_volumen]"]';
+    $('#edit_tablaSegundaDestilacion').on('input', selectorSegundaEdit, calcularTotalesEditSegunda);
+    $('#edit_tablaSegundaDestilacion').on('click', '.btn-danger', function() {
+        $(this).closest('tr').remove();
+        calcularTotalesEditSegunda();
+    });
+
+    // Disparadores para Tercera Destilación (edit)
+    const selectorTerceraEdit = 'input[name*="[puntas_volumen]"], input[name*="[mezcal_volumen]"], input[name*="[colas_volumen]"]';
+    $('#edit_tablaTerceraDestilacion').on('input', selectorTerceraEdit, calcularTotalesEditTercera);
+    $('#edit_tablaTerceraDestilacion').on('click', '.btn-danger', function() {
+        $(this).closest('tr').remove();
+        calcularTotalesEditTercera();
+    });
+
+
+    /**
+     * =============================================
+     * SECCIÓN 6: LLAMADA INICIAL
+     * =============================================
+     * Calcula todo en cuanto cargue el modal por si ya tiene datos
+     */
+    calcularTotalesEditMolienda();
+    calcularTotalesEditSegunda();
+    calcularTotalesEditTercera();
+
+});
   /* bitacoras update */
   $(function () {
     // Configurar CSRF para Laravel
