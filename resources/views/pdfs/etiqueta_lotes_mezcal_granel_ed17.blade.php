@@ -89,13 +89,13 @@
 
     <tr>
         <td class="verde" style="width: 14%;">FECHA DEL SERVICIO:</td>
-        <td>{{ Carbon\Carbon::parse($datos->fecha_servicio)->translatedFormat('d \d\e F \d\e Y') ?? ''}}</td>
+        <td>{{ $fecha_servicio }}</td>
         <td class="verde" style="width: 14%;">NO. DE SERVICIO:</td>
-        <td>{{ $datos->num_servicio ?? '' }}</td>
+        <td>{{ $num_servicio }}</td>
     </tr>
     <tr>
         <td class="verde">RAZÓN SOCIAL:</td>
-        <td colspan="3">{{ $datos->solicitud->empresa->razon_social ?? '' }}</td>
+        <td colspan="3">{{ $razon_social }}</td>
     </tr>
 
     <tr>
@@ -105,41 +105,41 @@
 <table class="tabla" style="border-collapse: collapse;" width=100%>
     <tr>
         <td class="verde" style="width: 17%;">No. DE LOTE A GRANEL:</td>
-        <td>{{ $datos->solicitud->lote_granel->nombre_lote ?? '' }}</td>
+        <td>{{ $nombre_lote }}</td>
         <td rowspan="4" style="width: 6px; border: none;"> </td><!--ESPACIO-->
         <td rowspan="2" class="verde" style="width: 14%;">ESPECIE DE AGAVE:</td>
         <td rowspan="2">
-            @forelse ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
+            {{-- @forelse ($datos->solicitud->lote_granel->tipos_relacionados as $tipo)
                 {{ $tipo->nombre }} (<em>{{ $tipo->cientifico }}</em>)
                 @if (!$loop->last)
                     <br>
                 @endif
             @empty
-                {{-- si está vacío no muestra nada (en blanco) --}}
-            @endforelse
+                {{-- si está vacío no muestra nada (en blanco) --}
+            @endforelse --}}
+            {!! $tipo_agave !!}
         </td>
         <td rowspan="4" style="width: 6px; border: none;"> </td><!--ESPACIO-->
         <td rowspan="2" class="verde">ID DE TANQUE (s):</td>
-        <td rowspan="2" style="width:17%;">{{ $datos->solicitud->lote_granel->id_tanque ?? '' }}</td>
+        <td rowspan="2" style="width:17%;">{{ $tanque }}</td>
     </tr>
     <tr>
         <td class="verde">CATEGORÍA:</td>
-        <td>{{ $datos->solicitud->lote_granel->categoria->categoria ?? ''}}</td>
+        <td>{{ $categoria }}</td>
     </tr>
     <tr>
         <td class="verde">CLASE:</td>
-        <td>{{ $datos->solicitud->lote_granel->clase->clase ?? '' }}</td>
+        <td>{{ $clase }}</td>
         <td rowspan="2" class="verde">INGREDIENTES:</td>
-        <td rowspan="2">{{ $datos->solicitud->lote_granel->ingredientes ?? '' }}</td>
+        <td rowspan="2">{{ $ingredientes }}</td>
 
         <td rowspan="2" class="verde">VOLUMEN DE LOTE:</td>
         <td rowspan="2">
-            {{-- {{ $datos->solicitud->lote_granel->volumen_restante ?? ''}} --}}
-            {{ json_decode($datos->solicitud->caracteristicas, true)['id_vol_traslado'] ?? '' }} L</td>
+            {{ $volumen }} L</td>
     </tr>
     <tr>
         <td class="verde">EDAD:</td>
-        <td>{{ $datos->solicitud->lote_granel->edad ?? '' }}</td>
+        <td>{{ $edad }}</td>
     </tr>
 
     <tr>
@@ -149,13 +149,11 @@
 <table class="tabla" style="border-collapse: collapse;" width=100%>
     <tr>
         <td class="verde" style="width: 31%; padding:9px;">NO. DE ANÁLISIS FISICOQUÍMICO:</td>
-        <td style="width: 19%;">{{ $datos->solicitud->lote_granel->folio_fq ?? '' }}</td>
+        <td style="width: 19%;">{{ $folio_fq }}</td>
         <td style="width: 1px; border:none"></td><!--ESPACIO-->
         <td class="verde" style="width: 25%;">CERTIFICADO NOM A GRANEL:</td>
         <td style="width: 25%;">
-            {{ $datos->solicitud->lote_granel?->certificadoGranel->num_certificado
-                ?? $datos->solicitud->lote_granel->folio_certificado 
-                ?? ''}}
+            {{ $num_certificado }}
         </td>
     </tr>
 
@@ -164,9 +162,9 @@
     </tr>
 
     <tr>
-        <td colspan="2" style="padding:8px;">{{-- {{ $datos->solicitud->instalaciones->responsable ?? ''}} --}}</td>
+        <td colspan="2" style="padding:8px;">{{ $responsable  }}</td>
         <td style="border: none;"></td><!--ESPACIO-->
-        <td colspan="2" style="padding:8px;">{{ $datos->inspector->name ?? ''}}</td>
+        <td colspan="2" style="padding:8px;">{{ $inspector }}</td>
     </tr>
     <tr>
         <td colspan="2" class="verde">NOMBRE Y FIRMA DEL RESPONSABLE DE INSTALACIONES</td>

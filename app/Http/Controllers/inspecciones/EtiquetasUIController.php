@@ -154,26 +154,38 @@ public function update(Request $request, $id)
 
     return response()->json(['message' => 'Actualizado correctamente.']);
 }
-/*
+
 ///PDF ETIQUETAS - LOTES DE MEZCAL A GRANEL (Vigilancia en el traslado del lote (4))
-public function pdfMezcalGranel($id)
+public function EtiquetaMezcalGranel($id)
 {
     $datos = EtiquetaUIMezcalGranel::where('id', $id)->first();
 
-
-    if ($datos->solicitud->fecha_solicitud < '2025-08-07') {//edicion del formato
+    if ($datos->fecha_servicio < '2025-08-07') {//edicion del formato
         $edicion = 'pdfs.etiqueta_lotes_mezcal_granel'; // ed16
     } else {
         $edicion = 'pdfs.etiqueta_lotes_mezcal_granel_ed17';
     }
     $pdf = Pdf::loadView($edicion, [
-        'datos' => $datos,
-        'lotesOriginales' => $lotesOriginales,
+        'fecha_servicio' => $datos->fecha_servicio ?? '',
+        'num_servicio' => $datos->num_servicio ?? '',
+        'razon_social' => $datos->razon_social ?? '',
+        'nombre_lote' => $datos->nombre_lote ?? '',
+        'tipo_agave' => $datos->tipo_agave ?? '',
+        'tanque' => $datos->tanque ?? '',
+        'categoria' => $datos->categoria ?? '',
+        'clase' => $datos->clase ?? '',
+        'ingredientes' => $datos->ingredientes ?? '',
+        'volumen' => $datos->volumen ?? '',
+        'edad' => $datos->edad ?? '',
+        'folio_fq' => $datos->folio_fq ?? '',
+        'num_certificado' => $datos->num_certificado ?? '',
+        'inspector' => $datos->inspector ?? '',
+        'responsable' => $datos->responsable ?? ''
     ]);
 
     return $pdf->stream('Etiqueta para lotes de mezcal a granel.pdf');
 }
-*/
+
 
 
 

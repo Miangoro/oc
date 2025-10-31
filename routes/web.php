@@ -880,7 +880,7 @@ Route::middleware(['auth'])->controller(inspeccionesController::class)->group(fu
     Route::post('/asignar-inspector', 'asignarInspector');
     Route::get('/oficio_de_comision/{id_inspeccion}', 'pdf_oficio_comision')->name('oficioDeComision');
     Route::get('/orden_de_servicio/{id_inspeccion}', 'pdf_orden_servicio')->name('ordenDeServicio');
-//etiquetas
+//PDF etiquetas
 Route::get('/etiqueta_lotes_mezcal_granel/{id_inspeccion}', 'etiqueta_granel')->name('etiquetalotegranel');
 Route::get('/etiqueta_agave_art/{id_inspeccion}', 'etiqueta_muestra')->name('etiqueta-muestra');
 Route::get('/etiqueta-barrica/{id_inspeccion}', 'etiqueta_barrica')->name('etiquetabarrica');
@@ -912,6 +912,12 @@ Route::middleware(['auth'])->controller(EtiquetasUIController::class)->group(fun
     Route::delete('/etiqueta-mezcal-granel/delete/{id}', 'destroy')->name('etiqueta-mezcal-granel.destroy');
     Route::get('/etiqueta-mezcal-granel/edit/{id}', 'edit')->name('etiqueta-mezcal-granel.edit');
     Route::post('/etiqueta-mezcal-granel/update/{id}', 'update')->name('etiqueta-mezcal-granel.update');
+
+    //PDF etiquetas
+Route::get('/etiqueta_mezcal_granel/{id}', 'EtiquetaMezcalGranel')->name('etiqueta-mezcal-granel.PDF');
+/*Route::get('/etiqueta_agave_art/{id_inspeccion}', 'etiqueta_muestra')->name('etiqueta-muestra');
+Route::get('/etiqueta-barrica/{id_inspeccion}', 'etiqueta_barrica')->name('etiquetabarrica');
+Route::get('/etiquetas_tapas_sellado/{id_inspeccion}', 'etiqueta')->name('etiqueta-2401ESPTOB');*/
     // Agave ART
     Route::get('/etiqueta-ui/agave-art', 'UserManagement2')->name('etiqueta-ui-2');
     Route::get('/etiquetas-list-art', 'index2')->name('etiqueta-art.index');

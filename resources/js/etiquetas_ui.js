@@ -376,7 +376,7 @@ FormValidation.formValidation(FormEditar, {
 $(document).on('click', '.pdfMezcalGranel', function ()  {
   var id = $(this).data('id');
   //var folio = $(this).data('folio');
-  var pdfUrl = '/etiqueta_lotes_mezcal_granel/' + id; //Ruta del PDF
+  var pdfUrl = '/etiqueta_mezcal_granel/' + id; //Ruta del PDF
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
 

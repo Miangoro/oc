@@ -1074,7 +1074,30 @@ public function agregarResultados(Request $request)
     public function etiqueta_granel($id_inspeccion)
     {
         $datos = inspecciones::where('id_solicitud', $id_inspeccion)->first();
+        //etiqueta retroactiva
+        $fecha_servicio = Carbon::parse($datos->fecha_servicio)->translatedFormat('d \d\e F \d\e Y') ?? '';
+        $num_servicio = $datos->num_servicio ?? '';
+        $razon_social = $datos->solicitud->empresa->razon_social ?? '';
+        $nombre_lote = $datos->solicitud->lote_granel->nombre_lote ?? '';
+        $tiposRelacionados = $datos->solicitud->lote_granel->tipos_relacionados ?? collect();
+        $tipo_agave = $tiposRelacionados->map(function($tipo) {
+                return "{$tipo->nombre} (<em>{$tipo->cientifico}</em>)";
+            })->implode('<br>'); // separa con <br>
+        $tanque = $datos->solicitud->lote_granel->id_tanque ?? '';
+        $categoria = $datos->solicitud->lote_granel->categoria->categoria ?? '';
+        $clase = $datos->solicitud->lote_granel->clase->clase ?? '';
+        $ingredientes = $datos->solicitud->lote_granel->ingredientes ?? '';
+        $volumen = json_decode($datos->solicitud->caracteristicas, true)['id_vol_traslado'] ?? '';
+        $edad = $datos->solicitud->lote_granel->edad ?? '';
+        $folio_fq = $datos->solicitud->lote_granel->folio_fq ?? '';
+        $num_certificado = $datos->solicitud->lote_granel?->certificadoGranel->num_certificado
+            ?? $datos->solicitud->lote_granel->folio_certificado 
+            ?? '';
+        $inspector = $datos->inspector->name ?? '';
+        $responsable = $datos->solicitud->instalaciones->responsable ?? '';
+        
 
+        //se dejan por si acaso
         $lotesOriginales = collect();
         if (!empty($datos->solicitud->lote_granel->lote_original_id)) {
             $json = json_decode($datos->solicitud->lote_granel->lote_original_id, true);
@@ -1092,8 +1115,26 @@ public function agregarResultados(Request $request)
             $edicion = 'pdfs.etiqueta_lotes_mezcal_granel_ed17';
         }
         $pdf = Pdf::loadView($edicion, [
+            //se dejan por si acaso
             'datos' => $datos,
             'lotesOriginales' => $lotesOriginales,
+
+            //etiqueta retroactiva
+            'fecha_servicio' => $fecha_servicio,
+            'num_servicio' => $num_servicio,
+            'razon_social' => $razon_social,
+            'nombre_lote' => $nombre_lote,
+            'tipo_agave' => $tipo_agave,
+            'tanque' => $tanque,
+            'categoria' => $categoria,
+            'clase' => $clase,
+            'ingredientes' => $ingredientes,
+            'volumen' => $volumen,
+            'edad' => $edad,
+            'folio_fq' => $folio_fq,
+            'num_certificado' => $num_certificado,
+            'inspector' => $inspector,
+            'responsable' => ''
         ]);
 
         return $pdf->stream('Etiqueta para lotes de mezcal a granel.pdf');
