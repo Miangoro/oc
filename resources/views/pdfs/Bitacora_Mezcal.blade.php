@@ -171,14 +171,14 @@
                 <tr class="bitacora-row">
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $bitacora->fecha ? \Carbon\Carbon::parse($bitacora->fecha)->translatedFormat('d \d\e F \d\e Y') : '----'  }}</td>
-                    <td>{{ $bitacora->loteBitacora?->id_tanque ?? '----' }}</td>
+                    <td>{{ $bitacora->id_tanque ?? $bitacora->loteBitacora?->id_tanque ?? '----' }}</td>
                     <td style="color:darkblue; font-family: 'calibri-bold';">{{ $bitacora->loteBitacora?->nombre_lote ?? '----' }}</td>
                     <td>{{ $bitacora->operacion_adicional ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora->categoria->categoria ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora->clase->clase ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora?->ingredientes ?? '----' }}</td>
                     <td>{{ $bitacora->loteBitacora?->edad ?? '----' }}</td>
-                    
+
                     <td>
                         {{-- @if ($bitacora->loteBitacora && $bitacora->loteBitacora->tiposRelacionados->isNotEmpty())
                             {!! $bitacora->loteBitacora->tiposRelacionados->map(function ($tipo) {
