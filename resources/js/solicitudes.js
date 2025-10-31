@@ -319,8 +319,7 @@ const ahora = new Date();
             html += '<span class="badge bg-danger me-1">Sin acta</span>';
           }
 
-          return `<span class="badge bg-warning mb-1">${data}</span><br>
-            <span class="badge ${estatus_validado_oc} mb-1">${row.estatus_validado_oc} por oc</span><br>
+          return `<span class="badge ${estatus_validado_oc} mb-1">${row.estatus_validado_oc} por oc</span><br>
             <span class="badge ${estatus_validado_ui}">${row.estatus_validado_ui} por ui</span> <br>`
             + html + `<br>` + $color_estatus;
         }
