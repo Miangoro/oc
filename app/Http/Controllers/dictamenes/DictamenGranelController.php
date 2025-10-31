@@ -44,7 +44,7 @@ class DictamenGranelController extends Controller  {
             })
             ->whereDoesntHave('dictamenGranel')
             ->whereDoesntHave('dictamenNoCumplimiento')
-            ->where('fecha_servicio', '>', '2024-12-31')
+            //->where('fecha_servicio', '>', '2024-12-31')
             ->with('solicitud') // para acceder a la relación
             ->get()
             ->sortByDesc('solicitud.id_solicitud'); // ordenar en la colección
